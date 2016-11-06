@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+   <link rel="stylesheet" href="styles.css">
+   <title> Surfyng </title>
+   <meta charset="UTF-8">
+</head>
+<body>
+<h1 class="title_home"> Surfyng
+</h1>
+
+<br>
+<div class="search">
+   <form action="propertyresults.php" method="post">
+   <p>Lieu (ville):</p>
+   <input type="text" name="city">
+   <br>
+
+   <p>Type de Bien:</p>
+   <select name="property_type">
+      <option value="appartement">Appartement</option>
+      <option value="maison">Maison</option>
+      <option value="terrain">Terrain</option>
+      <option value="garage">Garage</option>
+   </select>
+   <br><br>
+   
+   <div class="price_box">Prix min:
+   <input type="text" class="ta_price" name="price_min">
+   </div>
+
+   <div class="price_box">Prix max:
+   <input type="text" class="ta_price" name="price_max">
+   </div>
+   <p>Nombre de pieces:</p>
+   <input type="text" class="ta_nb_rooms" name="nb_rooms">
+   <br><br>
+   <input type="submit" name="valid" value="Valider">
+   </form>
+</div>
+</body>
+</html>
