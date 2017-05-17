@@ -1,8 +1,8 @@
 import scrapy
 
 
-class QuotesSpider(scrapy.Spider):
-   name = "quotes"
+class PropertiesSpider(scrapy.Spider):
+   name = "properties_spider"
 
    def start_requests(self):
       urls = [
@@ -18,6 +18,12 @@ class QuotesSpider(scrapy.Spider):
       for url in links:
          if "annonces" in url:
             announces.append(url)
-      else:
-         excluded.append(url)
+         else:
+            excluded.append(url)
 
+      print "announces found:\n"
+      for url in announces:
+         print "%s:" % url
+      print "\n announces excluded:\n"
+      for url in excluded:
+         print "%s:" %url
