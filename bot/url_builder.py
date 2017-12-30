@@ -18,8 +18,6 @@ def buildselogerurl(proptype,url = seloger_houilles_url ):
 
    return insert_in_url(url,seloger_prop_type_pos, proptype)
 
-#http://www.seloger.com/annonces/achat/maison/colombes-92/109240349.htm?ci=920025&idtt=2&idtypebien=2&listing-listpg=11&naturebien=1,2,4
-#http://www.seloger.com/detail,json,caracteristique_bien.json?idannonce=118385789
 
 def buildselogerdescriptionurl(url):
    match = re.search('([0-9]+).htm', url)

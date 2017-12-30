@@ -73,6 +73,3 @@ class PropertiesSpider(scrapy.Spider):
       for record in self.prop_record:
          print "url: %s | id_prop : %s | description: %s " %(record.url, record.id_prop, record.description)
 
-#http://www.seloger.com/detail,json,caracteristique_bien.json?idannonce=118385789
-#jsonresponse = json.loads(response.body_as_unicode())
-# jsonresponse = json.loads(response.text))
