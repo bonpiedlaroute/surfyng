@@ -4,6 +4,18 @@ struct OperationResult
    2: string error
 }
 
+struct GetResult
+{
+   1: OperationResult result
+   2: map<string,string> values
+}
+
+struct ScanReqResult
+{
+   1: OperationResult result
+   2: list<map<string, string>> values
+}
+
 enum Type
 {
    NUMBER=1,
@@ -24,10 +36,11 @@ struct KeyValue
 
 service dynamodb_access
 {
-   i64 putAsync(1: i64 userid, 2: string tablename, 3: map<string, ValueType> values),
-   i64 getAsync(1: i64 userid, 2: string tablename, 3: KeyValue key, 4: list<string> attributestoget),
-   i64 deleteAsync(1: i64 userid, 2: string tablename, 3: KeyValue key),
-   i64 updateAsync(1: i64 userid, 2: string tablename, 3: KeyValue key, 4: map<string, ValueType> values),
+   OperationResult put(1: string tablename, 2: map<string, ValueType> values),
+   GetResult get(1: string tablename, 2: KeyValue key, 3: list<string> attributestoget),
+   ScanReqResult scan(1: string tablename, 2: list<string> attributestoget, 3: string filterexpression),
+   OperationResult remove(1: string tablename, 2: KeyValue key),
+   OperationResult update(1: string tablename, 2: KeyValue key, 3: map<string, ValueType> values),
    OperationResult createTable(1: string tablename, 2: KeyValue key, 3: map<string, string> properties),
    OperationResult deleteTable(1: string tablename)
 }

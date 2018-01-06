@@ -130,6 +130,286 @@ void OperationResult::printTo(std::ostream& out) const {
 }
 
 
+GetResult::~GetResult() throw() {
+}
+
+
+void GetResult::__set_result(const OperationResult& val) {
+  this->result = val;
+}
+
+void GetResult::__set_values(const std::map<std::string, std::string> & val) {
+  this->values = val;
+}
+
+uint32_t GetResult::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->result.read(iprot);
+          this->__isset.result = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_MAP) {
+          {
+            this->values.clear();
+            uint32_t _size2;
+            ::apache::thrift::protocol::TType _ktype3;
+            ::apache::thrift::protocol::TType _vtype4;
+            xfer += iprot->readMapBegin(_ktype3, _vtype4, _size2);
+            uint32_t _i6;
+            for (_i6 = 0; _i6 < _size2; ++_i6)
+            {
+              std::string _key7;
+              xfer += iprot->readString(_key7);
+              std::string& _val8 = this->values[_key7];
+              xfer += iprot->readString(_val8);
+            }
+            xfer += iprot->readMapEnd();
+          }
+          this->__isset.values = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t GetResult::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("GetResult");
+
+  xfer += oprot->writeFieldBegin("result", ::apache::thrift::protocol::T_STRUCT, 1);
+  xfer += this->result.write(oprot);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("values", ::apache::thrift::protocol::T_MAP, 2);
+  {
+    xfer += oprot->writeMapBegin(::apache::thrift::protocol::T_STRING, ::apache::thrift::protocol::T_STRING, static_cast<uint32_t>(this->values.size()));
+    std::map<std::string, std::string> ::const_iterator _iter9;
+    for (_iter9 = this->values.begin(); _iter9 != this->values.end(); ++_iter9)
+    {
+      xfer += oprot->writeString(_iter9->first);
+      xfer += oprot->writeString(_iter9->second);
+    }
+    xfer += oprot->writeMapEnd();
+  }
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+void swap(GetResult &a, GetResult &b) {
+  using ::std::swap;
+  swap(a.result, b.result);
+  swap(a.values, b.values);
+  swap(a.__isset, b.__isset);
+}
+
+GetResult::GetResult(const GetResult& other10) {
+  result = other10.result;
+  values = other10.values;
+  __isset = other10.__isset;
+}
+GetResult& GetResult::operator=(const GetResult& other11) {
+  result = other11.result;
+  values = other11.values;
+  __isset = other11.__isset;
+  return *this;
+}
+void GetResult::printTo(std::ostream& out) const {
+  using ::apache::thrift::to_string;
+  out << "GetResult(";
+  out << "result=" << to_string(result);
+  out << ", " << "values=" << to_string(values);
+  out << ")";
+}
+
+
+ScanReqResult::~ScanReqResult() throw() {
+}
+
+
+void ScanReqResult::__set_result(const OperationResult& val) {
+  this->result = val;
+}
+
+void ScanReqResult::__set_values(const std::vector<std::map<std::string, std::string> > & val) {
+  this->values = val;
+}
+
+uint32_t ScanReqResult::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->result.read(iprot);
+          this->__isset.result = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_LIST) {
+          {
+            this->values.clear();
+            uint32_t _size12;
+            ::apache::thrift::protocol::TType _etype15;
+            xfer += iprot->readListBegin(_etype15, _size12);
+            this->values.resize(_size12);
+            uint32_t _i16;
+            for (_i16 = 0; _i16 < _size12; ++_i16)
+            {
+              {
+                this->values[_i16].clear();
+                uint32_t _size17;
+                ::apache::thrift::protocol::TType _ktype18;
+                ::apache::thrift::protocol::TType _vtype19;
+                xfer += iprot->readMapBegin(_ktype18, _vtype19, _size17);
+                uint32_t _i21;
+                for (_i21 = 0; _i21 < _size17; ++_i21)
+                {
+                  std::string _key22;
+                  xfer += iprot->readString(_key22);
+                  std::string& _val23 = this->values[_i16][_key22];
+                  xfer += iprot->readString(_val23);
+                }
+                xfer += iprot->readMapEnd();
+              }
+            }
+            xfer += iprot->readListEnd();
+          }
+          this->__isset.values = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t ScanReqResult::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("ScanReqResult");
+
+  xfer += oprot->writeFieldBegin("result", ::apache::thrift::protocol::T_STRUCT, 1);
+  xfer += this->result.write(oprot);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("values", ::apache::thrift::protocol::T_LIST, 2);
+  {
+    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_MAP, static_cast<uint32_t>(this->values.size()));
+    std::vector<std::map<std::string, std::string> > ::const_iterator _iter24;
+    for (_iter24 = this->values.begin(); _iter24 != this->values.end(); ++_iter24)
+    {
+      {
+        xfer += oprot->writeMapBegin(::apache::thrift::protocol::T_STRING, ::apache::thrift::protocol::T_STRING, static_cast<uint32_t>((*_iter24).size()));
+        std::map<std::string, std::string> ::const_iterator _iter25;
+        for (_iter25 = (*_iter24).begin(); _iter25 != (*_iter24).end(); ++_iter25)
+        {
+          xfer += oprot->writeString(_iter25->first);
+          xfer += oprot->writeString(_iter25->second);
+        }
+        xfer += oprot->writeMapEnd();
+      }
+    }
+    xfer += oprot->writeListEnd();
+  }
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+void swap(ScanReqResult &a, ScanReqResult &b) {
+  using ::std::swap;
+  swap(a.result, b.result);
+  swap(a.values, b.values);
+  swap(a.__isset, b.__isset);
+}
+
+ScanReqResult::ScanReqResult(const ScanReqResult& other26) {
+  result = other26.result;
+  values = other26.values;
+  __isset = other26.__isset;
+}
+ScanReqResult& ScanReqResult::operator=(const ScanReqResult& other27) {
+  result = other27.result;
+  values = other27.values;
+  __isset = other27.__isset;
+  return *this;
+}
+void ScanReqResult::printTo(std::ostream& out) const {
+  using ::apache::thrift::to_string;
+  out << "ScanReqResult(";
+  out << "result=" << to_string(result);
+  out << ", " << "values=" << to_string(values);
+  out << ")";
+}
+
+
 ValueType::~ValueType() throw() {
 }
 
@@ -173,9 +453,9 @@ uint32_t ValueType::read(::apache::thrift::protocol::TProtocol* iprot) {
         break;
       case 2:
         if (ftype == ::apache::thrift::protocol::T_I32) {
-          int32_t ecast2;
-          xfer += iprot->readI32(ecast2);
-          this->fieldtype = (Type::type)ecast2;
+          int32_t ecast28;
+          xfer += iprot->readI32(ecast28);
+          this->fieldtype = (Type::type)ecast28;
           this->__isset.fieldtype = true;
         } else {
           xfer += iprot->skip(ftype);
@@ -218,15 +498,15 @@ void swap(ValueType &a, ValueType &b) {
   swap(a.__isset, b.__isset);
 }
 
-ValueType::ValueType(const ValueType& other3) {
-  field = other3.field;
-  fieldtype = other3.fieldtype;
-  __isset = other3.__isset;
+ValueType::ValueType(const ValueType& other29) {
+  field = other29.field;
+  fieldtype = other29.fieldtype;
+  __isset = other29.__isset;
 }
-ValueType& ValueType::operator=(const ValueType& other4) {
-  field = other4.field;
-  fieldtype = other4.fieldtype;
-  __isset = other4.__isset;
+ValueType& ValueType::operator=(const ValueType& other30) {
+  field = other30.field;
+  fieldtype = other30.fieldtype;
+  __isset = other30.__isset;
   return *this;
 }
 void ValueType::printTo(std::ostream& out) const {
@@ -324,15 +604,15 @@ void swap(KeyValue &a, KeyValue &b) {
   swap(a.__isset, b.__isset);
 }
 
-KeyValue::KeyValue(const KeyValue& other5) {
-  key = other5.key;
-  value = other5.value;
-  __isset = other5.__isset;
+KeyValue::KeyValue(const KeyValue& other31) {
+  key = other31.key;
+  value = other31.value;
+  __isset = other31.__isset;
 }
-KeyValue& KeyValue::operator=(const KeyValue& other6) {
-  key = other6.key;
-  value = other6.value;
-  __isset = other6.__isset;
+KeyValue& KeyValue::operator=(const KeyValue& other32) {
+  key = other32.key;
+  value = other32.value;
+  __isset = other32.__isset;
   return *this;
 }
 void KeyValue::printTo(std::ostream& out) const {

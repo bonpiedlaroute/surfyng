@@ -7,9 +7,6 @@ SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -g")
 SET( SRCS thrift_generated/dynamodb_access_constants.cpp
    thrift_generated/dynamodb_access.cpp
    thrift_generated/dynamodb_access_types.cpp
-   thrift_generated/dynamodb_client_constants.cpp
-   thrift_generated/dynamodb_client_types.cpp
-   thrift_generated/dynamodb_client.cpp
    src/dynamodb_access_handler.cpp
    src/dynamodb_access_server.cpp  
 )

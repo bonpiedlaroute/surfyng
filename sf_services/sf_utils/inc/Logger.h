@@ -17,6 +17,8 @@
 namespace surfyng
 {
 
+namespace utils
+{
 
 /** @brief  this class creates a thread which will have the job to log messages.
  *          call to function info(), warn(), error(), will push the msg to a queue.
@@ -48,6 +50,7 @@ private:
    std::fstream      m_logfile;
 };
 
+}
 }
 
 #endif /* INC_LOGGER_H_ */

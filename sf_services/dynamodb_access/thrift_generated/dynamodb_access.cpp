@@ -9,11 +9,11 @@
 
 
 
-dynamodb_access_putAsync_args::~dynamodb_access_putAsync_args() throw() {
+dynamodb_access_put_args::~dynamodb_access_put_args() throw() {
 }
 
 
-uint32_t dynamodb_access_putAsync_args::read(::apache::thrift::protocol::TProtocol* iprot) {
+uint32_t dynamodb_access_put_args::read(::apache::thrift::protocol::TProtocol* iprot) {
 
   apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
   uint32_t xfer = 0;
@@ -35,14 +35,6 @@ uint32_t dynamodb_access_putAsync_args::read(::apache::thrift::protocol::TProtoc
     switch (fid)
     {
       case 1:
-        if (ftype == ::apache::thrift::protocol::T_I64) {
-          xfer += iprot->readI64(this->userid);
-          this->__isset.userid = true;
-        } else {
-          xfer += iprot->skip(ftype);
-        }
-        break;
-      case 2:
         if (ftype == ::apache::thrift::protocol::T_STRING) {
           xfer += iprot->readString(this->tablename);
           this->__isset.tablename = true;
@@ -50,21 +42,21 @@ uint32_t dynamodb_access_putAsync_args::read(::apache::thrift::protocol::TProtoc
           xfer += iprot->skip(ftype);
         }
         break;
-      case 3:
+      case 2:
         if (ftype == ::apache::thrift::protocol::T_MAP) {
           {
             this->values.clear();
-            uint32_t _size7;
-            ::apache::thrift::protocol::TType _ktype8;
-            ::apache::thrift::protocol::TType _vtype9;
-            xfer += iprot->readMapBegin(_ktype8, _vtype9, _size7);
-            uint32_t _i11;
-            for (_i11 = 0; _i11 < _size7; ++_i11)
+            uint32_t _size33;
+            ::apache::thrift::protocol::TType _ktype34;
+            ::apache::thrift::protocol::TType _vtype35;
+            xfer += iprot->readMapBegin(_ktype34, _vtype35, _size33);
+            uint32_t _i37;
+            for (_i37 = 0; _i37 < _size33; ++_i37)
             {
-              std::string _key12;
-              xfer += iprot->readString(_key12);
-              ValueType& _val13 = this->values[_key12];
-              xfer += _val13.read(iprot);
+              std::string _key38;
+              xfer += iprot->readString(_key38);
+              ValueType& _val39 = this->values[_key38];
+              xfer += _val39.read(iprot);
             }
             xfer += iprot->readMapEnd();
           }
@@ -85,27 +77,23 @@ uint32_t dynamodb_access_putAsync_args::read(::apache::thrift::protocol::TProtoc
   return xfer;
 }
 
-uint32_t dynamodb_access_putAsync_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
+uint32_t dynamodb_access_put_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
   uint32_t xfer = 0;
   apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
-  xfer += oprot->writeStructBegin("dynamodb_access_putAsync_args");
+  xfer += oprot->writeStructBegin("dynamodb_access_put_args");
 
-  xfer += oprot->writeFieldBegin("userid", ::apache::thrift::protocol::T_I64, 1);
-  xfer += oprot->writeI64(this->userid);
-  xfer += oprot->writeFieldEnd();
-
-  xfer += oprot->writeFieldBegin("tablename", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeFieldBegin("tablename", ::apache::thrift::protocol::T_STRING, 1);
   xfer += oprot->writeString(this->tablename);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("values", ::apache::thrift::protocol::T_MAP, 3);
+  xfer += oprot->writeFieldBegin("values", ::apache::thrift::protocol::T_MAP, 2);
   {
     xfer += oprot->writeMapBegin(::apache::thrift::protocol::T_STRING, ::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->values.size()));
-    std::map<std::string, ValueType> ::const_iterator _iter14;
-    for (_iter14 = this->values.begin(); _iter14 != this->values.end(); ++_iter14)
+    std::map<std::string, ValueType> ::const_iterator _iter40;
+    for (_iter40 = this->values.begin(); _iter40 != this->values.end(); ++_iter40)
     {
-      xfer += oprot->writeString(_iter14->first);
-      xfer += _iter14->second.write(oprot);
+      xfer += oprot->writeString(_iter40->first);
+      xfer += _iter40->second.write(oprot);
     }
     xfer += oprot->writeMapEnd();
   }
@@ -117,31 +105,27 @@ uint32_t dynamodb_access_putAsync_args::write(::apache::thrift::protocol::TProto
 }
 
 
-dynamodb_access_putAsync_pargs::~dynamodb_access_putAsync_pargs() throw() {
+dynamodb_access_put_pargs::~dynamodb_access_put_pargs() throw() {
 }
 
 
-uint32_t dynamodb_access_putAsync_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
+uint32_t dynamodb_access_put_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
   uint32_t xfer = 0;
   apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
-  xfer += oprot->writeStructBegin("dynamodb_access_putAsync_pargs");
+  xfer += oprot->writeStructBegin("dynamodb_access_put_pargs");
 
-  xfer += oprot->writeFieldBegin("userid", ::apache::thrift::protocol::T_I64, 1);
-  xfer += oprot->writeI64((*(this->userid)));
-  xfer += oprot->writeFieldEnd();
-
-  xfer += oprot->writeFieldBegin("tablename", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeFieldBegin("tablename", ::apache::thrift::protocol::T_STRING, 1);
   xfer += oprot->writeString((*(this->tablename)));
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("values", ::apache::thrift::protocol::T_MAP, 3);
+  xfer += oprot->writeFieldBegin("values", ::apache::thrift::protocol::T_MAP, 2);
   {
     xfer += oprot->writeMapBegin(::apache::thrift::protocol::T_STRING, ::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>((*(this->values)).size()));
-    std::map<std::string, ValueType> ::const_iterator _iter15;
-    for (_iter15 = (*(this->values)).begin(); _iter15 != (*(this->values)).end(); ++_iter15)
+    std::map<std::string, ValueType> ::const_iterator _iter41;
+    for (_iter41 = (*(this->values)).begin(); _iter41 != (*(this->values)).end(); ++_iter41)
     {
-      xfer += oprot->writeString(_iter15->first);
-      xfer += _iter15->second.write(oprot);
+      xfer += oprot->writeString(_iter41->first);
+      xfer += _iter41->second.write(oprot);
     }
     xfer += oprot->writeMapEnd();
   }
@@ -153,11 +137,11 @@ uint32_t dynamodb_access_putAsync_pargs::write(::apache::thrift::protocol::TProt
 }
 
 
-dynamodb_access_putAsync_result::~dynamodb_access_putAsync_result() throw() {
+dynamodb_access_put_result::~dynamodb_access_put_result() throw() {
 }
 
 
-uint32_t dynamodb_access_putAsync_result::read(::apache::thrift::protocol::TProtocol* iprot) {
+uint32_t dynamodb_access_put_result::read(::apache::thrift::protocol::TProtocol* iprot) {
 
   apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
   uint32_t xfer = 0;
@@ -179,8 +163,8 @@ uint32_t dynamodb_access_putAsync_result::read(::apache::thrift::protocol::TProt
     switch (fid)
     {
       case 0:
-        if (ftype == ::apache::thrift::protocol::T_I64) {
-          xfer += iprot->readI64(this->success);
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->success.read(iprot);
           this->__isset.success = true;
         } else {
           xfer += iprot->skip(ftype);
@@ -198,15 +182,15 @@ uint32_t dynamodb_access_putAsync_result::read(::apache::thrift::protocol::TProt
   return xfer;
 }
 
-uint32_t dynamodb_access_putAsync_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
+uint32_t dynamodb_access_put_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
 
   uint32_t xfer = 0;
 
-  xfer += oprot->writeStructBegin("dynamodb_access_putAsync_result");
+  xfer += oprot->writeStructBegin("dynamodb_access_put_result");
 
   if (this->__isset.success) {
-    xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_I64, 0);
-    xfer += oprot->writeI64(this->success);
+    xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_STRUCT, 0);
+    xfer += this->success.write(oprot);
     xfer += oprot->writeFieldEnd();
   }
   xfer += oprot->writeFieldStop();
@@ -215,11 +199,11 @@ uint32_t dynamodb_access_putAsync_result::write(::apache::thrift::protocol::TPro
 }
 
 
-dynamodb_access_putAsync_presult::~dynamodb_access_putAsync_presult() throw() {
+dynamodb_access_put_presult::~dynamodb_access_put_presult() throw() {
 }
 
 
-uint32_t dynamodb_access_putAsync_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
+uint32_t dynamodb_access_put_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
 
   apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
   uint32_t xfer = 0;
@@ -241,8 +225,8 @@ uint32_t dynamodb_access_putAsync_presult::read(::apache::thrift::protocol::TPro
     switch (fid)
     {
       case 0:
-        if (ftype == ::apache::thrift::protocol::T_I64) {
-          xfer += iprot->readI64((*(this->success)));
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += (*(this->success)).read(iprot);
           this->__isset.success = true;
         } else {
           xfer += iprot->skip(ftype);
@@ -261,11 +245,11 @@ uint32_t dynamodb_access_putAsync_presult::read(::apache::thrift::protocol::TPro
 }
 
 
-dynamodb_access_getAsync_args::~dynamodb_access_getAsync_args() throw() {
+dynamodb_access_get_args::~dynamodb_access_get_args() throw() {
 }
 
 
-uint32_t dynamodb_access_getAsync_args::read(::apache::thrift::protocol::TProtocol* iprot) {
+uint32_t dynamodb_access_get_args::read(::apache::thrift::protocol::TProtocol* iprot) {
 
   apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
   uint32_t xfer = 0;
@@ -287,14 +271,6 @@ uint32_t dynamodb_access_getAsync_args::read(::apache::thrift::protocol::TProtoc
     switch (fid)
     {
       case 1:
-        if (ftype == ::apache::thrift::protocol::T_I64) {
-          xfer += iprot->readI64(this->userid);
-          this->__isset.userid = true;
-        } else {
-          xfer += iprot->skip(ftype);
-        }
-        break;
-      case 2:
         if (ftype == ::apache::thrift::protocol::T_STRING) {
           xfer += iprot->readString(this->tablename);
           this->__isset.tablename = true;
@@ -302,7 +278,7 @@ uint32_t dynamodb_access_getAsync_args::read(::apache::thrift::protocol::TProtoc
           xfer += iprot->skip(ftype);
         }
         break;
-      case 3:
+      case 2:
         if (ftype == ::apache::thrift::protocol::T_STRUCT) {
           xfer += this->key.read(iprot);
           this->__isset.key = true;
@@ -310,18 +286,18 @@ uint32_t dynamodb_access_getAsync_args::read(::apache::thrift::protocol::TProtoc
           xfer += iprot->skip(ftype);
         }
         break;
-      case 4:
+      case 3:
         if (ftype == ::apache::thrift::protocol::T_LIST) {
           {
             this->attributestoget.clear();
-            uint32_t _size16;
-            ::apache::thrift::protocol::TType _etype19;
-            xfer += iprot->readListBegin(_etype19, _size16);
-            this->attributestoget.resize(_size16);
-            uint32_t _i20;
-            for (_i20 = 0; _i20 < _size16; ++_i20)
+            uint32_t _size42;
+            ::apache::thrift::protocol::TType _etype45;
+            xfer += iprot->readListBegin(_etype45, _size42);
+            this->attributestoget.resize(_size42);
+            uint32_t _i46;
+            for (_i46 = 0; _i46 < _size42; ++_i46)
             {
-              xfer += iprot->readString(this->attributestoget[_i20]);
+              xfer += iprot->readString(this->attributestoget[_i46]);
             }
             xfer += iprot->readListEnd();
           }
@@ -342,30 +318,26 @@ uint32_t dynamodb_access_getAsync_args::read(::apache::thrift::protocol::TProtoc
   return xfer;
 }
 
-uint32_t dynamodb_access_getAsync_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
+uint32_t dynamodb_access_get_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
   uint32_t xfer = 0;
   apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
-  xfer += oprot->writeStructBegin("dynamodb_access_getAsync_args");
+  xfer += oprot->writeStructBegin("dynamodb_access_get_args");
 
-  xfer += oprot->writeFieldBegin("userid", ::apache::thrift::protocol::T_I64, 1);
-  xfer += oprot->writeI64(this->userid);
-  xfer += oprot->writeFieldEnd();
-
-  xfer += oprot->writeFieldBegin("tablename", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeFieldBegin("tablename", ::apache::thrift::protocol::T_STRING, 1);
   xfer += oprot->writeString(this->tablename);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("key", ::apache::thrift::protocol::T_STRUCT, 3);
+  xfer += oprot->writeFieldBegin("key", ::apache::thrift::protocol::T_STRUCT, 2);
   xfer += this->key.write(oprot);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("attributestoget", ::apache::thrift::protocol::T_LIST, 4);
+  xfer += oprot->writeFieldBegin("attributestoget", ::apache::thrift::protocol::T_LIST, 3);
   {
     xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRING, static_cast<uint32_t>(this->attributestoget.size()));
-    std::vector<std::string> ::const_iterator _iter21;
-    for (_iter21 = this->attributestoget.begin(); _iter21 != this->attributestoget.end(); ++_iter21)
+    std::vector<std::string> ::const_iterator _iter47;
+    for (_iter47 = this->attributestoget.begin(); _iter47 != this->attributestoget.end(); ++_iter47)
     {
-      xfer += oprot->writeString((*_iter21));
+      xfer += oprot->writeString((*_iter47));
     }
     xfer += oprot->writeListEnd();
   }
@@ -377,34 +349,30 @@ uint32_t dynamodb_access_getAsync_args::write(::apache::thrift::protocol::TProto
 }
 
 
-dynamodb_access_getAsync_pargs::~dynamodb_access_getAsync_pargs() throw() {
+dynamodb_access_get_pargs::~dynamodb_access_get_pargs() throw() {
 }
 
 
-uint32_t dynamodb_access_getAsync_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
+uint32_t dynamodb_access_get_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
   uint32_t xfer = 0;
   apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
-  xfer += oprot->writeStructBegin("dynamodb_access_getAsync_pargs");
+  xfer += oprot->writeStructBegin("dynamodb_access_get_pargs");
 
-  xfer += oprot->writeFieldBegin("userid", ::apache::thrift::protocol::T_I64, 1);
-  xfer += oprot->writeI64((*(this->userid)));
-  xfer += oprot->writeFieldEnd();
-
-  xfer += oprot->writeFieldBegin("tablename", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeFieldBegin("tablename", ::apache::thrift::protocol::T_STRING, 1);
   xfer += oprot->writeString((*(this->tablename)));
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("key", ::apache::thrift::protocol::T_STRUCT, 3);
+  xfer += oprot->writeFieldBegin("key", ::apache::thrift::protocol::T_STRUCT, 2);
   xfer += (*(this->key)).write(oprot);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("attributestoget", ::apache::thrift::protocol::T_LIST, 4);
+  xfer += oprot->writeFieldBegin("attributestoget", ::apache::thrift::protocol::T_LIST, 3);
   {
     xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRING, static_cast<uint32_t>((*(this->attributestoget)).size()));
-    std::vector<std::string> ::const_iterator _iter22;
-    for (_iter22 = (*(this->attributestoget)).begin(); _iter22 != (*(this->attributestoget)).end(); ++_iter22)
+    std::vector<std::string> ::const_iterator _iter48;
+    for (_iter48 = (*(this->attributestoget)).begin(); _iter48 != (*(this->attributestoget)).end(); ++_iter48)
     {
-      xfer += oprot->writeString((*_iter22));
+      xfer += oprot->writeString((*_iter48));
     }
     xfer += oprot->writeListEnd();
   }
@@ -416,11 +384,11 @@ uint32_t dynamodb_access_getAsync_pargs::write(::apache::thrift::protocol::TProt
 }
 
 
-dynamodb_access_getAsync_result::~dynamodb_access_getAsync_result() throw() {
+dynamodb_access_get_result::~dynamodb_access_get_result() throw() {
 }
 
 
-uint32_t dynamodb_access_getAsync_result::read(::apache::thrift::protocol::TProtocol* iprot) {
+uint32_t dynamodb_access_get_result::read(::apache::thrift::protocol::TProtocol* iprot) {
 
   apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
   uint32_t xfer = 0;
@@ -442,8 +410,8 @@ uint32_t dynamodb_access_getAsync_result::read(::apache::thrift::protocol::TProt
     switch (fid)
     {
       case 0:
-        if (ftype == ::apache::thrift::protocol::T_I64) {
-          xfer += iprot->readI64(this->success);
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->success.read(iprot);
           this->__isset.success = true;
         } else {
           xfer += iprot->skip(ftype);
@@ -461,15 +429,15 @@ uint32_t dynamodb_access_getAsync_result::read(::apache::thrift::protocol::TProt
   return xfer;
 }
 
-uint32_t dynamodb_access_getAsync_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
+uint32_t dynamodb_access_get_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
 
   uint32_t xfer = 0;
 
-  xfer += oprot->writeStructBegin("dynamodb_access_getAsync_result");
+  xfer += oprot->writeStructBegin("dynamodb_access_get_result");
 
   if (this->__isset.success) {
-    xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_I64, 0);
-    xfer += oprot->writeI64(this->success);
+    xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_STRUCT, 0);
+    xfer += this->success.write(oprot);
     xfer += oprot->writeFieldEnd();
   }
   xfer += oprot->writeFieldStop();
@@ -478,11 +446,11 @@ uint32_t dynamodb_access_getAsync_result::write(::apache::thrift::protocol::TPro
 }
 
 
-dynamodb_access_getAsync_presult::~dynamodb_access_getAsync_presult() throw() {
+dynamodb_access_get_presult::~dynamodb_access_get_presult() throw() {
 }
 
 
-uint32_t dynamodb_access_getAsync_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
+uint32_t dynamodb_access_get_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
 
   apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
   uint32_t xfer = 0;
@@ -504,8 +472,8 @@ uint32_t dynamodb_access_getAsync_presult::read(::apache::thrift::protocol::TPro
     switch (fid)
     {
       case 0:
-        if (ftype == ::apache::thrift::protocol::T_I64) {
-          xfer += iprot->readI64((*(this->success)));
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += (*(this->success)).read(iprot);
           this->__isset.success = true;
         } else {
           xfer += iprot->skip(ftype);
@@ -524,11 +492,11 @@ uint32_t dynamodb_access_getAsync_presult::read(::apache::thrift::protocol::TPro
 }
 
 
-dynamodb_access_deleteAsync_args::~dynamodb_access_deleteAsync_args() throw() {
+dynamodb_access_scan_args::~dynamodb_access_scan_args() throw() {
 }
 
 
-uint32_t dynamodb_access_deleteAsync_args::read(::apache::thrift::protocol::TProtocol* iprot) {
+uint32_t dynamodb_access_scan_args::read(::apache::thrift::protocol::TProtocol* iprot) {
 
   apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
   uint32_t xfer = 0;
@@ -550,14 +518,6 @@ uint32_t dynamodb_access_deleteAsync_args::read(::apache::thrift::protocol::TPro
     switch (fid)
     {
       case 1:
-        if (ftype == ::apache::thrift::protocol::T_I64) {
-          xfer += iprot->readI64(this->userid);
-          this->__isset.userid = true;
-        } else {
-          xfer += iprot->skip(ftype);
-        }
-        break;
-      case 2:
         if (ftype == ::apache::thrift::protocol::T_STRING) {
           xfer += iprot->readString(this->tablename);
           this->__isset.tablename = true;
@@ -565,7 +525,254 @@ uint32_t dynamodb_access_deleteAsync_args::read(::apache::thrift::protocol::TPro
           xfer += iprot->skip(ftype);
         }
         break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_LIST) {
+          {
+            this->attributestoget.clear();
+            uint32_t _size49;
+            ::apache::thrift::protocol::TType _etype52;
+            xfer += iprot->readListBegin(_etype52, _size49);
+            this->attributestoget.resize(_size49);
+            uint32_t _i53;
+            for (_i53 = 0; _i53 < _size49; ++_i53)
+            {
+              xfer += iprot->readString(this->attributestoget[_i53]);
+            }
+            xfer += iprot->readListEnd();
+          }
+          this->__isset.attributestoget = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       case 3:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->filterexpression);
+          this->__isset.filterexpression = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t dynamodb_access_scan_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("dynamodb_access_scan_args");
+
+  xfer += oprot->writeFieldBegin("tablename", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString(this->tablename);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("attributestoget", ::apache::thrift::protocol::T_LIST, 2);
+  {
+    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRING, static_cast<uint32_t>(this->attributestoget.size()));
+    std::vector<std::string> ::const_iterator _iter54;
+    for (_iter54 = this->attributestoget.begin(); _iter54 != this->attributestoget.end(); ++_iter54)
+    {
+      xfer += oprot->writeString((*_iter54));
+    }
+    xfer += oprot->writeListEnd();
+  }
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("filterexpression", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString(this->filterexpression);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+dynamodb_access_scan_pargs::~dynamodb_access_scan_pargs() throw() {
+}
+
+
+uint32_t dynamodb_access_scan_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("dynamodb_access_scan_pargs");
+
+  xfer += oprot->writeFieldBegin("tablename", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString((*(this->tablename)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("attributestoget", ::apache::thrift::protocol::T_LIST, 2);
+  {
+    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRING, static_cast<uint32_t>((*(this->attributestoget)).size()));
+    std::vector<std::string> ::const_iterator _iter55;
+    for (_iter55 = (*(this->attributestoget)).begin(); _iter55 != (*(this->attributestoget)).end(); ++_iter55)
+    {
+      xfer += oprot->writeString((*_iter55));
+    }
+    xfer += oprot->writeListEnd();
+  }
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("filterexpression", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString((*(this->filterexpression)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+dynamodb_access_scan_result::~dynamodb_access_scan_result() throw() {
+}
+
+
+uint32_t dynamodb_access_scan_result::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->success.read(iprot);
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t dynamodb_access_scan_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
+
+  uint32_t xfer = 0;
+
+  xfer += oprot->writeStructBegin("dynamodb_access_scan_result");
+
+  if (this->__isset.success) {
+    xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_STRUCT, 0);
+    xfer += this->success.write(oprot);
+    xfer += oprot->writeFieldEnd();
+  }
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+dynamodb_access_scan_presult::~dynamodb_access_scan_presult() throw() {
+}
+
+
+uint32_t dynamodb_access_scan_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += (*(this->success)).read(iprot);
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+
+dynamodb_access_remove_args::~dynamodb_access_remove_args() throw() {
+}
+
+
+uint32_t dynamodb_access_remove_args::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->tablename);
+          this->__isset.tablename = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 2:
         if (ftype == ::apache::thrift::protocol::T_STRUCT) {
           xfer += this->key.read(iprot);
           this->__isset.key = true;
@@ -585,20 +792,16 @@ uint32_t dynamodb_access_deleteAsync_args::read(::apache::thrift::protocol::TPro
   return xfer;
 }
 
-uint32_t dynamodb_access_deleteAsync_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
+uint32_t dynamodb_access_remove_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
   uint32_t xfer = 0;
   apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
-  xfer += oprot->writeStructBegin("dynamodb_access_deleteAsync_args");
+  xfer += oprot->writeStructBegin("dynamodb_access_remove_args");
 
-  xfer += oprot->writeFieldBegin("userid", ::apache::thrift::protocol::T_I64, 1);
-  xfer += oprot->writeI64(this->userid);
-  xfer += oprot->writeFieldEnd();
-
-  xfer += oprot->writeFieldBegin("tablename", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeFieldBegin("tablename", ::apache::thrift::protocol::T_STRING, 1);
   xfer += oprot->writeString(this->tablename);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("key", ::apache::thrift::protocol::T_STRUCT, 3);
+  xfer += oprot->writeFieldBegin("key", ::apache::thrift::protocol::T_STRUCT, 2);
   xfer += this->key.write(oprot);
   xfer += oprot->writeFieldEnd();
 
@@ -608,24 +811,20 @@ uint32_t dynamodb_access_deleteAsync_args::write(::apache::thrift::protocol::TPr
 }
 
 
-dynamodb_access_deleteAsync_pargs::~dynamodb_access_deleteAsync_pargs() throw() {
+dynamodb_access_remove_pargs::~dynamodb_access_remove_pargs() throw() {
 }
 
 
-uint32_t dynamodb_access_deleteAsync_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
+uint32_t dynamodb_access_remove_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
   uint32_t xfer = 0;
   apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
-  xfer += oprot->writeStructBegin("dynamodb_access_deleteAsync_pargs");
+  xfer += oprot->writeStructBegin("dynamodb_access_remove_pargs");
 
-  xfer += oprot->writeFieldBegin("userid", ::apache::thrift::protocol::T_I64, 1);
-  xfer += oprot->writeI64((*(this->userid)));
-  xfer += oprot->writeFieldEnd();
-
-  xfer += oprot->writeFieldBegin("tablename", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeFieldBegin("tablename", ::apache::thrift::protocol::T_STRING, 1);
   xfer += oprot->writeString((*(this->tablename)));
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("key", ::apache::thrift::protocol::T_STRUCT, 3);
+  xfer += oprot->writeFieldBegin("key", ::apache::thrift::protocol::T_STRUCT, 2);
   xfer += (*(this->key)).write(oprot);
   xfer += oprot->writeFieldEnd();
 
@@ -635,11 +834,11 @@ uint32_t dynamodb_access_deleteAsync_pargs::write(::apache::thrift::protocol::TP
 }
 
 
-dynamodb_access_deleteAsync_result::~dynamodb_access_deleteAsync_result() throw() {
+dynamodb_access_remove_result::~dynamodb_access_remove_result() throw() {
 }
 
 
-uint32_t dynamodb_access_deleteAsync_result::read(::apache::thrift::protocol::TProtocol* iprot) {
+uint32_t dynamodb_access_remove_result::read(::apache::thrift::protocol::TProtocol* iprot) {
 
   apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
   uint32_t xfer = 0;
@@ -661,8 +860,8 @@ uint32_t dynamodb_access_deleteAsync_result::read(::apache::thrift::protocol::TP
     switch (fid)
     {
       case 0:
-        if (ftype == ::apache::thrift::protocol::T_I64) {
-          xfer += iprot->readI64(this->success);
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->success.read(iprot);
           this->__isset.success = true;
         } else {
           xfer += iprot->skip(ftype);
@@ -680,15 +879,15 @@ uint32_t dynamodb_access_deleteAsync_result::read(::apache::thrift::protocol::TP
   return xfer;
 }
 
-uint32_t dynamodb_access_deleteAsync_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
+uint32_t dynamodb_access_remove_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
 
   uint32_t xfer = 0;
 
-  xfer += oprot->writeStructBegin("dynamodb_access_deleteAsync_result");
+  xfer += oprot->writeStructBegin("dynamodb_access_remove_result");
 
   if (this->__isset.success) {
-    xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_I64, 0);
-    xfer += oprot->writeI64(this->success);
+    xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_STRUCT, 0);
+    xfer += this->success.write(oprot);
     xfer += oprot->writeFieldEnd();
   }
   xfer += oprot->writeFieldStop();
@@ -697,11 +896,11 @@ uint32_t dynamodb_access_deleteAsync_result::write(::apache::thrift::protocol::T
 }
 
 
-dynamodb_access_deleteAsync_presult::~dynamodb_access_deleteAsync_presult() throw() {
+dynamodb_access_remove_presult::~dynamodb_access_remove_presult() throw() {
 }
 
 
-uint32_t dynamodb_access_deleteAsync_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
+uint32_t dynamodb_access_remove_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
 
   apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
   uint32_t xfer = 0;
@@ -723,8 +922,8 @@ uint32_t dynamodb_access_deleteAsync_presult::read(::apache::thrift::protocol::T
     switch (fid)
     {
       case 0:
-        if (ftype == ::apache::thrift::protocol::T_I64) {
-          xfer += iprot->readI64((*(this->success)));
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += (*(this->success)).read(iprot);
           this->__isset.success = true;
         } else {
           xfer += iprot->skip(ftype);
@@ -743,11 +942,11 @@ uint32_t dynamodb_access_deleteAsync_presult::read(::apache::thrift::protocol::T
 }
 
 
-dynamodb_access_updateAsync_args::~dynamodb_access_updateAsync_args() throw() {
+dynamodb_access_update_args::~dynamodb_access_update_args() throw() {
 }
 
 
-uint32_t dynamodb_access_updateAsync_args::read(::apache::thrift::protocol::TProtocol* iprot) {
+uint32_t dynamodb_access_update_args::read(::apache::thrift::protocol::TProtocol* iprot) {
 
   apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
   uint32_t xfer = 0;
@@ -769,14 +968,6 @@ uint32_t dynamodb_access_updateAsync_args::read(::apache::thrift::protocol::TPro
     switch (fid)
     {
       case 1:
-        if (ftype == ::apache::thrift::protocol::T_I64) {
-          xfer += iprot->readI64(this->userid);
-          this->__isset.userid = true;
-        } else {
-          xfer += iprot->skip(ftype);
-        }
-        break;
-      case 2:
         if (ftype == ::apache::thrift::protocol::T_STRING) {
           xfer += iprot->readString(this->tablename);
           this->__isset.tablename = true;
@@ -784,7 +975,7 @@ uint32_t dynamodb_access_updateAsync_args::read(::apache::thrift::protocol::TPro
           xfer += iprot->skip(ftype);
         }
         break;
-      case 3:
+      case 2:
         if (ftype == ::apache::thrift::protocol::T_STRUCT) {
           xfer += this->key.read(iprot);
           this->__isset.key = true;
@@ -792,21 +983,21 @@ uint32_t dynamodb_access_updateAsync_args::read(::apache::thrift::protocol::TPro
           xfer += iprot->skip(ftype);
         }
         break;
-      case 4:
+      case 3:
         if (ftype == ::apache::thrift::protocol::T_MAP) {
           {
             this->values.clear();
-            uint32_t _size23;
-            ::apache::thrift::protocol::TType _ktype24;
-            ::apache::thrift::protocol::TType _vtype25;
-            xfer += iprot->readMapBegin(_ktype24, _vtype25, _size23);
-            uint32_t _i27;
-            for (_i27 = 0; _i27 < _size23; ++_i27)
+            uint32_t _size56;
+            ::apache::thrift::protocol::TType _ktype57;
+            ::apache::thrift::protocol::TType _vtype58;
+            xfer += iprot->readMapBegin(_ktype57, _vtype58, _size56);
+            uint32_t _i60;
+            for (_i60 = 0; _i60 < _size56; ++_i60)
             {
-              std::string _key28;
-              xfer += iprot->readString(_key28);
-              ValueType& _val29 = this->values[_key28];
-              xfer += _val29.read(iprot);
+              std::string _key61;
+              xfer += iprot->readString(_key61);
+              ValueType& _val62 = this->values[_key61];
+              xfer += _val62.read(iprot);
             }
             xfer += iprot->readMapEnd();
           }
@@ -827,31 +1018,27 @@ uint32_t dynamodb_access_updateAsync_args::read(::apache::thrift::protocol::TPro
   return xfer;
 }
 
-uint32_t dynamodb_access_updateAsync_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
+uint32_t dynamodb_access_update_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
   uint32_t xfer = 0;
   apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
-  xfer += oprot->writeStructBegin("dynamodb_access_updateAsync_args");
+  xfer += oprot->writeStructBegin("dynamodb_access_update_args");
 
-  xfer += oprot->writeFieldBegin("userid", ::apache::thrift::protocol::T_I64, 1);
-  xfer += oprot->writeI64(this->userid);
-  xfer += oprot->writeFieldEnd();
-
-  xfer += oprot->writeFieldBegin("tablename", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeFieldBegin("tablename", ::apache::thrift::protocol::T_STRING, 1);
   xfer += oprot->writeString(this->tablename);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("key", ::apache::thrift::protocol::T_STRUCT, 3);
+  xfer += oprot->writeFieldBegin("key", ::apache::thrift::protocol::T_STRUCT, 2);
   xfer += this->key.write(oprot);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("values", ::apache::thrift::protocol::T_MAP, 4);
+  xfer += oprot->writeFieldBegin("values", ::apache::thrift::protocol::T_MAP, 3);
   {
     xfer += oprot->writeMapBegin(::apache::thrift::protocol::T_STRING, ::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->values.size()));
-    std::map<std::string, ValueType> ::const_iterator _iter30;
-    for (_iter30 = this->values.begin(); _iter30 != this->values.end(); ++_iter30)
+    std::map<std::string, ValueType> ::const_iterator _iter63;
+    for (_iter63 = this->values.begin(); _iter63 != this->values.end(); ++_iter63)
     {
-      xfer += oprot->writeString(_iter30->first);
-      xfer += _iter30->second.write(oprot);
+      xfer += oprot->writeString(_iter63->first);
+      xfer += _iter63->second.write(oprot);
     }
     xfer += oprot->writeMapEnd();
   }
@@ -863,35 +1050,31 @@ uint32_t dynamodb_access_updateAsync_args::write(::apache::thrift::protocol::TPr
 }
 
 
-dynamodb_access_updateAsync_pargs::~dynamodb_access_updateAsync_pargs() throw() {
+dynamodb_access_update_pargs::~dynamodb_access_update_pargs() throw() {
 }
 
 
-uint32_t dynamodb_access_updateAsync_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
+uint32_t dynamodb_access_update_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
   uint32_t xfer = 0;
   apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
-  xfer += oprot->writeStructBegin("dynamodb_access_updateAsync_pargs");
+  xfer += oprot->writeStructBegin("dynamodb_access_update_pargs");
 
-  xfer += oprot->writeFieldBegin("userid", ::apache::thrift::protocol::T_I64, 1);
-  xfer += oprot->writeI64((*(this->userid)));
-  xfer += oprot->writeFieldEnd();
-
-  xfer += oprot->writeFieldBegin("tablename", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeFieldBegin("tablename", ::apache::thrift::protocol::T_STRING, 1);
   xfer += oprot->writeString((*(this->tablename)));
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("key", ::apache::thrift::protocol::T_STRUCT, 3);
+  xfer += oprot->writeFieldBegin("key", ::apache::thrift::protocol::T_STRUCT, 2);
   xfer += (*(this->key)).write(oprot);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("values", ::apache::thrift::protocol::T_MAP, 4);
+  xfer += oprot->writeFieldBegin("values", ::apache::thrift::protocol::T_MAP, 3);
   {
     xfer += oprot->writeMapBegin(::apache::thrift::protocol::T_STRING, ::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>((*(this->values)).size()));
-    std::map<std::string, ValueType> ::const_iterator _iter31;
-    for (_iter31 = (*(this->values)).begin(); _iter31 != (*(this->values)).end(); ++_iter31)
+    std::map<std::string, ValueType> ::const_iterator _iter64;
+    for (_iter64 = (*(this->values)).begin(); _iter64 != (*(this->values)).end(); ++_iter64)
     {
-      xfer += oprot->writeString(_iter31->first);
-      xfer += _iter31->second.write(oprot);
+      xfer += oprot->writeString(_iter64->first);
+      xfer += _iter64->second.write(oprot);
     }
     xfer += oprot->writeMapEnd();
   }
@@ -903,11 +1086,11 @@ uint32_t dynamodb_access_updateAsync_pargs::write(::apache::thrift::protocol::TP
 }
 
 
-dynamodb_access_updateAsync_result::~dynamodb_access_updateAsync_result() throw() {
+dynamodb_access_update_result::~dynamodb_access_update_result() throw() {
 }
 
 
-uint32_t dynamodb_access_updateAsync_result::read(::apache::thrift::protocol::TProtocol* iprot) {
+uint32_t dynamodb_access_update_result::read(::apache::thrift::protocol::TProtocol* iprot) {
 
   apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
   uint32_t xfer = 0;
@@ -929,8 +1112,8 @@ uint32_t dynamodb_access_updateAsync_result::read(::apache::thrift::protocol::TP
     switch (fid)
     {
       case 0:
-        if (ftype == ::apache::thrift::protocol::T_I64) {
-          xfer += iprot->readI64(this->success);
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += this->success.read(iprot);
           this->__isset.success = true;
         } else {
           xfer += iprot->skip(ftype);
@@ -948,15 +1131,15 @@ uint32_t dynamodb_access_updateAsync_result::read(::apache::thrift::protocol::TP
   return xfer;
 }
 
-uint32_t dynamodb_access_updateAsync_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
+uint32_t dynamodb_access_update_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
 
   uint32_t xfer = 0;
 
-  xfer += oprot->writeStructBegin("dynamodb_access_updateAsync_result");
+  xfer += oprot->writeStructBegin("dynamodb_access_update_result");
 
   if (this->__isset.success) {
-    xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_I64, 0);
-    xfer += oprot->writeI64(this->success);
+    xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_STRUCT, 0);
+    xfer += this->success.write(oprot);
     xfer += oprot->writeFieldEnd();
   }
   xfer += oprot->writeFieldStop();
@@ -965,11 +1148,11 @@ uint32_t dynamodb_access_updateAsync_result::write(::apache::thrift::protocol::T
 }
 
 
-dynamodb_access_updateAsync_presult::~dynamodb_access_updateAsync_presult() throw() {
+dynamodb_access_update_presult::~dynamodb_access_update_presult() throw() {
 }
 
 
-uint32_t dynamodb_access_updateAsync_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
+uint32_t dynamodb_access_update_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
 
   apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
   uint32_t xfer = 0;
@@ -991,8 +1174,8 @@ uint32_t dynamodb_access_updateAsync_presult::read(::apache::thrift::protocol::T
     switch (fid)
     {
       case 0:
-        if (ftype == ::apache::thrift::protocol::T_I64) {
-          xfer += iprot->readI64((*(this->success)));
+        if (ftype == ::apache::thrift::protocol::T_STRUCT) {
+          xfer += (*(this->success)).read(iprot);
           this->__isset.success = true;
         } else {
           xfer += iprot->skip(ftype);
@@ -1056,17 +1239,17 @@ uint32_t dynamodb_access_createTable_args::read(::apache::thrift::protocol::TPro
         if (ftype == ::apache::thrift::protocol::T_MAP) {
           {
             this->properties.clear();
-            uint32_t _size32;
-            ::apache::thrift::protocol::TType _ktype33;
-            ::apache::thrift::protocol::TType _vtype34;
-            xfer += iprot->readMapBegin(_ktype33, _vtype34, _size32);
-            uint32_t _i36;
-            for (_i36 = 0; _i36 < _size32; ++_i36)
+            uint32_t _size65;
+            ::apache::thrift::protocol::TType _ktype66;
+            ::apache::thrift::protocol::TType _vtype67;
+            xfer += iprot->readMapBegin(_ktype66, _vtype67, _size65);
+            uint32_t _i69;
+            for (_i69 = 0; _i69 < _size65; ++_i69)
             {
-              std::string _key37;
-              xfer += iprot->readString(_key37);
-              std::string& _val38 = this->properties[_key37];
-              xfer += iprot->readString(_val38);
+              std::string _key70;
+              xfer += iprot->readString(_key70);
+              std::string& _val71 = this->properties[_key70];
+              xfer += iprot->readString(_val71);
             }
             xfer += iprot->readMapEnd();
           }
@@ -1103,11 +1286,11 @@ uint32_t dynamodb_access_createTable_args::write(::apache::thrift::protocol::TPr
   xfer += oprot->writeFieldBegin("properties", ::apache::thrift::protocol::T_MAP, 3);
   {
     xfer += oprot->writeMapBegin(::apache::thrift::protocol::T_STRING, ::apache::thrift::protocol::T_STRING, static_cast<uint32_t>(this->properties.size()));
-    std::map<std::string, std::string> ::const_iterator _iter39;
-    for (_iter39 = this->properties.begin(); _iter39 != this->properties.end(); ++_iter39)
+    std::map<std::string, std::string> ::const_iterator _iter72;
+    for (_iter72 = this->properties.begin(); _iter72 != this->properties.end(); ++_iter72)
     {
-      xfer += oprot->writeString(_iter39->first);
-      xfer += oprot->writeString(_iter39->second);
+      xfer += oprot->writeString(_iter72->first);
+      xfer += oprot->writeString(_iter72->second);
     }
     xfer += oprot->writeMapEnd();
   }
@@ -1139,11 +1322,11 @@ uint32_t dynamodb_access_createTable_pargs::write(::apache::thrift::protocol::TP
   xfer += oprot->writeFieldBegin("properties", ::apache::thrift::protocol::T_MAP, 3);
   {
     xfer += oprot->writeMapBegin(::apache::thrift::protocol::T_STRING, ::apache::thrift::protocol::T_STRING, static_cast<uint32_t>((*(this->properties)).size()));
-    std::map<std::string, std::string> ::const_iterator _iter40;
-    for (_iter40 = (*(this->properties)).begin(); _iter40 != (*(this->properties)).end(); ++_iter40)
+    std::map<std::string, std::string> ::const_iterator _iter73;
+    for (_iter73 = (*(this->properties)).begin(); _iter73 != (*(this->properties)).end(); ++_iter73)
     {
-      xfer += oprot->writeString(_iter40->first);
-      xfer += oprot->writeString(_iter40->second);
+      xfer += oprot->writeString(_iter73->first);
+      xfer += oprot->writeString(_iter73->second);
     }
     xfer += oprot->writeMapEnd();
   }
@@ -1449,19 +1632,18 @@ uint32_t dynamodb_access_deleteTable_presult::read(::apache::thrift::protocol::T
   return xfer;
 }
 
-int64_t dynamodb_accessClient::putAsync(const int64_t userid, const std::string& tablename, const std::map<std::string, ValueType> & values)
+void dynamodb_accessClient::put(OperationResult& _return, const std::string& tablename, const std::map<std::string, ValueType> & values)
 {
-  send_putAsync(userid, tablename, values);
-  return recv_putAsync();
+  send_put(tablename, values);
+  recv_put(_return);
 }
 
-void dynamodb_accessClient::send_putAsync(const int64_t userid, const std::string& tablename, const std::map<std::string, ValueType> & values)
+void dynamodb_accessClient::send_put(const std::string& tablename, const std::map<std::string, ValueType> & values)
 {
   int32_t cseqid = 0;
-  oprot_->writeMessageBegin("putAsync", ::apache::thrift::protocol::T_CALL, cseqid);
+  oprot_->writeMessageBegin("put", ::apache::thrift::protocol::T_CALL, cseqid);
 
-  dynamodb_access_putAsync_pargs args;
-  args.userid = &userid;
+  dynamodb_access_put_pargs args;
   args.tablename = &tablename;
   args.values = &values;
   args.write(oprot_);
@@ -1471,7 +1653,7 @@ void dynamodb_accessClient::send_putAsync(const int64_t userid, const std::strin
   oprot_->getTransport()->flush();
 }
 
-int64_t dynamodb_accessClient::recv_putAsync()
+void dynamodb_accessClient::recv_put(OperationResult& _return)
 {
 
   int32_t rseqid = 0;
@@ -1491,37 +1673,36 @@ int64_t dynamodb_accessClient::recv_putAsync()
     iprot_->readMessageEnd();
     iprot_->getTransport()->readEnd();
   }
-  if (fname.compare("putAsync") != 0) {
+  if (fname.compare("put") != 0) {
     iprot_->skip(::apache::thrift::protocol::T_STRUCT);
     iprot_->readMessageEnd();
     iprot_->getTransport()->readEnd();
   }
-  int64_t _return;
-  dynamodb_access_putAsync_presult result;
+  dynamodb_access_put_presult result;
   result.success = &_return;
   result.read(iprot_);
   iprot_->readMessageEnd();
   iprot_->getTransport()->readEnd();
 
   if (result.__isset.success) {
-    return _return;
+    // _return pointer has now been filled
+    return;
   }
-  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "putAsync failed: unknown result");
+  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "put failed: unknown result");
 }
 
-int64_t dynamodb_accessClient::getAsync(const int64_t userid, const std::string& tablename, const KeyValue& key, const std::vector<std::string> & attributestoget)
+void dynamodb_accessClient::get(GetResult& _return, const std::string& tablename, const KeyValue& key, const std::vector<std::string> & attributestoget)
 {
-  send_getAsync(userid, tablename, key, attributestoget);
-  return recv_getAsync();
+  send_get(tablename, key, attributestoget);
+  recv_get(_return);
 }
 
-void dynamodb_accessClient::send_getAsync(const int64_t userid, const std::string& tablename, const KeyValue& key, const std::vector<std::string> & attributestoget)
+void dynamodb_accessClient::send_get(const std::string& tablename, const KeyValue& key, const std::vector<std::string> & attributestoget)
 {
   int32_t cseqid = 0;
-  oprot_->writeMessageBegin("getAsync", ::apache::thrift::protocol::T_CALL, cseqid);
+  oprot_->writeMessageBegin("get", ::apache::thrift::protocol::T_CALL, cseqid);
 
-  dynamodb_access_getAsync_pargs args;
-  args.userid = &userid;
+  dynamodb_access_get_pargs args;
   args.tablename = &tablename;
   args.key = &key;
   args.attributestoget = &attributestoget;
@@ -1532,7 +1713,7 @@ void dynamodb_accessClient::send_getAsync(const int64_t userid, const std::strin
   oprot_->getTransport()->flush();
 }
 
-int64_t dynamodb_accessClient::recv_getAsync()
+void dynamodb_accessClient::recv_get(GetResult& _return)
 {
 
   int32_t rseqid = 0;
@@ -1552,37 +1733,96 @@ int64_t dynamodb_accessClient::recv_getAsync()
     iprot_->readMessageEnd();
     iprot_->getTransport()->readEnd();
   }
-  if (fname.compare("getAsync") != 0) {
+  if (fname.compare("get") != 0) {
     iprot_->skip(::apache::thrift::protocol::T_STRUCT);
     iprot_->readMessageEnd();
     iprot_->getTransport()->readEnd();
   }
-  int64_t _return;
-  dynamodb_access_getAsync_presult result;
+  dynamodb_access_get_presult result;
   result.success = &_return;
   result.read(iprot_);
   iprot_->readMessageEnd();
   iprot_->getTransport()->readEnd();
 
   if (result.__isset.success) {
-    return _return;
+    // _return pointer has now been filled
+    return;
   }
-  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "getAsync failed: unknown result");
+  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "get failed: unknown result");
 }
 
-int64_t dynamodb_accessClient::deleteAsync(const int64_t userid, const std::string& tablename, const KeyValue& key)
+void dynamodb_accessClient::scan(ScanReqResult& _return, const std::string& tablename, const std::vector<std::string> & attributestoget, const std::string& filterexpression)
 {
-  send_deleteAsync(userid, tablename, key);
-  return recv_deleteAsync();
+  send_scan(tablename, attributestoget, filterexpression);
+  recv_scan(_return);
 }
 
-void dynamodb_accessClient::send_deleteAsync(const int64_t userid, const std::string& tablename, const KeyValue& key)
+void dynamodb_accessClient::send_scan(const std::string& tablename, const std::vector<std::string> & attributestoget, const std::string& filterexpression)
 {
   int32_t cseqid = 0;
-  oprot_->writeMessageBegin("deleteAsync", ::apache::thrift::protocol::T_CALL, cseqid);
+  oprot_->writeMessageBegin("scan", ::apache::thrift::protocol::T_CALL, cseqid);
 
-  dynamodb_access_deleteAsync_pargs args;
-  args.userid = &userid;
+  dynamodb_access_scan_pargs args;
+  args.tablename = &tablename;
+  args.attributestoget = &attributestoget;
+  args.filterexpression = &filterexpression;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+}
+
+void dynamodb_accessClient::recv_scan(ScanReqResult& _return)
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  iprot_->readMessageBegin(fname, mtype, rseqid);
+  if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+    ::apache::thrift::TApplicationException x;
+    x.read(iprot_);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+    throw x;
+  }
+  if (mtype != ::apache::thrift::protocol::T_REPLY) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  if (fname.compare("scan") != 0) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  dynamodb_access_scan_presult result;
+  result.success = &_return;
+  result.read(iprot_);
+  iprot_->readMessageEnd();
+  iprot_->getTransport()->readEnd();
+
+  if (result.__isset.success) {
+    // _return pointer has now been filled
+    return;
+  }
+  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "scan failed: unknown result");
+}
+
+void dynamodb_accessClient::remove(OperationResult& _return, const std::string& tablename, const KeyValue& key)
+{
+  send_remove(tablename, key);
+  recv_remove(_return);
+}
+
+void dynamodb_accessClient::send_remove(const std::string& tablename, const KeyValue& key)
+{
+  int32_t cseqid = 0;
+  oprot_->writeMessageBegin("remove", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  dynamodb_access_remove_pargs args;
   args.tablename = &tablename;
   args.key = &key;
   args.write(oprot_);
@@ -1592,7 +1832,7 @@ void dynamodb_accessClient::send_deleteAsync(const int64_t userid, const std::st
   oprot_->getTransport()->flush();
 }
 
-int64_t dynamodb_accessClient::recv_deleteAsync()
+void dynamodb_accessClient::recv_remove(OperationResult& _return)
 {
 
   int32_t rseqid = 0;
@@ -1612,37 +1852,36 @@ int64_t dynamodb_accessClient::recv_deleteAsync()
     iprot_->readMessageEnd();
     iprot_->getTransport()->readEnd();
   }
-  if (fname.compare("deleteAsync") != 0) {
+  if (fname.compare("remove") != 0) {
     iprot_->skip(::apache::thrift::protocol::T_STRUCT);
     iprot_->readMessageEnd();
     iprot_->getTransport()->readEnd();
   }
-  int64_t _return;
-  dynamodb_access_deleteAsync_presult result;
+  dynamodb_access_remove_presult result;
   result.success = &_return;
   result.read(iprot_);
   iprot_->readMessageEnd();
   iprot_->getTransport()->readEnd();
 
   if (result.__isset.success) {
-    return _return;
+    // _return pointer has now been filled
+    return;
   }
-  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "deleteAsync failed: unknown result");
+  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "remove failed: unknown result");
 }
 
-int64_t dynamodb_accessClient::updateAsync(const int64_t userid, const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & values)
+void dynamodb_accessClient::update(OperationResult& _return, const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & values)
 {
-  send_updateAsync(userid, tablename, key, values);
-  return recv_updateAsync();
+  send_update(tablename, key, values);
+  recv_update(_return);
 }
 
-void dynamodb_accessClient::send_updateAsync(const int64_t userid, const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & values)
+void dynamodb_accessClient::send_update(const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & values)
 {
   int32_t cseqid = 0;
-  oprot_->writeMessageBegin("updateAsync", ::apache::thrift::protocol::T_CALL, cseqid);
+  oprot_->writeMessageBegin("update", ::apache::thrift::protocol::T_CALL, cseqid);
 
-  dynamodb_access_updateAsync_pargs args;
-  args.userid = &userid;
+  dynamodb_access_update_pargs args;
   args.tablename = &tablename;
   args.key = &key;
   args.values = &values;
@@ -1653,7 +1892,7 @@ void dynamodb_accessClient::send_updateAsync(const int64_t userid, const std::st
   oprot_->getTransport()->flush();
 }
 
-int64_t dynamodb_accessClient::recv_updateAsync()
+void dynamodb_accessClient::recv_update(OperationResult& _return)
 {
 
   int32_t rseqid = 0;
@@ -1673,22 +1912,22 @@ int64_t dynamodb_accessClient::recv_updateAsync()
     iprot_->readMessageEnd();
     iprot_->getTransport()->readEnd();
   }
-  if (fname.compare("updateAsync") != 0) {
+  if (fname.compare("update") != 0) {
     iprot_->skip(::apache::thrift::protocol::T_STRUCT);
     iprot_->readMessageEnd();
     iprot_->getTransport()->readEnd();
   }
-  int64_t _return;
-  dynamodb_access_updateAsync_presult result;
+  dynamodb_access_update_presult result;
   result.success = &_return;
   result.read(iprot_);
   iprot_->readMessageEnd();
   iprot_->getTransport()->readEnd();
 
   if (result.__isset.success) {
-    return _return;
+    // _return pointer has now been filled
+    return;
   }
-  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "updateAsync failed: unknown result");
+  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "update failed: unknown result");
 }
 
 void dynamodb_accessClient::createTable(OperationResult& _return, const std::string& tablename, const KeyValue& key, const std::map<std::string, std::string> & properties)
@@ -1828,38 +2067,38 @@ bool dynamodb_accessProcessor::dispatchCall(::apache::thrift::protocol::TProtoco
   return true;
 }
 
-void dynamodb_accessProcessor::process_putAsync(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
+void dynamodb_accessProcessor::process_put(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
 {
   void* ctx = NULL;
   if (this->eventHandler_.get() != NULL) {
-    ctx = this->eventHandler_->getContext("dynamodb_access.putAsync", callContext);
+    ctx = this->eventHandler_->getContext("dynamodb_access.put", callContext);
   }
-  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "dynamodb_access.putAsync");
+  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "dynamodb_access.put");
 
   if (this->eventHandler_.get() != NULL) {
-    this->eventHandler_->preRead(ctx, "dynamodb_access.putAsync");
+    this->eventHandler_->preRead(ctx, "dynamodb_access.put");
   }
 
-  dynamodb_access_putAsync_args args;
+  dynamodb_access_put_args args;
   args.read(iprot);
   iprot->readMessageEnd();
   uint32_t bytes = iprot->getTransport()->readEnd();
 
   if (this->eventHandler_.get() != NULL) {
-    this->eventHandler_->postRead(ctx, "dynamodb_access.putAsync", bytes);
+    this->eventHandler_->postRead(ctx, "dynamodb_access.put", bytes);
   }
 
-  dynamodb_access_putAsync_result result;
+  dynamodb_access_put_result result;
   try {
-    result.success = iface_->putAsync(args.userid, args.tablename, args.values);
+    iface_->put(result.success, args.tablename, args.values);
     result.__isset.success = true;
   } catch (const std::exception& e) {
     if (this->eventHandler_.get() != NULL) {
-      this->eventHandler_->handlerError(ctx, "dynamodb_access.putAsync");
+      this->eventHandler_->handlerError(ctx, "dynamodb_access.put");
     }
 
     ::apache::thrift::TApplicationException x(e.what());
-    oprot->writeMessageBegin("putAsync", ::apache::thrift::protocol::T_EXCEPTION, seqid);
+    oprot->writeMessageBegin("put", ::apache::thrift::protocol::T_EXCEPTION, seqid);
     x.write(oprot);
     oprot->writeMessageEnd();
     oprot->getTransport()->writeEnd();
@@ -1868,52 +2107,52 @@ void dynamodb_accessProcessor::process_putAsync(int32_t seqid, ::apache::thrift:
   }
 
   if (this->eventHandler_.get() != NULL) {
-    this->eventHandler_->preWrite(ctx, "dynamodb_access.putAsync");
+    this->eventHandler_->preWrite(ctx, "dynamodb_access.put");
   }
 
-  oprot->writeMessageBegin("putAsync", ::apache::thrift::protocol::T_REPLY, seqid);
+  oprot->writeMessageBegin("put", ::apache::thrift::protocol::T_REPLY, seqid);
   result.write(oprot);
   oprot->writeMessageEnd();
   bytes = oprot->getTransport()->writeEnd();
   oprot->getTransport()->flush();
 
   if (this->eventHandler_.get() != NULL) {
-    this->eventHandler_->postWrite(ctx, "dynamodb_access.putAsync", bytes);
+    this->eventHandler_->postWrite(ctx, "dynamodb_access.put", bytes);
   }
 }
 
-void dynamodb_accessProcessor::process_getAsync(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
+void dynamodb_accessProcessor::process_get(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
 {
   void* ctx = NULL;
   if (this->eventHandler_.get() != NULL) {
-    ctx = this->eventHandler_->getContext("dynamodb_access.getAsync", callContext);
+    ctx = this->eventHandler_->getContext("dynamodb_access.get", callContext);
   }
-  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "dynamodb_access.getAsync");
+  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "dynamodb_access.get");
 
   if (this->eventHandler_.get() != NULL) {
-    this->eventHandler_->preRead(ctx, "dynamodb_access.getAsync");
+    this->eventHandler_->preRead(ctx, "dynamodb_access.get");
   }
 
-  dynamodb_access_getAsync_args args;
+  dynamodb_access_get_args args;
   args.read(iprot);
   iprot->readMessageEnd();
   uint32_t bytes = iprot->getTransport()->readEnd();
 
   if (this->eventHandler_.get() != NULL) {
-    this->eventHandler_->postRead(ctx, "dynamodb_access.getAsync", bytes);
+    this->eventHandler_->postRead(ctx, "dynamodb_access.get", bytes);
   }
 
-  dynamodb_access_getAsync_result result;
+  dynamodb_access_get_result result;
   try {
-    result.success = iface_->getAsync(args.userid, args.tablename, args.key, args.attributestoget);
+    iface_->get(result.success, args.tablename, args.key, args.attributestoget);
     result.__isset.success = true;
   } catch (const std::exception& e) {
     if (this->eventHandler_.get() != NULL) {
-      this->eventHandler_->handlerError(ctx, "dynamodb_access.getAsync");
+      this->eventHandler_->handlerError(ctx, "dynamodb_access.get");
     }
 
     ::apache::thrift::TApplicationException x(e.what());
-    oprot->writeMessageBegin("getAsync", ::apache::thrift::protocol::T_EXCEPTION, seqid);
+    oprot->writeMessageBegin("get", ::apache::thrift::protocol::T_EXCEPTION, seqid);
     x.write(oprot);
     oprot->writeMessageEnd();
     oprot->getTransport()->writeEnd();
@@ -1922,52 +2161,52 @@ void dynamodb_accessProcessor::process_getAsync(int32_t seqid, ::apache::thrift:
   }
 
   if (this->eventHandler_.get() != NULL) {
-    this->eventHandler_->preWrite(ctx, "dynamodb_access.getAsync");
+    this->eventHandler_->preWrite(ctx, "dynamodb_access.get");
   }
 
-  oprot->writeMessageBegin("getAsync", ::apache::thrift::protocol::T_REPLY, seqid);
+  oprot->writeMessageBegin("get", ::apache::thrift::protocol::T_REPLY, seqid);
   result.write(oprot);
   oprot->writeMessageEnd();
   bytes = oprot->getTransport()->writeEnd();
   oprot->getTransport()->flush();
 
   if (this->eventHandler_.get() != NULL) {
-    this->eventHandler_->postWrite(ctx, "dynamodb_access.getAsync", bytes);
+    this->eventHandler_->postWrite(ctx, "dynamodb_access.get", bytes);
   }
 }
 
-void dynamodb_accessProcessor::process_deleteAsync(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
+void dynamodb_accessProcessor::process_scan(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
 {
   void* ctx = NULL;
   if (this->eventHandler_.get() != NULL) {
-    ctx = this->eventHandler_->getContext("dynamodb_access.deleteAsync", callContext);
+    ctx = this->eventHandler_->getContext("dynamodb_access.scan", callContext);
   }
-  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "dynamodb_access.deleteAsync");
+  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "dynamodb_access.scan");
 
   if (this->eventHandler_.get() != NULL) {
-    this->eventHandler_->preRead(ctx, "dynamodb_access.deleteAsync");
+    this->eventHandler_->preRead(ctx, "dynamodb_access.scan");
   }
 
-  dynamodb_access_deleteAsync_args args;
+  dynamodb_access_scan_args args;
   args.read(iprot);
   iprot->readMessageEnd();
   uint32_t bytes = iprot->getTransport()->readEnd();
 
   if (this->eventHandler_.get() != NULL) {
-    this->eventHandler_->postRead(ctx, "dynamodb_access.deleteAsync", bytes);
+    this->eventHandler_->postRead(ctx, "dynamodb_access.scan", bytes);
   }
 
-  dynamodb_access_deleteAsync_result result;
+  dynamodb_access_scan_result result;
   try {
-    result.success = iface_->deleteAsync(args.userid, args.tablename, args.key);
+    iface_->scan(result.success, args.tablename, args.attributestoget, args.filterexpression);
     result.__isset.success = true;
   } catch (const std::exception& e) {
     if (this->eventHandler_.get() != NULL) {
-      this->eventHandler_->handlerError(ctx, "dynamodb_access.deleteAsync");
+      this->eventHandler_->handlerError(ctx, "dynamodb_access.scan");
     }
 
     ::apache::thrift::TApplicationException x(e.what());
-    oprot->writeMessageBegin("deleteAsync", ::apache::thrift::protocol::T_EXCEPTION, seqid);
+    oprot->writeMessageBegin("scan", ::apache::thrift::protocol::T_EXCEPTION, seqid);
     x.write(oprot);
     oprot->writeMessageEnd();
     oprot->getTransport()->writeEnd();
@@ -1976,52 +2215,52 @@ void dynamodb_accessProcessor::process_deleteAsync(int32_t seqid, ::apache::thri
   }
 
   if (this->eventHandler_.get() != NULL) {
-    this->eventHandler_->preWrite(ctx, "dynamodb_access.deleteAsync");
+    this->eventHandler_->preWrite(ctx, "dynamodb_access.scan");
   }
 
-  oprot->writeMessageBegin("deleteAsync", ::apache::thrift::protocol::T_REPLY, seqid);
+  oprot->writeMessageBegin("scan", ::apache::thrift::protocol::T_REPLY, seqid);
   result.write(oprot);
   oprot->writeMessageEnd();
   bytes = oprot->getTransport()->writeEnd();
   oprot->getTransport()->flush();
 
   if (this->eventHandler_.get() != NULL) {
-    this->eventHandler_->postWrite(ctx, "dynamodb_access.deleteAsync", bytes);
+    this->eventHandler_->postWrite(ctx, "dynamodb_access.scan", bytes);
   }
 }
 
-void dynamodb_accessProcessor::process_updateAsync(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
+void dynamodb_accessProcessor::process_remove(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
 {
   void* ctx = NULL;
   if (this->eventHandler_.get() != NULL) {
-    ctx = this->eventHandler_->getContext("dynamodb_access.updateAsync", callContext);
+    ctx = this->eventHandler_->getContext("dynamodb_access.remove", callContext);
   }
-  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "dynamodb_access.updateAsync");
+  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "dynamodb_access.remove");
 
   if (this->eventHandler_.get() != NULL) {
-    this->eventHandler_->preRead(ctx, "dynamodb_access.updateAsync");
+    this->eventHandler_->preRead(ctx, "dynamodb_access.remove");
   }
 
-  dynamodb_access_updateAsync_args args;
+  dynamodb_access_remove_args args;
   args.read(iprot);
   iprot->readMessageEnd();
   uint32_t bytes = iprot->getTransport()->readEnd();
 
   if (this->eventHandler_.get() != NULL) {
-    this->eventHandler_->postRead(ctx, "dynamodb_access.updateAsync", bytes);
+    this->eventHandler_->postRead(ctx, "dynamodb_access.remove", bytes);
   }
 
-  dynamodb_access_updateAsync_result result;
+  dynamodb_access_remove_result result;
   try {
-    result.success = iface_->updateAsync(args.userid, args.tablename, args.key, args.values);
+    iface_->remove(result.success, args.tablename, args.key);
     result.__isset.success = true;
   } catch (const std::exception& e) {
     if (this->eventHandler_.get() != NULL) {
-      this->eventHandler_->handlerError(ctx, "dynamodb_access.updateAsync");
+      this->eventHandler_->handlerError(ctx, "dynamodb_access.remove");
     }
 
     ::apache::thrift::TApplicationException x(e.what());
-    oprot->writeMessageBegin("updateAsync", ::apache::thrift::protocol::T_EXCEPTION, seqid);
+    oprot->writeMessageBegin("remove", ::apache::thrift::protocol::T_EXCEPTION, seqid);
     x.write(oprot);
     oprot->writeMessageEnd();
     oprot->getTransport()->writeEnd();
@@ -2030,17 +2269,71 @@ void dynamodb_accessProcessor::process_updateAsync(int32_t seqid, ::apache::thri
   }
 
   if (this->eventHandler_.get() != NULL) {
-    this->eventHandler_->preWrite(ctx, "dynamodb_access.updateAsync");
+    this->eventHandler_->preWrite(ctx, "dynamodb_access.remove");
   }
 
-  oprot->writeMessageBegin("updateAsync", ::apache::thrift::protocol::T_REPLY, seqid);
+  oprot->writeMessageBegin("remove", ::apache::thrift::protocol::T_REPLY, seqid);
   result.write(oprot);
   oprot->writeMessageEnd();
   bytes = oprot->getTransport()->writeEnd();
   oprot->getTransport()->flush();
 
   if (this->eventHandler_.get() != NULL) {
-    this->eventHandler_->postWrite(ctx, "dynamodb_access.updateAsync", bytes);
+    this->eventHandler_->postWrite(ctx, "dynamodb_access.remove", bytes);
+  }
+}
+
+void dynamodb_accessProcessor::process_update(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
+{
+  void* ctx = NULL;
+  if (this->eventHandler_.get() != NULL) {
+    ctx = this->eventHandler_->getContext("dynamodb_access.update", callContext);
+  }
+  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "dynamodb_access.update");
+
+  if (this->eventHandler_.get() != NULL) {
+    this->eventHandler_->preRead(ctx, "dynamodb_access.update");
+  }
+
+  dynamodb_access_update_args args;
+  args.read(iprot);
+  iprot->readMessageEnd();
+  uint32_t bytes = iprot->getTransport()->readEnd();
+
+  if (this->eventHandler_.get() != NULL) {
+    this->eventHandler_->postRead(ctx, "dynamodb_access.update", bytes);
+  }
+
+  dynamodb_access_update_result result;
+  try {
+    iface_->update(result.success, args.tablename, args.key, args.values);
+    result.__isset.success = true;
+  } catch (const std::exception& e) {
+    if (this->eventHandler_.get() != NULL) {
+      this->eventHandler_->handlerError(ctx, "dynamodb_access.update");
+    }
+
+    ::apache::thrift::TApplicationException x(e.what());
+    oprot->writeMessageBegin("update", ::apache::thrift::protocol::T_EXCEPTION, seqid);
+    x.write(oprot);
+    oprot->writeMessageEnd();
+    oprot->getTransport()->writeEnd();
+    oprot->getTransport()->flush();
+    return;
+  }
+
+  if (this->eventHandler_.get() != NULL) {
+    this->eventHandler_->preWrite(ctx, "dynamodb_access.update");
+  }
+
+  oprot->writeMessageBegin("update", ::apache::thrift::protocol::T_REPLY, seqid);
+  result.write(oprot);
+  oprot->writeMessageEnd();
+  bytes = oprot->getTransport()->writeEnd();
+  oprot->getTransport()->flush();
+
+  if (this->eventHandler_.get() != NULL) {
+    this->eventHandler_->postWrite(ctx, "dynamodb_access.update", bytes);
   }
 }
 
@@ -2159,20 +2452,19 @@ void dynamodb_accessProcessor::process_deleteTable(int32_t seqid, ::apache::thri
   return processor;
 }
 
-int64_t dynamodb_accessConcurrentClient::putAsync(const int64_t userid, const std::string& tablename, const std::map<std::string, ValueType> & values)
+void dynamodb_accessConcurrentClient::put(OperationResult& _return, const std::string& tablename, const std::map<std::string, ValueType> & values)
 {
-  int32_t seqid = send_putAsync(userid, tablename, values);
-  return recv_putAsync(seqid);
+  int32_t seqid = send_put(tablename, values);
+  recv_put(_return, seqid);
 }
 
-int32_t dynamodb_accessConcurrentClient::send_putAsync(const int64_t userid, const std::string& tablename, const std::map<std::string, ValueType> & values)
+int32_t dynamodb_accessConcurrentClient::send_put(const std::string& tablename, const std::map<std::string, ValueType> & values)
 {
   int32_t cseqid = this->sync_.generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(&this->sync_);
-  oprot_->writeMessageBegin("putAsync", ::apache::thrift::protocol::T_CALL, cseqid);
+  oprot_->writeMessageBegin("put", ::apache::thrift::protocol::T_CALL, cseqid);
 
-  dynamodb_access_putAsync_pargs args;
-  args.userid = &userid;
+  dynamodb_access_put_pargs args;
   args.tablename = &tablename;
   args.values = &values;
   args.write(oprot_);
@@ -2185,7 +2477,7 @@ int32_t dynamodb_accessConcurrentClient::send_putAsync(const int64_t userid, con
   return cseqid;
 }
 
-int64_t dynamodb_accessConcurrentClient::recv_putAsync(const int32_t seqid)
+void dynamodb_accessConcurrentClient::recv_put(OperationResult& _return, const int32_t seqid)
 {
 
   int32_t rseqid = 0;
@@ -2214,7 +2506,7 @@ int64_t dynamodb_accessConcurrentClient::recv_putAsync(const int32_t seqid)
         iprot_->readMessageEnd();
         iprot_->getTransport()->readEnd();
       }
-      if (fname.compare("putAsync") != 0) {
+      if (fname.compare("put") != 0) {
         iprot_->skip(::apache::thrift::protocol::T_STRUCT);
         iprot_->readMessageEnd();
         iprot_->getTransport()->readEnd();
@@ -2223,19 +2515,19 @@ int64_t dynamodb_accessConcurrentClient::recv_putAsync(const int32_t seqid)
         using ::apache::thrift::protocol::TProtocolException;
         throw TProtocolException(TProtocolException::INVALID_DATA);
       }
-      int64_t _return;
-      dynamodb_access_putAsync_presult result;
+      dynamodb_access_put_presult result;
       result.success = &_return;
       result.read(iprot_);
       iprot_->readMessageEnd();
       iprot_->getTransport()->readEnd();
 
       if (result.__isset.success) {
+        // _return pointer has now been filled
         sentry.commit();
-        return _return;
+        return;
       }
       // in a bad state, don't commit
-      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "putAsync failed: unknown result");
+      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "put failed: unknown result");
     }
     // seqid != rseqid
     this->sync_.updatePending(fname, mtype, rseqid);
@@ -2245,20 +2537,19 @@ int64_t dynamodb_accessConcurrentClient::recv_putAsync(const int32_t seqid)
   } // end while(true)
 }
 
-int64_t dynamodb_accessConcurrentClient::getAsync(const int64_t userid, const std::string& tablename, const KeyValue& key, const std::vector<std::string> & attributestoget)
+void dynamodb_accessConcurrentClient::get(GetResult& _return, const std::string& tablename, const KeyValue& key, const std::vector<std::string> & attributestoget)
 {
-  int32_t seqid = send_getAsync(userid, tablename, key, attributestoget);
-  return recv_getAsync(seqid);
+  int32_t seqid = send_get(tablename, key, attributestoget);
+  recv_get(_return, seqid);
 }
 
-int32_t dynamodb_accessConcurrentClient::send_getAsync(const int64_t userid, const std::string& tablename, const KeyValue& key, const std::vector<std::string> & attributestoget)
+int32_t dynamodb_accessConcurrentClient::send_get(const std::string& tablename, const KeyValue& key, const std::vector<std::string> & attributestoget)
 {
   int32_t cseqid = this->sync_.generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(&this->sync_);
-  oprot_->writeMessageBegin("getAsync", ::apache::thrift::protocol::T_CALL, cseqid);
+  oprot_->writeMessageBegin("get", ::apache::thrift::protocol::T_CALL, cseqid);
 
-  dynamodb_access_getAsync_pargs args;
-  args.userid = &userid;
+  dynamodb_access_get_pargs args;
   args.tablename = &tablename;
   args.key = &key;
   args.attributestoget = &attributestoget;
@@ -2272,7 +2563,7 @@ int32_t dynamodb_accessConcurrentClient::send_getAsync(const int64_t userid, con
   return cseqid;
 }
 
-int64_t dynamodb_accessConcurrentClient::recv_getAsync(const int32_t seqid)
+void dynamodb_accessConcurrentClient::recv_get(GetResult& _return, const int32_t seqid)
 {
 
   int32_t rseqid = 0;
@@ -2301,7 +2592,7 @@ int64_t dynamodb_accessConcurrentClient::recv_getAsync(const int32_t seqid)
         iprot_->readMessageEnd();
         iprot_->getTransport()->readEnd();
       }
-      if (fname.compare("getAsync") != 0) {
+      if (fname.compare("get") != 0) {
         iprot_->skip(::apache::thrift::protocol::T_STRUCT);
         iprot_->readMessageEnd();
         iprot_->getTransport()->readEnd();
@@ -2310,19 +2601,19 @@ int64_t dynamodb_accessConcurrentClient::recv_getAsync(const int32_t seqid)
         using ::apache::thrift::protocol::TProtocolException;
         throw TProtocolException(TProtocolException::INVALID_DATA);
       }
-      int64_t _return;
-      dynamodb_access_getAsync_presult result;
+      dynamodb_access_get_presult result;
       result.success = &_return;
       result.read(iprot_);
       iprot_->readMessageEnd();
       iprot_->getTransport()->readEnd();
 
       if (result.__isset.success) {
+        // _return pointer has now been filled
         sentry.commit();
-        return _return;
+        return;
       }
       // in a bad state, don't commit
-      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "getAsync failed: unknown result");
+      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "get failed: unknown result");
     }
     // seqid != rseqid
     this->sync_.updatePending(fname, mtype, rseqid);
@@ -2332,20 +2623,105 @@ int64_t dynamodb_accessConcurrentClient::recv_getAsync(const int32_t seqid)
   } // end while(true)
 }
 
-int64_t dynamodb_accessConcurrentClient::deleteAsync(const int64_t userid, const std::string& tablename, const KeyValue& key)
+void dynamodb_accessConcurrentClient::scan(ScanReqResult& _return, const std::string& tablename, const std::vector<std::string> & attributestoget, const std::string& filterexpression)
 {
-  int32_t seqid = send_deleteAsync(userid, tablename, key);
-  return recv_deleteAsync(seqid);
+  int32_t seqid = send_scan(tablename, attributestoget, filterexpression);
+  recv_scan(_return, seqid);
 }
 
-int32_t dynamodb_accessConcurrentClient::send_deleteAsync(const int64_t userid, const std::string& tablename, const KeyValue& key)
+int32_t dynamodb_accessConcurrentClient::send_scan(const std::string& tablename, const std::vector<std::string> & attributestoget, const std::string& filterexpression)
 {
   int32_t cseqid = this->sync_.generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(&this->sync_);
-  oprot_->writeMessageBegin("deleteAsync", ::apache::thrift::protocol::T_CALL, cseqid);
+  oprot_->writeMessageBegin("scan", ::apache::thrift::protocol::T_CALL, cseqid);
 
-  dynamodb_access_deleteAsync_pargs args;
-  args.userid = &userid;
+  dynamodb_access_scan_pargs args;
+  args.tablename = &tablename;
+  args.attributestoget = &attributestoget;
+  args.filterexpression = &filterexpression;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+
+  sentry.commit();
+  return cseqid;
+}
+
+void dynamodb_accessConcurrentClient::recv_scan(ScanReqResult& _return, const int32_t seqid)
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  // the read mutex gets dropped and reacquired as part of waitForWork()
+  // The destructor of this sentry wakes up other clients
+  ::apache::thrift::async::TConcurrentRecvSentry sentry(&this->sync_, seqid);
+
+  while(true) {
+    if(!this->sync_.getPending(fname, mtype, rseqid)) {
+      iprot_->readMessageBegin(fname, mtype, rseqid);
+    }
+    if(seqid == rseqid) {
+      if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+        ::apache::thrift::TApplicationException x;
+        x.read(iprot_);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+        sentry.commit();
+        throw x;
+      }
+      if (mtype != ::apache::thrift::protocol::T_REPLY) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+      }
+      if (fname.compare("scan") != 0) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+
+        // in a bad state, don't commit
+        using ::apache::thrift::protocol::TProtocolException;
+        throw TProtocolException(TProtocolException::INVALID_DATA);
+      }
+      dynamodb_access_scan_presult result;
+      result.success = &_return;
+      result.read(iprot_);
+      iprot_->readMessageEnd();
+      iprot_->getTransport()->readEnd();
+
+      if (result.__isset.success) {
+        // _return pointer has now been filled
+        sentry.commit();
+        return;
+      }
+      // in a bad state, don't commit
+      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "scan failed: unknown result");
+    }
+    // seqid != rseqid
+    this->sync_.updatePending(fname, mtype, rseqid);
+
+    // this will temporarily unlock the readMutex, and let other clients get work done
+    this->sync_.waitForWork(seqid);
+  } // end while(true)
+}
+
+void dynamodb_accessConcurrentClient::remove(OperationResult& _return, const std::string& tablename, const KeyValue& key)
+{
+  int32_t seqid = send_remove(tablename, key);
+  recv_remove(_return, seqid);
+}
+
+int32_t dynamodb_accessConcurrentClient::send_remove(const std::string& tablename, const KeyValue& key)
+{
+  int32_t cseqid = this->sync_.generateSeqId();
+  ::apache::thrift::async::TConcurrentSendSentry sentry(&this->sync_);
+  oprot_->writeMessageBegin("remove", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  dynamodb_access_remove_pargs args;
   args.tablename = &tablename;
   args.key = &key;
   args.write(oprot_);
@@ -2358,7 +2734,7 @@ int32_t dynamodb_accessConcurrentClient::send_deleteAsync(const int64_t userid, 
   return cseqid;
 }
 
-int64_t dynamodb_accessConcurrentClient::recv_deleteAsync(const int32_t seqid)
+void dynamodb_accessConcurrentClient::recv_remove(OperationResult& _return, const int32_t seqid)
 {
 
   int32_t rseqid = 0;
@@ -2387,7 +2763,7 @@ int64_t dynamodb_accessConcurrentClient::recv_deleteAsync(const int32_t seqid)
         iprot_->readMessageEnd();
         iprot_->getTransport()->readEnd();
       }
-      if (fname.compare("deleteAsync") != 0) {
+      if (fname.compare("remove") != 0) {
         iprot_->skip(::apache::thrift::protocol::T_STRUCT);
         iprot_->readMessageEnd();
         iprot_->getTransport()->readEnd();
@@ -2396,19 +2772,19 @@ int64_t dynamodb_accessConcurrentClient::recv_deleteAsync(const int32_t seqid)
         using ::apache::thrift::protocol::TProtocolException;
         throw TProtocolException(TProtocolException::INVALID_DATA);
       }
-      int64_t _return;
-      dynamodb_access_deleteAsync_presult result;
+      dynamodb_access_remove_presult result;
       result.success = &_return;
       result.read(iprot_);
       iprot_->readMessageEnd();
       iprot_->getTransport()->readEnd();
 
       if (result.__isset.success) {
+        // _return pointer has now been filled
         sentry.commit();
-        return _return;
+        return;
       }
       // in a bad state, don't commit
-      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "deleteAsync failed: unknown result");
+      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "remove failed: unknown result");
     }
     // seqid != rseqid
     this->sync_.updatePending(fname, mtype, rseqid);
@@ -2418,20 +2794,19 @@ int64_t dynamodb_accessConcurrentClient::recv_deleteAsync(const int32_t seqid)
   } // end while(true)
 }
 
-int64_t dynamodb_accessConcurrentClient::updateAsync(const int64_t userid, const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & values)
+void dynamodb_accessConcurrentClient::update(OperationResult& _return, const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & values)
 {
-  int32_t seqid = send_updateAsync(userid, tablename, key, values);
-  return recv_updateAsync(seqid);
+  int32_t seqid = send_update(tablename, key, values);
+  recv_update(_return, seqid);
 }
 
-int32_t dynamodb_accessConcurrentClient::send_updateAsync(const int64_t userid, const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & values)
+int32_t dynamodb_accessConcurrentClient::send_update(const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & values)
 {
   int32_t cseqid = this->sync_.generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(&this->sync_);
-  oprot_->writeMessageBegin("updateAsync", ::apache::thrift::protocol::T_CALL, cseqid);
+  oprot_->writeMessageBegin("update", ::apache::thrift::protocol::T_CALL, cseqid);
 
-  dynamodb_access_updateAsync_pargs args;
-  args.userid = &userid;
+  dynamodb_access_update_pargs args;
   args.tablename = &tablename;
   args.key = &key;
   args.values = &values;
@@ -2445,7 +2820,7 @@ int32_t dynamodb_accessConcurrentClient::send_updateAsync(const int64_t userid, 
   return cseqid;
 }
 
-int64_t dynamodb_accessConcurrentClient::recv_updateAsync(const int32_t seqid)
+void dynamodb_accessConcurrentClient::recv_update(OperationResult& _return, const int32_t seqid)
 {
 
   int32_t rseqid = 0;
@@ -2474,7 +2849,7 @@ int64_t dynamodb_accessConcurrentClient::recv_updateAsync(const int32_t seqid)
         iprot_->readMessageEnd();
         iprot_->getTransport()->readEnd();
       }
-      if (fname.compare("updateAsync") != 0) {
+      if (fname.compare("update") != 0) {
         iprot_->skip(::apache::thrift::protocol::T_STRUCT);
         iprot_->readMessageEnd();
         iprot_->getTransport()->readEnd();
@@ -2483,19 +2858,19 @@ int64_t dynamodb_accessConcurrentClient::recv_updateAsync(const int32_t seqid)
         using ::apache::thrift::protocol::TProtocolException;
         throw TProtocolException(TProtocolException::INVALID_DATA);
       }
-      int64_t _return;
-      dynamodb_access_updateAsync_presult result;
+      dynamodb_access_update_presult result;
       result.success = &_return;
       result.read(iprot_);
       iprot_->readMessageEnd();
       iprot_->getTransport()->readEnd();
 
       if (result.__isset.success) {
+        // _return pointer has now been filled
         sentry.commit();
-        return _return;
+        return;
       }
       // in a bad state, don't commit
-      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "updateAsync failed: unknown result");
+      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "update failed: unknown result");
     }
     // seqid != rseqid
     this->sync_.updatePending(fname, mtype, rseqid);

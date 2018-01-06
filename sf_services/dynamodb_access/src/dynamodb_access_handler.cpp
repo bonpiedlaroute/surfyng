@@ -27,9 +27,14 @@
 #include <aws/dynamodb/model/UpdateItemRequest.h>
 #include "surfyng/sf_services/sf_utils/inc/Config.h"
 #include "surfyng/sf_services/sf_utils/inc/Str.h"
+#include "surfyng/sf_services/sf_utils/inc/Logger.h"
 #include <thrift/protocol/TBinaryProtocol.h>
 #include <thrift/transport/TSocket.h>
 #include <thrift/transport/TTransportUtils.h>
+#include <aws/dynamodb/model/ScanRequest.h>
+#include <thread>
+
+
 #include <map>
 #include <fstream>
 #include <string>
@@ -46,65 +51,10 @@ using namespace apache::thrift;
 using namespace apache::thrift::protocol;
 using namespace apache::thrift::transport;
 
+using Log = surfyng::utils::Logger;
+
 namespace ddba
 {
-
-void dynamodb_accessHandler::putItemOutcomeReceived(const DynamoDBClient* sender, const PutItemRequest& request, const PutItemOutcome& outcome, const std::shared_ptr<const AsyncCallerContext>& context)
-{
-
-   OperationResultAsync result;
-   fillResult(result, outcome);
-
-   std::shared_ptr<const DDBAContext> ddba_context = std::dynamic_pointer_cast<const DDBAContext>(context);
-
-   if(ddba_context !=  nullptr)
-      m_users[ddba_context->getUserid()]->notifyPutAsync(ddba_context->getJobid(), result);
-}
-
-void dynamodb_accessHandler::getItemOutcomeReceived(const Aws::DynamoDB::DynamoDBClient* sender, const Aws::DynamoDB::Model::GetItemRequest& request,
-      const Aws::DynamoDB::Model::GetItemOutcome& outcome, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context)
-{
-   OperationResultAsync result;
-   fillResult(result, outcome);
-
-   Aws::Map<Aws::String, AttributeValue> itemCollection = outcome.GetResult().GetItem();
-   std::map<std::string, std::string> values;
-
-   for(Aws::Map<Aws::String, AttributeValue>::const_iterator iter = itemCollection.begin(); iter != itemCollection.end(); ++iter)
-   {
-      values[iter->first.c_str()] = iter->second.GetS();
-   }
-
-   std::shared_ptr<const DDBAContext> ddba_context = std::dynamic_pointer_cast<const DDBAContext>(context);
-
-   if(ddba_context !=  nullptr)
-      m_users[ddba_context->getUserid()]->notifyGetAsync(ddba_context->getJobid(), values, result);
-}
-
-void dynamodb_accessHandler::updateItemOutcomeReceived(const Aws::DynamoDB::DynamoDBClient* sender, const Aws::DynamoDB::Model::UpdateItemRequest& request,
-       const Aws::DynamoDB::Model::UpdateItemOutcome& outcome, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context)
-{
-   OperationResultAsync result;
-   fillResult(result, outcome);
-
-   std::shared_ptr<const DDBAContext> ddba_context = std::dynamic_pointer_cast<const DDBAContext>(context);
-
-   if(ddba_context !=  nullptr)
-      m_users[ddba_context->getUserid()]->notifyUpdateAsync(ddba_context->getJobid(), result);
-}
-
-void dynamodb_accessHandler::deleteItemOutcomeReceived(const Aws::DynamoDB::DynamoDBClient* sender, const Aws::DynamoDB::Model::DeleteItemRequest& request,
-        const Aws::DynamoDB::Model::DeleteItemOutcome& outcome, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context)
-{
-
-   OperationResultAsync result;
-   fillResult(result, outcome);
-
-   std::shared_ptr<const DDBAContext> ddba_context = std::dynamic_pointer_cast<const DDBAContext>(context);
-
-   if(ddba_context !=  nullptr)
-      m_users[ddba_context->getUserid()]->notifyDeleteAsync(ddba_context->getJobid(), result);
-}
 
 void dynamodb_accessHandler::Init()
 {
@@ -112,14 +62,28 @@ void dynamodb_accessHandler::Init()
    Aws::InitAPI(options);
 }
 
+void dynamodb_accessHandler::manageBandwitdhLimit(const std::string& service, const std::chrono::high_resolution_clock::time_point& lasttime, const int64_t& minimum_interval)
+{
+   auto duration_since_last_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - lasttime).count();
+
+   if( duration_since_last_time < minimum_interval )
+   {
+      std::stringstream message;
+      message << " "<< service <<": sleeping for " << ((minimum_interval - duration_since_last_time) + m_error_margin) << "ms";
+
+      Log::getInstance()->info(message.str());
+      std::this_thread::sleep_for(std::chrono::milliseconds((minimum_interval - duration_since_last_time) + m_error_margin));
+   }
+}
 dynamodb_accessHandler::dynamodb_accessHandler()
 {
-   m_jobid = 0;
 
    surfyng::utils::Config ddb_conf("dynamodb_access.ini");
    ddb_conf.loadconfig();
    std::string allocation_tag = ddb_conf.getStringValue("allocation_tag");
    std::shared_ptr<Aws::Utils::RateLimits::RateLimiterInterface> limiter = Aws::MakeShared<Aws::Utils::RateLimits::DefaultRateLimiter<>>(allocation_tag.c_str(), 200000);
+
+   Log::getInstance()->info(" Starting dynamodb Access ");
 
    ClientConfiguration config;
    config.endpointOverride = ddb_conf.getStringValue("endpoint_override");
@@ -133,50 +97,15 @@ dynamodb_accessHandler::dynamodb_accessHandler()
    config.region = ddb_conf.getStringValue("region");
 
    m_client = Aws::MakeShared<DynamoDBClient>(allocation_tag.c_str(), config);
+
+   Log::getInstance()->info(" dynamodb access Started ");
 }
 
-void dynamodb_accessHandler::loadUserSettings()
+
+
+void dynamodb_accessHandler::put(OperationResult& _return, const std::string& tablename, const std::map<std::string, ValueType> & values)
 {
-   std::fstream file;
-   file.open("users.dat", std::fstream::in);
-   std::string line;
 
-   while( std::getline(file,line) )
-   {
-      if( line[0] != '#' )
-      {
-         std::vector<std::string> usersettings;
-         surfyng::utils::split(line, ",", usersettings);
-
-         if( usersettings.size() == 3 )
-         {
-            m_usersettings[atoi(usersettings[0].c_str())] = std::make_pair(usersettings[1], atoi(usersettings[2].c_str()));
-         }
-      }
-   }
-}
-
-bool dynamodb_accessHandler::userIdExist(const int64_t& userid) const
-{
-   return m_usersettings.find(userid) != m_usersettings.end();
-
-}
-
-int64_t dynamodb_accessHandler::putAsync(const int64_t userid, const std::string& tablename, const std::map<std::string, ValueType> & values)
-{
-   if( !userIdExist(userid) )
-   {
-      return 0;
-   }
-
-   if(! isUserConnectionExist(userid) )
-   {
-      createUserConnection(userid);
-   }
-
-   m_jobid++;
-   auto putItemHandler = std::bind(&dynamodb_accessHandler::putItemOutcomeReceived, this, std::placeholders::_1, std::placeholders::_2,
-   std::placeholders::_3, std::placeholders::_4);
    PutItemRequest putItemRequest;
 
    putItemRequest.SetTableName(tablename.c_str());
@@ -203,26 +132,18 @@ int64_t dynamodb_accessHandler::putAsync(const int64_t userid, const std::string
 
    }
 
-   std::shared_ptr<const AsyncCallerContext> context = std::make_shared<const DDBAContext>(userid, m_jobid);
+   manageBandwitdhLimit("put", m_lastwritetime, m_minimum_write_interval);
 
-   m_client->PutItemAsync(putItemRequest, putItemHandler, context);
+   m_lastwritetime = std::chrono::high_resolution_clock::now();
 
-   return m_jobid;
-}
+   PutItemOutcome putOutcome = m_client->PutItem(putItemRequest);
 
-bool dynamodb_accessHandler::isUserConnectionExist(const int64_t userid) const
-{
-   return m_users.find(userid) != m_users.end();
-}
 
-void dynamodb_accessHandler::createUserConnection(const int64_t userid)
-{
-   boost::shared_ptr<TTransport> socket(new TSocket(m_usersettings[userid].first,m_usersettings[userid].second ));
-   boost::shared_ptr<TTransport> transport(new TBufferedTransport(socket));
-   boost::shared_ptr<TProtocol> protocol(new TBinaryProtocol(transport));
 
-   m_users[userid] = std::make_shared<dynamodb_clientClient>(protocol);
-   transport->open();
+   Log::getInstance()->info(" put sent");
+
+   fillResult(_return, putOutcome);
+
 }
 
 void dynamodb_accessHandler::setKeyAttributeValue(Aws::DynamoDB::Model::AttributeValue& Key, const KeyValue& key) const
@@ -241,22 +162,9 @@ void dynamodb_accessHandler::setKeyAttributeValue(Aws::DynamoDB::Model::Attribut
       }
    }
 }
-int64_t dynamodb_accessHandler::getAsync(const int64_t userid, const std::string& tablename, const KeyValue& key, const std::vector<std::string> & attributestoget)
+
+void dynamodb_accessHandler::get(GetResult& _return, const std::string& tablename, const KeyValue& key, const std::vector<std::string> & attributestoget)
 {
-   if( !userIdExist(userid) )
-   {
-      return 0;
-   }
-
-   if(! isUserConnectionExist(userid) )
-   {
-      createUserConnection(userid);
-   }
-   m_jobid++;
-
-   auto getItemHandler = std::bind(&dynamodb_accessHandler::getItemOutcomeReceived, this, std::placeholders::_1, std::placeholders::_2,
-         std::placeholders::_3, std::placeholders::_4);
-
    GetItemRequest getItemRequest;
 
    getItemRequest.SetTableName(tablename.c_str());
@@ -275,29 +183,31 @@ int64_t dynamodb_accessHandler::getAsync(const int64_t userid, const std::string
          attributesToGet.push_back(value.c_str());
    }
 
-   std::shared_ptr<const AsyncCallerContext> context = std::make_shared<const DDBAContext>(userid, m_jobid);
+   manageBandwitdhLimit("get", m_lastreadtime, m_minimum_read_interval);
 
-   m_client->GetItemAsync(getItemRequest, getItemHandler, context);
+   m_lastreadtime = std::chrono::high_resolution_clock::now();
 
-   return m_jobid;
+   GetItemOutcome getOutcome = m_client->GetItem(getItemRequest);
+
+   Log::getInstance()->info(" get sent");
+
+   fillResult(_return.result, getOutcome);
+
+
+   if( getOutcome.IsSuccess() )
+   {
+
+      Aws::Map<Aws::String, AttributeValue> itemCollection = getOutcome.GetResult().GetItem();
+
+      for(Aws::Map<Aws::String, AttributeValue>::const_iterator iter = itemCollection.begin(); iter != itemCollection.end(); ++iter)
+      {
+         _return.values[iter->first.c_str()] = iter->second.GetS();
+      }
+   }
 }
 
-int64_t dynamodb_accessHandler::deleteAsync(const int64_t userid, const std::string& tablename, const KeyValue& key)
+void dynamodb_accessHandler::remove(OperationResult& _return, const std::string& tablename, const KeyValue& key)
 {
-   if( !userIdExist(userid) )
-   {
-      return 0;
-   }
-
-   if(! isUserConnectionExist(userid) )
-   {
-      createUserConnection(userid);
-   }
-   m_jobid++;
-
-   auto deleteItemHandler = std::bind(&dynamodb_accessHandler::deleteItemOutcomeReceived, this, std::placeholders::_1, std::placeholders::_2,
-   std::placeholders::_3, std::placeholders::_4);
-
    DeleteItemRequest deleteItemRequest;
 
    AttributeValue Key;
@@ -309,28 +219,19 @@ int64_t dynamodb_accessHandler::deleteAsync(const int64_t userid, const std::str
    deleteItemRequest.SetTableName(tablename.c_str());
    deleteItemRequest.SetReturnValues(ReturnValue::ALL_OLD);
 
-   m_client->DeleteItemAsync(deleteItemRequest, deleteItemHandler);
+   manageBandwitdhLimit("remove", m_lastwritetime, m_minimum_write_interval);
 
-   return m_jobid;
+   m_lastwritetime = std::chrono::high_resolution_clock::now();
+
+   DeleteItemOutcome deleteItemOutcome = m_client->DeleteItem(deleteItemRequest);
+
+   Log::getInstance()->info(" delete sent");
+
+   fillResult(_return, deleteItemOutcome);
 }
 
-int64_t dynamodb_accessHandler::updateAsync(const int64_t userid, const std::string& tablename, const KeyValue& key,
-                                            const std::map<std::string, ValueType> & values)
+void dynamodb_accessHandler::update(OperationResult& _return, const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & values)
 {
-   if( !userIdExist(userid) )
-   {
-      return 0;
-   }
-
-   if(! isUserConnectionExist(userid) )
-   {
-      createUserConnection(userid);
-   }
-   m_jobid++;
-
-   auto updateItemHandler = std::bind(&dynamodb_accessHandler::updateItemOutcomeReceived, this, std::placeholders::_1, std::placeholders::_2,
-   std::placeholders::_3, std::placeholders::_4);
-
    UpdateItemRequest updateItemRequest;
    updateItemRequest.SetTableName(tablename.c_str());
 
@@ -362,11 +263,15 @@ int64_t dynamodb_accessHandler::updateAsync(const int64_t userid, const std::str
       updateItemRequest.AddAttributeUpdates(iter->first.c_str(), attValueUpdate);
    }
 
-   std::shared_ptr<const AsyncCallerContext> context = std::make_shared<const DDBAContext>(userid, m_jobid);
+   manageBandwitdhLimit("update", m_lastwritetime, m_minimum_write_interval);
 
-   m_client->UpdateItemAsync(updateItemRequest, updateItemHandler, context);
+   m_lastwritetime = std::chrono::high_resolution_clock::now();
 
-   return m_jobid;
+   UpdateItemOutcome updateItemOutcome = m_client->UpdateItem(updateItemRequest);
+
+   Log::getInstance()->info(" update sent");
+
+   fillResult(_return, updateItemOutcome);
 }
 
 void dynamodb_accessHandler::createTable(OperationResult& _return, const std::string& tablename, const KeyValue& key, const std::map<std::string, std::string> & properties)
@@ -404,8 +309,9 @@ void dynamodb_accessHandler::createTable(OperationResult& _return, const std::st
 
    CreateTableOutcome createTableOutcome = m_client->CreateTable(createTableRequest);
 
-   _return.success = createTableOutcome.IsSuccess();
-   _return.error = createTableOutcome.GetError().GetMessage();
+   Log::getInstance()->info(" createtable sent");
+
+   fillResult(_return, createTableOutcome);
 
 }
 
@@ -416,9 +322,54 @@ void dynamodb_accessHandler::deleteTable(OperationResult& _return, const std::st
 
    DeleteTableOutcome deleteTableOutcome = m_client->DeleteTable(deleteTableRequest);
 
-   _return.success = deleteTableOutcome.IsSuccess();
-   _return.error = deleteTableOutcome.GetError().GetMessage();
+   Log::getInstance()->info(" deletetable sent");
+
+   fillResult(_return, deleteTableOutcome);
 }
 
+void dynamodb_accessHandler::scan(ScanReqResult& _return, const std::string& tablename, const std::vector<std::string> & attributestoget, const std::string& filterexpression)
+{
+   ScanRequest scanRequest;
+
+   scanRequest.WithTableName(tablename.c_str());
+
+   Aws::Vector<Aws::String> attToget;
+
+   for( auto att : attributestoget )
+   {
+      attToget.push_back(att.c_str());
+   }
+
+   scanRequest.SetAttributesToGet(attToget);
+
+   scanRequest.SetFilterExpression(filterexpression.c_str());
+
+   manageBandwitdhLimit("scan", m_lastreadtime, m_minimum_read_interval);
+
+   m_lastreadtime = std::chrono::high_resolution_clock::now();
+
+   ScanOutcome scanOutcome = m_client->Scan(scanRequest);
+
+   fillResult(_return.result, scanOutcome);
+
+   if(scanOutcome.IsSuccess())
+   {
+         Aws::Vector<Aws::Map<Aws::String, AttributeValue>> itemsCollection = scanOutcome.GetResult().GetItems();
+
+         for(auto item: itemsCollection )
+         {
+            std::map<std::string, std::string> attributes;
+            for(Aws::Map<Aws::String, AttributeValue>::const_iterator iter = item.begin(); iter != item.end(); ++iter)
+            {
+               attributes[iter->first.c_str()] = iter->second.GetS();
+            }
+
+            _return.values.push_back(attributes);
+         }
+
+   }
+
+   Log::getInstance()->info(" scan sent");
+}
 
 }

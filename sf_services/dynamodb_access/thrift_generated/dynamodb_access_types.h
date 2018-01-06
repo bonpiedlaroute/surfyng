@@ -31,6 +31,10 @@ extern const std::map<int, const char*> _Type_VALUES_TO_NAMES;
 
 class OperationResult;
 
+class GetResult;
+
+class ScanReqResult;
+
 class ValueType;
 
 class KeyValue;
@@ -82,6 +86,110 @@ class OperationResult : public virtual ::apache::thrift::TBase {
 void swap(OperationResult &a, OperationResult &b);
 
 inline std::ostream& operator<<(std::ostream& out, const OperationResult& obj)
+{
+  obj.printTo(out);
+  return out;
+}
+
+typedef struct _GetResult__isset {
+  _GetResult__isset() : result(false), values(false) {}
+  bool result :1;
+  bool values :1;
+} _GetResult__isset;
+
+class GetResult : public virtual ::apache::thrift::TBase {
+ public:
+
+  GetResult(const GetResult&);
+  GetResult& operator=(const GetResult&);
+  GetResult() {
+  }
+
+  virtual ~GetResult() throw();
+  OperationResult result;
+  std::map<std::string, std::string>  values;
+
+  _GetResult__isset __isset;
+
+  void __set_result(const OperationResult& val);
+
+  void __set_values(const std::map<std::string, std::string> & val);
+
+  bool operator == (const GetResult & rhs) const
+  {
+    if (!(result == rhs.result))
+      return false;
+    if (!(values == rhs.values))
+      return false;
+    return true;
+  }
+  bool operator != (const GetResult &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const GetResult & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(GetResult &a, GetResult &b);
+
+inline std::ostream& operator<<(std::ostream& out, const GetResult& obj)
+{
+  obj.printTo(out);
+  return out;
+}
+
+typedef struct _ScanReqResult__isset {
+  _ScanReqResult__isset() : result(false), values(false) {}
+  bool result :1;
+  bool values :1;
+} _ScanReqResult__isset;
+
+class ScanReqResult : public virtual ::apache::thrift::TBase {
+ public:
+
+  ScanReqResult(const ScanReqResult&);
+  ScanReqResult& operator=(const ScanReqResult&);
+  ScanReqResult() {
+  }
+
+  virtual ~ScanReqResult() throw();
+  OperationResult result;
+  std::vector<std::map<std::string, std::string> >  values;
+
+  _ScanReqResult__isset __isset;
+
+  void __set_result(const OperationResult& val);
+
+  void __set_values(const std::vector<std::map<std::string, std::string> > & val);
+
+  bool operator == (const ScanReqResult & rhs) const
+  {
+    if (!(result == rhs.result))
+      return false;
+    if (!(values == rhs.values))
+      return false;
+    return true;
+  }
+  bool operator != (const ScanReqResult &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const ScanReqResult & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+  virtual void printTo(std::ostream& out) const;
+};
+
+void swap(ScanReqResult &a, ScanReqResult &b);
+
+inline std::ostream& operator<<(std::ostream& out, const ScanReqResult& obj)
 {
   obj.printTo(out);
   return out;

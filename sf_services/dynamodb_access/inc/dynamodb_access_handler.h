@@ -14,33 +14,13 @@
 #include <map>
 #include <unordered_map>
 #include <utility>
-#include "../thrift_generated/dynamodb_client.h"
 #include <aws/dynamodb/DynamoDBErrors.h>
+#include <chrono>
+
 
 namespace ddba
 {
 
-class DDBAContext : public Aws::Client::AsyncCallerContext
-{
-public:
-   DDBAContext(int64_t userid, int64_t jobid) :Aws::Client::AsyncCallerContext()
-         , m_userid(userid), m_jobid(jobid)
-   {
-
-   }
-   int64_t getUserid() const
-   {
-      return m_userid;
-   }
-   int64_t getJobid() const
-   {
-      return m_jobid;
-   }
-private:
-   int64_t m_userid;
-   int64_t m_jobid;
-
-};
 
 class dynamodb_accessHandler : virtual public dynamodb_accessIf
 {
@@ -48,47 +28,38 @@ public:
    static void Init();
    dynamodb_accessHandler();
 
-   int64_t putAsync(const int64_t userid, const std::string& tablename, const std::map<std::string, ValueType> & values) override;
+   void put(OperationResult& _return, const std::string& tablename, const std::map<std::string, ValueType> & values);
 
-   int64_t getAsync(const int64_t userid, const std::string& tablename, const KeyValue& key,
-                     const std::vector<std::string> & attributestoget) override;
+   void get(GetResult& _return, const std::string& tablename, const KeyValue& key, const std::vector<std::string> & attributestoget);
 
-   int64_t deleteAsync(const int64_t userid, const std::string& tablename, const KeyValue& key) override;
+   void scan(ScanReqResult& _return, const std::string& tablename, const std::vector<std::string> & attributestoget, const std::string& filterexpression);
 
-   int64_t updateAsync(const int64_t userid, const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & values) override;
+   void remove(OperationResult& _return, const std::string& tablename, const KeyValue& key);
 
-   void createTable(OperationResult& _return, const std::string& tablename, const KeyValue& key, const std::map<std::string, std::string> & properties) override;
+   void update(OperationResult& _return, const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & values);
 
-   void deleteTable(OperationResult& _return, const std::string& tablename) override;
+   void createTable(OperationResult& _return, const std::string& tablename, const KeyValue& key, const std::map<std::string, std::string> & properties);
 
-   void putItemOutcomeReceived(const Aws::DynamoDB::DynamoDBClient* sender, const Aws::DynamoDB::Model::PutItemRequest& request,
-                               const Aws::DynamoDB::Model::PutItemOutcome& outcome, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context);
-   void getItemOutcomeReceived(const Aws::DynamoDB::DynamoDBClient* sender, const Aws::DynamoDB::Model::GetItemRequest& request,
-                               const Aws::DynamoDB::Model::GetItemOutcome& outcome, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context);
-   void updateItemOutcomeReceived(const Aws::DynamoDB::DynamoDBClient* sender, const Aws::DynamoDB::Model::UpdateItemRequest& request,
-                                  const Aws::DynamoDB::Model::UpdateItemOutcome& outcome, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context);
-   void deleteItemOutcomeReceived(const Aws::DynamoDB::DynamoDBClient* sender, const Aws::DynamoDB::Model::DeleteItemRequest& request,
-           const Aws::DynamoDB::Model::DeleteItemOutcome& outcome, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context);
-protected:
-   void loadUserSettings();
-   bool userIdExist(const int64_t& userid) const;
-   void createUserConnection(const int64_t userid);
-   bool isUserConnectionExist(const int64_t userid) const;
+   void deleteTable(OperationResult& _return, const std::string& tablename);
+
 private:
    void setKeyAttributeValue(Aws::DynamoDB::Model::AttributeValue& Key, const KeyValue& key) const;
    template<class T>
-   void fillResult(OperationResultAsync& result, const T& outcome) const
+   void fillResult(OperationResult& result, const T& outcome) const
    {
       const Aws::Client::AWSError<Aws::DynamoDB::DynamoDBErrors> error = outcome.GetError();
 
       result.success = outcome.IsSuccess();
       result.error = error.GetMessage();
    }
+   void manageBandwitdhLimit(const std::string& service, const std::chrono::high_resolution_clock::time_point& lasttime, const int64_t& minimum_interval);
 private:
    std::shared_ptr<Aws::DynamoDB::DynamoDBClient> m_client;
-   std::unordered_map<int64_t, std::pair<std::string, int>> m_usersettings;
-   int64_t                          m_jobid;
-   std::unordered_map<int64_t, std::shared_ptr<dynamodb_clientClient>> m_users;
+   std::chrono::high_resolution_clock::time_point m_lastreadtime;
+   std::chrono::high_resolution_clock::time_point m_lastwritetime;
+   const int64_t m_minimum_write_interval = 200;
+   const int64_t m_minimum_read_interval = 200;
+   const int64_t m_error_margin = 3;
 };
 
 }

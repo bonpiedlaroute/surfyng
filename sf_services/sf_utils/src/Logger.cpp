@@ -13,6 +13,9 @@
 
 namespace surfyng
 {
+namespace utils
+{
+
 
 Logger* Logger::m_instance = nullptr;
 std::mutex  Logger::m_logger_mutex;
@@ -25,7 +28,7 @@ void Logger::writelog()
 
    logfilenamestreamer << filename << ".log";
 
-   m_logfile.open(logfilenamestreamer.str().c_str(),std::fstream::in | std::fstream::out | std::fstream::binary );
+   m_logfile.open(logfilenamestreamer.str().c_str(), std::ios_base::out );
    while(true)
    {
        std::unique_lock<std::mutex> lck(m_logger_mutex_queue);
@@ -45,7 +48,7 @@ void Logger::writelog()
          std::stringstream logstreamer;
          logstreamer << date_time_format << " " << log << "\n";
 
-         m_logfile << logstreamer.str();
+         m_logfile << logstreamer.str() << std::flush;
        }
 
 
@@ -106,7 +109,8 @@ void Logger::setDateTimeFormat(char * datetimeformat) const
    time_t now = time(NULL);
    struct tm* localinfo = localtime(&now);
 
-   strftime(datetimeformat,MAX_DATE_TIME_FORMAT,"%Y-%m-%d %H-%M-%S",localinfo);
+   strftime(datetimeformat,MAX_DATE_TIME_FORMAT,"%Y-%m-%d-%H-%M-%S",localinfo);
 }
 
+}
 }

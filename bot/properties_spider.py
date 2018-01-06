@@ -1,18 +1,27 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*- 
-# (c) Copyright 2017 Noel Tchidjo
+# (c) Copyright 2017 
+# author(s): Noel Tchidjo
 # All rights reserved
 
 import scrapy
 
+from hash_id import *
 from properties_type import *
 from url_builder import *
 from collections import namedtuple
+from thrift_generated.dynamodb_access import *
+
+from thrift import Thrift
+from thrift.transport import TSocket
+from thrift.transport import TTransport
+from thrift.protocol import TBinaryProtocol
+
 
 
 PropertyRecord = namedtuple('PropertyRecord', 'url, id_prop, description')
 
-
+tablename ="FR_PROPERTIES"
 
 class PropertiesSpider(scrapy.Spider):
    
@@ -23,6 +32,20 @@ class PropertiesSpider(scrapy.Spider):
       self.apart_announces = set()
       self.mapping_url_ptype = dict()
       self.prop_record = []
+      # Make socket
+      transport = TSocket.TSocket('localhost', 5050)
+
+      # Buffering is critical. Raw sockets are very slow
+      transport = TTransport.TBufferedTransport(transport)
+
+      # Wrap in a protocol
+      protocol = TBinaryProtocol.TBinaryProtocol(transport)
+
+      # Create a client to use the protocol encoder
+      self.client = dynamodb_access.Client(protocol)
+
+      # Connect!
+      transport.open()
 
    def start_requests(self):
       urls = []
@@ -61,15 +84,51 @@ class PropertiesSpider(scrapy.Spider):
    def parse_prop_description(self, response, announce_url, id_property):
       pr = PropertyRecord(announce_url, id_property, response.text)
       self.prop_record.append(pr)
-            
+      values = dict()
+      idvalue = ttypes.ValueType()
+      idvalue.field = str(hash_id(announce_url))
+      idvalue.fieldtype = ttypes.Type.NUMBER
+      values["ID"] = idvalue
+
+      property_type_value = ttypes.ValueType()
+      if id_property == APART_ID:
+         property_type_value.field = "apartment"
+      else:
+         property_type_value.field = "house"
+
+      property_type_value.fieldtype = ttypes.Type.STRING
+
+      values["PROPERTY_TYPE"] = property_type_value
+
+      property_desc_value = ttypes.ValueType()
+      property_desc_value.field = response.text
+      property_desc_value.fieldtype = ttypes.Type.STRING
+
+      values["PROPERTY_DESCRIPTION"] = property_desc_value
+
+      city_value = ttypes.ValueType()
+      city_value.field = "Houilles"
+      city_value.fieldtype = ttypes.Type.STRING
+      values["CITY"] = city_value
+   
+      region_value = ttypes.ValueType()
+      region_value.field = "ile de france"
+      region_value.fieldtype = ttypes.Type.STRING
+      values["REGION"] = region_value
+
+      announce_link_value = ttypes.ValueType()
+      announce_link_value.field = announce_url[2:]
+      announce_link_value.fieldtype = ttypes.Type.STRING
+      values["ANNOUNCE_LINK"] = announce_link_value
+
+      announce_url_value = ttypes.ValueType()
+      announce_url_value.field = announce_url[6:13]
+      announce_url_value.fieldtype = ttypes.Type.STRING
+      values["ANNOUNCE_SOURCE"] = announce_url_value 
+
+      result  = self.client.put(tablename, values)
+      
 
    def closed(self, reason):
-      print "Apart announces found: %d\n" % len(self.apart_announces)
-      print "House announces found: %d\n" % len(self.house_announces)
-      print "Appart description found: %d\n" % len(self.prop_record)
-      #print "\n self.announces excluded:\n"
-      for url in self.house_announces:
-         print "%s:" %url
-      for record in self.prop_record:
-         print "url: %s | id_prop : %s | description: %s " %(record.url, record.id_prop, record.description)
+      print "Announces found: %d\n" % len(self.prop_record)
 

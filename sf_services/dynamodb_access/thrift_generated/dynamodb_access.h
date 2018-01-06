@@ -21,10 +21,11 @@
 class dynamodb_accessIf {
  public:
   virtual ~dynamodb_accessIf() {}
-  virtual int64_t putAsync(const int64_t userid, const std::string& tablename, const std::map<std::string, ValueType> & values) = 0;
-  virtual int64_t getAsync(const int64_t userid, const std::string& tablename, const KeyValue& key, const std::vector<std::string> & attributestoget) = 0;
-  virtual int64_t deleteAsync(const int64_t userid, const std::string& tablename, const KeyValue& key) = 0;
-  virtual int64_t updateAsync(const int64_t userid, const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & values) = 0;
+  virtual void put(OperationResult& _return, const std::string& tablename, const std::map<std::string, ValueType> & values) = 0;
+  virtual void get(GetResult& _return, const std::string& tablename, const KeyValue& key, const std::vector<std::string> & attributestoget) = 0;
+  virtual void scan(ScanReqResult& _return, const std::string& tablename, const std::vector<std::string> & attributestoget, const std::string& filterexpression) = 0;
+  virtual void remove(OperationResult& _return, const std::string& tablename, const KeyValue& key) = 0;
+  virtual void update(OperationResult& _return, const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & values) = 0;
   virtual void createTable(OperationResult& _return, const std::string& tablename, const KeyValue& key, const std::map<std::string, std::string> & properties) = 0;
   virtual void deleteTable(OperationResult& _return, const std::string& tablename) = 0;
 };
@@ -56,21 +57,20 @@ class dynamodb_accessIfSingletonFactory : virtual public dynamodb_accessIfFactor
 class dynamodb_accessNull : virtual public dynamodb_accessIf {
  public:
   virtual ~dynamodb_accessNull() {}
-  int64_t putAsync(const int64_t /* userid */, const std::string& /* tablename */, const std::map<std::string, ValueType> & /* values */) {
-    int64_t _return = 0;
-    return _return;
+  void put(OperationResult& /* _return */, const std::string& /* tablename */, const std::map<std::string, ValueType> & /* values */) {
+    return;
   }
-  int64_t getAsync(const int64_t /* userid */, const std::string& /* tablename */, const KeyValue& /* key */, const std::vector<std::string> & /* attributestoget */) {
-    int64_t _return = 0;
-    return _return;
+  void get(GetResult& /* _return */, const std::string& /* tablename */, const KeyValue& /* key */, const std::vector<std::string> & /* attributestoget */) {
+    return;
   }
-  int64_t deleteAsync(const int64_t /* userid */, const std::string& /* tablename */, const KeyValue& /* key */) {
-    int64_t _return = 0;
-    return _return;
+  void scan(ScanReqResult& /* _return */, const std::string& /* tablename */, const std::vector<std::string> & /* attributestoget */, const std::string& /* filterexpression */) {
+    return;
   }
-  int64_t updateAsync(const int64_t /* userid */, const std::string& /* tablename */, const KeyValue& /* key */, const std::map<std::string, ValueType> & /* values */) {
-    int64_t _return = 0;
-    return _return;
+  void remove(OperationResult& /* _return */, const std::string& /* tablename */, const KeyValue& /* key */) {
+    return;
+  }
+  void update(OperationResult& /* _return */, const std::string& /* tablename */, const KeyValue& /* key */, const std::map<std::string, ValueType> & /* values */) {
+    return;
   }
   void createTable(OperationResult& /* _return */, const std::string& /* tablename */, const KeyValue& /* key */, const std::map<std::string, std::string> & /* properties */) {
     return;
@@ -80,49 +80,43 @@ class dynamodb_accessNull : virtual public dynamodb_accessIf {
   }
 };
 
-typedef struct _dynamodb_access_putAsync_args__isset {
-  _dynamodb_access_putAsync_args__isset() : userid(false), tablename(false), values(false) {}
-  bool userid :1;
+typedef struct _dynamodb_access_put_args__isset {
+  _dynamodb_access_put_args__isset() : tablename(false), values(false) {}
   bool tablename :1;
   bool values :1;
-} _dynamodb_access_putAsync_args__isset;
+} _dynamodb_access_put_args__isset;
 
-class dynamodb_access_putAsync_args {
+class dynamodb_access_put_args {
  public:
 
-  dynamodb_access_putAsync_args(const dynamodb_access_putAsync_args&);
-  dynamodb_access_putAsync_args& operator=(const dynamodb_access_putAsync_args&);
-  dynamodb_access_putAsync_args() : userid(0), tablename() {
+  dynamodb_access_put_args(const dynamodb_access_put_args&);
+  dynamodb_access_put_args& operator=(const dynamodb_access_put_args&);
+  dynamodb_access_put_args() : tablename() {
   }
 
-  virtual ~dynamodb_access_putAsync_args() throw();
-  int64_t userid;
+  virtual ~dynamodb_access_put_args() throw();
   std::string tablename;
   std::map<std::string, ValueType>  values;
 
-  _dynamodb_access_putAsync_args__isset __isset;
-
-  void __set_userid(const int64_t val);
+  _dynamodb_access_put_args__isset __isset;
 
   void __set_tablename(const std::string& val);
 
   void __set_values(const std::map<std::string, ValueType> & val);
 
-  bool operator == (const dynamodb_access_putAsync_args & rhs) const
+  bool operator == (const dynamodb_access_put_args & rhs) const
   {
-    if (!(userid == rhs.userid))
-      return false;
     if (!(tablename == rhs.tablename))
       return false;
     if (!(values == rhs.values))
       return false;
     return true;
   }
-  bool operator != (const dynamodb_access_putAsync_args &rhs) const {
+  bool operator != (const dynamodb_access_put_args &rhs) const {
     return !(*this == rhs);
   }
 
-  bool operator < (const dynamodb_access_putAsync_args & ) const;
+  bool operator < (const dynamodb_access_put_args & ) const;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
@@ -130,12 +124,11 @@ class dynamodb_access_putAsync_args {
 };
 
 
-class dynamodb_access_putAsync_pargs {
+class dynamodb_access_put_pargs {
  public:
 
 
-  virtual ~dynamodb_access_putAsync_pargs() throw();
-  const int64_t* userid;
+  virtual ~dynamodb_access_put_pargs() throw();
   const std::string* tablename;
   const std::map<std::string, ValueType> * values;
 
@@ -143,86 +136,82 @@ class dynamodb_access_putAsync_pargs {
 
 };
 
-typedef struct _dynamodb_access_putAsync_result__isset {
-  _dynamodb_access_putAsync_result__isset() : success(false) {}
+typedef struct _dynamodb_access_put_result__isset {
+  _dynamodb_access_put_result__isset() : success(false) {}
   bool success :1;
-} _dynamodb_access_putAsync_result__isset;
+} _dynamodb_access_put_result__isset;
 
-class dynamodb_access_putAsync_result {
+class dynamodb_access_put_result {
  public:
 
-  dynamodb_access_putAsync_result(const dynamodb_access_putAsync_result&);
-  dynamodb_access_putAsync_result& operator=(const dynamodb_access_putAsync_result&);
-  dynamodb_access_putAsync_result() : success(0) {
+  dynamodb_access_put_result(const dynamodb_access_put_result&);
+  dynamodb_access_put_result& operator=(const dynamodb_access_put_result&);
+  dynamodb_access_put_result() {
   }
 
-  virtual ~dynamodb_access_putAsync_result() throw();
-  int64_t success;
+  virtual ~dynamodb_access_put_result() throw();
+  OperationResult success;
 
-  _dynamodb_access_putAsync_result__isset __isset;
+  _dynamodb_access_put_result__isset __isset;
 
-  void __set_success(const int64_t val);
+  void __set_success(const OperationResult& val);
 
-  bool operator == (const dynamodb_access_putAsync_result & rhs) const
+  bool operator == (const dynamodb_access_put_result & rhs) const
   {
     if (!(success == rhs.success))
       return false;
     return true;
   }
-  bool operator != (const dynamodb_access_putAsync_result &rhs) const {
+  bool operator != (const dynamodb_access_put_result &rhs) const {
     return !(*this == rhs);
   }
 
-  bool operator < (const dynamodb_access_putAsync_result & ) const;
+  bool operator < (const dynamodb_access_put_result & ) const;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
 };
 
-typedef struct _dynamodb_access_putAsync_presult__isset {
-  _dynamodb_access_putAsync_presult__isset() : success(false) {}
+typedef struct _dynamodb_access_put_presult__isset {
+  _dynamodb_access_put_presult__isset() : success(false) {}
   bool success :1;
-} _dynamodb_access_putAsync_presult__isset;
+} _dynamodb_access_put_presult__isset;
 
-class dynamodb_access_putAsync_presult {
+class dynamodb_access_put_presult {
  public:
 
 
-  virtual ~dynamodb_access_putAsync_presult() throw();
-  int64_t* success;
+  virtual ~dynamodb_access_put_presult() throw();
+  OperationResult* success;
 
-  _dynamodb_access_putAsync_presult__isset __isset;
+  _dynamodb_access_put_presult__isset __isset;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
 
 };
 
-typedef struct _dynamodb_access_getAsync_args__isset {
-  _dynamodb_access_getAsync_args__isset() : userid(false), tablename(false), key(false), attributestoget(false) {}
-  bool userid :1;
+typedef struct _dynamodb_access_get_args__isset {
+  _dynamodb_access_get_args__isset() : tablename(false), key(false), attributestoget(false) {}
   bool tablename :1;
   bool key :1;
   bool attributestoget :1;
-} _dynamodb_access_getAsync_args__isset;
+} _dynamodb_access_get_args__isset;
 
-class dynamodb_access_getAsync_args {
+class dynamodb_access_get_args {
  public:
 
-  dynamodb_access_getAsync_args(const dynamodb_access_getAsync_args&);
-  dynamodb_access_getAsync_args& operator=(const dynamodb_access_getAsync_args&);
-  dynamodb_access_getAsync_args() : userid(0), tablename() {
+  dynamodb_access_get_args(const dynamodb_access_get_args&);
+  dynamodb_access_get_args& operator=(const dynamodb_access_get_args&);
+  dynamodb_access_get_args() : tablename() {
   }
 
-  virtual ~dynamodb_access_getAsync_args() throw();
-  int64_t userid;
+  virtual ~dynamodb_access_get_args() throw();
   std::string tablename;
   KeyValue key;
   std::vector<std::string>  attributestoget;
 
-  _dynamodb_access_getAsync_args__isset __isset;
-
-  void __set_userid(const int64_t val);
+  _dynamodb_access_get_args__isset __isset;
 
   void __set_tablename(const std::string& val);
 
@@ -230,10 +219,8 @@ class dynamodb_access_getAsync_args {
 
   void __set_attributestoget(const std::vector<std::string> & val);
 
-  bool operator == (const dynamodb_access_getAsync_args & rhs) const
+  bool operator == (const dynamodb_access_get_args & rhs) const
   {
-    if (!(userid == rhs.userid))
-      return false;
     if (!(tablename == rhs.tablename))
       return false;
     if (!(key == rhs.key))
@@ -242,11 +229,11 @@ class dynamodb_access_getAsync_args {
       return false;
     return true;
   }
-  bool operator != (const dynamodb_access_getAsync_args &rhs) const {
+  bool operator != (const dynamodb_access_get_args &rhs) const {
     return !(*this == rhs);
   }
 
-  bool operator < (const dynamodb_access_getAsync_args & ) const;
+  bool operator < (const dynamodb_access_get_args & ) const;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
@@ -254,12 +241,11 @@ class dynamodb_access_getAsync_args {
 };
 
 
-class dynamodb_access_getAsync_pargs {
+class dynamodb_access_get_pargs {
  public:
 
 
-  virtual ~dynamodb_access_getAsync_pargs() throw();
-  const int64_t* userid;
+  virtual ~dynamodb_access_get_pargs() throw();
   const std::string* tablename;
   const KeyValue* key;
   const std::vector<std::string> * attributestoget;
@@ -268,104 +254,216 @@ class dynamodb_access_getAsync_pargs {
 
 };
 
-typedef struct _dynamodb_access_getAsync_result__isset {
-  _dynamodb_access_getAsync_result__isset() : success(false) {}
+typedef struct _dynamodb_access_get_result__isset {
+  _dynamodb_access_get_result__isset() : success(false) {}
   bool success :1;
-} _dynamodb_access_getAsync_result__isset;
+} _dynamodb_access_get_result__isset;
 
-class dynamodb_access_getAsync_result {
+class dynamodb_access_get_result {
  public:
 
-  dynamodb_access_getAsync_result(const dynamodb_access_getAsync_result&);
-  dynamodb_access_getAsync_result& operator=(const dynamodb_access_getAsync_result&);
-  dynamodb_access_getAsync_result() : success(0) {
+  dynamodb_access_get_result(const dynamodb_access_get_result&);
+  dynamodb_access_get_result& operator=(const dynamodb_access_get_result&);
+  dynamodb_access_get_result() {
   }
 
-  virtual ~dynamodb_access_getAsync_result() throw();
-  int64_t success;
+  virtual ~dynamodb_access_get_result() throw();
+  GetResult success;
 
-  _dynamodb_access_getAsync_result__isset __isset;
+  _dynamodb_access_get_result__isset __isset;
 
-  void __set_success(const int64_t val);
+  void __set_success(const GetResult& val);
 
-  bool operator == (const dynamodb_access_getAsync_result & rhs) const
+  bool operator == (const dynamodb_access_get_result & rhs) const
   {
     if (!(success == rhs.success))
       return false;
     return true;
   }
-  bool operator != (const dynamodb_access_getAsync_result &rhs) const {
+  bool operator != (const dynamodb_access_get_result &rhs) const {
     return !(*this == rhs);
   }
 
-  bool operator < (const dynamodb_access_getAsync_result & ) const;
+  bool operator < (const dynamodb_access_get_result & ) const;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
 };
 
-typedef struct _dynamodb_access_getAsync_presult__isset {
-  _dynamodb_access_getAsync_presult__isset() : success(false) {}
+typedef struct _dynamodb_access_get_presult__isset {
+  _dynamodb_access_get_presult__isset() : success(false) {}
   bool success :1;
-} _dynamodb_access_getAsync_presult__isset;
+} _dynamodb_access_get_presult__isset;
 
-class dynamodb_access_getAsync_presult {
+class dynamodb_access_get_presult {
  public:
 
 
-  virtual ~dynamodb_access_getAsync_presult() throw();
-  int64_t* success;
+  virtual ~dynamodb_access_get_presult() throw();
+  GetResult* success;
 
-  _dynamodb_access_getAsync_presult__isset __isset;
+  _dynamodb_access_get_presult__isset __isset;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
 
 };
 
-typedef struct _dynamodb_access_deleteAsync_args__isset {
-  _dynamodb_access_deleteAsync_args__isset() : userid(false), tablename(false), key(false) {}
-  bool userid :1;
+typedef struct _dynamodb_access_scan_args__isset {
+  _dynamodb_access_scan_args__isset() : tablename(false), attributestoget(false), filterexpression(false) {}
   bool tablename :1;
-  bool key :1;
-} _dynamodb_access_deleteAsync_args__isset;
+  bool attributestoget :1;
+  bool filterexpression :1;
+} _dynamodb_access_scan_args__isset;
 
-class dynamodb_access_deleteAsync_args {
+class dynamodb_access_scan_args {
  public:
 
-  dynamodb_access_deleteAsync_args(const dynamodb_access_deleteAsync_args&);
-  dynamodb_access_deleteAsync_args& operator=(const dynamodb_access_deleteAsync_args&);
-  dynamodb_access_deleteAsync_args() : userid(0), tablename() {
+  dynamodb_access_scan_args(const dynamodb_access_scan_args&);
+  dynamodb_access_scan_args& operator=(const dynamodb_access_scan_args&);
+  dynamodb_access_scan_args() : tablename(), filterexpression() {
   }
 
-  virtual ~dynamodb_access_deleteAsync_args() throw();
-  int64_t userid;
+  virtual ~dynamodb_access_scan_args() throw();
+  std::string tablename;
+  std::vector<std::string>  attributestoget;
+  std::string filterexpression;
+
+  _dynamodb_access_scan_args__isset __isset;
+
+  void __set_tablename(const std::string& val);
+
+  void __set_attributestoget(const std::vector<std::string> & val);
+
+  void __set_filterexpression(const std::string& val);
+
+  bool operator == (const dynamodb_access_scan_args & rhs) const
+  {
+    if (!(tablename == rhs.tablename))
+      return false;
+    if (!(attributestoget == rhs.attributestoget))
+      return false;
+    if (!(filterexpression == rhs.filterexpression))
+      return false;
+    return true;
+  }
+  bool operator != (const dynamodb_access_scan_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const dynamodb_access_scan_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class dynamodb_access_scan_pargs {
+ public:
+
+
+  virtual ~dynamodb_access_scan_pargs() throw();
+  const std::string* tablename;
+  const std::vector<std::string> * attributestoget;
+  const std::string* filterexpression;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _dynamodb_access_scan_result__isset {
+  _dynamodb_access_scan_result__isset() : success(false) {}
+  bool success :1;
+} _dynamodb_access_scan_result__isset;
+
+class dynamodb_access_scan_result {
+ public:
+
+  dynamodb_access_scan_result(const dynamodb_access_scan_result&);
+  dynamodb_access_scan_result& operator=(const dynamodb_access_scan_result&);
+  dynamodb_access_scan_result() {
+  }
+
+  virtual ~dynamodb_access_scan_result() throw();
+  ScanReqResult success;
+
+  _dynamodb_access_scan_result__isset __isset;
+
+  void __set_success(const ScanReqResult& val);
+
+  bool operator == (const dynamodb_access_scan_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    return true;
+  }
+  bool operator != (const dynamodb_access_scan_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const dynamodb_access_scan_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _dynamodb_access_scan_presult__isset {
+  _dynamodb_access_scan_presult__isset() : success(false) {}
+  bool success :1;
+} _dynamodb_access_scan_presult__isset;
+
+class dynamodb_access_scan_presult {
+ public:
+
+
+  virtual ~dynamodb_access_scan_presult() throw();
+  ScanReqResult* success;
+
+  _dynamodb_access_scan_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
+typedef struct _dynamodb_access_remove_args__isset {
+  _dynamodb_access_remove_args__isset() : tablename(false), key(false) {}
+  bool tablename :1;
+  bool key :1;
+} _dynamodb_access_remove_args__isset;
+
+class dynamodb_access_remove_args {
+ public:
+
+  dynamodb_access_remove_args(const dynamodb_access_remove_args&);
+  dynamodb_access_remove_args& operator=(const dynamodb_access_remove_args&);
+  dynamodb_access_remove_args() : tablename() {
+  }
+
+  virtual ~dynamodb_access_remove_args() throw();
   std::string tablename;
   KeyValue key;
 
-  _dynamodb_access_deleteAsync_args__isset __isset;
-
-  void __set_userid(const int64_t val);
+  _dynamodb_access_remove_args__isset __isset;
 
   void __set_tablename(const std::string& val);
 
   void __set_key(const KeyValue& val);
 
-  bool operator == (const dynamodb_access_deleteAsync_args & rhs) const
+  bool operator == (const dynamodb_access_remove_args & rhs) const
   {
-    if (!(userid == rhs.userid))
-      return false;
     if (!(tablename == rhs.tablename))
       return false;
     if (!(key == rhs.key))
       return false;
     return true;
   }
-  bool operator != (const dynamodb_access_deleteAsync_args &rhs) const {
+  bool operator != (const dynamodb_access_remove_args &rhs) const {
     return !(*this == rhs);
   }
 
-  bool operator < (const dynamodb_access_deleteAsync_args & ) const;
+  bool operator < (const dynamodb_access_remove_args & ) const;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
@@ -373,12 +471,11 @@ class dynamodb_access_deleteAsync_args {
 };
 
 
-class dynamodb_access_deleteAsync_pargs {
+class dynamodb_access_remove_pargs {
  public:
 
 
-  virtual ~dynamodb_access_deleteAsync_pargs() throw();
-  const int64_t* userid;
+  virtual ~dynamodb_access_remove_pargs() throw();
   const std::string* tablename;
   const KeyValue* key;
 
@@ -386,86 +483,82 @@ class dynamodb_access_deleteAsync_pargs {
 
 };
 
-typedef struct _dynamodb_access_deleteAsync_result__isset {
-  _dynamodb_access_deleteAsync_result__isset() : success(false) {}
+typedef struct _dynamodb_access_remove_result__isset {
+  _dynamodb_access_remove_result__isset() : success(false) {}
   bool success :1;
-} _dynamodb_access_deleteAsync_result__isset;
+} _dynamodb_access_remove_result__isset;
 
-class dynamodb_access_deleteAsync_result {
+class dynamodb_access_remove_result {
  public:
 
-  dynamodb_access_deleteAsync_result(const dynamodb_access_deleteAsync_result&);
-  dynamodb_access_deleteAsync_result& operator=(const dynamodb_access_deleteAsync_result&);
-  dynamodb_access_deleteAsync_result() : success(0) {
+  dynamodb_access_remove_result(const dynamodb_access_remove_result&);
+  dynamodb_access_remove_result& operator=(const dynamodb_access_remove_result&);
+  dynamodb_access_remove_result() {
   }
 
-  virtual ~dynamodb_access_deleteAsync_result() throw();
-  int64_t success;
+  virtual ~dynamodb_access_remove_result() throw();
+  OperationResult success;
 
-  _dynamodb_access_deleteAsync_result__isset __isset;
+  _dynamodb_access_remove_result__isset __isset;
 
-  void __set_success(const int64_t val);
+  void __set_success(const OperationResult& val);
 
-  bool operator == (const dynamodb_access_deleteAsync_result & rhs) const
+  bool operator == (const dynamodb_access_remove_result & rhs) const
   {
     if (!(success == rhs.success))
       return false;
     return true;
   }
-  bool operator != (const dynamodb_access_deleteAsync_result &rhs) const {
+  bool operator != (const dynamodb_access_remove_result &rhs) const {
     return !(*this == rhs);
   }
 
-  bool operator < (const dynamodb_access_deleteAsync_result & ) const;
+  bool operator < (const dynamodb_access_remove_result & ) const;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
 };
 
-typedef struct _dynamodb_access_deleteAsync_presult__isset {
-  _dynamodb_access_deleteAsync_presult__isset() : success(false) {}
+typedef struct _dynamodb_access_remove_presult__isset {
+  _dynamodb_access_remove_presult__isset() : success(false) {}
   bool success :1;
-} _dynamodb_access_deleteAsync_presult__isset;
+} _dynamodb_access_remove_presult__isset;
 
-class dynamodb_access_deleteAsync_presult {
+class dynamodb_access_remove_presult {
  public:
 
 
-  virtual ~dynamodb_access_deleteAsync_presult() throw();
-  int64_t* success;
+  virtual ~dynamodb_access_remove_presult() throw();
+  OperationResult* success;
 
-  _dynamodb_access_deleteAsync_presult__isset __isset;
+  _dynamodb_access_remove_presult__isset __isset;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
 
 };
 
-typedef struct _dynamodb_access_updateAsync_args__isset {
-  _dynamodb_access_updateAsync_args__isset() : userid(false), tablename(false), key(false), values(false) {}
-  bool userid :1;
+typedef struct _dynamodb_access_update_args__isset {
+  _dynamodb_access_update_args__isset() : tablename(false), key(false), values(false) {}
   bool tablename :1;
   bool key :1;
   bool values :1;
-} _dynamodb_access_updateAsync_args__isset;
+} _dynamodb_access_update_args__isset;
 
-class dynamodb_access_updateAsync_args {
+class dynamodb_access_update_args {
  public:
 
-  dynamodb_access_updateAsync_args(const dynamodb_access_updateAsync_args&);
-  dynamodb_access_updateAsync_args& operator=(const dynamodb_access_updateAsync_args&);
-  dynamodb_access_updateAsync_args() : userid(0), tablename() {
+  dynamodb_access_update_args(const dynamodb_access_update_args&);
+  dynamodb_access_update_args& operator=(const dynamodb_access_update_args&);
+  dynamodb_access_update_args() : tablename() {
   }
 
-  virtual ~dynamodb_access_updateAsync_args() throw();
-  int64_t userid;
+  virtual ~dynamodb_access_update_args() throw();
   std::string tablename;
   KeyValue key;
   std::map<std::string, ValueType>  values;
 
-  _dynamodb_access_updateAsync_args__isset __isset;
-
-  void __set_userid(const int64_t val);
+  _dynamodb_access_update_args__isset __isset;
 
   void __set_tablename(const std::string& val);
 
@@ -473,10 +566,8 @@ class dynamodb_access_updateAsync_args {
 
   void __set_values(const std::map<std::string, ValueType> & val);
 
-  bool operator == (const dynamodb_access_updateAsync_args & rhs) const
+  bool operator == (const dynamodb_access_update_args & rhs) const
   {
-    if (!(userid == rhs.userid))
-      return false;
     if (!(tablename == rhs.tablename))
       return false;
     if (!(key == rhs.key))
@@ -485,11 +576,11 @@ class dynamodb_access_updateAsync_args {
       return false;
     return true;
   }
-  bool operator != (const dynamodb_access_updateAsync_args &rhs) const {
+  bool operator != (const dynamodb_access_update_args &rhs) const {
     return !(*this == rhs);
   }
 
-  bool operator < (const dynamodb_access_updateAsync_args & ) const;
+  bool operator < (const dynamodb_access_update_args & ) const;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
@@ -497,12 +588,11 @@ class dynamodb_access_updateAsync_args {
 };
 
 
-class dynamodb_access_updateAsync_pargs {
+class dynamodb_access_update_pargs {
  public:
 
 
-  virtual ~dynamodb_access_updateAsync_pargs() throw();
-  const int64_t* userid;
+  virtual ~dynamodb_access_update_pargs() throw();
   const std::string* tablename;
   const KeyValue* key;
   const std::map<std::string, ValueType> * values;
@@ -511,56 +601,56 @@ class dynamodb_access_updateAsync_pargs {
 
 };
 
-typedef struct _dynamodb_access_updateAsync_result__isset {
-  _dynamodb_access_updateAsync_result__isset() : success(false) {}
+typedef struct _dynamodb_access_update_result__isset {
+  _dynamodb_access_update_result__isset() : success(false) {}
   bool success :1;
-} _dynamodb_access_updateAsync_result__isset;
+} _dynamodb_access_update_result__isset;
 
-class dynamodb_access_updateAsync_result {
+class dynamodb_access_update_result {
  public:
 
-  dynamodb_access_updateAsync_result(const dynamodb_access_updateAsync_result&);
-  dynamodb_access_updateAsync_result& operator=(const dynamodb_access_updateAsync_result&);
-  dynamodb_access_updateAsync_result() : success(0) {
+  dynamodb_access_update_result(const dynamodb_access_update_result&);
+  dynamodb_access_update_result& operator=(const dynamodb_access_update_result&);
+  dynamodb_access_update_result() {
   }
 
-  virtual ~dynamodb_access_updateAsync_result() throw();
-  int64_t success;
+  virtual ~dynamodb_access_update_result() throw();
+  OperationResult success;
 
-  _dynamodb_access_updateAsync_result__isset __isset;
+  _dynamodb_access_update_result__isset __isset;
 
-  void __set_success(const int64_t val);
+  void __set_success(const OperationResult& val);
 
-  bool operator == (const dynamodb_access_updateAsync_result & rhs) const
+  bool operator == (const dynamodb_access_update_result & rhs) const
   {
     if (!(success == rhs.success))
       return false;
     return true;
   }
-  bool operator != (const dynamodb_access_updateAsync_result &rhs) const {
+  bool operator != (const dynamodb_access_update_result &rhs) const {
     return !(*this == rhs);
   }
 
-  bool operator < (const dynamodb_access_updateAsync_result & ) const;
+  bool operator < (const dynamodb_access_update_result & ) const;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
 };
 
-typedef struct _dynamodb_access_updateAsync_presult__isset {
-  _dynamodb_access_updateAsync_presult__isset() : success(false) {}
+typedef struct _dynamodb_access_update_presult__isset {
+  _dynamodb_access_update_presult__isset() : success(false) {}
   bool success :1;
-} _dynamodb_access_updateAsync_presult__isset;
+} _dynamodb_access_update_presult__isset;
 
-class dynamodb_access_updateAsync_presult {
+class dynamodb_access_update_presult {
  public:
 
 
-  virtual ~dynamodb_access_updateAsync_presult() throw();
-  int64_t* success;
+  virtual ~dynamodb_access_update_presult() throw();
+  OperationResult* success;
 
-  _dynamodb_access_updateAsync_presult__isset __isset;
+  _dynamodb_access_update_presult__isset __isset;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
 
@@ -813,18 +903,21 @@ class dynamodb_accessClient : virtual public dynamodb_accessIf {
   boost::shared_ptr< ::apache::thrift::protocol::TProtocol> getOutputProtocol() {
     return poprot_;
   }
-  int64_t putAsync(const int64_t userid, const std::string& tablename, const std::map<std::string, ValueType> & values);
-  void send_putAsync(const int64_t userid, const std::string& tablename, const std::map<std::string, ValueType> & values);
-  int64_t recv_putAsync();
-  int64_t getAsync(const int64_t userid, const std::string& tablename, const KeyValue& key, const std::vector<std::string> & attributestoget);
-  void send_getAsync(const int64_t userid, const std::string& tablename, const KeyValue& key, const std::vector<std::string> & attributestoget);
-  int64_t recv_getAsync();
-  int64_t deleteAsync(const int64_t userid, const std::string& tablename, const KeyValue& key);
-  void send_deleteAsync(const int64_t userid, const std::string& tablename, const KeyValue& key);
-  int64_t recv_deleteAsync();
-  int64_t updateAsync(const int64_t userid, const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & values);
-  void send_updateAsync(const int64_t userid, const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & values);
-  int64_t recv_updateAsync();
+  void put(OperationResult& _return, const std::string& tablename, const std::map<std::string, ValueType> & values);
+  void send_put(const std::string& tablename, const std::map<std::string, ValueType> & values);
+  void recv_put(OperationResult& _return);
+  void get(GetResult& _return, const std::string& tablename, const KeyValue& key, const std::vector<std::string> & attributestoget);
+  void send_get(const std::string& tablename, const KeyValue& key, const std::vector<std::string> & attributestoget);
+  void recv_get(GetResult& _return);
+  void scan(ScanReqResult& _return, const std::string& tablename, const std::vector<std::string> & attributestoget, const std::string& filterexpression);
+  void send_scan(const std::string& tablename, const std::vector<std::string> & attributestoget, const std::string& filterexpression);
+  void recv_scan(ScanReqResult& _return);
+  void remove(OperationResult& _return, const std::string& tablename, const KeyValue& key);
+  void send_remove(const std::string& tablename, const KeyValue& key);
+  void recv_remove(OperationResult& _return);
+  void update(OperationResult& _return, const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & values);
+  void send_update(const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & values);
+  void recv_update(OperationResult& _return);
   void createTable(OperationResult& _return, const std::string& tablename, const KeyValue& key, const std::map<std::string, std::string> & properties);
   void send_createTable(const std::string& tablename, const KeyValue& key, const std::map<std::string, std::string> & properties);
   void recv_createTable(OperationResult& _return);
@@ -846,19 +939,21 @@ class dynamodb_accessProcessor : public ::apache::thrift::TDispatchProcessor {
   typedef  void (dynamodb_accessProcessor::*ProcessFunction)(int32_t, ::apache::thrift::protocol::TProtocol*, ::apache::thrift::protocol::TProtocol*, void*);
   typedef std::map<std::string, ProcessFunction> ProcessMap;
   ProcessMap processMap_;
-  void process_putAsync(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
-  void process_getAsync(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
-  void process_deleteAsync(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
-  void process_updateAsync(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_put(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_get(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_scan(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_remove(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_update(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_createTable(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_deleteTable(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   dynamodb_accessProcessor(boost::shared_ptr<dynamodb_accessIf> iface) :
     iface_(iface) {
-    processMap_["putAsync"] = &dynamodb_accessProcessor::process_putAsync;
-    processMap_["getAsync"] = &dynamodb_accessProcessor::process_getAsync;
-    processMap_["deleteAsync"] = &dynamodb_accessProcessor::process_deleteAsync;
-    processMap_["updateAsync"] = &dynamodb_accessProcessor::process_updateAsync;
+    processMap_["put"] = &dynamodb_accessProcessor::process_put;
+    processMap_["get"] = &dynamodb_accessProcessor::process_get;
+    processMap_["scan"] = &dynamodb_accessProcessor::process_scan;
+    processMap_["remove"] = &dynamodb_accessProcessor::process_remove;
+    processMap_["update"] = &dynamodb_accessProcessor::process_update;
     processMap_["createTable"] = &dynamodb_accessProcessor::process_createTable;
     processMap_["deleteTable"] = &dynamodb_accessProcessor::process_deleteTable;
   }
@@ -889,40 +984,54 @@ class dynamodb_accessMultiface : virtual public dynamodb_accessIf {
     ifaces_.push_back(iface);
   }
  public:
-  int64_t putAsync(const int64_t userid, const std::string& tablename, const std::map<std::string, ValueType> & values) {
+  void put(OperationResult& _return, const std::string& tablename, const std::map<std::string, ValueType> & values) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->putAsync(userid, tablename, values);
+      ifaces_[i]->put(_return, tablename, values);
     }
-    return ifaces_[i]->putAsync(userid, tablename, values);
+    ifaces_[i]->put(_return, tablename, values);
+    return;
   }
 
-  int64_t getAsync(const int64_t userid, const std::string& tablename, const KeyValue& key, const std::vector<std::string> & attributestoget) {
+  void get(GetResult& _return, const std::string& tablename, const KeyValue& key, const std::vector<std::string> & attributestoget) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->getAsync(userid, tablename, key, attributestoget);
+      ifaces_[i]->get(_return, tablename, key, attributestoget);
     }
-    return ifaces_[i]->getAsync(userid, tablename, key, attributestoget);
+    ifaces_[i]->get(_return, tablename, key, attributestoget);
+    return;
   }
 
-  int64_t deleteAsync(const int64_t userid, const std::string& tablename, const KeyValue& key) {
+  void scan(ScanReqResult& _return, const std::string& tablename, const std::vector<std::string> & attributestoget, const std::string& filterexpression) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->deleteAsync(userid, tablename, key);
+      ifaces_[i]->scan(_return, tablename, attributestoget, filterexpression);
     }
-    return ifaces_[i]->deleteAsync(userid, tablename, key);
+    ifaces_[i]->scan(_return, tablename, attributestoget, filterexpression);
+    return;
   }
 
-  int64_t updateAsync(const int64_t userid, const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & values) {
+  void remove(OperationResult& _return, const std::string& tablename, const KeyValue& key) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->updateAsync(userid, tablename, key, values);
+      ifaces_[i]->remove(_return, tablename, key);
     }
-    return ifaces_[i]->updateAsync(userid, tablename, key, values);
+    ifaces_[i]->remove(_return, tablename, key);
+    return;
+  }
+
+  void update(OperationResult& _return, const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & values) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->update(_return, tablename, key, values);
+    }
+    ifaces_[i]->update(_return, tablename, key, values);
+    return;
   }
 
   void createTable(OperationResult& _return, const std::string& tablename, const KeyValue& key, const std::map<std::string, std::string> & properties) {
@@ -975,18 +1084,21 @@ class dynamodb_accessConcurrentClient : virtual public dynamodb_accessIf {
   boost::shared_ptr< ::apache::thrift::protocol::TProtocol> getOutputProtocol() {
     return poprot_;
   }
-  int64_t putAsync(const int64_t userid, const std::string& tablename, const std::map<std::string, ValueType> & values);
-  int32_t send_putAsync(const int64_t userid, const std::string& tablename, const std::map<std::string, ValueType> & values);
-  int64_t recv_putAsync(const int32_t seqid);
-  int64_t getAsync(const int64_t userid, const std::string& tablename, const KeyValue& key, const std::vector<std::string> & attributestoget);
-  int32_t send_getAsync(const int64_t userid, const std::string& tablename, const KeyValue& key, const std::vector<std::string> & attributestoget);
-  int64_t recv_getAsync(const int32_t seqid);
-  int64_t deleteAsync(const int64_t userid, const std::string& tablename, const KeyValue& key);
-  int32_t send_deleteAsync(const int64_t userid, const std::string& tablename, const KeyValue& key);
-  int64_t recv_deleteAsync(const int32_t seqid);
-  int64_t updateAsync(const int64_t userid, const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & values);
-  int32_t send_updateAsync(const int64_t userid, const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & values);
-  int64_t recv_updateAsync(const int32_t seqid);
+  void put(OperationResult& _return, const std::string& tablename, const std::map<std::string, ValueType> & values);
+  int32_t send_put(const std::string& tablename, const std::map<std::string, ValueType> & values);
+  void recv_put(OperationResult& _return, const int32_t seqid);
+  void get(GetResult& _return, const std::string& tablename, const KeyValue& key, const std::vector<std::string> & attributestoget);
+  int32_t send_get(const std::string& tablename, const KeyValue& key, const std::vector<std::string> & attributestoget);
+  void recv_get(GetResult& _return, const int32_t seqid);
+  void scan(ScanReqResult& _return, const std::string& tablename, const std::vector<std::string> & attributestoget, const std::string& filterexpression);
+  int32_t send_scan(const std::string& tablename, const std::vector<std::string> & attributestoget, const std::string& filterexpression);
+  void recv_scan(ScanReqResult& _return, const int32_t seqid);
+  void remove(OperationResult& _return, const std::string& tablename, const KeyValue& key);
+  int32_t send_remove(const std::string& tablename, const KeyValue& key);
+  void recv_remove(OperationResult& _return, const int32_t seqid);
+  void update(OperationResult& _return, const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & values);
+  int32_t send_update(const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & values);
+  void recv_update(OperationResult& _return, const int32_t seqid);
   void createTable(OperationResult& _return, const std::string& tablename, const KeyValue& key, const std::map<std::string, std::string> & properties);
   int32_t send_createTable(const std::string& tablename, const KeyValue& key, const std::map<std::string, std::string> & properties);
   void recv_createTable(OperationResult& _return, const int32_t seqid);
