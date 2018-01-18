@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*- 
-# (c) Copyright 2017 Noel Tchidjo
+# (c) Copyright 2017 
+# author(s): Noel Tchidjo
 # All rights reserved
 
 
@@ -41,6 +42,18 @@ class TestSpiders(unittest.TestCase):
       self.assertEquals('http://www.seloger.com/detail,json,caracteristique_bien.json?idannonce=109240349',buildselogerdescriptionurl(url))
 
 
+   def test_should_return_correct_logicimmo_url(self):
+      url = 'http://www.logic-immo.com/vente-immobilier-houilles-78800,13772_2/options/groupprptypesids=1'
+      self.assertEquals(url, buildLogicImmoUrl(1))
+
+      url = url[:-1]
+
+      url = url + '2'
+
+      self.assertEquals(url, buildLogicImmoUrl(2))
+   
+     
+ 
 if __name__ == '__main__':
    suite = unittest.TestLoader().loadTestsFromTestCase(TestSpiders)
    unittest.TextTestRunner(verbosity=2).run(suite)

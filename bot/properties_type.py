@@ -11,7 +11,18 @@ SeLogerPropertiesMapping = dict()
 SeLogerPropertiesMapping[HOUSE_ID] = '2'
 SeLogerPropertiesMapping[APART_ID] = '1'
 
+logicimmo_mappingids = dict()
+
+logicimmo_mappingids[APART_ID] = '1'
+logicimmo_mappingids[HOUSE_ID] = '2'
+
+
+
 def getSeLogerPropertiesId(surfyng_properties_id):
    
    return SeLogerPropertiesMapping[surfyng_properties_id]
+
+
+def getLogicImmoPropertiesId(surfyng_properties_id):
+   return logicimmo_mappingids[surfyng_properties_id]
 
