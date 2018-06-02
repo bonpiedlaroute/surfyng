@@ -8,7 +8,7 @@
 
 import unittest
 from url_builder import *
-from properties_type import *
+from search_features import *
 
 class TestSpiders(unittest.TestCase):
    
@@ -26,8 +26,11 @@ class TestSpiders(unittest.TestCase):
    def test_should_build_correct_url(self):
       url = 'http://www.seloger.com/list.htm?idtt=2&naturebien=1,2,4&idtypebien=&ci=780311'
       
-      url_seloger = buildselogerurl('2')
-      self.assertEqual('http://www.seloger.com/list.htm?idtt=2&naturebien=1,2,4&idtypebien=2&ci=780311', url_seloger)
+      url_seloger = buildselogerurl('2', '2')
+      self.assertEqual('https://www.seloger.com/list.htm?idtt=2&naturebien=1,2,4&idtypebien=2&ci=780311', url_seloger)
+
+      url_seloger = buildselogerurl('1', '2')
+      self.assertEqual('https://www.seloger.com/list.htm?idtt=2&naturebien=1,2,4&idtypebien=1&ci=780311', url_seloger)
 
 
    def test_should_return_the_correct_properties_id(self):
@@ -36,10 +39,17 @@ class TestSpiders(unittest.TestCase):
 
       self.assertEquals('2', getSeLogerPropertiesId(HOUSE_ID))
 
+   def test_should_return_the_correct_search_id(self):
+      
+      self.assertEquals('2', getSeLogerSearchTypeId(BUY_ID))
+
+      self.assertEquals('1', getSeLogerSearchTypeId(RENT_ID))
+
+
    def test_should_return_correct_description_url(self):
       url = 'http://www.seloger.com/annonces/achat/maison/colombes-92/109240349.htm?ci=920025&idtt=2&idtypebien=2&listing-listpg=11&naturebien=1,2,4'
 
-      self.assertEquals('http://www.seloger.com/detail,json,caracteristique_bien.json?idannonce=109240349',buildselogerdescriptionurl(url))
+      self.assertEquals('https://www.seloger.com/detail,json,caracteristique_bien.json?idannonce=109240349',buildselogerdescriptionurl(url))
 
 
    def test_should_return_correct_logicimmo_url(self):

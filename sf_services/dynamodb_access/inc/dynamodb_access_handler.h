@@ -55,11 +55,6 @@ private:
    void manageBandwitdhLimit(const std::string& service, const std::chrono::high_resolution_clock::time_point& lasttime, const int64_t& minimum_interval);
 private:
    std::shared_ptr<Aws::DynamoDB::DynamoDBClient> m_client;
-   std::chrono::high_resolution_clock::time_point m_lastreadtime;
-   std::chrono::high_resolution_clock::time_point m_lastwritetime;
-   const int64_t m_minimum_write_interval = 200;
-   const int64_t m_minimum_read_interval = 200;
-   const int64_t m_error_margin = 3;
 };
 
 }

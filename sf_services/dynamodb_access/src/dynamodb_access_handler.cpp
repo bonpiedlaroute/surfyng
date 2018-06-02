@@ -62,19 +62,6 @@ void dynamodb_accessHandler::Init()
    Aws::InitAPI(options);
 }
 
-void dynamodb_accessHandler::manageBandwitdhLimit(const std::string& service, const std::chrono::high_resolution_clock::time_point& lasttime, const int64_t& minimum_interval)
-{
-   auto duration_since_last_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - lasttime).count();
-
-   if( duration_since_last_time < minimum_interval )
-   {
-      std::stringstream message;
-      message << " "<< service <<": sleeping for " << ((minimum_interval - duration_since_last_time) + m_error_margin) << "ms";
-
-      Log::getInstance()->info(message.str());
-      std::this_thread::sleep_for(std::chrono::milliseconds((minimum_interval - duration_since_last_time) + m_error_margin));
-   }
-}
 dynamodb_accessHandler::dynamodb_accessHandler()
 {
 
@@ -132,13 +119,7 @@ void dynamodb_accessHandler::put(OperationResult& _return, const std::string& ta
 
    }
 
-   manageBandwitdhLimit("put", m_lastwritetime, m_minimum_write_interval);
-
-   m_lastwritetime = std::chrono::high_resolution_clock::now();
-
    PutItemOutcome putOutcome = m_client->PutItem(putItemRequest);
-
-
 
    Log::getInstance()->info(" put sent");
 
@@ -183,9 +164,6 @@ void dynamodb_accessHandler::get(GetResult& _return, const std::string& tablenam
          attributesToGet.push_back(value.c_str());
    }
 
-   manageBandwitdhLimit("get", m_lastreadtime, m_minimum_read_interval);
-
-   m_lastreadtime = std::chrono::high_resolution_clock::now();
 
    GetItemOutcome getOutcome = m_client->GetItem(getItemRequest);
 
@@ -219,9 +197,7 @@ void dynamodb_accessHandler::remove(OperationResult& _return, const std::string&
    deleteItemRequest.SetTableName(tablename.c_str());
    deleteItemRequest.SetReturnValues(ReturnValue::ALL_OLD);
 
-   manageBandwitdhLimit("remove", m_lastwritetime, m_minimum_write_interval);
 
-   m_lastwritetime = std::chrono::high_resolution_clock::now();
 
    DeleteItemOutcome deleteItemOutcome = m_client->DeleteItem(deleteItemRequest);
 
@@ -263,9 +239,6 @@ void dynamodb_accessHandler::update(OperationResult& _return, const std::string&
       updateItemRequest.AddAttributeUpdates(iter->first.c_str(), attValueUpdate);
    }
 
-   manageBandwitdhLimit("update", m_lastwritetime, m_minimum_write_interval);
-
-   m_lastwritetime = std::chrono::high_resolution_clock::now();
 
    UpdateItemOutcome updateItemOutcome = m_client->UpdateItem(updateItemRequest);
 
@@ -343,10 +316,6 @@ void dynamodb_accessHandler::scan(ScanReqResult& _return, const std::string& tab
    scanRequest.SetAttributesToGet(attToget);
 
    scanRequest.SetFilterExpression(filterexpression.c_str());
-
-   manageBandwitdhLimit("scan", m_lastreadtime, m_minimum_read_interval);
-
-   m_lastreadtime = std::chrono::high_resolution_clock::now();
 
    ScanOutcome scanOutcome = m_client->Scan(scanRequest);
 

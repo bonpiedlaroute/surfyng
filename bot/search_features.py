@@ -26,3 +26,14 @@ def getSeLogerPropertiesId(surfyng_properties_id):
 def getLogicImmoPropertiesId(surfyng_properties_id):
    return logicimmo_mappingids[surfyng_properties_id]
 
+
+BUY_ID = 1
+RENT_ID = 2
+SeLogerSearchTypeMapping = dict()
+
+SeLogerSearchTypeMapping[BUY_ID] = '2'
+SeLogerSearchTypeMapping[RENT_ID] = '1'
+
+def getSeLogerSearchTypeId(surfyn_searchtype):
+   return SeLogerSearchTypeMapping[surfyn_searchtype]
+ 

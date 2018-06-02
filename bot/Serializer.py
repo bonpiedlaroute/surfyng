@@ -10,7 +10,8 @@ from thrift import Thrift
 from thrift.transport import TSocket
 from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
-from properties_type import *
+from search_features import *
+import datetime
 
 tablename ="FR_PROPERTIES"
 
@@ -26,7 +27,7 @@ class Serializer:
 
       self.transport.open()
 
-   def send(self, ID, property_type, property_description, city, region, announce_link, announce_source, announce_title):
+   def send(self, ID, property_type, property_description, city, region, announce_link, announce_source, announce_title, id_search):
       values = dict()
 
       idvalue = ttypes.ValueType()
@@ -75,6 +76,21 @@ class Serializer:
       announce_title_value.field = announce_title
       announce_title_value.fieldtype = ttypes.Type.STRING
       values["ANNOUNCE_TITLE"] = announce_title_value
+
+      timestamp = ttypes.ValueType()
+      timestamp.field = datetime.datetime.utcnow().replace(microsecond=0).isoformat()
+      timestamp.fieldtype = ttypes.Type.STRING
+      values["TIMESTAMP"] = timestamp 
+
+      search_type = ttypes.ValueType()
+      if id_search == BUY_ID:
+         search_type.field = "For sale"
+      else:
+         search_type.field = "For rent"
+      
+      search_type.fieldtype = ttypes.Type.STRING
+
+      values["SEARCH_TYPE"] = search_type
 
       return self.client.put(tablename, values)
 
