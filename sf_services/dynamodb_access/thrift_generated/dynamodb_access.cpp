@@ -287,19 +287,22 @@ uint32_t dynamodb_access_get_args::read(::apache::thrift::protocol::TProtocol* i
         }
         break;
       case 3:
-        if (ftype == ::apache::thrift::protocol::T_LIST) {
+        if (ftype == ::apache::thrift::protocol::T_MAP) {
           {
             this->attributestoget.clear();
             uint32_t _size42;
-            ::apache::thrift::protocol::TType _etype45;
-            xfer += iprot->readListBegin(_etype45, _size42);
-            this->attributestoget.resize(_size42);
+            ::apache::thrift::protocol::TType _ktype43;
+            ::apache::thrift::protocol::TType _vtype44;
+            xfer += iprot->readMapBegin(_ktype43, _vtype44, _size42);
             uint32_t _i46;
             for (_i46 = 0; _i46 < _size42; ++_i46)
             {
-              xfer += iprot->readString(this->attributestoget[_i46]);
+              std::string _key47;
+              xfer += iprot->readString(_key47);
+              ValueType& _val48 = this->attributestoget[_key47];
+              xfer += _val48.read(iprot);
             }
-            xfer += iprot->readListEnd();
+            xfer += iprot->readMapEnd();
           }
           this->__isset.attributestoget = true;
         } else {
@@ -331,15 +334,16 @@ uint32_t dynamodb_access_get_args::write(::apache::thrift::protocol::TProtocol* 
   xfer += this->key.write(oprot);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("attributestoget", ::apache::thrift::protocol::T_LIST, 3);
+  xfer += oprot->writeFieldBegin("attributestoget", ::apache::thrift::protocol::T_MAP, 3);
   {
-    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRING, static_cast<uint32_t>(this->attributestoget.size()));
-    std::vector<std::string> ::const_iterator _iter47;
-    for (_iter47 = this->attributestoget.begin(); _iter47 != this->attributestoget.end(); ++_iter47)
+    xfer += oprot->writeMapBegin(::apache::thrift::protocol::T_STRING, ::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->attributestoget.size()));
+    std::map<std::string, ValueType> ::const_iterator _iter49;
+    for (_iter49 = this->attributestoget.begin(); _iter49 != this->attributestoget.end(); ++_iter49)
     {
-      xfer += oprot->writeString((*_iter47));
+      xfer += oprot->writeString(_iter49->first);
+      xfer += _iter49->second.write(oprot);
     }
-    xfer += oprot->writeListEnd();
+    xfer += oprot->writeMapEnd();
   }
   xfer += oprot->writeFieldEnd();
 
@@ -366,15 +370,16 @@ uint32_t dynamodb_access_get_pargs::write(::apache::thrift::protocol::TProtocol*
   xfer += (*(this->key)).write(oprot);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("attributestoget", ::apache::thrift::protocol::T_LIST, 3);
+  xfer += oprot->writeFieldBegin("attributestoget", ::apache::thrift::protocol::T_MAP, 3);
   {
-    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRING, static_cast<uint32_t>((*(this->attributestoget)).size()));
-    std::vector<std::string> ::const_iterator _iter48;
-    for (_iter48 = (*(this->attributestoget)).begin(); _iter48 != (*(this->attributestoget)).end(); ++_iter48)
+    xfer += oprot->writeMapBegin(::apache::thrift::protocol::T_STRING, ::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>((*(this->attributestoget)).size()));
+    std::map<std::string, ValueType> ::const_iterator _iter50;
+    for (_iter50 = (*(this->attributestoget)).begin(); _iter50 != (*(this->attributestoget)).end(); ++_iter50)
     {
-      xfer += oprot->writeString((*_iter48));
+      xfer += oprot->writeString(_iter50->first);
+      xfer += _iter50->second.write(oprot);
     }
-    xfer += oprot->writeListEnd();
+    xfer += oprot->writeMapEnd();
   }
   xfer += oprot->writeFieldEnd();
 
@@ -526,19 +531,22 @@ uint32_t dynamodb_access_scan_args::read(::apache::thrift::protocol::TProtocol* 
         }
         break;
       case 2:
-        if (ftype == ::apache::thrift::protocol::T_LIST) {
+        if (ftype == ::apache::thrift::protocol::T_MAP) {
           {
             this->attributestoget.clear();
-            uint32_t _size49;
-            ::apache::thrift::protocol::TType _etype52;
-            xfer += iprot->readListBegin(_etype52, _size49);
-            this->attributestoget.resize(_size49);
-            uint32_t _i53;
-            for (_i53 = 0; _i53 < _size49; ++_i53)
+            uint32_t _size51;
+            ::apache::thrift::protocol::TType _ktype52;
+            ::apache::thrift::protocol::TType _vtype53;
+            xfer += iprot->readMapBegin(_ktype52, _vtype53, _size51);
+            uint32_t _i55;
+            for (_i55 = 0; _i55 < _size51; ++_i55)
             {
-              xfer += iprot->readString(this->attributestoget[_i53]);
+              std::string _key56;
+              xfer += iprot->readString(_key56);
+              ValueType& _val57 = this->attributestoget[_key56];
+              xfer += _val57.read(iprot);
             }
-            xfer += iprot->readListEnd();
+            xfer += iprot->readMapEnd();
           }
           this->__isset.attributestoget = true;
         } else {
@@ -574,15 +582,16 @@ uint32_t dynamodb_access_scan_args::write(::apache::thrift::protocol::TProtocol*
   xfer += oprot->writeString(this->tablename);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("attributestoget", ::apache::thrift::protocol::T_LIST, 2);
+  xfer += oprot->writeFieldBegin("attributestoget", ::apache::thrift::protocol::T_MAP, 2);
   {
-    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRING, static_cast<uint32_t>(this->attributestoget.size()));
-    std::vector<std::string> ::const_iterator _iter54;
-    for (_iter54 = this->attributestoget.begin(); _iter54 != this->attributestoget.end(); ++_iter54)
+    xfer += oprot->writeMapBegin(::apache::thrift::protocol::T_STRING, ::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->attributestoget.size()));
+    std::map<std::string, ValueType> ::const_iterator _iter58;
+    for (_iter58 = this->attributestoget.begin(); _iter58 != this->attributestoget.end(); ++_iter58)
     {
-      xfer += oprot->writeString((*_iter54));
+      xfer += oprot->writeString(_iter58->first);
+      xfer += _iter58->second.write(oprot);
     }
-    xfer += oprot->writeListEnd();
+    xfer += oprot->writeMapEnd();
   }
   xfer += oprot->writeFieldEnd();
 
@@ -609,15 +618,16 @@ uint32_t dynamodb_access_scan_pargs::write(::apache::thrift::protocol::TProtocol
   xfer += oprot->writeString((*(this->tablename)));
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("attributestoget", ::apache::thrift::protocol::T_LIST, 2);
+  xfer += oprot->writeFieldBegin("attributestoget", ::apache::thrift::protocol::T_MAP, 2);
   {
-    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRING, static_cast<uint32_t>((*(this->attributestoget)).size()));
-    std::vector<std::string> ::const_iterator _iter55;
-    for (_iter55 = (*(this->attributestoget)).begin(); _iter55 != (*(this->attributestoget)).end(); ++_iter55)
+    xfer += oprot->writeMapBegin(::apache::thrift::protocol::T_STRING, ::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>((*(this->attributestoget)).size()));
+    std::map<std::string, ValueType> ::const_iterator _iter59;
+    for (_iter59 = (*(this->attributestoget)).begin(); _iter59 != (*(this->attributestoget)).end(); ++_iter59)
     {
-      xfer += oprot->writeString((*_iter55));
+      xfer += oprot->writeString(_iter59->first);
+      xfer += _iter59->second.write(oprot);
     }
-    xfer += oprot->writeListEnd();
+    xfer += oprot->writeMapEnd();
   }
   xfer += oprot->writeFieldEnd();
 
@@ -987,17 +997,17 @@ uint32_t dynamodb_access_update_args::read(::apache::thrift::protocol::TProtocol
         if (ftype == ::apache::thrift::protocol::T_MAP) {
           {
             this->values.clear();
-            uint32_t _size56;
-            ::apache::thrift::protocol::TType _ktype57;
-            ::apache::thrift::protocol::TType _vtype58;
-            xfer += iprot->readMapBegin(_ktype57, _vtype58, _size56);
-            uint32_t _i60;
-            for (_i60 = 0; _i60 < _size56; ++_i60)
+            uint32_t _size60;
+            ::apache::thrift::protocol::TType _ktype61;
+            ::apache::thrift::protocol::TType _vtype62;
+            xfer += iprot->readMapBegin(_ktype61, _vtype62, _size60);
+            uint32_t _i64;
+            for (_i64 = 0; _i64 < _size60; ++_i64)
             {
-              std::string _key61;
-              xfer += iprot->readString(_key61);
-              ValueType& _val62 = this->values[_key61];
-              xfer += _val62.read(iprot);
+              std::string _key65;
+              xfer += iprot->readString(_key65);
+              ValueType& _val66 = this->values[_key65];
+              xfer += _val66.read(iprot);
             }
             xfer += iprot->readMapEnd();
           }
@@ -1034,11 +1044,11 @@ uint32_t dynamodb_access_update_args::write(::apache::thrift::protocol::TProtoco
   xfer += oprot->writeFieldBegin("values", ::apache::thrift::protocol::T_MAP, 3);
   {
     xfer += oprot->writeMapBegin(::apache::thrift::protocol::T_STRING, ::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->values.size()));
-    std::map<std::string, ValueType> ::const_iterator _iter63;
-    for (_iter63 = this->values.begin(); _iter63 != this->values.end(); ++_iter63)
+    std::map<std::string, ValueType> ::const_iterator _iter67;
+    for (_iter67 = this->values.begin(); _iter67 != this->values.end(); ++_iter67)
     {
-      xfer += oprot->writeString(_iter63->first);
-      xfer += _iter63->second.write(oprot);
+      xfer += oprot->writeString(_iter67->first);
+      xfer += _iter67->second.write(oprot);
     }
     xfer += oprot->writeMapEnd();
   }
@@ -1070,11 +1080,11 @@ uint32_t dynamodb_access_update_pargs::write(::apache::thrift::protocol::TProtoc
   xfer += oprot->writeFieldBegin("values", ::apache::thrift::protocol::T_MAP, 3);
   {
     xfer += oprot->writeMapBegin(::apache::thrift::protocol::T_STRING, ::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>((*(this->values)).size()));
-    std::map<std::string, ValueType> ::const_iterator _iter64;
-    for (_iter64 = (*(this->values)).begin(); _iter64 != (*(this->values)).end(); ++_iter64)
+    std::map<std::string, ValueType> ::const_iterator _iter68;
+    for (_iter68 = (*(this->values)).begin(); _iter68 != (*(this->values)).end(); ++_iter68)
     {
-      xfer += oprot->writeString(_iter64->first);
-      xfer += _iter64->second.write(oprot);
+      xfer += oprot->writeString(_iter68->first);
+      xfer += _iter68->second.write(oprot);
     }
     xfer += oprot->writeMapEnd();
   }
@@ -1239,17 +1249,17 @@ uint32_t dynamodb_access_createTable_args::read(::apache::thrift::protocol::TPro
         if (ftype == ::apache::thrift::protocol::T_MAP) {
           {
             this->properties.clear();
-            uint32_t _size65;
-            ::apache::thrift::protocol::TType _ktype66;
-            ::apache::thrift::protocol::TType _vtype67;
-            xfer += iprot->readMapBegin(_ktype66, _vtype67, _size65);
-            uint32_t _i69;
-            for (_i69 = 0; _i69 < _size65; ++_i69)
+            uint32_t _size69;
+            ::apache::thrift::protocol::TType _ktype70;
+            ::apache::thrift::protocol::TType _vtype71;
+            xfer += iprot->readMapBegin(_ktype70, _vtype71, _size69);
+            uint32_t _i73;
+            for (_i73 = 0; _i73 < _size69; ++_i73)
             {
-              std::string _key70;
-              xfer += iprot->readString(_key70);
-              std::string& _val71 = this->properties[_key70];
-              xfer += iprot->readString(_val71);
+              std::string _key74;
+              xfer += iprot->readString(_key74);
+              std::string& _val75 = this->properties[_key74];
+              xfer += iprot->readString(_val75);
             }
             xfer += iprot->readMapEnd();
           }
@@ -1286,11 +1296,11 @@ uint32_t dynamodb_access_createTable_args::write(::apache::thrift::protocol::TPr
   xfer += oprot->writeFieldBegin("properties", ::apache::thrift::protocol::T_MAP, 3);
   {
     xfer += oprot->writeMapBegin(::apache::thrift::protocol::T_STRING, ::apache::thrift::protocol::T_STRING, static_cast<uint32_t>(this->properties.size()));
-    std::map<std::string, std::string> ::const_iterator _iter72;
-    for (_iter72 = this->properties.begin(); _iter72 != this->properties.end(); ++_iter72)
+    std::map<std::string, std::string> ::const_iterator _iter76;
+    for (_iter76 = this->properties.begin(); _iter76 != this->properties.end(); ++_iter76)
     {
-      xfer += oprot->writeString(_iter72->first);
-      xfer += oprot->writeString(_iter72->second);
+      xfer += oprot->writeString(_iter76->first);
+      xfer += oprot->writeString(_iter76->second);
     }
     xfer += oprot->writeMapEnd();
   }
@@ -1322,11 +1332,11 @@ uint32_t dynamodb_access_createTable_pargs::write(::apache::thrift::protocol::TP
   xfer += oprot->writeFieldBegin("properties", ::apache::thrift::protocol::T_MAP, 3);
   {
     xfer += oprot->writeMapBegin(::apache::thrift::protocol::T_STRING, ::apache::thrift::protocol::T_STRING, static_cast<uint32_t>((*(this->properties)).size()));
-    std::map<std::string, std::string> ::const_iterator _iter73;
-    for (_iter73 = (*(this->properties)).begin(); _iter73 != (*(this->properties)).end(); ++_iter73)
+    std::map<std::string, std::string> ::const_iterator _iter77;
+    for (_iter77 = (*(this->properties)).begin(); _iter77 != (*(this->properties)).end(); ++_iter77)
     {
-      xfer += oprot->writeString(_iter73->first);
-      xfer += oprot->writeString(_iter73->second);
+      xfer += oprot->writeString(_iter77->first);
+      xfer += oprot->writeString(_iter77->second);
     }
     xfer += oprot->writeMapEnd();
   }
@@ -1691,13 +1701,13 @@ void dynamodb_accessClient::recv_put(OperationResult& _return)
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "put failed: unknown result");
 }
 
-void dynamodb_accessClient::get(GetResult& _return, const std::string& tablename, const KeyValue& key, const std::vector<std::string> & attributestoget)
+void dynamodb_accessClient::get(GetResult& _return, const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & attributestoget)
 {
   send_get(tablename, key, attributestoget);
   recv_get(_return);
 }
 
-void dynamodb_accessClient::send_get(const std::string& tablename, const KeyValue& key, const std::vector<std::string> & attributestoget)
+void dynamodb_accessClient::send_get(const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & attributestoget)
 {
   int32_t cseqid = 0;
   oprot_->writeMessageBegin("get", ::apache::thrift::protocol::T_CALL, cseqid);
@@ -1751,13 +1761,13 @@ void dynamodb_accessClient::recv_get(GetResult& _return)
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "get failed: unknown result");
 }
 
-void dynamodb_accessClient::scan(ScanReqResult& _return, const std::string& tablename, const std::vector<std::string> & attributestoget, const std::string& filterexpression)
+void dynamodb_accessClient::scan(ScanReqResult& _return, const std::string& tablename, const std::map<std::string, ValueType> & attributestoget, const std::string& filterexpression)
 {
   send_scan(tablename, attributestoget, filterexpression);
   recv_scan(_return);
 }
 
-void dynamodb_accessClient::send_scan(const std::string& tablename, const std::vector<std::string> & attributestoget, const std::string& filterexpression)
+void dynamodb_accessClient::send_scan(const std::string& tablename, const std::map<std::string, ValueType> & attributestoget, const std::string& filterexpression)
 {
   int32_t cseqid = 0;
   oprot_->writeMessageBegin("scan", ::apache::thrift::protocol::T_CALL, cseqid);
@@ -2537,13 +2547,13 @@ void dynamodb_accessConcurrentClient::recv_put(OperationResult& _return, const i
   } // end while(true)
 }
 
-void dynamodb_accessConcurrentClient::get(GetResult& _return, const std::string& tablename, const KeyValue& key, const std::vector<std::string> & attributestoget)
+void dynamodb_accessConcurrentClient::get(GetResult& _return, const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & attributestoget)
 {
   int32_t seqid = send_get(tablename, key, attributestoget);
   recv_get(_return, seqid);
 }
 
-int32_t dynamodb_accessConcurrentClient::send_get(const std::string& tablename, const KeyValue& key, const std::vector<std::string> & attributestoget)
+int32_t dynamodb_accessConcurrentClient::send_get(const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & attributestoget)
 {
   int32_t cseqid = this->sync_.generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(&this->sync_);
@@ -2623,13 +2633,13 @@ void dynamodb_accessConcurrentClient::recv_get(GetResult& _return, const int32_t
   } // end while(true)
 }
 
-void dynamodb_accessConcurrentClient::scan(ScanReqResult& _return, const std::string& tablename, const std::vector<std::string> & attributestoget, const std::string& filterexpression)
+void dynamodb_accessConcurrentClient::scan(ScanReqResult& _return, const std::string& tablename, const std::map<std::string, ValueType> & attributestoget, const std::string& filterexpression)
 {
   int32_t seqid = send_scan(tablename, attributestoget, filterexpression);
   recv_scan(_return, seqid);
 }
 
-int32_t dynamodb_accessConcurrentClient::send_scan(const std::string& tablename, const std::vector<std::string> & attributestoget, const std::string& filterexpression)
+int32_t dynamodb_accessConcurrentClient::send_scan(const std::string& tablename, const std::map<std::string, ValueType> & attributestoget, const std::string& filterexpression)
 {
   int32_t cseqid = this->sync_.generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(&this->sync_);

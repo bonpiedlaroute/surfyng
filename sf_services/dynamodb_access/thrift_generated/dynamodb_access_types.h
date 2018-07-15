@@ -144,9 +144,10 @@ inline std::ostream& operator<<(std::ostream& out, const GetResult& obj)
 }
 
 typedef struct _ScanReqResult__isset {
-  _ScanReqResult__isset() : result(false), values(false) {}
+  _ScanReqResult__isset() : result(false), values(false), scanend(false) {}
   bool result :1;
   bool values :1;
+  bool scanend :1;
 } _ScanReqResult__isset;
 
 class ScanReqResult : public virtual ::apache::thrift::TBase {
@@ -154,12 +155,13 @@ class ScanReqResult : public virtual ::apache::thrift::TBase {
 
   ScanReqResult(const ScanReqResult&);
   ScanReqResult& operator=(const ScanReqResult&);
-  ScanReqResult() {
+  ScanReqResult() : scanend(0) {
   }
 
   virtual ~ScanReqResult() throw();
   OperationResult result;
   std::vector<std::map<std::string, std::string> >  values;
+  bool scanend;
 
   _ScanReqResult__isset __isset;
 
@@ -167,11 +169,15 @@ class ScanReqResult : public virtual ::apache::thrift::TBase {
 
   void __set_values(const std::vector<std::map<std::string, std::string> > & val);
 
+  void __set_scanend(const bool val);
+
   bool operator == (const ScanReqResult & rhs) const
   {
     if (!(result == rhs.result))
       return false;
     if (!(values == rhs.values))
+      return false;
+    if (!(scanend == rhs.scanend))
       return false;
     return true;
   }

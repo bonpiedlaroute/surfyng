@@ -1,0 +1,85 @@
+/*
+   (c) copyright 2018
+   All rights reserved
+
+   author(s): Noel Tchidjo
+*/
+#include "PurgeRealEstateAd.h"
+#include <vector>
+#include <ctime>
+#include <chrono>
+#include <thread>
+#include <iostream>
+#include "surfyng/sf_services/sf_utils/inc/Algorithm.h"
+
+const std::string id_field = "ID";
+const std::string timestamp_field = "TIMESTAMP";
+const int nbSecondsPerDay = 86400;
+
+void purgeRealEstateAd(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tablename)
+{
+   std::vector<std::string> elementKeyToDelete;
+   std::map<std::string, ValueType> attributestoget;
+
+   ValueType value;
+   value.field = "";
+   value.fieldtype = Type::type::NUMBER;
+   attributestoget[id_field] = value;
+
+   value.fieldtype = Type::type::STRING;
+   attributestoget[timestamp_field] = value;
+
+   bool scanend = false;
+
+   // finding outdate keys
+   do
+   {
+      ScanReqResult scanReturn;
+      client->scan(scanReturn, tablename, attributestoget, "");
+
+      time_t current_time = time(nullptr);
+
+
+      std::cout << scanReturn.values.size() << " elements scan\n";
+
+
+      for(auto iter = scanReturn.values.begin(); iter != scanReturn.values.end();++iter)
+      {
+         const auto it_timestamp = iter->find(timestamp_field);
+
+         if( it_timestamp != iter->end())
+         {
+            struct tm last;
+            strptime(it_timestamp->second.c_str(), "%Y-%m-%dT%H:%M:%S", &last);
+            time_t last_modification_time = timegm(&last);
+
+            if((current_time - last_modification_time) >= nbSecondsPerDay)
+            {
+               const auto it_id = iter->find(id_field);
+
+               if( it_id != iter->end())
+               {
+                  elementKeyToDelete.emplace_back(it_id->second);
+               }
+            }
+         }
+      }
+      scanend = scanReturn.scanend;
+   }while(!scanend);
+
+   // remove keys found
+   OperationResult removeReturn;
+   for( auto key : elementKeyToDelete)
+   {
+      KeyValue keyToRemove;
+      keyToRemove.value.fieldtype = Type::type::NUMBER;
+      keyToRemove.value.field = key;
+      keyToRemove.key = "ID";
+
+      client->remove(removeReturn, tablename, keyToRemove);
+      // TODO manage bandwith limit
+      // work-around
+      std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+   }
+}

@@ -9,6 +9,7 @@
 #include <utility>
 #include <vector>
 #include <stdint.h>
+#include <ctime>
 
 namespace surfyng
 {

@@ -188,17 +188,20 @@ class ScanReqResult(object):
     Attributes:
      - result
      - values
+     - scanend
     """
 
     thrift_spec = (
         None,  # 0
         (1, TType.STRUCT, 'result', (OperationResult, OperationResult.thrift_spec), None, ),  # 1
         (2, TType.LIST, 'values', (TType.MAP, (TType.STRING, 'UTF8', TType.STRING, 'UTF8', False), False), None, ),  # 2
+        (3, TType.BOOL, 'scanend', None, None, ),  # 3
     )
 
-    def __init__(self, result=None, values=None,):
+    def __init__(self, result=None, values=None, scanend=None,):
         self.result = result
         self.values = values
+        self.scanend = scanend
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -231,6 +234,11 @@ class ScanReqResult(object):
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.BOOL:
+                    self.scanend = iprot.readBool()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -255,6 +263,10 @@ class ScanReqResult(object):
                     oprot.writeString(viter24.encode('utf-8') if sys.version_info[0] == 2 else viter24)
                 oprot.writeMapEnd()
             oprot.writeListEnd()
+            oprot.writeFieldEnd()
+        if self.scanend is not None:
+            oprot.writeFieldBegin('scanend', TType.BOOL, 3)
+            oprot.writeBool(self.scanend)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()

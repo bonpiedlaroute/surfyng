@@ -14,6 +14,7 @@ struct ScanReqResult
 {
    1: OperationResult result
    2: list<map<string, string>> values
+   3: bool scanend
 }
 
 enum Type
@@ -37,8 +38,8 @@ struct KeyValue
 service dynamodb_access
 {
    OperationResult put(1: string tablename, 2: map<string, ValueType> values),
-   GetResult get(1: string tablename, 2: KeyValue key, 3: list<string> attributestoget),
-   ScanReqResult scan(1: string tablename, 2: list<string> attributestoget, 3: string filterexpression),
+   GetResult get(1: string tablename, 2: KeyValue key, 3: map<string, ValueType> attributestoget),
+   ScanReqResult scan(1: string tablename, 2: map<string, ValueType> attributestoget, 3: string filterexpression),
    OperationResult remove(1: string tablename, 2: KeyValue key),
    OperationResult update(1: string tablename, 2: KeyValue key, 3: map<string, ValueType> values),
    OperationResult createTable(1: string tablename, 2: KeyValue key, 3: map<string, string> properties),

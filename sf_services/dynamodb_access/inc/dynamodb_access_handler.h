@@ -30,9 +30,9 @@ public:
 
    void put(OperationResult& _return, const std::string& tablename, const std::map<std::string, ValueType> & values);
 
-   void get(GetResult& _return, const std::string& tablename, const KeyValue& key, const std::vector<std::string> & attributestoget);
+   void get(GetResult& _return, const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & attributestoget);
 
-   void scan(ScanReqResult& _return, const std::string& tablename, const std::vector<std::string> & attributestoget, const std::string& filterexpression);
+   void scan(ScanReqResult& _return, const std::string& tablename, const std::map<std::string, ValueType> & attributestoget, const std::string& filterexpression);
 
    void remove(OperationResult& _return, const std::string& tablename, const KeyValue& key);
 
@@ -53,8 +53,11 @@ private:
       result.error = error.GetMessage();
    }
    void manageBandwitdhLimit(const std::string& service, const std::chrono::high_resolution_clock::time_point& lasttime, const int64_t& minimum_interval);
+   Type::type findAttrType(const std::string& attr, const KeyValue& key, const std::map<std::string, ValueType>& attributestoget) const;
+   Type::type findAttrType(const std::string& attr, const std::map<std::string, ValueType>& attributestoget) const;
 private:
    std::shared_ptr<Aws::DynamoDB::DynamoDBClient> m_client;
+   Aws::Map<Aws::String, Aws::DynamoDB::Model::AttributeValue> m_lastEvaluatedKey;
 };
 
 }

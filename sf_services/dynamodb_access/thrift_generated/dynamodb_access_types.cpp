@@ -272,6 +272,10 @@ void ScanReqResult::__set_values(const std::vector<std::map<std::string, std::st
   this->values = val;
 }
 
+void ScanReqResult::__set_scanend(const bool val) {
+  this->scanend = val;
+}
+
 uint32_t ScanReqResult::read(::apache::thrift::protocol::TProtocol* iprot) {
 
   apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
@@ -336,6 +340,14 @@ uint32_t ScanReqResult::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_BOOL) {
+          xfer += iprot->readBool(this->scanend);
+          this->__isset.scanend = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -378,6 +390,10 @@ uint32_t ScanReqResult::write(::apache::thrift::protocol::TProtocol* oprot) cons
   }
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("scanend", ::apache::thrift::protocol::T_BOOL, 3);
+  xfer += oprot->writeBool(this->scanend);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -387,17 +403,20 @@ void swap(ScanReqResult &a, ScanReqResult &b) {
   using ::std::swap;
   swap(a.result, b.result);
   swap(a.values, b.values);
+  swap(a.scanend, b.scanend);
   swap(a.__isset, b.__isset);
 }
 
 ScanReqResult::ScanReqResult(const ScanReqResult& other26) {
   result = other26.result;
   values = other26.values;
+  scanend = other26.scanend;
   __isset = other26.__isset;
 }
 ScanReqResult& ScanReqResult::operator=(const ScanReqResult& other27) {
   result = other27.result;
   values = other27.values;
+  scanend = other27.scanend;
   __isset = other27.__isset;
   return *this;
 }
@@ -406,6 +425,7 @@ void ScanReqResult::printTo(std::ostream& out) const {
   out << "ScanReqResult(";
   out << "result=" << to_string(result);
   out << ", " << "values=" << to_string(values);
+  out << ", " << "scanend=" << to_string(scanend);
   out << ")";
 }
 

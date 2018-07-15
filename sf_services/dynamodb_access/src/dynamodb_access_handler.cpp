@@ -144,7 +144,31 @@ void dynamodb_accessHandler::setKeyAttributeValue(Aws::DynamoDB::Model::Attribut
    }
 }
 
-void dynamodb_accessHandler::get(GetResult& _return, const std::string& tablename, const KeyValue& key, const std::vector<std::string> & attributestoget)
+Type::type dynamodb_accessHandler::findAttrType(const std::string& attr, const KeyValue& key, const std::map<std::string, ValueType>& attributestoget) const
+{
+   if( attr == key.key )
+   {
+      return key.value.fieldtype;
+   }
+   else
+   {
+      return findAttrType(attr, attributestoget);
+   }
+}
+Type::type dynamodb_accessHandler::findAttrType(const std::string& attr, const std::map<std::string, ValueType>& attributestoget) const
+{
+   auto iter = attributestoget.find(attr);
+
+   if( iter != attributestoget.end() )
+   {
+      return iter->second.fieldtype;
+   }
+   else
+   {
+      return Type::type::STRING;
+   }
+}
+void dynamodb_accessHandler::get(GetResult& _return, const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & attributestoget)
 {
    GetItemRequest getItemRequest;
 
@@ -161,7 +185,7 @@ void dynamodb_accessHandler::get(GetResult& _return, const std::string& tablenam
 
    for( auto value: attributestoget)
    {
-         attributesToGet.push_back(value.c_str());
+      attributesToGet.push_back(value.first.c_str());
    }
 
 
@@ -179,7 +203,22 @@ void dynamodb_accessHandler::get(GetResult& _return, const std::string& tablenam
 
       for(Aws::Map<Aws::String, AttributeValue>::const_iterator iter = itemCollection.begin(); iter != itemCollection.end(); ++iter)
       {
-         _return.values[iter->first.c_str()] = iter->second.GetS();
+         Type::type attrType = findAttrType(iter->first.c_str(), key, attributestoget);
+
+         switch(attrType)
+         {
+            case Type::type::NUMBER:
+            {
+               _return.values[iter->first.c_str()] = iter->second.GetN();
+               break;
+            }
+            default:
+            {
+               _return.values[iter->first.c_str()] = iter->second.GetS();
+               break;
+            }
+         }
+
       }
    }
 }
@@ -195,7 +234,7 @@ void dynamodb_accessHandler::remove(OperationResult& _return, const std::string&
    deleteItemRequest.AddKey(key.key.c_str(), Key);
 
    deleteItemRequest.SetTableName(tablename.c_str());
-   deleteItemRequest.SetReturnValues(ReturnValue::ALL_OLD);
+   deleteItemRequest.SetReturnValues(ReturnValue::NONE);
 
 
 
@@ -300,8 +339,9 @@ void dynamodb_accessHandler::deleteTable(OperationResult& _return, const std::st
    fillResult(_return, deleteTableOutcome);
 }
 
-void dynamodb_accessHandler::scan(ScanReqResult& _return, const std::string& tablename, const std::vector<std::string> & attributestoget, const std::string& filterexpression)
+void dynamodb_accessHandler::scan(ScanReqResult& _return, const std::string& tablename, const std::map<std::string, ValueType> & attributestoget, const std::string& filterexpression)
 {
+   // TODO manage the case of concurrent access
    ScanRequest scanRequest;
 
    scanRequest.WithTableName(tablename.c_str());
@@ -310,12 +350,15 @@ void dynamodb_accessHandler::scan(ScanReqResult& _return, const std::string& tab
 
    for( auto att : attributestoget )
    {
-      attToget.push_back(att.c_str());
+      attToget.push_back(att.first.c_str());
    }
 
    scanRequest.SetAttributesToGet(attToget);
 
-   scanRequest.SetFilterExpression(filterexpression.c_str());
+   if(!filterexpression.empty())
+      scanRequest.SetFilterExpression(filterexpression.c_str());
+
+   scanRequest.WithExclusiveStartKey(m_lastEvaluatedKey);
 
    ScanOutcome scanOutcome = m_client->Scan(scanRequest);
 
@@ -330,7 +373,21 @@ void dynamodb_accessHandler::scan(ScanReqResult& _return, const std::string& tab
             std::map<std::string, std::string> attributes;
             for(Aws::Map<Aws::String, AttributeValue>::const_iterator iter = item.begin(); iter != item.end(); ++iter)
             {
-               attributes[iter->first.c_str()] = iter->second.GetS();
+               Type::type attrType = findAttrType(iter->first.c_str(), attributestoget);
+
+               switch(attrType)
+               {
+                  case Type::type::NUMBER:
+                  {
+                     attributes[iter->first.c_str()] = iter->second.GetN();
+                     break;
+                  }
+                  default:
+                  {
+                     attributes[iter->first.c_str()] = iter->second.GetS();
+                     break;
+                  }
+               }
             }
 
             _return.values.push_back(attributes);
@@ -338,6 +395,15 @@ void dynamodb_accessHandler::scan(ScanReqResult& _return, const std::string& tab
 
    }
 
+   m_lastEvaluatedKey = scanOutcome.GetResult().GetLastEvaluatedKey();
+   if( m_lastEvaluatedKey.empty() )
+   {
+      _return.scanend = true;
+   }
+   else
+   {
+      _return.scanend = false;
+   }
    Log::getInstance()->info(" scan sent");
 }
 
