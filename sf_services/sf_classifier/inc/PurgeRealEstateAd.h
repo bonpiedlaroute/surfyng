@@ -10,5 +10,12 @@
 #include <memory>
 #include "surfyng/sf_services/dynamodb_access/thrift_generated/dynamodb_access.h"
 
+namespace surfyng
+{
+namespace classifier
+{
 extern void purgeRealEstateAd(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tablename);
+}
+}
+
 #endif /* INC_PURGEREALESTATEAD_H_ */

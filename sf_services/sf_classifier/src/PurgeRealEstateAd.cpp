@@ -11,13 +11,24 @@
 #include <thread>
 #include <iostream>
 #include "surfyng/sf_services/sf_utils/inc/Algorithm.h"
+#include "surfyng/sf_services/sf_utils/inc/Logger.h"
+#include <sstream>
+
+namespace surfyng
+{
+namespace classifier
+{
 
 const std::string id_field = "ID";
 const std::string timestamp_field = "TIMESTAMP";
 const int nbSecondsPerDay = 86400;
 
+using Log = surfyng::utils::Logger;
+
 void purgeRealEstateAd(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tablename)
 {
+   Log::getInstance()->info("Purge old Ad");
+
    std::vector<std::string> elementKeyToDelete;
    std::map<std::string, ValueType> attributestoget;
 
@@ -39,9 +50,10 @@ void purgeRealEstateAd(const std::shared_ptr<dynamodb_accessClient>& client, con
 
       time_t current_time = time(nullptr);
 
+      std::stringstream logstream;
+      logstream << "Purge: " << scanReturn.values.size() << " elements scan\n";
 
-      std::cout << scanReturn.values.size() << " elements scan\n";
-
+      Log::getInstance()->info(logstream.str());
 
       for(auto iter = scanReturn.values.begin(); iter != scanReturn.values.end();++iter)
       {
@@ -82,4 +94,10 @@ void purgeRealEstateAd(const std::shared_ptr<dynamodb_accessClient>& client, con
       std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
    }
+
+   Log::getInstance()->info("Purge Finished!");
 }
+
+}
+}
+

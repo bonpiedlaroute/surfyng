@@ -22,7 +22,7 @@ void RealEstateAd::setId(int64_t id)
 {
    m_id = std::move(id);
 }
-int64_t RealEstateAd::getId()
+int64_t RealEstateAd::getId() const
 {
    return m_id;
 }

@@ -25,7 +25,8 @@ extern const char* RealEstateTypeOfHeating;
 extern const char* RealEstateCellars;
 extern const char* RealEstateFloor;
 extern const char* RealEstateParking;
-extern const char* Key;
+extern const char* RealEstateKey;
+extern const char* RealEstateSimilarAd;
 
 struct CriteriaID
 {

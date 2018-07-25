@@ -33,7 +33,7 @@ class RealEstateAd
 public:
    explicit RealEstateAd(int64_t id);
    void setId(int64_t id);
-   int64_t getId();
+   int64_t getId() const;
    void setDescription(const std::string& id, const std::string& value);
    std::string getDescription(const std::string& id) const;
 private:

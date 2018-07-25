@@ -49,7 +49,7 @@ void RealEstateAdClassifier::loadAd(const std::string& filename)
       std::shared_ptr<RealEstateAd> realEstateAd = std::make_shared<RealEstateAd>(0);
       for (auto & property: array_element.second)
       {
-         if( property.first == Key)
+         if( property.first == RealEstateKey)
          {
             realEstateAd->setId(atoi(property.second.get_value <std::string >().c_str()));
          }

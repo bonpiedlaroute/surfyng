@@ -12,7 +12,8 @@ SET( SRCS src/Criteria.cpp
    ../../../surfyng/sf_services/dynamodb_access/thrift_generated/dynamodb_access_constants.cpp
    ../../../surfyng/sf_services/dynamodb_access/thrift_generated/dynamodb_access_types.cpp
    ../../../surfyng/sf_services/dynamodb_access/thrift_generated/dynamodb_access.cpp
-   src/sf_classifier.cpp  
+   src/Classifier.cpp
+   src/Main.cpp  
 )
 
 project(sf_classifier)

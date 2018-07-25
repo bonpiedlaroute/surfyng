@@ -25,7 +25,8 @@ const char* RealEstateTypeOfHeating = "TYPE_OF_HEATING";
 const char* RealEstateCellars = "CELLARS";
 const char* RealEstateFloor = "FLOOR";
 const char* RealEstateParking = "PARKING";
-const char* Key = "ID";
+const char* RealEstateKey = "ID";
+const char* RealEstateSimilarAd = "SIMILAR_AD";
 
 
 Criteria::Criteria(CriteriaID::Value id) : m_id(std::move(id)), m_critOKAndSameAd(0),
