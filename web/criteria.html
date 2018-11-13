@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Mes critères </title>
+
+    <!-- Bootstrap core CSS -->
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <!--  Surfyn styles -->
+    <link href="surfyn.css" rel="stylesheet">
+  </head>
+    <body >
+
+    <div style="height:60px;background-color:#222545;" class="row mx-auto">
+
+      <a style="font-size:30px; color:white;" class="mx-auto">Mes Critères</a>
+
+    </div>
+     <div style="height:140px;" class="row mx-auto">
+        <div class="sf_search_block mx-auto d-block">
+         <div class="sf_input_block">
+           <i class="fa fa-search sf_search_icon"></i>
+           <input class="form-control" type="search" placeholder="Ville" name="city" style ="padding-left:30px; width:250px;"> </input>
+         </div>
+       </div>
+     </div>
+
+    <div class="sf_line row mx-auto">
+      <a style="font-size:18px; color:black;" class="mx-auto">Prix</a>
+    </div>
+    <div style="height:150px;" class="row mx-auto">
+
+      <div class="sf_slider_annotation">
+        <div class="sf_slider_label sf_slider_min">MIN</div>
+        <div class="sf_slider_track_width"></div>
+        <div class="sf_slider_label sf_slider_max">MAX</div>
+      </div>
+
+      <div class="sf_range_slider">
+        <div class="sf_range_slider_input sf_slider_min no_select" id = "price_min">50 K€</div>
+        <div class="sf_range_slider_track sf_slider_track_width"></div>
+        <div class="sf_range_slider_input sf_slider_max no_select" id = "price_max">4000 K€</div>
+      </div>
+    </div>
+    <div class="sf_line row mx-auto">
+      <a style="font-size:18px; color:black;" class="mx-auto">Type de bien</a>
+    </div>
+    <div style="height:150px;" class="row mx-auto">
+      <div style = " display: flex; align-items: center;flex-direction:row;width:100%;justify-content: space-evenly;flex-wrap:wrap;">
+        <div style = "width:15%; height:120px; border-radius:6px;  background-image:url('loft.svg');
+          background-repeat: no-repeat;background-size: cover;background-color:#61AEB5;display: flex; transform:scale(0.85);" id="loft">
+          <span style="align-self: flex-end;margin : 0 auto;font-weight:bold;" class="no_select">Loft</span>
+        </div>
+        <div style = "width:15%; height:120px; border-radius:6px;  background-image:url('home_buy.svg');
+          background-repeat: no-repeat;background-size: cover;background-color:#61AEB5;display: flex; transform:scale(0.85);" id ="house">
+          <span style="align-self: flex-end;margin : 0 auto;font-weight:bold;" class="no_select">Maison</span>
+        </div>
+        <div style = "width:15%; height:120px;border-radius:6px;  background-image:url('home_rent.svg');
+          background-repeat: no-repeat;background-size: cover;background-color:#4C8E99;display: flex;transform:scale(0.85);" id="apart">
+          <span style="align-self: flex-end;margin : 0 auto;font-weight:bold;" class="no_select">Appart</span>
+        </div>
+        <div style = "width:15%; height:120px;border-radius:6px;  background-image:url('office.svg');
+          background-repeat: no-repeat;background-size: cover;background-color:#4C8E99;display: flex;transform:scale(0.85);" id="office">
+          <span style="align-self: flex-end;margin : 0 auto;font-weight:bold;" class="no_select">Bureau</span>
+        </div>
+
+      </div>
+
+    </div>
+    <div class="sf_line row mx-auto">
+      <a style="font-size:18px; color:black;" class="mx-auto">Superficie</a>
+    </div>
+    <div style="height:150px;" class="row mx-auto">
+      <div class="sf_slider_annotation">
+        <div class="sf_slider_label sf_slider_min">MIN</div>
+        <div class="sf_slider_track_width"></div>
+        <div class="sf_slider_label sf_slider_max">MAX</div>
+      </div>
+
+      <div class="sf_range_slider">
+        <div class="sf_range_slider_input sf_slider_min no_select" id = "area_min">10 m2</div>
+        <div class="sf_range_slider_track sf_slider_track_width"></div>
+        <div class="sf_range_slider_input sf_slider_max no_select" id = "area_max">400 m2</div>
+      </div>
+    </div>
+    <div class="sf_line row mx-auto">
+      <a style="font-size:18px; color:black;" class="mx-auto">Temps de trajet</a>
+    </div>
+    <div style="height:150px;" class="row mx-auto">
+      <div style = " display: flex; align-items: center;flex-direction:row;width:100%;justify-content: space-evenly;flex-wrap:wrap;">
+        <div style = "width:15%; height:120px; border-radius:6px;  background-image:url('work.svg');
+          background-repeat: no-repeat;background-size: cover;background-color:#61AEB5;display: flex; transform:scale(0.85);" id="work">
+          <span style="align-self: flex-end;margin : 0 auto;font-weight:bold;" class="no_select">Travail</span>
+        </div>
+        <div style = "width:15%; height:120px;border-radius:6px;  background-image:url('school.svg');
+          background-repeat: no-repeat;background-size: cover;background-color:#4C8E99;display: flex;transform:scale(0.85);" id ="school">
+          <span style="align-self: flex-end;margin : 0 auto;font-weight:bold;" class="no_select">Ecole</span>
+        </div>
+
+      </div>
+
+    </div>
+        <a style="position:fixed; bottom:10px; right: 20px; z-index:20;" href="#">
+        <i class="fas fa-arrow-circle-right" style="font-size: 50px !important; color:green; " ></i>
+        </a>
+    <script>
+        var divLoft = document.getElementById("loft");
+        var divHouse = document.getElementById("house");
+        var divApart = document.getElementById("apart");
+        var divOffice = document.getElementById("office");
+
+        var propertyType = Object.freeze({"loft":0, "house":1, "apart":2, "office":3});
+        var isSelected = [false, false, false, false];
+
+        function handleEvtDownPropertyType(event, divElt, evtType)
+        {
+          if( isSelected[evtType])
+          {
+            isSelected[evtType] = false;
+            divElt.style.transform = "scale(0.85)";
+            divElt.style.border = "";
+          }
+          else
+          {
+            isSelected[evtType] = true;
+            divElt.style.transform = "scale(1)";
+            divElt.style.border = "solid 3px blue";
+          }
+        }
+        function handleEvtDownLoft(event)
+        {
+          handleEvtDownPropertyType(event,divLoft, propertyType.loft);
+        }
+        function handleEvtDownHouse(event)
+        {
+          handleEvtDownPropertyType(event,divHouse, propertyType.house);
+        }
+        function handleEvtDownApart(event)
+        {
+          handleEvtDownPropertyType(event,divApart, propertyType.apart);
+        }
+        function handleEvtDownOffice(event)
+        {
+          handleEvtDownPropertyType(event,divOffice, propertyType.office);
+        }
+        divLoft.addEventListener('mousedown', handleEvtDownLoft, true);
+        divHouse.addEventListener('mousedown', handleEvtDownHouse, true);
+        divApart.addEventListener('mousedown', handleEvtDownApart, true);
+        divOffice.addEventListener('mousedown', handleEvtDownOffice, true);
+    </script>
+    <script src="surfyn.js"></script>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+  </body>
+</html>

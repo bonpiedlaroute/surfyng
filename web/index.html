@@ -1,42 +1,51 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-   <link rel="stylesheet" href="styles.css">
-   <title> Surfyng </title>
-   <meta charset="UTF-8">
-</head>
-<body>
-<h1 class="title_home"> Surfyng
-</h1>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-<br>
-<div class="search">
-   <form action="propertyresults.php" method="post">
-   <p>Lieu (ville):</p>
-   <input type="text" name="city">
-   <br>
+    <title>Surfyn - Simplifier la recherche de bien immobilier </title>
 
-   <p>Type de Bien:</p>
-   <select name="property_type">
-      <option value="appartement">Appartement</option>
-      <option value="maison">Maison</option>
-      <option value="terrain">Terrain</option>
-      <option value="garage">Garage</option>
-   </select>
-   <br><br>
-   
-   <div class="price_box">Prix min:
-   <input type="text" class="ta_price" name="price_min">
-   </div>
+    <!-- Bootstrap core CSS -->
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <!--  Surfyn styles -->
+    <link href="surfyn.css" rel="stylesheet">
+  </head>
 
-   <div class="price_box">Prix max:
-   <input type="text" class="ta_price" name="price_max">
-   </div>
-   <p>Nombre de pieces:</p>
-   <input type="text" class="ta_nb_rooms" name="nb_rooms">
-   <br><br>
-   <input type="submit" name="valid" value="Valider">
-   </form>
-</div>
-</body>
+    <body style="background-color:#222545;">
+    <div style="height:350px;" class="row mx-auto">
+
+         <img src="logo.svg" class="home_logo mx-auto d-block"  />
+
+    </div>
+    <div style="height:200px;" class="row mx-auto">
+
+      <a class="col-lg-2 mx-auto"></a>
+
+      <a class="col-lg-2 mx-auto d-block search_type_button buy_background" href="criteria.html?search_type=1">
+       <img src="home_buy.svg" class="mx-auto d-block" />
+        Acheter
+      </a>
+
+      <a class="col-lg-2 mx-auto d-block search_type_button rent_background" href="criteria.html?search_type=2">
+        <img src="home_rent.svg" class="mx-auto d-block"  />
+      Louer
+      </a>
+
+       <a class="col-lg-2 mx-auto"></a>
+
+    </div>
+
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+  </body>
 </html>
