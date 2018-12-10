@@ -17,10 +17,25 @@
     <body >
 
     <div style="height:60px;background-color:#222545;" class="row mx-auto">
+      <div style="display:flex;align-items:center;justify-content: space-between;flex-direction:row; height:60px;width:100%">
+        <div style="height:60px; width:30%;">
+          <a href="javascript:history.back()">
+          <i class="fas fa-arrow-left" style="font-size: 30px !important; color:white; margin-top:10px; margin-left:15px;" ></i>
+          </a>
+        </div>
+        <div style="height:60px; width:30%;display:flex; justify-content:center;align-items:baseline;">
+          <a style="font-size:30px; color:white;">Mes critères</a>
+        </div>
+        <div style="height:60px; width:30%;">
 
-      <a style="font-size:30px; color:white;" class="mx-auto">Mes Critères</a>
-
+        </div>
+      </div>
     </div>
+
+
+
+
+
      <div style="height:140px;" class="row mx-auto">
         <div class="sf_search_block mx-auto d-block">
          <div class="sf_input_block">
@@ -57,7 +72,7 @@
           <span style="align-self: flex-end;margin : 0 auto;font-weight:bold;" class="no_select">Loft</span>
         </div>
         <div style = "width:15%; height:120px; border-radius:6px;  background-image:url('home_buy.svg');
-          background-repeat: no-repeat;background-size: cover;background-color:#61AEB5;display: flex; transform:scale(0.85);" id ="house">
+          background-repeat: no-repeat;background-size: cover;background-color:#61AEB5;display: flex; transform:scale(0.85);" id="house">
           <span style="align-self: flex-end;margin : 0 auto;font-weight:bold;" class="no_select">Maison</span>
         </div>
         <div style = "width:15%; height:120px;border-radius:6px;  background-image:url('home_rent.svg');
@@ -105,53 +120,11 @@
       </div>
 
     </div>
-        <a style="position:fixed; bottom:10px; right: 20px; z-index:20;" href="#">
+        <a style="position:fixed; bottom:10px; right: 20px; z-index:20;" id="validate" href="#">
         <i class="fas fa-arrow-circle-right" style="font-size: 50px !important; color:green; " ></i>
         </a>
     <script>
-        var divLoft = document.getElementById("loft");
-        var divHouse = document.getElementById("house");
-        var divApart = document.getElementById("apart");
-        var divOffice = document.getElementById("office");
 
-        var propertyType = Object.freeze({"loft":0, "house":1, "apart":2, "office":3});
-        var isSelected = [false, false, false, false];
-
-        function handleEvtDownPropertyType(event, divElt, evtType)
-        {
-          if( isSelected[evtType])
-          {
-            isSelected[evtType] = false;
-            divElt.style.transform = "scale(0.85)";
-            divElt.style.border = "";
-          }
-          else
-          {
-            isSelected[evtType] = true;
-            divElt.style.transform = "scale(1)";
-            divElt.style.border = "solid 3px blue";
-          }
-        }
-        function handleEvtDownLoft(event)
-        {
-          handleEvtDownPropertyType(event,divLoft, propertyType.loft);
-        }
-        function handleEvtDownHouse(event)
-        {
-          handleEvtDownPropertyType(event,divHouse, propertyType.house);
-        }
-        function handleEvtDownApart(event)
-        {
-          handleEvtDownPropertyType(event,divApart, propertyType.apart);
-        }
-        function handleEvtDownOffice(event)
-        {
-          handleEvtDownPropertyType(event,divOffice, propertyType.office);
-        }
-        divLoft.addEventListener('mousedown', handleEvtDownLoft, true);
-        divHouse.addEventListener('mousedown', handleEvtDownHouse, true);
-        divApart.addEventListener('mousedown', handleEvtDownApart, true);
-        divOffice.addEventListener('mousedown', handleEvtDownOffice, true);
     </script>
     <script src="surfyn.js"></script>
     <!-- Bootstrap core JavaScript

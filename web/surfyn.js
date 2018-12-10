@@ -8,8 +8,10 @@ var inputType = Object.freeze({"priceMin":0, "priceMax":1, "areaMin":2, "areaMax
 var offset = [0, 0, 0, 0];
 var isDown = [false, false, false, false];
 var values = [50000, 4000000, 10, 400];
-var startPosition = [inputPriceMin.offsetLeft, inputPriceMax.offsetLeft, inputAreaMin.offsetLeft, inputAreaMax.offsetLeft];
-var lastPosition = [inputPriceMin.offsetLeft, inputPriceMax.offsetLeft, inputAreaMin.offsetLeft, inputAreaMax.offsetLeft];
+var startPosition = [inputPriceMin?inputPriceMin.offsetLeft:0, inputPriceMax?inputPriceMax.offsetLeft:0,
+  inputAreaMin?inputAreaMin.offsetLeft:0, inputAreaMax?inputAreaMax.offsetLeft:0];
+var lastPosition = [inputPriceMin?inputPriceMin.offsetLeft:0, inputPriceMax?inputPriceMax.offsetLeft:0,
+  inputAreaMin?inputAreaMin.offsetLeft:0, inputAreaMax?inputAreaMax.offsetLeft:0];
 
 
 function roundvalue(oldValue)
@@ -212,14 +214,142 @@ function handleEvtMove(event) {
               }
         }
 }
-inputPriceMin.addEventListener('mousedown', handleEvtDownPriceMin, true);
 
-inputPriceMax.addEventListener('mousedown', handleEvtDownPriceMax, true);
+if( inputPriceMin && inputPriceMax && inputAreaMin && inputAreaMax)
+{
+  inputPriceMin.addEventListener('mousedown', handleEvtDownPriceMin, true);
 
-inputAreaMin.addEventListener('mousedown', handleEvtDownAreaMin, true);
+  inputPriceMax.addEventListener('mousedown', handleEvtDownPriceMax, true);
 
-inputAreaMax.addEventListener('mousedown', handleEvtDownAreaMax, true);
+  inputAreaMin.addEventListener('mousedown', handleEvtDownAreaMin, true);
 
-document.addEventListener('mouseup', handleEvtUp, true);
+  inputAreaMax.addEventListener('mousedown', handleEvtDownAreaMax, true);
 
-document.addEventListener('mousemove', handleEvtMove, true);
+  document.addEventListener('mouseup', handleEvtUp, true);
+
+  document.addEventListener('mousemove', handleEvtMove, true);
+
+}
+
+
+
+
+var divLoft = document.getElementById("loft");
+var divHouse = document.getElementById("house");
+var divApart = document.getElementById("apart");
+var divOffice = document.getElementById("office");
+
+var propertyType = Object.freeze({"loft":0, "house":1, "apart":2, "office":3});
+var isSelected = [false, false, false, false];
+
+function handleEvtDownPropertyType(event, divElt, evtType)
+{
+  if( isSelected[evtType])
+  {
+    isSelected[evtType] = false;
+    divElt.style.transform = "scale(0.85)";
+    divElt.style.border = "";
+  }
+  else
+  {
+    isSelected[evtType] = true;
+    divElt.style.transform = "scale(1)";
+    divElt.style.border = "solid 3px blue";
+  }
+}
+function handleEvtDownLoft(event)
+{
+  handleEvtDownPropertyType(event,divLoft, propertyType.loft);
+}
+function handleEvtDownHouse(event)
+{
+  handleEvtDownPropertyType(event,divHouse, propertyType.house);
+}
+function handleEvtDownApart(event)
+{
+  handleEvtDownPropertyType(event,divApart, propertyType.apart);
+}
+function handleEvtDownOffice(event)
+{
+  handleEvtDownPropertyType(event,divOffice, propertyType.office);
+}
+
+if( divLoft && divHouse && divApart && divOffice)
+{
+  divLoft.addEventListener('mousedown', handleEvtDownLoft, true);
+  divHouse.addEventListener('mousedown', handleEvtDownHouse, true);
+  divApart.addEventListener('mousedown', handleEvtDownApart, true);
+  divOffice.addEventListener('mousedown', handleEvtDownOffice, true);
+}
+
+
+var validate = document.getElementById("validate");
+var isFirstTimePropType = true;
+var url_results = "";
+
+
+function updatePropertyTypeUrlParam()
+{
+  url_results+="?prop_type=";
+  isFirstTimePropType = false;
+}
+function updatePropertyTypeResult( value)
+{
+  if(isFirstTimePropType)
+  {
+    updatePropertyTypeUrlParam();
+  }
+  else {
+    url_results+=","
+
+  }
+  url_results+=value;
+}
+function submit_request(event)
+{
+  url_results = "results_summary.html?";
+  const urlParams = new URLSearchParams(window.location.search);
+  const search_type = urlParams.get('search_type');
+  url_results+="search_type=";
+  url_results+=search_type;
+  url_results+="?price_min=";
+  url_results+= inputPriceMin.innerHTML;
+  url_results+="?price_max=";
+  url_results+= inputPriceMax.innerHTML;
+
+  if(isSelected[propertyType.loft])
+  {
+    updatePropertyTypeUrlParam();
+
+    url_results+="4";
+  }
+  if(isSelected[propertyType.house])
+  {
+    updatePropertyTypeResult("2");
+  }
+  if(isSelected[propertyType.apart])
+  {
+    updatePropertyTypeResult("1");
+  }
+  if(isSelected[propertyType.office])
+  {
+    updatePropertyTypeResult("3");
+  }
+
+  url_results+="?area_min=";
+  url_results+= inputAreaMin.innerHTML;
+  url_results+="?area_max=";
+  url_results+= inputAreaMax.innerHTML;
+
+  validate.href = url_results;
+}
+
+if( validate)
+validate.onclick=submit_request;
+console.log(url_results);
+/*
+const userAction = async () => {
+  const response = await fetch('http://surfyn.xyz/search/');
+  const myJson = await response.json(); //extract JSON from the http response
+  // do something with myJson
+}*/

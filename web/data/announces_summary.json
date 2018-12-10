@@ -1,0 +1,58 @@
+[{
+      "ID":"1",		
+      "PROPERTY_TYPE": "Appartement",
+		"SURFACE": "46 m2",
+		"NB_ROOMS": "2 pièces",
+		"CITY": "Houilles",
+		"HISTORY": "il y'a 3h",
+		"PRICE": "320 000  €",
+		"IMAGE": "data/annonce_1.jpg",
+		"SOURCES": [
+			"seloger",
+			"logicimmo",
+			"leboncoin"
+		]
+	},
+	{
+      "ID":"2",
+		"PROPERTY_TYPE": "Appartement",
+		"SURFACE": "53 m2",
+		"NB_ROOMS": "3 pièces",
+		"CITY": "Houilles",
+		"HISTORY": "il y'a 2h",
+		"PRICE": "339 000  €",
+		"IMAGE": "data/annonce_2.jpg",
+		"SOURCES": [
+			"seloger",
+			"seloger"
+		]
+	},
+	{
+      "ID":"3",
+		"PROPERTY_TYPE": "Maison",
+		"SURFACE": "228 m2",
+		"NB_ROOMS": "8 pièces",
+		"CITY": "Houilles",
+		"HISTORY": "il y'a 1h",
+		"PRICE": "800 000  €",
+		"IMAGE": "data/annonce_3.jpg",
+		"SOURCES": [
+			"leboncoin"
+		]
+	},
+	{
+      "ID":"4",
+		"PROPERTY_TYPE": "Appartement",
+		"SURFACE": "63 m2",
+		"NB_ROOMS": "3 pièces",
+		"CITY": "Houilles",
+		"HISTORY": "il y'a 2h",
+		"PRICE": "215 000  €",
+		"IMAGE": "data/annonce_5.jpg",
+		"SOURCES": [
+			"seloger",
+			"logicimmo",
+			"leboncoin"
+		]
+	}
+]
