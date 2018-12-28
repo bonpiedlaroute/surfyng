@@ -9,7 +9,7 @@
 #include <stdint.h>
 
 
-namespace surfyng
+namespace surfyn
 {
 namespace utils
 {

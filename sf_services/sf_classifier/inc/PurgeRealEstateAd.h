@@ -10,7 +10,7 @@
 #include <memory>
 #include "surfyng/sf_services/dynamodb_access/thrift_generated/dynamodb_access.h"
 
-namespace surfyng
+namespace surfyn
 {
 namespace classifier
 {

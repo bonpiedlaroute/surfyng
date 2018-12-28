@@ -7,7 +7,7 @@
 #include "Algorithm.h"
 #include <algorithm>
 
-namespace surfyng
+namespace surfyn
 {
 namespace utils
 {

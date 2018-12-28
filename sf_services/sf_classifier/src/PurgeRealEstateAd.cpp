@@ -14,7 +14,7 @@
 #include "surfyng/sf_services/sf_utils/inc/Logger.h"
 #include <sstream>
 
-namespace surfyng
+namespace surfyn
 {
 namespace classifier
 {
@@ -23,7 +23,7 @@ const std::string id_field = "ID";
 const std::string timestamp_field = "TIMESTAMP";
 const int nbSecondsPerDay = 86400;
 
-using Log = surfyng::utils::Logger;
+using Log = surfyn::utils::Logger;
 
 void purgeRealEstateAd(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tablename)
 {

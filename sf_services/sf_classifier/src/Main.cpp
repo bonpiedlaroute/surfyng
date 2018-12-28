@@ -23,7 +23,7 @@ using namespace ::apache::thrift::transport;
 using boost::shared_ptr;
 
 
-using Log = surfyng::utils::Logger;
+using Log = surfyn::utils::Logger;
 
 
 int main(int argc, char* argv[])
@@ -37,10 +37,10 @@ int main(int argc, char* argv[])
 
    transport->open();
 
-   //surfyng::classifier::purgeRealEstateAd(client, "FR_PROPERTIES");
+   surfyn::classifier::purgeRealEstateAd(client, "FR_PROPERTIES");
 
 
-   surfyng::classifier::detectSimilarRealEstateAd(client, "FR_PROPERTIES");
+   surfyn::classifier::detectSimilarRealEstateAd(client, "FR_PROPERTIES");
 
 
    return 0;

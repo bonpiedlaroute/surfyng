@@ -6,7 +6,7 @@
 */
 #include "Math.h"
 
-namespace surfyng
+namespace surfyn
 {
 namespace utils
 {

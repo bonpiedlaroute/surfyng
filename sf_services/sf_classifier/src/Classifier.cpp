@@ -15,9 +15,9 @@
 #include "Criteria.h"
 #include "RealEstateAd.h"
 
-using Log = surfyng::utils::Logger;
+using Log = surfyn::utils::Logger;
 
-namespace surfyng
+namespace surfyn
 {
 namespace classifier
 {

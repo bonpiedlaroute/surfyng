@@ -10,7 +10,7 @@
 #include <unordered_map>
 
 
-namespace surfyng
+namespace surfyn
 {
 namespace utils
 {

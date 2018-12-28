@@ -14,7 +14,7 @@
 #include <future>
 #include <condition_variable>
 
-namespace surfyng
+namespace surfyn
 {
 
 namespace utils

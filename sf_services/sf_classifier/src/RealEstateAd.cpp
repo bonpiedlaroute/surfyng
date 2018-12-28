@@ -8,7 +8,7 @@
 
 #include <utility>
 
-namespace surfyng
+namespace surfyn
 {
 namespace classifier
 {

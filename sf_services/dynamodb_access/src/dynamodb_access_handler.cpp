@@ -51,7 +51,7 @@ using namespace apache::thrift;
 using namespace apache::thrift::protocol;
 using namespace apache::thrift::transport;
 
-using Log = surfyng::utils::Logger;
+using Log = surfyn::utils::Logger;
 
 namespace ddba
 {
@@ -65,7 +65,7 @@ void dynamodb_accessHandler::Init()
 dynamodb_accessHandler::dynamodb_accessHandler()
 {
 
-   surfyng::utils::Config ddb_conf("dynamodb_access.ini");
+   surfyn::utils::Config ddb_conf("dynamodb_access.ini");
    ddb_conf.loadconfig();
    std::string allocation_tag = ddb_conf.getStringValue("allocation_tag");
    std::shared_ptr<Aws::Utils::RateLimits::RateLimiterInterface> limiter = Aws::MakeShared<Aws::Utils::RateLimits::DefaultRateLimiter<>>(allocation_tag.c_str(), 200000);

@@ -10,7 +10,7 @@
 #include <string>
 
 
-namespace surfyng
+namespace surfyn
 {
 namespace classifier
 {

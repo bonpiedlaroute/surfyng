@@ -14,7 +14,7 @@
 #include "RealEstateAd.h"
 
 
-namespace surfyng
+namespace surfyn
 {
 namespace classifier
 {

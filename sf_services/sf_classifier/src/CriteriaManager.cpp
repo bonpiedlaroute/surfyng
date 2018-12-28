@@ -8,7 +8,7 @@
 #include "CriteriaManager.h"
 #include <iostream>
 
-namespace surfyng
+namespace surfyn
 {
 namespace classifier
 {

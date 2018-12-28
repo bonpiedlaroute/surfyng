@@ -17,7 +17,7 @@
 #include <math.h>
 #include <iterator>
 
-namespace surfyng
+namespace surfyn
 {
 namespace classifier
 {
@@ -26,7 +26,7 @@ constexpr double classifier_epsilon = pow(10,-6);
 
 RealEstateAdClassifier::RealEstateAdClassifier()
 {
-   surfyng::utils::Config classifier_conf("sf_classifier.ini");
+   surfyn::utils::Config classifier_conf("sf_classifier.ini");
    classifier_conf.loadconfig();
    m_realEstateDataFile = classifier_conf.getStringValue("realestate_data_file");
    m_similarAdFile = classifier_conf.getStringValue("similar_ad_file");
@@ -76,7 +76,7 @@ void RealEstateAdClassifier::loadSameAd(const std::string& filename)
    {
       std::vector<std::string> results;
 
-      surfyng::utils::split(line, ";", results);
+      surfyn::utils::split(line, ";", results);
 
       std::vector<int> values;
 
@@ -143,7 +143,7 @@ void RealEstateAdClassifier::trainClassifier()
 
    std::vector<AdPair> pairOfNonSimilarAd;
 
-   surfyng::utils::pair_difference(pairOfAd, pairOfSimilarAd, pairOfNonSimilarAd);
+   surfyn::utils::pair_difference(pairOfAd, pairOfSimilarAd, pairOfNonSimilarAd);
 
    //process all pair of ad
    processAd(pairOfNonSimilarAd, AdType::Value::NonSimilarAd);
@@ -188,7 +188,7 @@ void RealEstateAdClassifier::computeSetCritOKWithCondition(const std::vector<Cri
    for(iter = std::next(iter, 1); iter != criteriaIds.end() && !result.empty(); ++iter)
    {
       std::vector<AdPair> temp;
-      surfyng::utils::pair_intersection(result,CriteriaManager::getData(*iter, adtype), temp);
+      surfyn::utils::pair_intersection(result,CriteriaManager::getData(*iter, adtype), temp);
       result = temp;
    }
 }
@@ -216,7 +216,7 @@ void RealEstateAdClassifier::computeSetCritOK(const std::vector<CriteriaID::Valu
       temp.insert(temp.end(), critokSimAdList.begin(), critokSimAdList.end());
       temp.insert(temp.end(), critokNonSimAdList.begin(), critokNonSimAdList.end());
 
-      surfyng::utils::pair_intersection(setCritOK, temp, result);
+      surfyn::utils::pair_intersection(setCritOK, temp, result);
 
       setCritOK = result;
    }

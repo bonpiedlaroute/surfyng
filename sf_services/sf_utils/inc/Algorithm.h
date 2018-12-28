@@ -11,7 +11,7 @@
 #include <stdint.h>
 #include <ctime>
 
-namespace surfyng
+namespace surfyn
 {
 namespace utils
 {

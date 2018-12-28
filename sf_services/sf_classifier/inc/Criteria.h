@@ -8,7 +8,7 @@
 #define INC_CRITERIA_H_
 #include "RealEstateAd.h"
 
-namespace surfyng
+namespace surfyn
 {
 namespace classifier
 {

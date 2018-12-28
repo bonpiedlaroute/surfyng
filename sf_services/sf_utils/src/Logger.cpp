@@ -11,7 +11,7 @@
 #define MAX_DATE_TIME_FORMAT   64
 
 
-namespace surfyng
+namespace surfyn
 {
 namespace utils
 {

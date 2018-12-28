@@ -6,7 +6,7 @@
 */
 #include "Str.h"
 
-namespace surfyng
+namespace surfyn
 {
 namespace utils
 {

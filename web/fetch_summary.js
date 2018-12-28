@@ -28,36 +28,28 @@ function loadJSON(path, success, error) {
   }
 
 
-  const url = 'http://surfyn.xyz/search'+ window.location.search;
+  //const url = 'http://surfyn.xyz/search/all'+ window.location.search;
+  const url = 'http://127.0.0.1:7878/search/all'+ window.location.search;
 
-  console.log('url=' + url);
 
   fetch(url)
-  .then((resp) => resp.json())
+  .then(function(resp) { return resp.json(); } )
   .then(function(data) {
-    /*let authors = data.results;
-    return authors.map(function(author) {
-      let li = createNode('li'),
-          img = createNode('img'),
-          span = createNode('span');
-      img.src = author.picture.medium;
-      span.innerHTML = `${author.name.first} ${author.name.last}`;
-      append(li, img);
-      append(li, span);
-      append(ul, li);
-    })*/
+    console.log("success of fetch");
+    generate_summary_page(data);
+
   })
   .catch(function(error) {
-    loadJSON('data/announces_summary.json',
-             function(data) { generate_summary_page(JSON.parse(data.responseText)); },
-             function(xhr) { console.log(xhr); }
-    );
+    console.log(error);
   });
 
   function generate_summary_page(data)
   {
+    console.log("in generate_summary_page");
+    console.log(data);
     if( data.length == 0)
     {
+      console.log("no data");
       var announces_found = document.getElementById("nb_announces_found");
       announces_found.innerHTML = "(0)";
 
@@ -69,6 +61,7 @@ function loadJSON(path, success, error) {
     }
     else
     {
+          console.log("there is " +data.length + "data" );
           for(var i = 0; i < data.length; i++)
           {
               var announces_found = document.getElementById("nb_announces_found");
@@ -76,7 +69,7 @@ function loadJSON(path, success, error) {
 
                var ad_link = createNode("a");
                ad_link.style.display = "block";
-               ad_link.href = "#"
+               ad_link.href = "results_details.html?"+data[i].ID;
 
                var ad_div = createNode("div");
                ad_div.style.height = "200px";

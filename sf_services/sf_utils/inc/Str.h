@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-namespace surfyng
+namespace surfyn
 {
 namespace utils
 {

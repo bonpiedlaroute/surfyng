@@ -11,7 +11,7 @@
 #include <fstream>
 
 
-using namespace surfyng::classifier;
+using namespace surfyn::classifier;
 
 static void generate_simple_data()
 {

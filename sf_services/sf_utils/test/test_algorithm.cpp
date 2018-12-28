@@ -7,7 +7,7 @@
 #include <gtest/gtest.h>
 #include "Algorithm.h"
 
-using namespace surfyng::utils;
+using namespace surfyn::utils;
 
 TEST(TestPairIntersection, should_return_one_pair_when_only_one_match)
 {
