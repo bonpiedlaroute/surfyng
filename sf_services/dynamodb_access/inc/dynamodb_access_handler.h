@@ -50,7 +50,7 @@ private:
       const Aws::Client::AWSError<Aws::DynamoDB::DynamoDBErrors> error = outcome.GetError();
 
       result.success = outcome.IsSuccess();
-      result.error = error.GetMessage();
+      result.error = error.GetMessage().c_str();
    }
    void manageBandwitdhLimit(const std::string& service, const std::chrono::high_resolution_clock::time_point& lasttime, const int64_t& minimum_interval);
    Type::type findAttrType(const std::string& attr, const KeyValue& key, const std::map<std::string, ValueType>& attributestoget) const;

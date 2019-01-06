@@ -2455,10 +2455,10 @@ void dynamodb_accessProcessor::process_deleteTable(int32_t seqid, ::apache::thri
   }
 }
 
-::boost::shared_ptr< ::apache::thrift::TProcessor > dynamodb_accessProcessorFactory::getProcessor(const ::apache::thrift::TConnectionInfo& connInfo) {
+::std::shared_ptr< ::apache::thrift::TProcessor > dynamodb_accessProcessorFactory::getProcessor(const ::apache::thrift::TConnectionInfo& connInfo) {
   ::apache::thrift::ReleaseHandler< dynamodb_accessIfFactory > cleanup(handlerFactory_);
-  ::boost::shared_ptr< dynamodb_accessIf > handler(handlerFactory_->getHandler(connInfo), cleanup);
-  ::boost::shared_ptr< ::apache::thrift::TProcessor > processor(new dynamodb_accessProcessor(handler));
+  ::std::shared_ptr< dynamodb_accessIf > handler(handlerFactory_->getHandler(connInfo), cleanup);
+  ::std::shared_ptr< ::apache::thrift::TProcessor > processor(new dynamodb_accessProcessor(handler));
   return processor;
 }
 

@@ -7,9 +7,9 @@
 #include "RealEstateAdClassifier.h"
 #include "boost/property_tree/ptree.hpp"
 #include "boost/property_tree/json_parser.hpp"
-#include "surfyng/sf_services/sf_utils/inc/Config.h"
-#include "surfyng/sf_services/sf_utils/inc/Str.h"
-#include "surfyng/sf_services/sf_utils/inc/Algorithm.h"
+#include "Config.h"
+#include "Str.h"
+#include "Algorithm.h"
 #include <fstream>
 #include <utility>
 #include "CriteriaManager.h"
@@ -22,7 +22,7 @@ namespace surfyn
 namespace classifier
 {
 
-constexpr double classifier_epsilon = pow(10,-6);
+double classifier_epsilon = pow(10,-6);
 
 RealEstateAdClassifier::RealEstateAdClassifier()
 {

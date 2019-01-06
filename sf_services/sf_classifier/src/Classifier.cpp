@@ -6,7 +6,7 @@
 */
 #include <iostream>
 #include "RealEstateAdClassifier.h"
-#include "surfyng/sf_services/sf_utils/inc/Logger.h"
+#include "Logger.h"
 #include "PurgeRealEstateAd.h"
 
 

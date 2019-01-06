@@ -5,11 +5,10 @@
  *      Author(s): Noel Tchidjo
  */
 #include <cstdio>
-#include <gtest/gtest.h>
+#include "pch.h"
 #include "RealEstateAdClassifier.h"
 #include "RealEstateAd.h"
 #include <fstream>
-
 
 using namespace surfyn::classifier;
 

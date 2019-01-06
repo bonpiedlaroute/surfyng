@@ -10,9 +10,12 @@
 #include <chrono>
 #include <thread>
 #include <iostream>
-#include "surfyng/sf_services/sf_utils/inc/Algorithm.h"
-#include "surfyng/sf_services/sf_utils/inc/Logger.h"
+#include "Algorithm.h"
+#include "Logger.h"
+#include "strptime.h"
 #include <sstream>
+
+#define timegm _mkgmtime
 
 namespace surfyn
 {
