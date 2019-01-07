@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
 
    transport->open();
 
-   surfyn::classifier::purgeRealEstateAd(client, "FR_PROPERTIES");
+   //surfyn::classifier::purgeRealEstateAd(client, "FR_PROPERTIES");
 
    surfyn::classifier::detectSimilarRealEstateAd(client, "FR_PROPERTIES");
 

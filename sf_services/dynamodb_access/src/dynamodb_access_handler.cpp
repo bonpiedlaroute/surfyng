@@ -40,6 +40,7 @@
 #include <string>
 #include <stdlib.h>
 #include <memory>
+#include <sstream>
 
 using namespace Aws::Http;
 using namespace Aws::Client;
@@ -358,7 +359,7 @@ void dynamodb_accessHandler::scan(ScanReqResult& _return, const std::string& tab
    if(!filterexpression.empty())
       scanRequest.SetFilterExpression(filterexpression.c_str());
 
-   scanRequest.WithExclusiveStartKey(m_lastEvaluatedKey);
+   //scanRequest.WithExclusiveStartKey(m_lastEvaluatedKey);
 
    ScanOutcome scanOutcome = m_client->Scan(scanRequest);
 
@@ -393,6 +394,12 @@ void dynamodb_accessHandler::scan(ScanReqResult& _return, const std::string& tab
             _return.values.push_back(attributes);
          }
 
+   }
+   else
+   {
+      std::stringstream ss;
+      ss << " failed to scan table " << tablename << ", reason[" << scanOutcome.GetError() << "]";
+      Log::getInstance()->error(ss.str());
    }
 
    m_lastEvaluatedKey = scanOutcome.GetResult().GetLastEvaluatedKey();

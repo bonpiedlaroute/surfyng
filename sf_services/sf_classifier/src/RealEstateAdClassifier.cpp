@@ -108,8 +108,14 @@ void RealEstateAdClassifier::init()
 
 void RealEstateAdClassifier::trainClassifier()
 {
-   loadAd(m_realEstateDataFile);
-   loadSameAd(m_similarAdFile);
+   if (!m_realEstateDataFile.empty())
+   {
+      loadAd(m_realEstateDataFile);
+   }
+   if (!m_similarAdFile.empty())
+   {
+      loadSameAd(m_similarAdFile);
+   }
 
    std::vector<AdPair> pairOfSimilarAd;
 
