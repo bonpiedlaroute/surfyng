@@ -290,18 +290,29 @@ void detectSimilarRealEstateAd(const std::shared_ptr<dynamodb_accessClient>& cli
 
    // 2. process similar announces
    RealEstateAdClassifier Classifier;
-   Classifier.trainClassifier();
+   //Classifier.trainClassifier();
 
+   int sameAnnoucePairNb = 0;
    for(auto iter = announces.begin(); iter != announces.end(); ++iter)
    {
       for(auto it = std::next(iter, 1); it != announces.end(); ++it)
       {
+         std::stringstream ss;
+         ss << "Comparing " << iter->getId() << " and " << it->getId();
+         Log::getInstance()->info(ss.str());
+
          if( Classifier.isSame(*iter, *it) )
          {
-            updateDataBaseWithSimilarAd(client, tablename, *iter, *it);
+            std::stringstream ss;
+            ss << iter->getId() << " and " << it->getId() << " are the same";
+            Log::getInstance()->info(ss.str());
+            sameAnnoucePairNb++;
+            //updateDataBaseWithSimilarAd(client, tablename, *iter, *it);
          }
       }
    }
+   sameAnnoucePairNb /= 2;
+   Log::getInstance()->info("Same announce pair is " + std::to_string(sameAnnoucePairNb));
 }
 
 

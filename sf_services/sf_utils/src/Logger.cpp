@@ -10,10 +10,7 @@
 
 #include "Logger.h"
 #include <time.h>
-#include <chrono>
-#include <iomanip>
 #include <sstream>
-#include <iostream>
 
 #define MAX_DATE_TIME_FORMAT   64
 
@@ -54,7 +51,6 @@ void Logger::writelog()
          setDateTimeFormat(date_time_format);
 
          std::stringstream logstreamer;
-
          logstreamer << date_time_format << " " << log << "\n";
 
          m_logfile << logstreamer.str() << std::flush;
@@ -118,12 +114,7 @@ void Logger::setDateTimeFormat(char * datetimeformat) const
    time_t now = time(NULL);
    struct tm* localinfo = localtime(&now);
 
-   strftime(datetimeformat, MAX_DATE_TIME_FORMAT, "%Y-%m-%d-%H-%M-%S", localinfo);
-
-   ////strftime(datetimeformat,MAX_DATE_TIME_FORMAT,"%Y-%m-%d-%H-%M-%S",localinfo);
-   //std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
-   //std::time_t now_c = std::chrono::system_clock::to_time_t(now);
-   //sprintf_s(datetimeformat, MAX_DATE_TIME_FORMAT, "%d", now_c);
+   strftime(datetimeformat,MAX_DATE_TIME_FORMAT, "%Y-%m-%d-%H-%M-%S", localinfo);
 }
 
 }
