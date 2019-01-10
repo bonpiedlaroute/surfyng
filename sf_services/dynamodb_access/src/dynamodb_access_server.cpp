@@ -17,9 +17,7 @@ using namespace ::apache::thrift::protocol;
 using namespace ::apache::thrift::transport;
 using namespace ::apache::thrift::server;
 
-using boost::shared_ptr;
-
-
+using std::shared_ptr;
 
 int main(int argc, char **argv)
 {

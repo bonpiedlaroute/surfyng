@@ -5,14 +5,14 @@
    author(s): Noel Tchidjo
 */
 #include <iostream>
-#include "surfyng/sf_services/sf_utils/inc/Logger.h"
+#include "Logger.h"
 #include "PurgeRealEstateAd.h"
 #include "Classifier.h"
 
 #include <thrift/protocol/TBinaryProtocol.h>
 #include <thrift/transport/TSocket.h>
 #include <thrift/transport/TBufferTransports.h>
-#include "surfyng/sf_services/dynamodb_access/thrift_generated/dynamodb_access.h"
+#include "dynamodb_access.h"
 
 
 const int port = 5050;
@@ -20,7 +20,7 @@ using namespace ::apache::thrift;
 using namespace ::apache::thrift::protocol;
 using namespace ::apache::thrift::transport;
 
-using boost::shared_ptr;
+using std::shared_ptr;
 
 
 using Log = surfyn::utils::Logger;
@@ -37,8 +37,7 @@ int main(int argc, char* argv[])
 
    transport->open();
 
-   surfyn::classifier::purgeRealEstateAd(client, "FR_PROPERTIES");
-
+   //surfyn::classifier::purgeRealEstateAd(client, "FR_PROPERTIES");
 
    surfyn::classifier::detectSimilarRealEstateAd(client, "FR_PROPERTIES");
 

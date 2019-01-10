@@ -25,6 +25,11 @@ extern const char* RealEstateTypeOfHeating;
 extern const char* RealEstateCellars;
 extern const char* RealEstateFloor;
 extern const char* RealEstateParking;
+extern const char* RealEstateBox;
+extern const char* RealEstateSearchType;
+extern const char* RealEstateLandSurface;
+extern const char* RealEstateLift;
+extern const char* RealEstateBalcony;
 extern const char* RealEstateKey;
 extern const char* RealEstateSimilarAd;
 
@@ -44,6 +49,11 @@ struct CriteriaID
       Cellars,
       Floor,
       Parking,
+      Box,
+      SearchType,
+      LandSurface,
+      Lift,
+      Balcony,
       CriteriaMax
    };
 };
@@ -172,6 +182,46 @@ class CriteriaParking : public Criteria
 {
 public:
    CriteriaParking();
+   bool isEquals(const RealEstateAd& p1, const RealEstateAd& p2) const override;
+   bool isValid(const RealEstateAd& p) const override;
+};
+
+class CriteriaBox : public Criteria
+{
+public:
+   CriteriaBox();
+   bool isEquals(const RealEstateAd& p1, const RealEstateAd& p2) const override;
+   bool isValid(const RealEstateAd& p) const override;
+};
+
+class CriteriaSearchType : public Criteria
+{
+public:
+   CriteriaSearchType();
+   bool isEquals(const RealEstateAd& p1, const RealEstateAd& p2) const override;
+   bool isValid(const RealEstateAd& p) const override;
+};
+
+class CriteriaLandSurface : public Criteria
+{
+public:
+   CriteriaLandSurface();
+   bool isEquals(const RealEstateAd& p1, const RealEstateAd& p2) const override;
+   bool isValid(const RealEstateAd& p) const override;
+};
+
+class CriteriaLift : public Criteria
+{
+public:
+   CriteriaLift();
+   bool isEquals(const RealEstateAd& p1, const RealEstateAd& p2) const override;
+   bool isValid(const RealEstateAd& p) const override;
+};
+
+class CriteriaBalcony : public Criteria
+{
+public:
+   CriteriaBalcony();
    bool isEquals(const RealEstateAd& p1, const RealEstateAd& p2) const override;
    bool isValid(const RealEstateAd& p) const override;
 };

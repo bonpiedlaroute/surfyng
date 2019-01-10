@@ -7,22 +7,26 @@
 #include "RealEstateAdClassifier.h"
 #include "boost/property_tree/ptree.hpp"
 #include "boost/property_tree/json_parser.hpp"
-#include "surfyng/sf_services/sf_utils/inc/Config.h"
-#include "surfyng/sf_services/sf_utils/inc/Str.h"
-#include "surfyng/sf_services/sf_utils/inc/Algorithm.h"
+#include "Config.h"
+#include "Str.h"
+#include "Algorithm.h"
 #include <fstream>
 #include <utility>
 #include "CriteriaManager.h"
 #include <iostream>
 #include <math.h>
 #include <iterator>
+#include "Logger.h"
+
+
+using Log = surfyn::utils::Logger;
 
 namespace surfyn
 {
 namespace classifier
 {
 
-constexpr double classifier_epsilon = pow(10,-6);
+double classifier_epsilon = pow(10,-6);
 
 RealEstateAdClassifier::RealEstateAdClassifier()
 {
@@ -40,6 +44,8 @@ RealEstateAdClassifier::RealEstateAdClassifier()
 void RealEstateAdClassifier::loadAd(const std::string& filename)
 {
    using boost::property_tree::ptree;
+
+   Log::getInstance()->info("Loading training ads[" + filename + "]");
 
    ptree pt;
    read_json(filename, pt);
@@ -68,6 +74,8 @@ void RealEstateAdClassifier::loadAd(const std::string& filename)
 
 void RealEstateAdClassifier::loadSameAd(const std::string& filename)
 {
+   Log::getInstance()->info("Loading training same ads [" + filename + "]");
+
    std::ifstream file;
    file.open(filename);
    std::string line;
@@ -104,12 +112,23 @@ void RealEstateAdClassifier::init()
    m_criteriaList.emplace_back(std::make_shared<CriteriaCellars>());
    m_criteriaList.emplace_back(std::make_shared<CriteriaFloor>());
    m_criteriaList.emplace_back(std::make_shared<CriteriaParking>());
+   m_criteriaList.emplace_back(std::make_shared<CriteriaBox>());
+   m_criteriaList.emplace_back(std::make_shared<CriteriaSearchType>());
+   m_criteriaList.emplace_back(std::make_shared<CriteriaLandSurface>());
+   m_criteriaList.emplace_back(std::make_shared<CriteriaLift>());
+   m_criteriaList.emplace_back(std::make_shared<CriteriaBalcony>());
 }
 
 void RealEstateAdClassifier::trainClassifier()
 {
-   loadAd(m_realEstateDataFile);
-   loadSameAd(m_similarAdFile);
+   if (!m_realEstateDataFile.empty())
+   {
+      loadAd(m_realEstateDataFile);
+   }
+   if (!m_similarAdFile.empty())
+   {
+      loadSameAd(m_similarAdFile);
+   }
 
    std::vector<AdPair> pairOfSimilarAd;
 

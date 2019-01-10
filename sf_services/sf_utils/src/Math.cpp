@@ -4,7 +4,7 @@
 
    author(s): Noel Tchidjo
 */
-#include "Math.h"
+#include "MyMath.h"
 
 namespace surfyn
 {

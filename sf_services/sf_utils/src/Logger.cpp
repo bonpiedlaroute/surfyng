@@ -4,11 +4,16 @@
 
    author(s): Noel Tchidjo
 */
+
+#pragma warning(suppress : 4996)
+#define _CRT_SECURE_NO_WARNINGS
+
 #include "Logger.h"
 #include <time.h>
 #include <sstream>
 
 #define MAX_DATE_TIME_FORMAT   64
+
 
 
 namespace surfyn
@@ -109,7 +114,7 @@ void Logger::setDateTimeFormat(char * datetimeformat) const
    time_t now = time(NULL);
    struct tm* localinfo = localtime(&now);
 
-   strftime(datetimeformat,MAX_DATE_TIME_FORMAT,"%Y-%m-%d-%H-%M-%S",localinfo);
+   strftime(datetimeformat,MAX_DATE_TIME_FORMAT, "%Y-%m-%d-%H-%M-%S", localinfo);
 }
 
 }

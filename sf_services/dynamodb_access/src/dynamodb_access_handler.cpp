@@ -25,9 +25,9 @@
 #include <aws/dynamodb/model/GetItemRequest.h>
 #include <aws/dynamodb/model/DeleteItemRequest.h>
 #include <aws/dynamodb/model/UpdateItemRequest.h>
-#include "surfyng/sf_services/sf_utils/inc/Config.h"
-#include "surfyng/sf_services/sf_utils/inc/Str.h"
-#include "surfyng/sf_services/sf_utils/inc/Logger.h"
+#include "surfyn/sf_services/sf_utils/inc/Config.h"
+#include "surfyn/sf_services/sf_utils/inc/Str.h"
+#include "surfyn/sf_services/sf_utils/inc/Logger.h"
 #include <thrift/protocol/TBinaryProtocol.h>
 #include <thrift/transport/TSocket.h>
 #include <thrift/transport/TTransportUtils.h>
@@ -40,6 +40,7 @@
 #include <string>
 #include <stdlib.h>
 #include <memory>
+#include <sstream>
 
 using namespace Aws::Http;
 using namespace Aws::Client;
@@ -67,13 +68,13 @@ dynamodb_accessHandler::dynamodb_accessHandler()
 
    surfyn::utils::Config ddb_conf("dynamodb_access.ini");
    ddb_conf.loadconfig();
-   std::string allocation_tag = ddb_conf.getStringValue("allocation_tag");
+   std::string allocation_tag = ddb_conf.getStringValue("allocation_tag").c_str();
    std::shared_ptr<Aws::Utils::RateLimits::RateLimiterInterface> limiter = Aws::MakeShared<Aws::Utils::RateLimits::DefaultRateLimiter<>>(allocation_tag.c_str(), 200000);
 
    Log::getInstance()->info(" Starting dynamodb Access ");
 
    ClientConfiguration config;
-   config.endpointOverride = ddb_conf.getStringValue("endpoint_override");
+   config.endpointOverride = ddb_conf.getStringValue("endpoint_override").c_str();
    config.scheme = static_cast<Aws::Http::Scheme>(ddb_conf.getIntValue("http_scheme"));
    config.connectTimeoutMs = ddb_conf.getLongValue("connection_timeout_ms");
    config.requestTimeoutMs = ddb_conf.getLongValue("request_timeout_ms");
@@ -81,7 +82,7 @@ dynamodb_accessHandler::dynamodb_accessHandler()
    config.writeRateLimiter = limiter;
    config.httpLibOverride = Aws::Http::TransferLibType::DEFAULT_CLIENT;
    config.executor = Aws::MakeShared<Aws::Utils::Threading::PooledThreadExecutor>(allocation_tag.c_str(), 4);
-   config.region = ddb_conf.getStringValue("region");
+   config.region = ddb_conf.getStringValue("region").c_str();
 
    m_client = Aws::MakeShared<DynamoDBClient>(allocation_tag.c_str(), config);
 
@@ -358,7 +359,7 @@ void dynamodb_accessHandler::scan(ScanReqResult& _return, const std::string& tab
    if(!filterexpression.empty())
       scanRequest.SetFilterExpression(filterexpression.c_str());
 
-   scanRequest.WithExclusiveStartKey(m_lastEvaluatedKey);
+   //scanRequest.WithExclusiveStartKey(m_lastEvaluatedKey);
 
    ScanOutcome scanOutcome = m_client->Scan(scanRequest);
 
@@ -393,6 +394,12 @@ void dynamodb_accessHandler::scan(ScanReqResult& _return, const std::string& tab
             _return.values.push_back(attributes);
          }
 
+   }
+   else
+   {
+      std::stringstream ss;
+      ss << " failed to scan table " << tablename << ", reason[" << scanOutcome.GetError() << "]";
+      Log::getInstance()->error(ss.str());
    }
 
    m_lastEvaluatedKey = scanOutcome.GetResult().GetLastEvaluatedKey();

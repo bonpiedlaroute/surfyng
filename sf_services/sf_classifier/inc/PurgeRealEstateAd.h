@@ -8,7 +8,7 @@
 #define INC_PURGEREALESTATEAD_H_
 
 #include <memory>
-#include "surfyng/sf_services/dynamodb_access/thrift_generated/dynamodb_access.h"
+#include "dynamodb_access.h"
 
 namespace surfyn
 {
