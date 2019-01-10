@@ -25,9 +25,13 @@ const char* RealEstateTypeOfHeating = "TYPE_OF_HEATING";
 const char* RealEstateCellars = "CELLARS";
 const char* RealEstateFloor = "FLOOR";
 const char* RealEstateParking = "PARKING";
+const char* RealEstateBox = "BOX";
+const char* RealEstateSearchType = "SEARCH_TYPE";
+const char* RealEstateLandSurface = "LAND_SURFACE";
+const char* RealEstateLift = "LIFT";
+const char* RealEstateBalcony = "BALCONY";
 const char* RealEstateKey = "ID";
 const char* RealEstateSimilarAd = "SIMILAR_AD";
-
 
 Criteria::Criteria(CriteriaID::Value id) : m_id(std::move(id)), m_critOKAndSameAd(0),
       m_critNOKAndSameAd(0), m_critOK(0), m_critNOK(0), m_probaCritOKKnowingThatSameAd(0),
@@ -289,6 +293,82 @@ bool CriteriaParking::isValid(const RealEstateAd& p) const
 {
    return p.getDescription(RealEstateParking) != "";
 }
+
+CriteriaBox::CriteriaBox() : Criteria(CriteriaID::Value::Box)
+{
+
+}
+
+bool CriteriaBox::isEquals(const RealEstateAd& p1, const RealEstateAd& p2) const
+{
+   return p1.getDescription(RealEstateParking) == p2.getDescription(RealEstateParking);
+}
+
+bool CriteriaBox::isValid(const RealEstateAd& p) const
+{
+   return p.getDescription(RealEstateParking) != "";
+}
+
+CriteriaSearchType::CriteriaSearchType() : Criteria(CriteriaID::Value::SearchType)
+{
+
+}
+
+bool CriteriaSearchType::isEquals(const RealEstateAd& p1, const RealEstateAd& p2) const
+{
+   return p1.getDescription(RealEstateParking) == p2.getDescription(RealEstateParking);
+}
+
+bool CriteriaSearchType::isValid(const RealEstateAd& p) const
+{
+   return p.getDescription(RealEstateParking) != "";
+}
+
+CriteriaLandSurface::CriteriaLandSurface() : Criteria(CriteriaID::Value::LandSurface)
+{
+
+}
+
+bool CriteriaLandSurface::isEquals(const RealEstateAd& p1, const RealEstateAd& p2) const
+{
+   return p1.getDescription(RealEstateParking) == p2.getDescription(RealEstateParking);
+}
+
+bool CriteriaLandSurface::isValid(const RealEstateAd& p) const
+{
+   return p.getDescription(RealEstateParking) != "";
+}
+
+CriteriaLift::CriteriaLift() : Criteria(CriteriaID::Value::Lift)
+{
+
+}
+
+bool CriteriaLift::isEquals(const RealEstateAd& p1, const RealEstateAd& p2) const
+{
+   return p1.getDescription(RealEstateParking) == p2.getDescription(RealEstateParking);
+}
+
+bool CriteriaLift::isValid(const RealEstateAd& p) const
+{
+   return p.getDescription(RealEstateParking) != "";
+}
+
+CriteriaBalcony::CriteriaBalcony() : Criteria(CriteriaID::Value::Balcony)
+{
+
+}
+
+bool CriteriaBalcony::isEquals(const RealEstateAd& p1, const RealEstateAd& p2) const
+{
+   return p1.getDescription(RealEstateParking) == p2.getDescription(RealEstateParking);
+}
+
+bool CriteriaBalcony::isValid(const RealEstateAd& p) const
+{
+   return p.getDescription(RealEstateParking) != "";
+}
+
 
 }
 }

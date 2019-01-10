@@ -16,6 +16,10 @@
 #include <iostream>
 #include <math.h>
 #include <iterator>
+#include "Logger.h"
+
+
+using Log = surfyn::utils::Logger;
 
 namespace surfyn
 {
@@ -40,6 +44,8 @@ RealEstateAdClassifier::RealEstateAdClassifier()
 void RealEstateAdClassifier::loadAd(const std::string& filename)
 {
    using boost::property_tree::ptree;
+
+   Log::getInstance()->info("Loading training ads[" + filename + "]");
 
    ptree pt;
    read_json(filename, pt);
@@ -68,6 +74,8 @@ void RealEstateAdClassifier::loadAd(const std::string& filename)
 
 void RealEstateAdClassifier::loadSameAd(const std::string& filename)
 {
+   Log::getInstance()->info("Loading training same ads [" + filename + "]");
+
    std::ifstream file;
    file.open(filename);
    std::string line;
@@ -104,6 +112,11 @@ void RealEstateAdClassifier::init()
    m_criteriaList.emplace_back(std::make_shared<CriteriaCellars>());
    m_criteriaList.emplace_back(std::make_shared<CriteriaFloor>());
    m_criteriaList.emplace_back(std::make_shared<CriteriaParking>());
+   m_criteriaList.emplace_back(std::make_shared<CriteriaBox>());
+   m_criteriaList.emplace_back(std::make_shared<CriteriaSearchType>());
+   m_criteriaList.emplace_back(std::make_shared<CriteriaLandSurface>());
+   m_criteriaList.emplace_back(std::make_shared<CriteriaLift>());
+   m_criteriaList.emplace_back(std::make_shared<CriteriaBalcony>());
 }
 
 void RealEstateAdClassifier::trainClassifier()

@@ -136,6 +136,10 @@ void detectSimilarRealEstateAd(const std::shared_ptr<dynamodb_accessClient>& cli
          {
             prop.setDescription(it_field->first, it_field->second);
          }
+         if ((it_field = iter->find(RealEstateSearchType)) != iter->end())
+         {
+            prop.setDescription(it_field->first, it_field->second);
+         }
          if ((it_field = iter->find(PROPERTY_DESCRIPTION)) != iter->end())
          {
             using namespace rapidjson;
@@ -175,9 +179,22 @@ void detectSimilarRealEstateAd(const std::shared_ptr<dynamodb_accessClient>& cli
                            if (object.HasMember("order") && object.HasMember("value"))
                            {
                               const int order = object["order"].GetInt();
+                              std::string value = object["value"].GetString();
                               if (order == 2430)
                               {
                                  prop.setDescription(RealEstateCellars, "1");
+                              }
+                              else if (order == 2410)
+                              {
+                                 prop.setDescription(RealEstateLift, "1");
+                              }
+                              else if (order == 2450)
+                              {
+                                 auto index = value.find_first_of(' ');
+                                 if (index != std::string::npos)
+                                 {
+                                    prop.setDescription(RealEstateBalcony, value.substr(0, index));
+                                 }
                               }
                            }
                         }
@@ -261,6 +278,20 @@ void detectSimilarRealEstateAd(const std::shared_ptr<dynamodb_accessClient>& cli
                                     prop.setDescription(RealEstateParking, value.substr(0, index));
                                  }
                               }
+                              else if (order == 2470)
+                              {
+                                 auto index = value.find_first_of(' ');
+                                 if (index != std::string::npos)
+                                 {
+                                    prop.setDescription(RealEstateBox, value.substr(0, index));
+                                 }
+                              }
+                              else if (order == 3250)
+                              {
+                                 float landSurface = 0;
+                                 sscanf(value.c_str(), "Terrain de %f m²", &landSurface);
+                                 prop.setDescription(RealEstateLandSurface, std::to_string(landSurface));
+                              }
                            }
                         }
                      }
@@ -290,7 +321,7 @@ void detectSimilarRealEstateAd(const std::shared_ptr<dynamodb_accessClient>& cli
 
    // 2. process similar announces
    RealEstateAdClassifier Classifier;
-   //Classifier.trainClassifier();
+   Classifier.trainClassifier();
 
    int sameAnnoucePairNb = 0;
    for(auto iter = announces.begin(); iter != announces.end(); ++iter)
@@ -307,7 +338,7 @@ void detectSimilarRealEstateAd(const std::shared_ptr<dynamodb_accessClient>& cli
             ss << iter->getId() << " and " << it->getId() << " are the same";
             Log::getInstance()->info(ss.str());
             sameAnnoucePairNb++;
-            //updateDataBaseWithSimilarAd(client, tablename, *iter, *it);
+            updateDataBaseWithSimilarAd(client, tablename, *iter, *it);
          }
       }
    }
