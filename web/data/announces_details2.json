@@ -1,0 +1,27 @@
+[
+{
+      "ID":"2_1",		
+      "ANNOUNCE_LINK": "#",
+		"IMAGE": "data/annonce_2.jpg",
+      "IMAGE_COUNT":"2",
+      "TRANSPORT": "3mn de la gare",
+		"SURFACE": "53 m2",
+		"NB_ROOMS": "3 pièces",
+		"LOCATION": "quartier centre ville",
+		"SOURCE_LOGO": "data/SL0.svg"
+
+},
+{
+      "ID":"2_2",		
+      "ANNOUNCE_LINK": "#",
+		"IMAGE": "data/annonce_2.jpg",
+      "IMAGE_COUNT":"3",
+      "TRANSPORT": "3mn de la gare",
+		"SURFACE": "53 m2",
+		"NB_ROOMS": "3 pièces",
+		"LOCATION": "centre ville",
+      "FLOOR":"2ème etage",
+		"SOURCE_LOGO": "data/SL0.svg"
+
+}
+]

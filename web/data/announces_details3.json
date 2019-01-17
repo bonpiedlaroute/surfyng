@@ -1,0 +1,16 @@
+[
+{
+      "ID":"1_1",		
+      "ANNOUNCE_LINK": "#",
+		"IMAGE": "data/annonce_3.jpg",
+      "IMAGE_COUNT":"4",
+		"SURFACE": "228 m2",
+		"NB_ROOMS": "8 pièces",
+		"LOCATION": "main de fer",
+      "FLOOR":"6ème etage",
+      "CELLAR":"cave",
+      "TRANSPORT": "15mn de la gare",
+		"SOURCE_LOGO": "data/lbc0.svg"
+
+}
+]
