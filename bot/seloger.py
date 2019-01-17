@@ -5,6 +5,8 @@
 # All rights reserved
 
 import scrapy
+import json
+import urllib
 
 from hash_id import *
 from search_features import *
@@ -64,8 +66,21 @@ class SelogerSpider(scrapy.Spider):
       self.serializer.send(ID, id_property, response.text, "Houilles","ile de france", announce_url, announce_url[12:19], self.announce_title[ID], id_search)
             
    def parse_announce_title(self, response, announce_url, id_property, id_search):
-      title = response.xpath('//h1[@class="detail-title title1"]/text()').extract()
+
       ID = hash_id(announce_url)
+
+      title = response.xpath('//h1[@class="detail-title title1"]/text()').extract()
+      image_divs = response.xpath('//div[@class="carrousel_slide"]/img/@src').extract()
+      image_divs2 = response.xpath('//div[@class="carrousel_slide"]/div/@data-lazy').extract()
+      for image_div in image_divs2:
+         image_divs.append(json.loads(image_div)['url'])
+
+      image_count = 1
+      for image_div in image_divs:
+         image_url  = 'http:' + image_div
+         image_name = 'images\\' + str(ID) + '_' + str(image_count) + '.jpg'
+         urllib.urlretrieve(image_url, image_name)
+         image_count = image_count + 1
 
       if title is not None:
          self.announce_title[ID] = title[0].strip()
