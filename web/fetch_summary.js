@@ -40,13 +40,14 @@ function loadJSON(path, success, error) {
 
   })
   .catch(function(error) {
+    loadJSON("data/announces_summary.json",
+    function (data) { generate_summary_page(JSON.parse(data.response));}, function(err) {console.log(err);})
     console.log(error);
   });
 
   function generate_summary_page(data)
   {
     console.log("in generate_summary_page");
-    console.log(data);
     if( data.length == 0)
     {
       console.log("no data");
@@ -62,11 +63,10 @@ function loadJSON(path, success, error) {
     else
     {
           console.log("there is " +data.length + "data" );
+          var announces_found = document.getElementById("nb_announces_found");
+          announces_found.innerHTML = "("+ data.length +")";
           for(var i = 0; i < data.length; i++)
           {
-              var announces_found = document.getElementById("nb_announces_found");
-              announces_found.innerHTML = "("+ data.length +")";
-
                var ad_link = createNode("a");
                ad_link.style.display = "block";
                ad_link.href = "results_details.html?"+data[i].ID;
@@ -140,9 +140,9 @@ function loadJSON(path, success, error) {
 
               var img_url =
               {
-              seloger:"data/seloger-logo.jpg",
-              logicimmo:"data/logicimmo.png",
-              leboncoin: "data/leboncoin-logo.png"
+              seloger:"data/SL0.svg",
+              logicimmo:"data/li0.svg",
+              leboncoin: "data/lbc0.svg"
               }
               var max_offset = 40;
               var max_zindex = 10;
@@ -150,7 +150,7 @@ function loadJSON(path, success, error) {
               {
                 var ad_source_container_div = createNode("div");
                 ad_source_container_div.className = "announce_source_container";
-                var new_offset = max_offset - j * 10;
+                var new_offset = max_offset - j * 20;
                 ad_source_container_div.style.right = new_offset + "px";
                 var new_zindex = max_zindex - j;
                 ad_source_container_div.style.zIndex = new_zindex;

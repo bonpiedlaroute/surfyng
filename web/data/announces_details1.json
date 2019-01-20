@@ -1,0 +1,40 @@
+[
+{
+      "ID":"1_1",		
+      "ANNOUNCE_LINK": "#",
+		"IMAGE": "data/annonce_1.jpg",
+      "IMAGE_COUNT":"4",
+      "TRANSPORT": "3mn de la gare",
+		"SURFACE": "32 m2",
+		"NB_ROOMS": "2 pièces",
+		"LOCATION": "quartier centre ville",
+		"SOURCE_LOGO": "data/SL0.svg"
+
+},
+{
+      "ID":"1_2",		
+      "ANNOUNCE_LINK": "#",
+		"IMAGE": "data/annonce_1.jpg",
+      "IMAGE_COUNT":"3",
+      "TRANSPORT": "3mn de la gare",
+		"SURFACE": "32 m2",
+		"NB_ROOMS": "2 pièces",
+		"LOCATION": "centre ville",
+      "FLOOR":"6eme etage",
+		"SOURCE_LOGO": "data/li0.svg"
+
+},
+{
+      "ID":"1_3",		
+      "ANNOUNCE_LINK": "#",
+		"IMAGE": "data/annonce_1.jpg",
+      "IMAGE_COUNT":"6",
+		"SURFACE": "31,9 m2",
+		"NB_ROOMS": "2 pièces",
+		"LOCATION": "quartier centre ville",
+      "FLOOR":"6ème etage",
+      "CELLAR":"cave",
+		"SOURCE_LOGO": "data/lbc0.svg"
+
+}
+]
