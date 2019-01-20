@@ -13,7 +13,7 @@ SET( SRCS thrift_generated/dynamodb_access_constants.cpp
 
 project(dynamodb_access)
 
-include_directories(../../..)
+include_directories(../..)
 include_directories(inc)
 include_directories(thrift_generated)
 

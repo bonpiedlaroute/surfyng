@@ -17,7 +17,11 @@ using namespace ::apache::thrift::protocol;
 using namespace ::apache::thrift::transport;
 using namespace ::apache::thrift::server;
 
+#ifdef _WIN32
 using std::shared_ptr;
+#else
+using boost::shared_ptr;
+#endif
 
 int main(int argc, char **argv)
 {

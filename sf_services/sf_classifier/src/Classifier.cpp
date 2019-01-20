@@ -6,7 +6,7 @@
 */
 #include <iostream>
 #include "RealEstateAdClassifier.h"
-#include "Logger.h"
+#include "sf_services/sf_utils/inc/Logger.h"
 #include "PurgeRealEstateAd.h"
 
 
@@ -213,23 +213,23 @@ void detectSimilarRealEstateAd(const std::shared_ptr<dynamodb_accessClient>& cli
                               std::string value = object["value"].GetString();
                               if (2090 == order)
                               {
-                                 sscanf(value.c_str(), "Surface de %s m²", surface);
+                                 sscanf(value.c_str(), "Surface de %s mï¿½", surface);
                               }
                               else if (2092 == order)
                               {
-                                 sscanf(value.c_str(), "Année de construction %d", &constructionYear);
+                                 sscanf(value.c_str(), "Annï¿½e de construction %d", &constructionYear);
                               }
                               else if (2094 == order)
                               {
-                                 sscanf(value.c_str(), "Bâtiment de %d étage", &buildingTotalFloor);
+                                 sscanf(value.c_str(), "Bï¿½timent de %d ï¿½tage", &buildingTotalFloor);
                               }
                               else if (2096 == order)
                               {
-                                 sscanf(value.c_str(), "Au %s étage", floor);
+                                 sscanf(value.c_str(), "Au %s ï¿½tage", floor);
                               }
                               else if (2140 == order)
                               {
-                                 sscanf(value.c_str(), "%d Pièces", &pieceNb);
+                                 sscanf(value.c_str(), "%d Piï¿½ces", &pieceNb);
                               }
                               else if (2165 == order)
                               {
@@ -289,7 +289,7 @@ void detectSimilarRealEstateAd(const std::shared_ptr<dynamodb_accessClient>& cli
                               else if (order == 3250)
                               {
                                  float landSurface = 0;
-                                 sscanf(value.c_str(), "Terrain de %f m²", &landSurface);
+                                 sscanf(value.c_str(), "Terrain de %f mï¿½", &landSurface);
                                  prop.setDescription(RealEstateLandSurface, std::to_string(landSurface));
                               }
                            }

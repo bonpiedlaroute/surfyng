@@ -25,9 +25,9 @@
 #include <aws/dynamodb/model/GetItemRequest.h>
 #include <aws/dynamodb/model/DeleteItemRequest.h>
 #include <aws/dynamodb/model/UpdateItemRequest.h>
-#include "surfyn/sf_services/sf_utils/inc/Config.h"
-#include "surfyn/sf_services/sf_utils/inc/Str.h"
-#include "surfyn/sf_services/sf_utils/inc/Logger.h"
+#include "sf_services/sf_utils/inc/Config.h"
+#include "sf_services/sf_utils/inc/Str.h"
+#include "sf_services/sf_utils/inc/Logger.h"
 #include <thrift/protocol/TBinaryProtocol.h>
 #include <thrift/transport/TSocket.h>
 #include <thrift/transport/TTransportUtils.h>
@@ -222,6 +222,12 @@ void dynamodb_accessHandler::get(GetResult& _return, const std::string& tablenam
 
       }
    }
+   else
+   {
+      std::stringstream ss;
+      ss << " failed to get item "<< key.key << " in table " << tablename << ", reason[" << getOutcome.GetError().GetMessage() << "]";
+      Log::getInstance()->error(ss.str());
+   }
 }
 
 void dynamodb_accessHandler::remove(OperationResult& _return, const std::string& tablename, const KeyValue& key)
@@ -359,15 +365,24 @@ void dynamodb_accessHandler::scan(ScanReqResult& _return, const std::string& tab
    if(!filterexpression.empty())
       scanRequest.SetFilterExpression(filterexpression.c_str());
 
-   //scanRequest.WithExclusiveStartKey(m_lastEvaluatedKey);
+   if(!m_lastEvaluatedKey.empty())
+      scanRequest.WithExclusiveStartKey(m_lastEvaluatedKey);
 
    ScanOutcome scanOutcome = m_client->Scan(scanRequest);
+
+   Log::getInstance()->info(" scan sent");
 
    fillResult(_return.result, scanOutcome);
 
    if(scanOutcome.IsSuccess())
    {
          Aws::Vector<Aws::Map<Aws::String, AttributeValue>> itemsCollection = scanOutcome.GetResult().GetItems();
+
+         std::stringstream msg;
+         msg << " scan success: ";
+         msg << itemsCollection.size();
+         msg << " items received ";
+         Log::getInstance()->info(msg.str());
 
          for(auto item: itemsCollection )
          {
@@ -380,11 +395,26 @@ void dynamodb_accessHandler::scan(ScanReqResult& _return, const std::string& tab
                {
                   case Type::type::NUMBER:
                   {
+                     /*std::stringstream msg;
+                     msg << " inserting ...";
+                     msg << iter->first.c_str();
+                     msg << ":";
+                     msg << iter->second.GetN();
+
+                     Log::getInstance()->info(msg.str());*/
                      attributes[iter->first.c_str()] = iter->second.GetN();
                      break;
                   }
                   default:
                   {
+                     /*std::stringstream msg;
+                     msg << " inserting ...";
+                     msg << iter->first.c_str();
+                     msg << ":";
+                     msg << iter->second.GetS();
+
+                     Log::getInstance()->info(msg.str());*/
+
                      attributes[iter->first.c_str()] = iter->second.GetS();
                      break;
                   }
@@ -398,7 +428,7 @@ void dynamodb_accessHandler::scan(ScanReqResult& _return, const std::string& tab
    else
    {
       std::stringstream ss;
-      ss << " failed to scan table " << tablename << ", reason[" << scanOutcome.GetError() << "]";
+      ss << " failed to scan table " << tablename << ", reason[" << scanOutcome.GetError().GetMessage() << "]";
       Log::getInstance()->error(ss.str());
    }
 
@@ -411,7 +441,7 @@ void dynamodb_accessHandler::scan(ScanReqResult& _return, const std::string& tab
    {
       _return.scanend = false;
    }
-   Log::getInstance()->info(" scan sent");
+
 }
 
 }

@@ -22,7 +22,7 @@ set( CMAKE_PREFIX_PATH "${SF_UTILS_BUILD_DIR}")
 find_library(SF_UTILS_LIB sf_utils)
 find_package(Boost 1.65.1)
 
-include_directories(../../..)
+include_directories(../..)
 include_directories(../../../surfyng/sf_services/dynamodb_access/thrift_generated)
 include_directories(inc)
 include_directories(${Boost_INCLUDE_DIRS})

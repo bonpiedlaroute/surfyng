@@ -5,7 +5,7 @@
    author(s): Noel Tchidjo
 */
 #include <iostream>
-#include "Logger.h"
+#include "sf_services/sf_utils/inc/Logger.h"
 #include "PurgeRealEstateAd.h"
 #include "Classifier.h"
 
@@ -20,8 +20,11 @@ using namespace ::apache::thrift;
 using namespace ::apache::thrift::protocol;
 using namespace ::apache::thrift::transport;
 
+#ifdef _WIN32
 using std::shared_ptr;
-
+#else
+using boost::shared_ptr;
+#endif
 
 using Log = surfyn::utils::Logger;
 
