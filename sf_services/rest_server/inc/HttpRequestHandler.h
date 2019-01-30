@@ -1,3 +1,9 @@
+/*
+   (c) copyright 2019
+   All rights reserved
+
+   author(s): Noel Tchidjo
+*/
 #ifndef _HTTP_REQUEST_HANDLER_
 #define _HTTP_REQUEST_HANDLER_
 #include <iostream>

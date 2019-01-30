@@ -7,6 +7,9 @@
 #ifndef INC_DBACCESS_H_
 #define INC_DBACCESS_H_
 #include "stdafx.h"
+#include <map>
+#include "sf_services/dynamodb_access/thrift_generated/dynamodb_access.h"
+#include <memory>
 
 namespace surfyn
 {
@@ -15,9 +18,12 @@ namespace rest_server
 
 class DBaccess
 {
+private:
+   std::shared_ptr<dynamodb_accessClient> m_client;
 public:
-   DBaccess() = default;
-   void fetchData(utility::stringstream_t& sstream);
+   DBaccess();
+   void fetchSummary(utility::stringstream_t& sstream, const std::map<utility::string_t,  utility::string_t>& query );
+   void fetchDetails(utility::stringstream_t& sstream, const std::map<utility::string_t,  utility::string_t>& query );
 };
 
 }
