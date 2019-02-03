@@ -213,23 +213,23 @@ void detectSimilarRealEstateAd(const std::shared_ptr<dynamodb_accessClient>& cli
                               std::string value = object["value"].GetString();
                               if (2090 == order)
                               {
-                                 sscanf(value.c_str(), "Surface de %s m�", surface);
+                                 sscanf(value.c_str(), "Surface de %s m2", surface);
                               }
                               else if (2092 == order)
                               {
-                                 sscanf(value.c_str(), "Ann�e de construction %d", &constructionYear);
+                                 sscanf(value.c_str(), "Année de construction %d", &constructionYear);
                               }
                               else if (2094 == order)
                               {
-                                 sscanf(value.c_str(), "B�timent de %d �tage", &buildingTotalFloor);
+                                 sscanf(value.c_str(), "Bâtiment de %d étage", &buildingTotalFloor);
                               }
                               else if (2096 == order)
                               {
-                                 sscanf(value.c_str(), "Au %s �tage", floor);
+                                 sscanf(value.c_str(), "Au %s étage", floor);
                               }
                               else if (2140 == order)
                               {
-                                 sscanf(value.c_str(), "%d Pi�ces", &pieceNb);
+                                 sscanf(value.c_str(), "%d Pièces", &pieceNb);
                               }
                               else if (2165 == order)
                               {
@@ -289,7 +289,7 @@ void detectSimilarRealEstateAd(const std::shared_ptr<dynamodb_accessClient>& cli
                               else if (order == 3250)
                               {
                                  float landSurface = 0;
-                                 sscanf(value.c_str(), "Terrain de %f m�", &landSurface);
+                                 sscanf(value.c_str(), "Terrain de %f m2", &landSurface);
                                  prop.setDescription(RealEstateLandSurface, std::to_string(landSurface));
                               }
                            }
