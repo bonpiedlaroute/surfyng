@@ -880,6 +880,7 @@ class dynamodb_access_deleteTable_presult {
 
 class dynamodb_accessClient : virtual public dynamodb_accessIf {
  public:
+#ifdef _WIN32
   dynamodb_accessClient(std::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
     setProtocol(prot);
   }
@@ -903,6 +904,31 @@ class dynamodb_accessClient : virtual public dynamodb_accessIf {
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> getOutputProtocol() {
     return poprot_;
   }
+#else
+  dynamodb_accessClient(boost::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
+    setProtocol(prot);
+  }
+  dynamodb_accessClient(boost::shared_ptr< ::apache::thrift::protocol::TProtocol> iprot, boost::shared_ptr< ::apache::thrift::protocol::TProtocol> oprot) {
+    setProtocol(iprot,oprot);
+  }
+ private:
+  void setProtocol(boost::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
+  setProtocol(prot,prot);
+  }
+  void setProtocol(boost::shared_ptr< ::apache::thrift::protocol::TProtocol> iprot, boost::shared_ptr< ::apache::thrift::protocol::TProtocol> oprot) {
+    piprot_=iprot;
+    poprot_=oprot;
+    iprot_ = iprot.get();
+    oprot_ = oprot.get();
+  }
+ public:
+  boost::shared_ptr< ::apache::thrift::protocol::TProtocol> getInputProtocol() {
+    return piprot_;
+  }
+  boost::shared_ptr< ::apache::thrift::protocol::TProtocol> getOutputProtocol() {
+    return poprot_;
+  }
+#endif
   void put(OperationResult& _return, const std::string& tablename, const std::map<std::string, ValueType> & values);
   void send_put(const std::string& tablename, const std::map<std::string, ValueType> & values);
   void recv_put(OperationResult& _return);
@@ -925,15 +951,24 @@ class dynamodb_accessClient : virtual public dynamodb_accessIf {
   void send_deleteTable(const std::string& tablename);
   void recv_deleteTable(OperationResult& _return);
  protected:
+#ifdef _WIN32
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
+#else
+  boost::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
+  boost::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
+#endif
   ::apache::thrift::protocol::TProtocol* iprot_;
   ::apache::thrift::protocol::TProtocol* oprot_;
 };
 
 class dynamodb_accessProcessor : public ::apache::thrift::TDispatchProcessor {
  protected:
+#ifdef _WIN32
   std::shared_ptr<dynamodb_accessIf> iface_;
+#else
+  boost::shared_ptr<dynamodb_accessIf> iface_;
+#endif
   virtual bool dispatchCall(::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, const std::string& fname, int32_t seqid, void* callContext);
  private:
   typedef  void (dynamodb_accessProcessor::*ProcessFunction)(int32_t, ::apache::thrift::protocol::TProtocol*, ::apache::thrift::protocol::TProtocol*, void*);
@@ -947,7 +982,11 @@ class dynamodb_accessProcessor : public ::apache::thrift::TDispatchProcessor {
   void process_createTable(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_deleteTable(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
+#ifdef _WIN32
   dynamodb_accessProcessor(std::shared_ptr<dynamodb_accessIf> iface) :
+#else
+     dynamodb_accessProcessor(boost::shared_ptr<dynamodb_accessIf> iface) :
+#endif
     iface_(iface) {
     processMap_["put"] = &dynamodb_accessProcessor::process_put;
     processMap_["get"] = &dynamodb_accessProcessor::process_get;
@@ -963,13 +1002,23 @@ class dynamodb_accessProcessor : public ::apache::thrift::TDispatchProcessor {
 
 class dynamodb_accessProcessorFactory : public ::apache::thrift::TProcessorFactory {
  public:
+#if _WIN32
   dynamodb_accessProcessorFactory(const ::std::shared_ptr< dynamodb_accessIfFactory >& handlerFactory) :
       handlerFactory_(handlerFactory) {}
 
   ::std::shared_ptr< ::apache::thrift::TProcessor > getProcessor(const ::apache::thrift::TConnectionInfo& connInfo);
+#else
+  dynamodb_accessProcessorFactory(const ::boost::shared_ptr< dynamodb_accessIfFactory >& handlerFactory) :
+      handlerFactory_(handlerFactory) {}
+  ::boost::shared_ptr< ::apache::thrift::TProcessor > getProcessor(const ::apache::thrift::TConnectionInfo& connInfo);
+#endif
 
  protected:
+#ifdef _WIN32
   ::std::shared_ptr< dynamodb_accessIfFactory > handlerFactory_;
+#else
+  ::boost::shared_ptr< dynamodb_accessIfFactory > handlerFactory_;
+#endif
 };
 
 class dynamodb_accessMultiface : virtual public dynamodb_accessIf {

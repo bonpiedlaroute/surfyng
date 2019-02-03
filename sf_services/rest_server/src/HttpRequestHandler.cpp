@@ -1,4 +1,13 @@
+/*
+   (c) copyright 2019
+   All rights reserved
+
+   author(s): Noel Tchidjo
+*/
 #include "HttpRequestHandler.h"
+#include "sf_services/sf_utils/inc/Logger.h"
+
+using Log = surfyn::utils::Logger;
 
 namespace surfyn
 {
@@ -44,10 +53,47 @@ void HttpRequestHandler::handle_get(http_request message)
 
     auto paths = http::uri::split_path(http::uri::decode(message.relative_uri().path()));
 
-    message.relative_uri().path();
-
     utility::stringstream_t sstream;
-    m_dbaccess.fetchData(sstream);
+
+    if( paths.size() != 2)
+    {
+       std::string error = "Unknown path ";
+       for( auto valuepath : paths)
+       {
+          error += valuepath;
+          error +="/";
+       }
+       Log::getInstance()->error(error);
+
+       message.reply(status_codes::NotFound, "resource not found!");
+       return;
+    }
+
+    if( paths[0] == "search" && paths[1] == "all")
+    {
+       auto query = http::uri::split_query(http::uri::decode(message.relative_uri().query()));
+       m_dbaccess.fetchSummary(sstream, query);
+    }
+    else
+    {
+       if(paths[0] == "search" && paths[1] == "ad")
+       {
+          auto query = http::uri::split_query(http::uri::decode(message.relative_uri().query()));
+          m_dbaccess.fetchDetails(sstream, query);
+       }
+       else
+       {
+          std::string error = "Unknown requested service:";
+          error+=paths[0];
+          error+="/";
+          error+=paths[1];
+          Log::getInstance()->error(error);
+          message.reply(status_codes::NotFound, "resource not found!");
+          return;
+
+       }
+    }
+
     auto body_text = utility::conversions::to_utf8string(sstream.str());
     auto length = body_text.size();
 

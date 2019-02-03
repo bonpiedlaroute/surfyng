@@ -10,12 +10,17 @@
 #include <chrono>
 #include <thread>
 #include <iostream>
-#include "Algorithm.h"
-#include "Logger.h"
-#include "strptime.h"
+#include "sf_services/sf_utils/inc/Algorithm.h"
+#include "sf_services/sf_utils/inc/Logger.h"
 #include <sstream>
 
+#ifdef _WIN32
+#include <strptime.h>
 #define timegm _mkgmtime
+#endif
+
+
+
 
 namespace surfyn
 {

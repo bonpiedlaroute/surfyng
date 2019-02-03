@@ -7,16 +7,16 @@
 #include "RealEstateAdClassifier.h"
 #include "boost/property_tree/ptree.hpp"
 #include "boost/property_tree/json_parser.hpp"
-#include "Config.h"
-#include "Str.h"
-#include "Algorithm.h"
+#include "sf_services/sf_utils/inc/Config.h"
+#include "sf_services/sf_utils/inc/Str.h"
+#include "sf_services/sf_utils/inc/Algorithm.h"
 #include <fstream>
 #include <utility>
 #include "CriteriaManager.h"
 #include <iostream>
 #include <math.h>
 #include <iterator>
-#include "Logger.h"
+#include "sf_services/sf_utils/inc/Logger.h"
 
 
 using Log = surfyn::utils::Logger;

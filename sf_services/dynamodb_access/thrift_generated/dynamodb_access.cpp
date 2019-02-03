@@ -2454,12 +2454,21 @@ void dynamodb_accessProcessor::process_deleteTable(int32_t seqid, ::apache::thri
     this->eventHandler_->postWrite(ctx, "dynamodb_access.deleteTable", bytes);
   }
 }
-
-::std::shared_ptr< ::apache::thrift::TProcessor > dynamodb_accessProcessorFactory::getProcessor(const ::apache::thrift::TConnectionInfo& connInfo) {
+#ifdef _WIN32
+   ::std::shared_ptr< ::apache::thrift::TProcessor > dynamodb_accessProcessorFactory::getProcessor(const ::apache::thrift::TConnectionInfo& connInfo) {
+   ::apache::thrift::ReleaseHandler< dynamodb_accessIfFactory > cleanup(handlerFactory_);
+   ::std::shared_ptr< dynamodb_accessIf > handler(handlerFactory_->getHandler(connInfo), cleanup);
+   ::std::shared_ptr< ::apache::thrift::TProcessor > processor(new dynamodb_accessProcessor(handler));
+   return processor;
+}
+#else
+  ::boost::shared_ptr< ::apache::thrift::TProcessor > dynamodb_accessProcessorFactory::getProcessor(const ::apache::thrift::TConnectionInfo& connInfo) {
   ::apache::thrift::ReleaseHandler< dynamodb_accessIfFactory > cleanup(handlerFactory_);
-  ::std::shared_ptr< dynamodb_accessIf > handler(handlerFactory_->getHandler(connInfo), cleanup);
-  ::std::shared_ptr< ::apache::thrift::TProcessor > processor(new dynamodb_accessProcessor(handler));
+  ::boost::shared_ptr< dynamodb_accessIf > handler(handlerFactory_->getHandler(connInfo), cleanup);
+  ::boost::shared_ptr< ::apache::thrift::TProcessor > processor(new dynamodb_accessProcessor(handler));
   return processor;
+#endif
+
 }
 
 void dynamodb_accessConcurrentClient::put(OperationResult& _return, const std::string& tablename, const std::map<std::string, ValueType> & values)
