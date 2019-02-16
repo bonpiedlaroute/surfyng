@@ -3,10 +3,14 @@ from scipy import spatial
 from nltk import ngrams
 import random, json, glob, os, codecs, random
 import numpy as np
+
+from thrift_generated.dynamodb_access.ttypes import Type
+from thrift_generated.dynamodb_access.ttypes import ValueType
+from thrift_generated.dynamodb_access.ttypes import KeyValue
 from Serializer import *
 
 tablename ="FR_PROPERTIES"
-attribute_name = "SIMILAR_ANNOUNCE"
+similar_announce_column = "SIMILAR_ANNOUNCE"
 
 # data structures
 file_index_to_file_name = {}
@@ -40,8 +44,24 @@ for i in file_index_to_file_name.keys():
    master_file_name = file_index_to_file_name[i]
    master_vector = file_index_to_file_vector[i]
    master_announce_id, master_photo_index = master_file_name.split('_')
-   item_key = {'ID' : master_announce_id}
-   similar_announce_list = serializer.client.get(tablename, item_key, attribute_name)
+
+   print (master_announce_id)
+   master_announce_id_value = ValueType()
+   master_announce_id_value.field = master_announce_id
+   master_announce_id_value.fieldtype = Type.NUMBER
+   item_key = KeyValue('ID', master_announce_id_value)
+
+   attributes_to_get = {}
+   similar_announce_value = ValueType()
+   attributes_to_get['CITY'] = similar_announce_value
+
+   query_result = serializer.client.get(tablename, item_key, attributes_to_get)
+   first_insert = not query_result.result.success
+   similar_announce_list = []
+   if not first_insert and similar_announce_column in query_result.values.keys():
+      similar_announce_list = query_result.values[similar_announce_column].split(' ')
+
+   values = {}
 
    named_nearest_neighbors = []
    nearest_neighbors = t.get_nns_by_item(i, n_nearest_neighbors)
@@ -54,13 +74,28 @@ for i in file_index_to_file_name.keys():
          rounded_similarity = int((similarity * 10000)) / 10000.0
 
          if rounded_similarity >= similarity_threshold:
-            neighbor_announce_id, neighbor_photo_index = neighbor_file_name.split('_')         
+            neighbor_announce_id, neighbor_photo_index = neighbor_file_name.split('_')
             similar_announce_list.append(neighbor_announce_id)
             named_nearest_neighbors.append({
                'filename': neighbor_file_name,
                'similarity': rounded_similarity
             })
-   serializer.client.update(tablename, master_announce_id, similar_announce_list)
+      #query_result.values[similar_announce_column] = similar_announce_list
+
+   similar_announce_list_value = ValueType()
+   similar_announce_list_value.field = ' '.join(similar_announce_list)
+   similar_announce_list_value.fieldtype = Type.STRING
+
+   values[similar_announce_column] = similar_announce_list_value
+
+   if first_insert:
+      print ("insert new item {}".format(master_announce_id))
+      ret = serializer.client.put(tablename, values)
+      print (ret)
+   else:
+      print ("update item {}".format(master_announce_id))
+      ret = serializer.client.update(tablename, item_key, values)
+      print (ret)
 
    with open('seloger_nearest_neighbors/' + master_file_name + '.json', 'w') as out:
       json.dump(named_nearest_neighbors, out)
