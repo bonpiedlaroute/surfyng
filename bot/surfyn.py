@@ -56,10 +56,9 @@ for i in file_index_to_file_name.keys():
    attributes_to_get['CITY'] = similar_announce_value
 
    query_result = serializer.client.get(tablename, item_key, attributes_to_get)
-   first_insert = not query_result.result.success
-   similar_announce_list = []
-   if not first_insert and similar_announce_column in query_result.values.keys():
-      similar_announce_list = query_result.values[similar_announce_column].split(' ')
+   similar_announce_set = set()
+   if query_result.result.success and similar_announce_column in query_result.values.keys():
+      similar_announce_set = set(query_result.values[similar_announce_column].split(' '))
 
    values = {}
 
@@ -75,24 +74,19 @@ for i in file_index_to_file_name.keys():
 
          if rounded_similarity >= similarity_threshold:
             neighbor_announce_id, neighbor_photo_index = neighbor_file_name.split('_')
-            similar_announce_list.append(neighbor_announce_id)
+            similar_announce_set.add(neighbor_announce_id)
             named_nearest_neighbors.append({
                'filename': neighbor_file_name,
                'similarity': rounded_similarity
             })
-      #query_result.values[similar_announce_column] = similar_announce_list
 
-   similar_announce_list_value = ValueType()
-   similar_announce_list_value.field = ' '.join(similar_announce_list)
-   similar_announce_list_value.fieldtype = Type.STRING
+   if len(named_nearest_neighbors) > 0:
+      similar_announce_set_value = ValueType()
+      similar_announce_set_value.field = ' '.join(similar_announce_set)
+      similar_announce_set_value.fieldtype = Type.STRING
 
-   values[similar_announce_column] = similar_announce_list_value
+      values[similar_announce_column] = similar_announce_set_value
 
-   if first_insert:
-      print ("insert new item {}".format(master_announce_id))
-      ret = serializer.client.put(tablename, values)
-      print (ret)
-   else:
       print ("update item {}".format(master_announce_id))
       ret = serializer.client.update(tablename, item_key, values)
       print (ret)
