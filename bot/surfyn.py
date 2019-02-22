@@ -22,7 +22,7 @@ dims = 2048
 n_nearest_neighbors = 5
 similarity_threshold=0.9
 trees = 10000
-infiles = glob.glob('seloger_image_vectors/*.npz')
+infiles = glob.glob('image_vectors/*.npz')
 
 # build ann index
 t = AnnoyIndex(dims)
@@ -58,7 +58,7 @@ for i in file_index_to_file_name.keys():
    query_result = serializer.client.get(tablename, item_key, attributes_to_get)
    similar_announce_set = set()
    if query_result.result.success and similar_announce_column in query_result.values.keys():
-      similar_announce_set = set(query_result.values[similar_announce_column].split(' '))
+      similar_announce_set = set(query_result.values[similar_announce_column].split(','))
 
    values = {}
 
@@ -82,7 +82,7 @@ for i in file_index_to_file_name.keys():
 
    if len(named_nearest_neighbors) > 0:
       similar_announce_set_value = ValueType()
-      similar_announce_set_value.field = ' '.join(similar_announce_set)
+      similar_announce_set_value.field = ','.join(similar_announce_set)
       similar_announce_set_value.fieldtype = Type.STRING
 
       values[similar_announce_column] = similar_announce_set_value
