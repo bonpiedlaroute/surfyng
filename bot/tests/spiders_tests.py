@@ -54,15 +54,22 @@ class TestSpiders(unittest.TestCase):
 
    def test_should_return_correct_logicimmo_url(self):
       url = 'http://www.logic-immo.com/vente-immobilier-houilles-78800,13772_2/options/groupprptypesids=1'
-      self.assertEquals(url, buildLogicImmoUrl(1))
+      self.assertEquals(url, buildLogicImmoUrl(1, BUY_ID))
 
       url = url[:-1]
 
       url = url + '2'
 
-      self.assertEquals(url, buildLogicImmoUrl(2))
+      self.assertEquals(url, buildLogicImmoUrl(2, BUY_ID))
    
-     
+   def test_should_return_correct_leboncoin_url(self):
+      url = 'https://www.leboncoin.fr/recherche/?category=10&locations=Houilles&real_estate_type=2'
+
+      self.assertEquals(url, buildleboncoinurl('2', '10','Houilles'))
+
+      url = 'https://www.leboncoin.fr/recherche/?category=9&locations=Houilles&real_estate_type=1'
+ 
+      self.assertEquals(url, buildleboncoinurl('1', '9', 'Houilles'))
  
 if __name__ == '__main__':
    suite = unittest.TestLoader().loadTestsFromTestCase(TestSpiders)

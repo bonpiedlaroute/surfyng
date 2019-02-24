@@ -7,7 +7,7 @@
 import scrapy
 
 from hash_id import *
-from properties_type import *
+from search_features import *
 from url_builder import *
 from collections import namedtuple
 from thrift_generated.dynamodb_access import *
