@@ -17,6 +17,11 @@ logicimmo_mappingids[APART_ID] = '1'
 logicimmo_mappingids[HOUSE_ID] = '2'
 
 
+LeboncoinPropertiesMapping = dict()
+LeboncoinPropertiesMapping[APART_ID] = '2'
+LeboncoinPropertiesMapping[HOUSE_ID] = '1'
+
+
 
 def getSeLogerPropertiesId(surfyng_properties_id):
    
@@ -27,13 +32,25 @@ def getLogicImmoPropertiesId(surfyng_properties_id):
    return logicimmo_mappingids[surfyng_properties_id]
 
 
+def getLeboncoinPropertiesId(surfyn_properties_id):
+   return LeboncoinPropertiesMapping[surfyn_properties_id]
+
 BUY_ID = 1
 RENT_ID = 2
 SeLogerSearchTypeMapping = dict()
-
 SeLogerSearchTypeMapping[BUY_ID] = '2'
 SeLogerSearchTypeMapping[RENT_ID] = '1'
 
+
+LeboncoinSearchTypeMapping = dict()
+LeboncoinSearchTypeMapping[BUY_ID] = '9'
+LeboncoinSearchTypeMapping[RENT_ID] = '10'
+
+
+
 def getSeLogerSearchTypeId(surfyn_searchtype):
    return SeLogerSearchTypeMapping[surfyn_searchtype]
- 
+
+
+def getLeboncoinSearchTypeId(surfyn_searchtype):
+   return LeboncoinSearchTypeMapping[surfyn_searchtype]

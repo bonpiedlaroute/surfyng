@@ -7,6 +7,7 @@
 import scrapy
 import json
 import urllib
+import os
 
 from hash_id import *
 from search_features import *
@@ -78,7 +79,7 @@ class SelogerSpider(scrapy.Spider):
       image_count = 1
       for image_div in image_divs:
          image_url  = 'http:' + image_div
-         image_name = 'images\\' + str(ID) + '_' + str(image_count) + '.jpg'
+         image_name = os.path.join('images', str(ID) + '_' + str(image_count) + '.jpg')
          urllib.urlretrieve(image_url, image_name)
          image_count = image_count + 1
 
