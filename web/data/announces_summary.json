@@ -1,10 +1,10 @@
 [{
-      "ID":"1",		
+      "ID":"1",
       "PROPERTY_TYPE": "Appartement",
-		"SURFACE": "46 m2",
+		"SURFACE": "46 m<sup>2",
 		"NB_ROOMS": "2 pièces",
-		"CITY": "Houilles",
-		"HISTORY": "il y'a 3h",
+		"CITY": "Paris",
+		"HISTORY": "il y a 3h",
 		"PRICE": "320 000  €",
 		"IMAGE": "data/annonce_1.jpg",
 		"SOURCES": [
@@ -16,10 +16,10 @@
 	{
       "ID":"2",
 		"PROPERTY_TYPE": "Appartement",
-		"SURFACE": "53 m2",
+		"SURFACE": "53 m<sup>2",
 		"NB_ROOMS": "3 pièces",
-		"CITY": "Houilles",
-		"HISTORY": "il y'a 2h",
+		"CITY": "Paris",
+		"HISTORY": "il y a 2h",
 		"PRICE": "339 000  €",
 		"IMAGE": "data/annonce_2.jpg",
 		"SOURCES": [
@@ -30,10 +30,10 @@
 	{
       "ID":"3",
 		"PROPERTY_TYPE": "Maison",
-		"SURFACE": "228 m2",
+		"SURFACE": "228 m<sup>2",
 		"NB_ROOMS": "8 pièces",
-		"CITY": "Houilles",
-		"HISTORY": "il y'a 1h",
+		"CITY": "Paris",
+		"HISTORY": "il y a 1h",
 		"PRICE": "800 000  €",
 		"IMAGE": "data/annonce_3.jpg",
 		"SOURCES": [
@@ -43,10 +43,10 @@
 	{
       "ID":"4",
 		"PROPERTY_TYPE": "Appartement",
-		"SURFACE": "63 m2",
+		"SURFACE": "63 m<sup>2",
 		"NB_ROOMS": "3 pièces",
-		"CITY": "Houilles",
-		"HISTORY": "il y'a 2h",
+		"CITY": "Paris",
+		"HISTORY": "il y a 2h",
 		"PRICE": "215 000  €",
 		"IMAGE": "data/annonce_5.jpg",
 		"SOURCES": [

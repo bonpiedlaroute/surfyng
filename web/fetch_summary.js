@@ -35,7 +35,6 @@ function loadJSON(path, success, error) {
   fetch(url)
   .then(function(resp) { return resp.json(); } )
   .then(function(data) {
-    console.log("success of fetch");
     generate_summary_page(data);
 
   })
@@ -47,10 +46,10 @@ function loadJSON(path, success, error) {
 
   function generate_summary_page(data)
   {
-    console.log("in generate_summary_page");
+
     if( data.length == 0)
     {
-      console.log("no data");
+
       var announces_found = document.getElementById("nb_announces_found");
       announces_found.innerHTML = "(0)";
 
@@ -62,7 +61,6 @@ function loadJSON(path, success, error) {
     }
     else
     {
-          console.log("there is " +data.length + "data" );
           var announces_found = document.getElementById("nb_announces_found");
           announces_found.innerHTML = "("+ data.length +")";
           for(var i = 0; i < data.length; i++)
@@ -126,6 +124,7 @@ function loadJSON(path, success, error) {
 
               var ad_price_p = createNode("p");
               ad_price_p.style.float = "right";
+              ad_price_p.style.color = "#4c94bc";
               ad_price_p.innerHTML = data[i].PRICE;
               ad_summary_desc_div2.appendChild(ad_price_p);
 

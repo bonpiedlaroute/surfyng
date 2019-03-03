@@ -3,6 +3,11 @@ var inputPriceMax = document.getElementById("price_max");
 var inputAreaMin = document.getElementById("area_min");
 var inputAreaMax = document.getElementById("area_max");
 
+var valuePriceMin = document.getElementById("value_price_min");
+var valuePriceMax = document.getElementById("value_price_max");
+var valueAreaMin = document.getElementById("value_area_min");
+var valueAreaMax = document.getElementById("value_area_max");
+
 var inputType = Object.freeze({"priceMin":0, "priceMax":1, "areaMin":2, "areaMax":3});
 
 var offset = [0, 0, 0, 0];
@@ -116,7 +121,7 @@ function handleEvtMove(event) {
         newPriceMin = roundvalue(newPriceMin);
 
 
-        inputPriceMin.innerHTML = newPriceMin + " K€";
+        valuePriceMin.innerHTML = newPriceMin + " K€";
 
       }
       else if (isDown[inputType.priceMax]) {
@@ -146,7 +151,7 @@ function handleEvtMove(event) {
           newPriceMax = roundvalue(newPriceMax);
 
 
-          inputPriceMax.innerHTML = newPriceMax + " K€";
+          valuePriceMax.innerHTML = newPriceMax + " K€";
 
         }
         else {
@@ -180,7 +185,7 @@ function handleEvtMove(event) {
               newAreaMin = roundvalue(newAreaMin);
 
 
-              inputAreaMin.innerHTML = newAreaMin + " m2";
+              valueAreaMin.innerHTML = newAreaMin + " m<sup>2";
 
             }
             else if (isDown[inputType.areaMax]) {
@@ -209,7 +214,7 @@ function handleEvtMove(event) {
                 newAreaMax = roundvalue(newAreaMax);
 
 
-                inputAreaMax.innerHTML = newAreaMax + " m2";
+                valueAreaMax.innerHTML = newAreaMax + " m<sup>2";
 
               }
         }
@@ -254,7 +259,7 @@ function handleEvtDownPropertyType(event, divElt, evtType)
   {
     isSelected[evtType] = true;
     divElt.style.transform = "scale(1)";
-    divElt.style.border = "solid 3px blue";
+    divElt.style.border = "solid 3px #222545";
   }
 }
 function handleEvtDownLoft(event)
@@ -307,15 +312,26 @@ function updatePropertyTypeResult( value)
 }
 function submit_request(event)
 {
-  url_results = "results_summary.html?";
+  var city = document.getElementById("search_city");
+  url_results = "results_summary.html";
+
+  if( checkCity() == false )
+  {
+    validate.href = "#"
+    return ;
+  }
+
+  url_results += "?search_city=";
+  url_results += city.value;
+
   const urlParams = new URLSearchParams(window.location.search);
   const search_type = urlParams.get('search_type');
-  url_results+="search_type=";
+  url_results+="?search_type=";
   url_results+=search_type;
   url_results+="?price_min=";
-  url_results+= inputPriceMin.innerHTML;
+  url_results+= valuePriceMin.innerHTML.substring(0, valuePriceMin.innerHTML.length - 3);
   url_results+="?price_max=";
-  url_results+= inputPriceMax.innerHTML;
+  url_results+= valuePriceMax.innerHTML.substring(0, valuePriceMax.innerHTML.length - 3);
 
   if(isSelected[propertyType.loft])
   {
@@ -337,19 +353,33 @@ function submit_request(event)
   }
 
   url_results+="?area_min=";
-  url_results+= inputAreaMin.innerHTML;
+  url_results+= valueAreaMin.innerHTML.substring(0, valueAreaMin.innerHTML.length - 14);
   url_results+="?area_max=";
-  url_results+= inputAreaMax.innerHTML;
-
+  url_results+= valueAreaMax.innerHTML.substring(0, valueAreaMax.innerHTML.length - 14);;
+  isFirstTimePropType = true;
   validate.href = url_results;
 }
 
 if( validate)
 validate.onclick=submit_request;
-console.log(url_results);
-/*
-const userAction = async () => {
-  const response = await fetch('http://surfyn.xyz/search/');
-  const myJson = await response.json(); //extract JSON from the http response
-  // do something with myJson
-}*/
+
+
+function checkCity()
+{
+  var new_city = document.getElementById("search_city");
+  var error_msg = document.getElementById("error_msg");
+
+  if( new_city.value.trim().toUpperCase() == "PARIS" )
+  {
+    new_city.className = "form-control";
+    error_msg.innerHTML = "";
+    return true;
+  }
+  else
+  {
+    new_city.className = "form-control is-invalid";
+    error_msg.innerHTML = "Désolé, pour l'instant nous supportons uniquement la Ville de Paris";
+
+    return false;
+  }
+}
