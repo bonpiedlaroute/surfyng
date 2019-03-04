@@ -12,7 +12,26 @@ var inputType = Object.freeze({"priceMin":0, "priceMax":1, "areaMin":2, "areaMax
 
 var offset = [0, 0, 0, 0];
 var isDown = [false, false, false, false];
-var values = [50000, 4000000, 10, 400];
+var values = [];
+const Params = new URLSearchParams(window.location.search);
+const searchType = Params.get('search_type');
+if( searchType == "1")
+{
+  values[inputType.priceMin] = 50000;
+  values[inputType.priceMax] = 4000000;
+  valuePriceMin.innerHTML = "50 K€";
+  valuePriceMax.innerHTML = "4000 K€";
+}
+else {
+  values[inputType.priceMin] = 100;
+  values[inputType.priceMax] = 4000;
+  valuePriceMin.innerHTML = "100 €";
+  valuePriceMax.innerHTML = "4000 €";
+}
+values[inputType.areaMin] = 10;
+values[inputType.areaMax] = 400;
+
+
 var startPosition = [inputPriceMin?inputPriceMin.offsetLeft:0, inputPriceMax?inputPriceMax.offsetLeft:0,
   inputAreaMin?inputAreaMin.offsetLeft:0, inputAreaMax?inputAreaMax.offsetLeft:0];
 var lastPosition = [inputPriceMin?inputPriceMin.offsetLeft:0, inputPriceMax?inputPriceMax.offsetLeft:0,
@@ -117,11 +136,17 @@ function handleEvtMove(event) {
 
         var newPriceMin = computeValue(newValue, inputType.priceMin, inputType.priceMax);
 
-        newPriceMin = newPriceMin / 1000;
-        newPriceMin = roundvalue(newPriceMin);
+        if( searchType == "1")
+        {
+          newPriceMin = newPriceMin / 1000;
+          newPriceMin = roundvalue(newPriceMin);
+          valuePriceMin.innerHTML = newPriceMin + " K€";
+        }
+        else {
+          newPriceMin = roundvalue(newPriceMin);
+          valuePriceMin.innerHTML = newPriceMin + " €";
+        }
 
-
-        valuePriceMin.innerHTML = newPriceMin + " K€";
 
       }
       else if (isDown[inputType.priceMax]) {
@@ -147,11 +172,18 @@ function handleEvtMove(event) {
           inputPriceMax.style.left = newValue + 'px';
 
           var newPriceMax = computeValue(newValue, inputType.priceMin, inputType.priceMax);
-          newPriceMax = newPriceMax / 1000;
-          newPriceMax = roundvalue(newPriceMax);
 
+          if( searchType == "1")
+          {
+            newPriceMax = newPriceMax / 1000;
+            newPriceMax = roundvalue(newPriceMax);
+            valuePriceMax.innerHTML = newPriceMax + " K€";
+          }
+          else{
+            newPriceMax = roundvalue(newPriceMax);
+            valuePriceMax.innerHTML = newPriceMax + " €";
+          }
 
-          valuePriceMax.innerHTML = newPriceMax + " K€";
 
         }
         else {
@@ -324,14 +356,19 @@ function submit_request(event)
   url_results += "?search_city=";
   url_results += city.value;
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const search_type = urlParams.get('search_type');
   url_results+="?search_type=";
-  url_results+=search_type;
+  url_results+=searchType;
+
+  var formattingLength= 0;
+  if( searchType == "1")
+    formattingLength = 3;
+  else
+    formattingLength = 2;
+
   url_results+="?price_min=";
-  url_results+= valuePriceMin.innerHTML.substring(0, valuePriceMin.innerHTML.length - 3);
+  url_results+= valuePriceMin.innerHTML.substring(0, valuePriceMin.innerHTML.length - formattingLength);
   url_results+="?price_max=";
-  url_results+= valuePriceMax.innerHTML.substring(0, valuePriceMax.innerHTML.length - 3);
+  url_results+= valuePriceMax.innerHTML.substring(0, valuePriceMax.innerHTML.length - formattingLength);
 
   if(isSelected[propertyType.loft])
   {
