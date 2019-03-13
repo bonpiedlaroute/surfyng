@@ -8,6 +8,14 @@ var valuePriceMax = document.getElementById("value_price_max");
 var valueAreaMin = document.getElementById("value_area_min");
 var valueAreaMax = document.getElementById("value_area_max");
 
+var mobile   = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
+var eventdown = mobile ? "touchstart" : "mousedown";
+var eventmove = mobile ? "touchmove" : "mousemove";
+var eventup = mobile ? "touchend" : "mouseup";
+
+console.log("mobile : " + mobile);
+console.log(" useragent : " + navigator.userAgent);
+
 var inputType = Object.freeze({"priceMin":0, "priceMax":1, "areaMin":2, "areaMax":3});
 
 var offset = [0, 0, 0, 0];
@@ -80,8 +88,10 @@ function computeValue(position, evtTypeMin, evtTypeMax)
 }
 function handleEvtDown(e, input, evttype)
 {
+  //console.log("Down");
+  //console.log(e.changedTouches[0].clientX);
   isDown[evttype] = true;
-  offset[evttype] = input.offsetLeft - e.clientX;
+  offset[evttype] = input.offsetLeft - (mobile ? e.changedTouches[0].clientX : e.clientX);
 }
 function handleEvtDownPriceMin(e)
 {
@@ -105,13 +115,18 @@ function handleEvtUp()
     isDown[inputType.priceMax] = false;
     isDown[inputType.areaMin] = false;
     isDown[inputType.areaMax] = false;
+    //console.log("Up");
 }
 
 function handleEvtMove(event) {
+    if(mobile === false)
     event.preventDefault();
+    console.log("Move :");
+    //console.log(event);
+    //console.log(event.changedTouches[0].clientX);
     if (isDown[inputType.priceMin]) {
-
-        var newValue = event.clientX + offset[inputType.priceMin];
+        //console.log(event);
+        var newValue = (mobile ? event.changedTouches[0].clientX : event.clientX) + offset[inputType.priceMin];
         if( newValue <= startPosition[inputType.priceMin] )
         {
           newValue = startPosition[inputType.priceMin];
@@ -136,6 +151,7 @@ function handleEvtMove(event) {
 
         var newPriceMin = computeValue(newValue, inputType.priceMin, inputType.priceMax);
 
+
         if( searchType == "1")
         {
           newPriceMin = newPriceMin / 1000;
@@ -151,7 +167,7 @@ function handleEvtMove(event) {
       }
       else if (isDown[inputType.priceMax]) {
 
-          var newValue = event.clientX + offset[inputType.priceMax];
+          var newValue = (mobile ? event.changedTouches[0].clientX : event.clientX) + offset[inputType.priceMax];
           if( newValue > startPosition[inputType.priceMax] )
           {
             newValue = startPosition[inputType.priceMax];
@@ -189,7 +205,7 @@ function handleEvtMove(event) {
         else {
           if (isDown[inputType.areaMin]) {
 
-              var newValue = event.clientX + offset[inputType.areaMin];
+              var newValue = (mobile ? event.changedTouches[0].clientX : event.clientX) + offset[inputType.areaMin];
               if( newValue <= startPosition[inputType.areaMin] )
               {
                 newValue = startPosition[inputType.areaMin];
@@ -222,7 +238,7 @@ function handleEvtMove(event) {
             }
             else if (isDown[inputType.areaMax]) {
 
-                var newValue = event.clientX + offset[inputType.areaMax];
+                var newValue = (mobile ? event.changedTouches[0].clientX : event.clientX) + offset[inputType.areaMax];
                 if( newValue > startPosition[inputType.areaMax] )
                 {
                   newValue = startPosition[inputType.areaMax];
@@ -254,17 +270,17 @@ function handleEvtMove(event) {
 
 if( inputPriceMin && inputPriceMax && inputAreaMin && inputAreaMax)
 {
-  inputPriceMin.addEventListener('mousedown', handleEvtDownPriceMin, true);
+  inputPriceMin.addEventListener(eventdown, handleEvtDownPriceMin, true);
 
-  inputPriceMax.addEventListener('mousedown', handleEvtDownPriceMax, true);
+  inputPriceMax.addEventListener(eventdown, handleEvtDownPriceMax, true);
 
-  inputAreaMin.addEventListener('mousedown', handleEvtDownAreaMin, true);
+  inputAreaMin.addEventListener(eventdown, handleEvtDownAreaMin, true);
 
-  inputAreaMax.addEventListener('mousedown', handleEvtDownAreaMax, true);
+  inputAreaMax.addEventListener(eventdown, handleEvtDownAreaMax, true);
 
-  document.addEventListener('mouseup', handleEvtUp, true);
+  document.addEventListener(eventup, handleEvtUp, true);
 
-  document.addEventListener('mousemove', handleEvtMove, true);
+  document.addEventListener(eventmove, handleEvtMove, true);
 
 }
 
@@ -313,10 +329,10 @@ function handleEvtDownOffice(event)
 
 if( divLoft && divHouse && divApart && divOffice)
 {
-  divLoft.addEventListener('mousedown', handleEvtDownLoft, true);
-  divHouse.addEventListener('mousedown', handleEvtDownHouse, true);
-  divApart.addEventListener('mousedown', handleEvtDownApart, true);
-  divOffice.addEventListener('mousedown', handleEvtDownOffice, true);
+  divLoft.addEventListener(eventdown, handleEvtDownLoft, true);
+  divHouse.addEventListener(eventdown, handleEvtDownHouse, true);
+  divApart.addEventListener(eventdown, handleEvtDownApart, true);
+  divOffice.addEventListener(eventdown, handleEvtDownOffice, true);
 }
 
 

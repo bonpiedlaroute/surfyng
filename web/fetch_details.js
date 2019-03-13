@@ -54,7 +54,7 @@ function generate_details_page(data)
   if(data.length == 0)
   {
     var announces_found = document.getElementById("nb_announces_found");
-    announces_found.innerHTML = " 0 ";
+    announces_found.innerHTML = " Nous avons trouvé pour vous aucune announce ";
 
     var text = createNode("p");
 
@@ -65,8 +65,9 @@ function generate_details_page(data)
   else
   {
     var nb_similar = document.getElementById("nb_announces_found");
-    nb_similar.innerHTML = " " + data.length + " ";
+    nb_similar.innerHTML = "Nous avons trouvé pour vous " + data.length + " annonce(s) correspondant à ce même bien";
 
+    var ismobile   = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
     var det_container_div;
     for(var i = 0; i < data.length; i++)
     {
@@ -80,7 +81,7 @@ function generate_details_page(data)
       det_ad_container_div.className = "det_ad_container";
 
       if(i%2 != 0 )
-      det_ad_container_div.style.marginLeft = "70px";
+      det_ad_container_div.style.marginLeft = ismobile ? "20px" : "70px";
 
       var ad_link = createNode("a");
       ad_link.style.display = "block";
@@ -150,7 +151,9 @@ function generate_details_page(data)
         det_transport_span.className = "no_select";
         det_transport_span.style.fontWeight = "bold";
         det_transport_span.style.color = "#4C8E99";
-        det_transport_span.innerHTML = "transport";
+        if(ismobile)
+        det_transport_span.style.fontSize = "12px";
+        det_transport_span.innerHTML = "Transport";
 
         det_ad_desc_transport_div.appendChild(det_transport_span);
 
@@ -171,6 +174,8 @@ function generate_details_page(data)
         det_surface_span.className = "no_select";
         det_surface_span.style.fontWeight ="bold";
         det_surface_span.style.color = "#4C8E99";
+        if(ismobile)
+        det_surface_span.style.fontSize = "12px";
         det_surface_span.innerHTML = data[i].SURFACE;
 
         det_surface_container_div.appendChild(det_surface_span);
@@ -187,6 +192,8 @@ function generate_details_page(data)
         det_nb_rooms_span.className = "no_select";
         det_nb_rooms_span.style.fontWeight = "bold";
         det_nb_rooms_span.style.color = "#4C8E99";
+        if(ismobile)
+        det_nb_rooms_span.style.fontSize = "12px";
         det_nb_rooms_span.innerHTML = data[i].NB_ROOMS;
 
         det_nb_rooms_container_div.appendChild(det_nb_rooms_span);
@@ -220,6 +227,8 @@ function generate_details_page(data)
         det_location_text_span.className = "no_select";
         det_location_text_span.style.fontWeight = "bold";
         det_location_text_span.style.color = "#4C8E99";
+        if(ismobile)
+        det_location_text_span.style.fontSize = "12px";
         det_location_text_span.innerHTML = "Position";
 
         det_location_text_div.appendChild(det_location_text_span);
@@ -241,6 +250,8 @@ function generate_details_page(data)
         det_ad_floor_span.style.fontWeight = "bold";
         det_ad_floor_span.style.color = "#4C8E99";
         det_ad_floor_span.style.marginLeft = "10px";
+        if(ismobile)
+        det_ad_floor_span.style.fontSize = "12px";
         det_ad_floor_span.innerHTML = data[i].FLOOR;
 
         det_ad_floor_div.appendChild(det_ad_floor_span);
@@ -257,6 +268,8 @@ function generate_details_page(data)
         det_ad_cellar_span.className = "no_select";
         det_ad_cellar_span.style.fontWeight = "bold";
         det_ad_cellar_span.style.color = "#4C8E99";
+        if(ismobile)
+        det_ad_cellar_span.style.fontSize = "12px";
         det_ad_cellar_span.innerHTML = data[i].CELLAR;
 
         det_ad_cellar_div.appendChild(det_ad_cellar_span);

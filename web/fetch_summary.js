@@ -70,8 +70,7 @@ function loadJSON(path, success, error) {
                ad_link.href = "results_details.html?"+data[i].ID;
 
                var ad_div = createNode("div");
-               ad_div.style.height = "200px";
-               ad_div.className = "row mx-auto";
+               ad_div.className = "row mx-auto announce_frame";
 
                var ad_container_div = createNode("div");
                ad_container_div.className = "announce_container";
@@ -131,8 +130,7 @@ function loadJSON(path, success, error) {
               ad_summary_container_div.appendChild(ad_summary_desc_div2);
 
               var ad_source_frame_div = createNode("div");
-              ad_source_frame_div.style.height = "63px";
-              ad_source_frame_div.style.width = "100%";
+              ad_source_frame_div.className = "announce_summary_desc_logo";
 
               var ad_source_div = createNode("div");
               ad_source_div.className = "announce_source"
