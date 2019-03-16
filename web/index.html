@@ -14,27 +14,38 @@
     <link href="surfyn.css" rel="stylesheet">
   </head>
 
-    <body style="background-color:#222545;">
+   <body style="background-color:#222545;">
+
     <div style="height:350px;" class="row mx-auto">
 
          <img src="logo.svg" class="home_logo mx-auto d-block"  />
 
     </div>
-    <div style="height:200px;" class="row mx-auto">
+    <div style="height:350px;display:flex; align-items:center; justify-content:center; width:100%;" >
 
-      <a class="col-lg-2 mx-auto"></a>
 
-      <a class="col-lg-2 mx-auto d-block search_type_button buy_background" href="criteria.html?search_type=1">
-       <img src="home_buy.svg" class="mx-auto d-block" />
-        Acheter
-      </a>
+      <div class="search_type_button buy_settings" style="cursor:pointer;" onclick="location.href='criteria.html?search_type=1';">
+          <div class="search_type_header">
+            <div class="search_type_icon buy_icon">
 
-      <a class="col-lg-2 mx-auto d-block search_type_button rent_background" href="criteria.html?search_type=2">
-        <img src="home_rent.svg" class="mx-auto d-block"  />
-      Louer
-      </a>
+            </div>
+          </div>
+          <div class="search_type_footer no_select"><a class="search_type_text" style="color:white;"> Acheter</a>
+          </div>
+      </div>
 
-       <a class="col-lg-2 mx-auto"></a>
+
+
+      <div class="search_type_button rent_settings" style="cursor:pointer;" onclick="location.href='criteria.html?search_type=2';">
+          <div class="search_type_header">
+            <div class="search_type_icon rent_icon">
+
+            </div>
+          </div>
+          <div class="search_type_footer no_select"><a class="search_type_text" style="color:white;"> Louer</a>
+          </div>
+      </div>
+
 
     </div>
 
