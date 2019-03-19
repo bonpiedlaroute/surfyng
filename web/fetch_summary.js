@@ -35,7 +35,6 @@ function loadJSON(path, success, error) {
   fetch(url)
   .then(function(resp) { return resp.json(); } )
   .then(function(data) {
-    console.log("success of fetch");
     generate_summary_page(data);
 
   })
@@ -47,10 +46,10 @@ function loadJSON(path, success, error) {
 
   function generate_summary_page(data)
   {
-    console.log("in generate_summary_page");
+
     if( data.length == 0)
     {
-      console.log("no data");
+
       var announces_found = document.getElementById("nb_announces_found");
       announces_found.innerHTML = "(0)";
 
@@ -62,7 +61,6 @@ function loadJSON(path, success, error) {
     }
     else
     {
-          console.log("there is " +data.length + "data" );
           var announces_found = document.getElementById("nb_announces_found");
           announces_found.innerHTML = "("+ data.length +")";
           for(var i = 0; i < data.length; i++)
@@ -72,8 +70,7 @@ function loadJSON(path, success, error) {
                ad_link.href = "results_details.html?"+data[i].ID;
 
                var ad_div = createNode("div");
-               ad_div.style.height = "200px";
-               ad_div.className = "row mx-auto";
+               ad_div.className = "row mx-auto announce_frame";
 
                var ad_container_div = createNode("div");
                ad_container_div.className = "announce_container";
@@ -126,14 +123,14 @@ function loadJSON(path, success, error) {
 
               var ad_price_p = createNode("p");
               ad_price_p.style.float = "right";
+              ad_price_p.style.color = "#4c94bc";
               ad_price_p.innerHTML = data[i].PRICE;
               ad_summary_desc_div2.appendChild(ad_price_p);
 
               ad_summary_container_div.appendChild(ad_summary_desc_div2);
 
               var ad_source_frame_div = createNode("div");
-              ad_source_frame_div.style.height = "63px";
-              ad_source_frame_div.style.width = "100%";
+              ad_source_frame_div.className = "announce_summary_desc_logo";
 
               var ad_source_div = createNode("div");
               ad_source_div.className = "announce_source"

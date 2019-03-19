@@ -3,11 +3,43 @@ var inputPriceMax = document.getElementById("price_max");
 var inputAreaMin = document.getElementById("area_min");
 var inputAreaMax = document.getElementById("area_max");
 
+var valuePriceMin = document.getElementById("value_price_min");
+var valuePriceMax = document.getElementById("value_price_max");
+var valueAreaMin = document.getElementById("value_area_min");
+var valueAreaMax = document.getElementById("value_area_max");
+
+var mobile   = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
+var eventdown = mobile ? "touchstart" : "mousedown";
+var eventmove = mobile ? "touchmove" : "mousemove";
+var eventup = mobile ? "touchend" : "mouseup";
+
+console.log("mobile : " + mobile);
+console.log(" useragent : " + navigator.userAgent);
+
 var inputType = Object.freeze({"priceMin":0, "priceMax":1, "areaMin":2, "areaMax":3});
 
 var offset = [0, 0, 0, 0];
 var isDown = [false, false, false, false];
-var values = [50000, 4000000, 10, 400];
+var values = [];
+const Params = new URLSearchParams(window.location.search);
+const searchType = Params.get('search_type');
+if( searchType == "1")
+{
+  values[inputType.priceMin] = 50000;
+  values[inputType.priceMax] = 4000000;
+  valuePriceMin.innerHTML = "50 K€";
+  valuePriceMax.innerHTML = "4000 K€";
+}
+else {
+  values[inputType.priceMin] = 100;
+  values[inputType.priceMax] = 4000;
+  valuePriceMin.innerHTML = "100 €";
+  valuePriceMax.innerHTML = "4000 €";
+}
+values[inputType.areaMin] = 10;
+values[inputType.areaMax] = 400;
+
+
 var startPosition = [inputPriceMin?inputPriceMin.offsetLeft:0, inputPriceMax?inputPriceMax.offsetLeft:0,
   inputAreaMin?inputAreaMin.offsetLeft:0, inputAreaMax?inputAreaMax.offsetLeft:0];
 var lastPosition = [inputPriceMin?inputPriceMin.offsetLeft:0, inputPriceMax?inputPriceMax.offsetLeft:0,
@@ -56,8 +88,10 @@ function computeValue(position, evtTypeMin, evtTypeMax)
 }
 function handleEvtDown(e, input, evttype)
 {
+  //console.log("Down");
+  //console.log(e.changedTouches[0].clientX);
   isDown[evttype] = true;
-  offset[evttype] = input.offsetLeft - e.clientX;
+  offset[evttype] = input.offsetLeft - (mobile ? e.changedTouches[0].clientX : e.clientX);
 }
 function handleEvtDownPriceMin(e)
 {
@@ -81,13 +115,18 @@ function handleEvtUp()
     isDown[inputType.priceMax] = false;
     isDown[inputType.areaMin] = false;
     isDown[inputType.areaMax] = false;
+    //console.log("Up");
 }
 
 function handleEvtMove(event) {
+    if(mobile === false)
     event.preventDefault();
+    console.log("Move :");
+    //console.log(event);
+    //console.log(event.changedTouches[0].clientX);
     if (isDown[inputType.priceMin]) {
-
-        var newValue = event.clientX + offset[inputType.priceMin];
+        //console.log(event);
+        var newValue = (mobile ? event.changedTouches[0].clientX : event.clientX) + offset[inputType.priceMin];
         if( newValue <= startPosition[inputType.priceMin] )
         {
           newValue = startPosition[inputType.priceMin];
@@ -112,16 +151,23 @@ function handleEvtMove(event) {
 
         var newPriceMin = computeValue(newValue, inputType.priceMin, inputType.priceMax);
 
-        newPriceMin = newPriceMin / 1000;
-        newPriceMin = roundvalue(newPriceMin);
 
+        if( searchType == "1")
+        {
+          newPriceMin = newPriceMin / 1000;
+          newPriceMin = roundvalue(newPriceMin);
+          valuePriceMin.innerHTML = newPriceMin + " K€";
+        }
+        else {
+          newPriceMin = roundvalue(newPriceMin);
+          valuePriceMin.innerHTML = newPriceMin + " €";
+        }
 
-        inputPriceMin.innerHTML = newPriceMin + " K€";
 
       }
       else if (isDown[inputType.priceMax]) {
 
-          var newValue = event.clientX + offset[inputType.priceMax];
+          var newValue = (mobile ? event.changedTouches[0].clientX : event.clientX) + offset[inputType.priceMax];
           if( newValue > startPosition[inputType.priceMax] )
           {
             newValue = startPosition[inputType.priceMax];
@@ -142,17 +188,24 @@ function handleEvtMove(event) {
           inputPriceMax.style.left = newValue + 'px';
 
           var newPriceMax = computeValue(newValue, inputType.priceMin, inputType.priceMax);
-          newPriceMax = newPriceMax / 1000;
-          newPriceMax = roundvalue(newPriceMax);
 
+          if( searchType == "1")
+          {
+            newPriceMax = newPriceMax / 1000;
+            newPriceMax = roundvalue(newPriceMax);
+            valuePriceMax.innerHTML = newPriceMax + " K€";
+          }
+          else{
+            newPriceMax = roundvalue(newPriceMax);
+            valuePriceMax.innerHTML = newPriceMax + " €";
+          }
 
-          inputPriceMax.innerHTML = newPriceMax + " K€";
 
         }
         else {
           if (isDown[inputType.areaMin]) {
 
-              var newValue = event.clientX + offset[inputType.areaMin];
+              var newValue = (mobile ? event.changedTouches[0].clientX : event.clientX) + offset[inputType.areaMin];
               if( newValue <= startPosition[inputType.areaMin] )
               {
                 newValue = startPosition[inputType.areaMin];
@@ -180,12 +233,12 @@ function handleEvtMove(event) {
               newAreaMin = roundvalue(newAreaMin);
 
 
-              inputAreaMin.innerHTML = newAreaMin + " m2";
+              valueAreaMin.innerHTML = newAreaMin + " m<sup>2";
 
             }
             else if (isDown[inputType.areaMax]) {
 
-                var newValue = event.clientX + offset[inputType.areaMax];
+                var newValue = (mobile ? event.changedTouches[0].clientX : event.clientX) + offset[inputType.areaMax];
                 if( newValue > startPosition[inputType.areaMax] )
                 {
                   newValue = startPosition[inputType.areaMax];
@@ -209,7 +262,7 @@ function handleEvtMove(event) {
                 newAreaMax = roundvalue(newAreaMax);
 
 
-                inputAreaMax.innerHTML = newAreaMax + " m2";
+                valueAreaMax.innerHTML = newAreaMax + " m<sup>2";
 
               }
         }
@@ -217,17 +270,17 @@ function handleEvtMove(event) {
 
 if( inputPriceMin && inputPriceMax && inputAreaMin && inputAreaMax)
 {
-  inputPriceMin.addEventListener('mousedown', handleEvtDownPriceMin, true);
+  inputPriceMin.addEventListener(eventdown, handleEvtDownPriceMin, true);
 
-  inputPriceMax.addEventListener('mousedown', handleEvtDownPriceMax, true);
+  inputPriceMax.addEventListener(eventdown, handleEvtDownPriceMax, true);
 
-  inputAreaMin.addEventListener('mousedown', handleEvtDownAreaMin, true);
+  inputAreaMin.addEventListener(eventdown, handleEvtDownAreaMin, true);
 
-  inputAreaMax.addEventListener('mousedown', handleEvtDownAreaMax, true);
+  inputAreaMax.addEventListener(eventdown, handleEvtDownAreaMax, true);
 
-  document.addEventListener('mouseup', handleEvtUp, true);
+  document.addEventListener(eventup, handleEvtUp, true);
 
-  document.addEventListener('mousemove', handleEvtMove, true);
+  document.addEventListener(eventmove, handleEvtMove, true);
 
 }
 
@@ -254,7 +307,7 @@ function handleEvtDownPropertyType(event, divElt, evtType)
   {
     isSelected[evtType] = true;
     divElt.style.transform = "scale(1)";
-    divElt.style.border = "solid 3px blue";
+    divElt.style.border = "solid 3px #222545";
   }
 }
 function handleEvtDownLoft(event)
@@ -276,10 +329,10 @@ function handleEvtDownOffice(event)
 
 if( divLoft && divHouse && divApart && divOffice)
 {
-  divLoft.addEventListener('mousedown', handleEvtDownLoft, true);
-  divHouse.addEventListener('mousedown', handleEvtDownHouse, true);
-  divApart.addEventListener('mousedown', handleEvtDownApart, true);
-  divOffice.addEventListener('mousedown', handleEvtDownOffice, true);
+  divLoft.addEventListener(eventdown, handleEvtDownLoft, true);
+  divHouse.addEventListener(eventdown, handleEvtDownHouse, true);
+  divApart.addEventListener(eventdown, handleEvtDownApart, true);
+  divOffice.addEventListener(eventdown, handleEvtDownOffice, true);
 }
 
 
@@ -307,15 +360,31 @@ function updatePropertyTypeResult( value)
 }
 function submit_request(event)
 {
-  url_results = "results_summary.html?";
-  const urlParams = new URLSearchParams(window.location.search);
-  const search_type = urlParams.get('search_type');
-  url_results+="search_type=";
-  url_results+=search_type;
+  var city = document.getElementById("search_city");
+  url_results = "results_summary.html";
+
+  if( checkCity() == false )
+  {
+    validate.href = "#"
+    return ;
+  }
+
+  url_results += "?search_city=";
+  url_results += city.value;
+
+  url_results+="?search_type=";
+  url_results+=searchType;
+
+  var formattingLength= 0;
+  if( searchType == "1")
+    formattingLength = 3;
+  else
+    formattingLength = 2;
+
   url_results+="?price_min=";
-  url_results+= inputPriceMin.innerHTML;
+  url_results+= valuePriceMin.innerHTML.substring(0, valuePriceMin.innerHTML.length - formattingLength);
   url_results+="?price_max=";
-  url_results+= inputPriceMax.innerHTML;
+  url_results+= valuePriceMax.innerHTML.substring(0, valuePriceMax.innerHTML.length - formattingLength);
 
   if(isSelected[propertyType.loft])
   {
@@ -337,19 +406,33 @@ function submit_request(event)
   }
 
   url_results+="?area_min=";
-  url_results+= inputAreaMin.innerHTML;
+  url_results+= valueAreaMin.innerHTML.substring(0, valueAreaMin.innerHTML.length - 14);
   url_results+="?area_max=";
-  url_results+= inputAreaMax.innerHTML;
-
+  url_results+= valueAreaMax.innerHTML.substring(0, valueAreaMax.innerHTML.length - 14);;
+  isFirstTimePropType = true;
   validate.href = url_results;
 }
 
 if( validate)
 validate.onclick=submit_request;
-console.log(url_results);
-/*
-const userAction = async () => {
-  const response = await fetch('http://surfyn.xyz/search/');
-  const myJson = await response.json(); //extract JSON from the http response
-  // do something with myJson
-}*/
+
+
+function checkCity()
+{
+  var new_city = document.getElementById("search_city");
+  var error_msg = document.getElementById("error_msg");
+
+  if( new_city.value.trim().toUpperCase() == "PARIS" )
+  {
+    new_city.className = "form-control";
+    error_msg.innerHTML = "";
+    return true;
+  }
+  else
+  {
+    new_city.className = "form-control is-invalid";
+    error_msg.innerHTML = "Désolé, pour l'instant nous supportons uniquement la Ville de Paris";
+
+    return false;
+  }
+}
