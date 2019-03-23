@@ -14,7 +14,9 @@
 #include <thrift/protocol/TBinaryProtocol.h>
 #include <thrift/transport/TSocket.h>
 #include <thrift/transport/TBufferTransports.h>
-
+#include <boost/algorithm/string.hpp>
+#include <numeric>
+#include <set>
 
 const int port = 5050;
 using namespace ::apache::thrift;
@@ -105,6 +107,7 @@ namespace surfyn
       attributestoget[REGION] = value;
       attributestoget[SEARCH_TYPE] = value;
       attributestoget[TIMESTAMP] = value;
+      attributestoget[SIMILAR_ANNOUNCE] = value;
 
       bool scanend = false;
       do
@@ -314,18 +317,65 @@ namespace surfyn
             }
             if ((it_field = iter->find(SIMILAR_ANNOUNCE)) != iter->end())
             {
-               ADD_STRING_FIELD_TO_PUT(DUPLICATES, it_field->second);
+               std::string similarAnnouces = it_field->second;
+               ADD_STRING_FIELD_TO_PUT(DUPLICATES, similarAnnouces);
+
+               std::vector<std::string> annoucesIDs;
+               boost::split(annoucesIDs, similarAnnouces, [](char c) { return c == ','; });
+               std::set<std::string> sources;
+               for (std::string similarID : annoucesIDs)
+               {
+                  GetResult getResult;
+                  KeyValue key;
+                  key.key = ID;
+                  ValueType keyValue;
+                  keyValue.field = similarID;
+                  keyValue.fieldtype = Type::type::NUMBER;
+                  key.value = keyValue;
+
+                  std::map<std::string, ValueType> attributes;
+
+                  ValueType valueToGet;
+                  valueToGet.field = "";
+                  valueToGet.fieldtype = Type::type::NUMBER;
+                  attributes[ID] = valueToGet;
+
+                  valueToGet.fieldtype = Type::type::STRING;
+
+                  attributes[ANNOUNCE_SOURCE] = valueToGet;
+
+                  client->get(getResult, srcTable, key, attributes);
+                  if (getResult.result.success)
+                  {
+                     auto it_get = getResult.values.find(ANNOUNCE_SOURCE);
+                     if (it_get != getResult.values.end())
+                     {
+                        sources.insert(it_get->second);
+                     }
+                  }
+                  else
+                  {
+                     Log::getInstance()->error("Failed to get annouce of ID " + similarID);
+                  }
+               }
+               if (!sources.empty())
+               {
+                  std::string annouceSources = std::accumulate(std::begin(sources),
+                     std::end(sources),
+                     std::string{},
+                     [](const std::string& a, const std::string &b)
+                        {
+                        return a.empty() ? b : a + ',' + b;
+                        });
+                  ADD_STRING_FIELD_TO_PUT(SOURCES, annouceSources);
+               }
             }
             ADD_STRING_FIELD_TO_PUT(IMAGE, "data/annonce_1.jpg");
             ADD_STRING_FIELD_TO_PUT(SOURCE_LOGO, "data/SL0.svg");
 
             OperationResult result;
             client->put(result, destTable, valuesToPut);
-            if (result.success)
-            {
-               Log::getInstance()->info("Successfully put " + std::to_string(id) + " into table " + destTable);
-            }
-            else
+            if (!result.success)
             {
                Log::getInstance()->error("Failed to put " + std::to_string(id) + " into table " + destTable + " error : " + result.error);
             }
