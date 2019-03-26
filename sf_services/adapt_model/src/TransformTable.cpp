@@ -85,6 +85,220 @@ namespace surfyn
    const std::string CELLAR = "CELLAR";
    const std::string DUPLICATES = "DUPLICATES";
 
+   void ProcessSelogerJSON(const std::string json, std::map<std::string, ValueType>& valuesToPut)
+   {
+      rapidjson::Document document;
+      document.Parse(json.c_str());
+      if (document.HasMember("infos_acquereur"))
+      {
+         const rapidjson::Value& info_acquereur = document["infos_acquereur"];
+         if (info_acquereur.HasMember("prix"))
+         {
+            const rapidjson::Value& prix = info_acquereur["prix"];
+            if (prix.HasMember("prix"))
+            {
+               double price = prix["prix"].GetDouble();
+               ADD_STRING_FIELD_TO_PUT(RealEstatePrice, std::to_string(price));
+            }
+         }
+      }
+
+      if (document.HasMember("categories"))
+      {
+         const rapidjson::Value& categories = document["categories"];
+
+         for (rapidjson::SizeType i = 0; i < categories.Size(); i++)
+         {
+            const rapidjson::Value& category = categories[i];
+            if (category.HasMember("id") && category.HasMember("criteria"))
+            {
+               const int id = category["id"].GetInt();
+               const rapidjson::Value& criteria = category["criteria"];
+               if (1 == id)
+               {
+                  for (rapidjson::SizeType j = 0; j < criteria.Size(); ++j)
+                  {
+                     const rapidjson::Value& object = criteria[j];
+                     if (object.HasMember("order") && object.HasMember("value"))
+                     {
+                        const int order = object["order"].GetInt();
+                        std::string value = object["value"].GetString();
+                        if (order == 2430)
+                        {
+                           ADD_STRING_FIELD_TO_PUT(CELLAR, "1");
+                        }
+                        else if (order == 2410)
+                        {
+                           ADD_STRING_FIELD_TO_PUT(RealEstateLift, "1");
+                        }
+                        else if (order == 2450)
+                        {
+                           auto index = value.find_first_of(' ');
+                           if (index != std::string::npos)
+                           {
+                              ADD_STRING_FIELD_TO_PUT(RealEstateBalcony, value.substr(0, index));
+                           }
+                        }
+                     }
+                  }
+               }
+               else if (2 == id)
+               {
+                  char surface[20];
+                  char floor[10];
+                  int bedroomNb = 0, pieceNb = 0, constructionYear = 1970, buildingTotalFloor = 1;
+                  for (rapidjson::SizeType j = 0; j < criteria.Size(); j++)
+                  {
+                     const rapidjson::Value& object = criteria[j];
+                     if (object.HasMember("order") && object.HasMember("value"))
+                     {
+                        const int order = object["order"].GetInt();
+                        std::string value = object["value"].GetString();
+                        if (2090 == order)
+                        {
+                           sscanf(value.c_str(), "Surface de %s m2", surface);
+                        }
+                        else if (2092 == order)
+                        {
+                           sscanf(value.c_str(), "Année de construction %d", &constructionYear);
+                        }
+                        else if (2094 == order)
+                        {
+                           sscanf(value.c_str(), "Bâtiment de %d étage", &buildingTotalFloor);
+                        }
+                        else if (2096 == order)
+                        {
+                           sscanf(value.c_str(), "Au %s étage", floor);
+                        }
+                        else if (2140 == order)
+                        {
+                           sscanf(value.c_str(), "%d Pièces", &pieceNb);
+                        }
+                        else if (2165 == order)
+                        {
+                           sscanf(value.c_str(), "%d Chambre", &bedroomNb);
+                        }
+                     }
+                  }
+
+                  ADD_STRING_FIELD_TO_PUT(RealEstateSurface, std::string(surface));
+                  ADD_STRING_FIELD_TO_PUT(RealEstateConstructionYear, std::to_string(constructionYear));
+                  ADD_STRING_FIELD_TO_PUT(RealEstateBeds, std::to_string(bedroomNb));
+                  ADD_STRING_FIELD_TO_PUT(RealEstateRooms, std::to_string(pieceNb));
+                  ADD_STRING_FIELD_TO_PUT(RealEstateFloor, std::string(floor));
+
+               }
+               else if (3 == id)
+               {
+                  for (rapidjson::SizeType j = 0; j < criteria.Size(); ++j)
+                  {
+                     const rapidjson::Value& object = criteria[j];
+                     if (object.HasMember("order") && object.HasMember("value"))
+                     {
+                        const int order = object["order"].GetInt();
+                        const std::string value = object["value"].GetString();
+                        if (order == 2540)
+                        {
+                           ADD_STRING_FIELD_TO_PUT(RealEstateTypeOfHeating, value);
+                        }
+                     }
+                  }
+               }
+               else if (4 == id)
+               {
+                  for (rapidjson::SizeType j = 0; j < criteria.Size(); ++j)
+                  {
+                     const rapidjson::Value& object = criteria[j];
+                     if (object.HasMember("order") && object.HasMember("value"))
+                     {
+                        const int order = object["order"].GetInt();
+                        const std::string value = object["value"].GetString();
+                        if (order == 2430)
+                        {
+                           auto index = value.find_first_of(' ');
+                           if (index != std::string::npos)
+                           {
+                              ADD_STRING_FIELD_TO_PUT(RealEstateParking, value.substr(0, index));
+                           }
+                        }
+                        else if (order == 2470)
+                        {
+                           auto index = value.find_first_of(' ');
+                           if (index != std::string::npos)
+                           {
+                              ADD_STRING_FIELD_TO_PUT(RealEstateBox, value.substr(0, index));
+                           }
+                        }
+                        else if (order == 3250)
+                        {
+                           float landSurface = 0;
+                           sscanf(value.c_str(), "Terrain de %f m2", &landSurface);
+                           ADD_STRING_FIELD_TO_PUT(RealEstateLandSurface, std::to_string(landSurface));
+                        }
+                     }
+                  }
+               }
+               else
+               {
+
+               }
+            }
+         }
+
+      }
+   }
+
+   void ProcessLeboncoinJSON(const std::string json, std::map<std::string, ValueType>& valuesToPut)
+   {
+      rapidjson::Document document;
+      document.Parse(json.c_str());
+      if (document.HasMember("price"))
+      {
+         double price = document["price"][0].GetDouble();
+         ADD_STRING_FIELD_TO_PUT(RealEstatePrice, std::to_string(price));
+      }
+      if (document.HasMember("attributes"))
+      {
+         const rapidjson::Value& attributes = document["attributes"];
+
+         std::string surface, pieceNb;
+         for (rapidjson::SizeType j = 0; j < attributes.Size(); j++)
+         {
+            const rapidjson::Value& attribute = attributes[j];
+            if (attribute.HasMember("key") && attribute.HasMember("value"))
+            {
+               const std::string key = attribute["key"].GetString();
+               const std::string value = attribute["value"].GetString();
+               if ("square" == key)
+               {
+                  surface = value;
+               }
+               else if ("rooms" == key)
+               {
+                  pieceNb = value;
+               }
+            }
+         }
+
+         ADD_STRING_FIELD_TO_PUT(RealEstateSurface, surface);
+         ADD_STRING_FIELD_TO_PUT(RealEstateRooms, pieceNb);
+      }
+      if (document.HasMember("images"))
+      {
+         const rapidjson::Value& images = document["images"];
+         if (images.HasMember("nb_images"))
+         {
+            int imageCount = images["nb_images"].GetInt();
+            ADD_STRING_FIELD_TO_PUT(IMAGE_COUNT, std::to_string(imageCount));
+         }
+         if (images.HasMember("urls"))
+         {
+            std::string imageUrls = images["urls"].GetString();
+            ADD_STRING_FIELD_TO_PUT(IMAGE, imageUrls);
+         }
+      }
+   }
+
    void ProcessTable(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& srcTable, const std::string& destTable)
    {
       std::locale::global(std::locale{ "" });
@@ -116,7 +330,7 @@ namespace surfyn
          client->scan(scanReturn, srcTable, attributestoget, "");
 
          std::stringstream logstream;
-         logstream << "Classifier: " << scanReturn.values.size() << " elements scan\n";
+         logstream << "Adapt model: " << scanReturn.values.size() << " elements scan\n";
 
          Log::getInstance()->info(logstream.str());
 
@@ -131,6 +345,10 @@ namespace surfyn
             valuesToPut[ID] = IDValue;
 
             std::map<std::string, std::string>::const_iterator it_field;
+            if ((it_field = iter->find(ANNOUNCE_LINK)) != iter->end())
+            {
+               ADD_STRING_FIELD_TO_PUT(ANNOUNCE_LINK, it_field->second);
+            }
             if ((it_field = iter->find(RealEstateCity)) != iter->end())
             {
                ADD_STRING_FIELD_TO_PUT(RealEstateCity, it_field->second);
@@ -143,167 +361,30 @@ namespace surfyn
             {
                ADD_STRING_FIELD_TO_PUT(RealEstateSearchType, it_field->second);
             }
+            std::string announceSource;
+            if ((it_field = iter->find(ANNOUNCE_SOURCE)) != iter->end())
+            {
+               announceSource = it_field->second;
+            }
             if ((it_field = iter->find(PROPERTY_DESCRIPTION)) != iter->end())
             {
-               rapidjson::Document document;
-               document.Parse(it_field->second.c_str());
-               if (document.HasMember("infos_acquereur"))
+               std::string json = it_field->second;
+               if (!announceSource.empty())
                {
-                  const rapidjson::Value& info_acquereur = document["infos_acquereur"];
-                  if (info_acquereur.HasMember("prix"))
+                  if (announceSource == "seloger")
                   {
-                     const rapidjson::Value& prix = info_acquereur["prix"];
-                     if (prix.HasMember("prix"))
-                     {
-                        double price = prix["prix"].GetDouble();
-                        ADD_STRING_FIELD_TO_PUT(RealEstatePrice, std::to_string(price));
-                     }
+                     ProcessSelogerJSON(json, valuesToPut);
+                  }
+                  else if (announceSource == "leboncoin")
+                  {
+                     ProcessLeboncoinJSON(json, valuesToPut);
                   }
                }
-
-               if (document.HasMember("categories"))
+               else
                {
-                  const rapidjson::Value& categories = document["categories"];
-
-                  for (rapidjson::SizeType i = 0; i < categories.Size(); i++)
-                  {
-                     const rapidjson::Value& category = categories[i];
-                     if (category.HasMember("id") && category.HasMember("criteria"))
-                     {
-                        const int id = category["id"].GetInt();
-                        const rapidjson::Value& criteria = category["criteria"];
-                        if (1 == id)
-                        {
-                           for (rapidjson::SizeType j = 0; j < criteria.Size(); ++j)
-                           {
-                              const rapidjson::Value& object = criteria[j];
-                              if (object.HasMember("order") && object.HasMember("value"))
-                              {
-                                 const int order = object["order"].GetInt();
-                                 std::string value = object["value"].GetString();
-                                 if (order == 2430)
-                                 {
-                                    ADD_STRING_FIELD_TO_PUT(CELLAR, "1");
-                                 }
-                                 else if (order == 2410)
-                                 {
-                                    ADD_STRING_FIELD_TO_PUT(RealEstateLift, "1");
-                                 }
-                                 else if (order == 2450)
-                                 {
-                                    auto index = value.find_first_of(' ');
-                                    if (index != std::string::npos)
-                                    {
-                                       ADD_STRING_FIELD_TO_PUT(RealEstateBalcony, value.substr(0, index));
-                                    }
-                                 }
-                              }
-                           }
-                        }
-                        else if (2 == id)
-                        {
-                           char surface[20];
-                           char floor[10];
-                           int bedroomNb = 0, pieceNb = 0, constructionYear = 1970, buildingTotalFloor = 1;
-                           for (rapidjson::SizeType j = 0; j < criteria.Size(); j++)
-                           {
-                              const rapidjson::Value& object = criteria[j];
-                              if (object.HasMember("order") && object.HasMember("value"))
-                              {
-                                 const int order = object["order"].GetInt();
-                                 std::string value = object["value"].GetString();
-                                 if (2090 == order)
-                                 {
-                                    sscanf(value.c_str(), "Surface de %s m2", surface);
-                                 }
-                                 else if (2092 == order)
-                                 {
-                                    sscanf(value.c_str(), "Année de construction %d", &constructionYear);
-                                 }
-                                 else if (2094 == order)
-                                 {
-                                    sscanf(value.c_str(), "Bâtiment de %d étage", &buildingTotalFloor);
-                                 }
-                                 else if (2096 == order)
-                                 {
-                                    sscanf(value.c_str(), "Au %s étage", floor);
-                                 }
-                                 else if (2140 == order)
-                                 {
-                                    sscanf(value.c_str(), "%d Pièces", &pieceNb);
-                                 }
-                                 else if (2165 == order)
-                                 {
-                                    sscanf(value.c_str(), "%d Chambre", &bedroomNb);
-                                 }
-                              }
-                           }
-
-                           ADD_STRING_FIELD_TO_PUT(RealEstateSurface, std::string(surface));
-                           ADD_STRING_FIELD_TO_PUT(RealEstateConstructionYear, std::to_string(constructionYear));
-                           ADD_STRING_FIELD_TO_PUT(RealEstateBeds, std::to_string(bedroomNb));
-                           ADD_STRING_FIELD_TO_PUT(RealEstateRooms, std::to_string(pieceNb));
-                           ADD_STRING_FIELD_TO_PUT(RealEstateFloor, std::string(floor));
-
-                        }
-                        else if (3 == id)
-                        {
-                           for (rapidjson::SizeType j = 0; j < criteria.Size(); ++j)
-                           {
-                              const rapidjson::Value& object = criteria[j];
-                              if (object.HasMember("order") && object.HasMember("value"))
-                              {
-                                 const int order = object["order"].GetInt();
-                                 const std::string value = object["value"].GetString();
-                                 if (order == 2540)
-                                 {
-                                    ADD_STRING_FIELD_TO_PUT(RealEstateTypeOfHeating, value);
-                                 }
-                              }
-                           }
-                        }
-                        else if (4 == id)
-                        {
-                           for (rapidjson::SizeType j = 0; j < criteria.Size(); ++j)
-                           {
-                              const rapidjson::Value& object = criteria[j];
-                              if (object.HasMember("order") && object.HasMember("value"))
-                              {
-                                 const int order = object["order"].GetInt();
-                                 const std::string value = object["value"].GetString();
-                                 if (order == 2430)
-                                 {
-                                    auto index = value.find_first_of(' ');
-                                    if (index != std::string::npos)
-                                    {
-                                       ADD_STRING_FIELD_TO_PUT(RealEstateParking, value.substr(0, index));
-                                    }
-                                 }
-                                 else if (order == 2470)
-                                 {
-                                    auto index = value.find_first_of(' ');
-                                    if (index != std::string::npos)
-                                    {
-                                       ADD_STRING_FIELD_TO_PUT(RealEstateBox, value.substr(0, index));
-                                    }
-                                 }
-                                 else if (order == 3250)
-                                 {
-                                    float landSurface = 0;
-                                    sscanf(value.c_str(), "Terrain de %f m2", &landSurface);
-                                    ADD_STRING_FIELD_TO_PUT(RealEstateLandSurface, std::to_string(landSurface));
-                                 }
-                              }
-                           }
-                        }
-                        else
-                        {
-
-                        }
-                     }
-                  }
-
+                  ProcessSelogerJSON(json, valuesToPut);
                }
+               
             }
 
             //TODO to add more fields
@@ -390,7 +471,7 @@ namespace surfyn
 
 int main(int argc, char* argv[])
 {
-   Log::getInstance()->info("Starting Classifier ...");
+   Log::getInstance()->info("Starting adapt model ...");
    shared_ptr<TTransport> socket(new TSocket("localhost", port));
    shared_ptr<TTransport> transport(new TBufferedTransport(socket));
    shared_ptr<TProtocol> protocol(new TBinaryProtocol(transport));
