@@ -17,6 +17,7 @@
 #include <boost/algorithm/string.hpp>
 #include <numeric>
 #include <set>
+#include <locale>
 
 const int port = 5050;
 using namespace ::apache::thrift;
@@ -87,6 +88,8 @@ namespace surfyn
 
    void ProcessSelogerJSON(const std::string json, std::map<std::string, ValueType>& valuesToPut)
    {
+      std::locale::global(std::locale(""));
+
       rapidjson::Document document;
       document.Parse(json.c_str());
       if (document.HasMember("infos_acquereur"))
@@ -144,8 +147,7 @@ namespace surfyn
                }
                else if (2 == id)
                {
-                  char surface[20];
-                  char floor[10];
+                  std::string surface, floor;
                   int bedroomNb = 0, pieceNb = 0, constructionYear = 1970, buildingTotalFloor = 1;
                   for (rapidjson::SizeType j = 0; j < criteria.Size(); j++)
                   {
@@ -156,7 +158,8 @@ namespace surfyn
                         std::string value = object["value"].GetString();
                         if (2090 == order)
                         {
-                           sscanf(value.c_str(), "Surface de %s m2", surface);
+                           auto it = floor.find_last_of(' ');
+                           surface = value.substr(10, it - 10);
                         }
                         else if (2092 == order)
                         {
@@ -168,7 +171,8 @@ namespace surfyn
                         }
                         else if (2096 == order)
                         {
-                           sscanf(value.c_str(), "Au %s étage", floor);
+                           auto it = floor.find_last_of(' ');
+                           floor = value.substr(3, it - 3);
                         }
                         else if (2140 == order)
                         {
@@ -293,15 +297,22 @@ namespace surfyn
          }
          if (images.HasMember("urls"))
          {
-            std::string imageUrls = images["urls"].GetString();
-            ADD_STRING_FIELD_TO_PUT(IMAGE, imageUrls);
+            std::stringstream ss;
+            bool first = true;
+            const rapidjson::Value& imageUrls = images["urls"];
+            for (rapidjson::SizeType j = 0; j < imageUrls.Size(); j++)
+            {
+               if (!first) ss << ',';
+               ss << "\"" << imageUrls[j].GetString() << "\"";
+            }
+            ADD_STRING_FIELD_TO_PUT(IMAGE, ss.str());
          }
       }
    }
 
    void ProcessTable(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& srcTable, const std::string& destTable)
    {
-      std::locale::global(std::locale{ "" });
+      std::locale::global(std::locale(""));
 
       std::map<std::string, ValueType> attributestoget;
 
@@ -374,6 +385,7 @@ namespace surfyn
                   if (announceSource == "seloger")
                   {
                      ProcessSelogerJSON(json, valuesToPut);
+                     ADD_STRING_FIELD_TO_PUT(IMAGE, "data/annonce_1.jpg");
                   }
                   else if (announceSource == "leboncoin")
                   {
@@ -451,7 +463,6 @@ namespace surfyn
                   ADD_STRING_FIELD_TO_PUT(SOURCES, annouceSources);
                }
             }
-            ADD_STRING_FIELD_TO_PUT(IMAGE, "data/annonce_1.jpg");
             ADD_STRING_FIELD_TO_PUT(SOURCE_LOGO, "data/SL0.svg");
 
             OperationResult result;

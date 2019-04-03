@@ -27,7 +27,7 @@ class Serializer:
 
       self.transport.open()
 
-   def send(self, ID, property_type, property_description, city, region, announce_link, announce_source, announce_title, id_search):
+   def send(self, ID, property_type, property_description, city, region, announce_link, announce_source, announce_title, id_search, image_count, image_urls):
       values = dict()
 
       idvalue = ttypes.ValueType()
@@ -81,6 +81,16 @@ class Serializer:
       timestamp.field = datetime.datetime.utcnow().replace(microsecond=0).isoformat()
       timestamp.fieldtype = ttypes.Type.STRING
       values["TIMESTAMP"] = timestamp 
+
+      image_count_value = ttypes.ValueType()
+      image_count_value.field = image_count
+      image_count_value.fieldtype = ttypes.Type.STRING
+      values["IMAGE_COUNT"] = image_count_value
+
+      image_urls_value = ttypes.ValueType()
+      image_urls_value.field = image_urls
+      image_urls_value.fieldtype = ttypes.Type.STRING
+      values["IMAGE"] = image_urls_value
 
       search_type = ttypes.ValueType()
       if id_search == BUY_ID:
