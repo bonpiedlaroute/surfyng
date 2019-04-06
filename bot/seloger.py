@@ -14,12 +14,17 @@ from search_features import *
 from url_builder import *
 from Serializer import *
 
+IMAGES_FOLDER_NAME='images'
+IMAGE_VECTORS_FOLDER_NAME='images'
 
 class SelogerSpider(scrapy.Spider):
    
    name = "seloger"
 
    def __init__(self):
+      if not os.path.exists(IMAGES_FOLDER_NAME):
+         os.mkdir(IMAGES_FOLDER_NAME)
+
       self.mapping_url_ptype = dict()
       self.mapping_url_stype = dict()
       self.announces_cnt = 0
@@ -81,7 +86,7 @@ class SelogerSpider(scrapy.Spider):
       for image_div in image_divs:
          image_url  = 'http:' + image_div
          urls.append(image_url)
-         image_name = os.path.join('images', str(ID) + '_' + str(image_count) + '.jpg')
+         image_name = os.path.join(IMAGES_FOLDER_NAME, str(ID) + '_' + str(image_count) + '.jpg')
          urllib.urlretrieve(image_url, image_name)
          image_count = image_count + 1
 

@@ -31,11 +31,13 @@ struct AdType
 class RealEstateAd
 {
 public:
-   explicit RealEstateAd(int64_t id);
+   RealEstateAd() = default;
+   RealEstateAd(int64_t id);
    void setId(int64_t id);
    int64_t getId() const;
    void setDescription(const std::string& id, const std::string& value);
    std::string getDescription(const std::string& id) const;
+   const std::unordered_map<std::string, std::string>& GetAllDescriptions() const;
 private:
    int64_t m_id;
    std::unordered_map<std::string, std::string> m_adDescription;
