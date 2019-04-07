@@ -10,7 +10,7 @@ from thrift_generated.dynamodb_access.ttypes import KeyValue
 from Serializer import *
 
 tablename ="FR_PROPERTIES"
-similar_announce_column = "SIMILAR_ANNOUNCE"
+similar_announce_column = "TF_SIMILAR_ANNOUNCE"
 
 # data structures
 file_index_to_file_name = {}

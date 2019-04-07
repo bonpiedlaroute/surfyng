@@ -14,12 +14,17 @@ from search_features import *
 from url_builder import *
 from Serializer import *
 
+IMAGES_FOLDER_NAME='images'
+IMAGE_VECTORS_FOLDER_NAME='images'
 
 class SelogerSpider(scrapy.Spider):
    
    name = "seloger"
 
    def __init__(self):
+      if not os.path.exists(IMAGES_FOLDER_NAME):
+         os.mkdir(IMAGES_FOLDER_NAME)
+
       self.mapping_url_ptype = dict()
       self.mapping_url_stype = dict()
       self.announces_cnt = 0
@@ -61,10 +66,10 @@ class SelogerSpider(scrapy.Spider):
 
          yield response.follow(new_link, self.parse)
 
-   def parse_prop_description(self, response, announce_url, id_property, ID, id_search):
+   def parse_prop_description(self, response, announce_url, id_property, ID, id_search, image_count, image_urls):
       self.announces_cnt += 1
 
-      self.serializer.send(ID, id_property, response.text, "Houilles","ile de france", announce_url, announce_url[12:19], self.announce_title[ID], id_search)
+      self.serializer.send(ID, id_property, response.text, "Paris","ile de france", announce_url, announce_url[12:19], self.announce_title[ID], id_search, image_count, image_urls)
             
    def parse_announce_title(self, response, announce_url, id_property, id_search):
 
@@ -77,9 +82,11 @@ class SelogerSpider(scrapy.Spider):
          image_divs.append(json.loads(image_div)['url'])
 
       image_count = 1
+      urls = []
       for image_div in image_divs:
          image_url  = 'http:' + image_div
-         image_name = os.path.join('images', str(ID) + '_' + str(image_count) + '.jpg')
+         urls.append(image_url)
+         image_name = os.path.join(IMAGES_FOLDER_NAME, str(ID) + '_' + str(image_count) + '.jpg')
          urllib.urlretrieve(image_url, image_name)
          image_count = image_count + 1
 
@@ -88,7 +95,7 @@ class SelogerSpider(scrapy.Spider):
       else:
          self.announce_title[ID] = ""
 
-      yield scrapy.Request(buildselogerdescriptionurl(announce_url), callback= lambda r, url = announce_url, id_prop = id_property, ID = ID, id_search = id_search:self.parse_prop_description(r,url, id_prop, ID, id_search))
+      yield scrapy.Request(buildselogerdescriptionurl(announce_url), callback= lambda r, url = announce_url, id_prop = id_property, ID = ID, id_search = id_search, image_count = str(image_count), image_urls = ','.join(urls):self.parse_prop_description(r,url, id_prop, ID, id_search, image_count, image_urls))
 
    def closed(self, reason):
       print "Announces found: %d\n" %self.announces_cnt

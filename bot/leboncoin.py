@@ -77,9 +77,6 @@ class LeboncoinSpider(scrapy.Spider):
       ID = hash_id(ad_url)
       data = json.loads(response.text)
       
-      # send data to db
-      self.serializer.send(ID, property_type, response.text, 'Houilles', 'ile de france', ad_url, 'leboncoin', data['subject'], search_type)
-
       # store images on disk
       if 'images' in data and 'urls' in data['images']:
          images = data['images']['urls']
@@ -91,7 +88,10 @@ class LeboncoinSpider(scrapy.Spider):
             urllib.urlretrieve(img_url, fullfilename)
             image_cnt += 1
 
- 
+      # send data to db
+      self.serializer.send(ID, property_type, response.text, 'Houilles', 'ile de france', ad_url, 'leboncoin', data['subject'], search_type, str(image_cnt), ','.join(images))
+
+
    def closed(self, reason):
       print "Announces found: %d\n" %self.announces_cnt
       self.serializer.close()

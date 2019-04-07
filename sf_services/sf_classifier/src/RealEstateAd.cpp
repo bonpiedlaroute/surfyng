@@ -47,5 +47,10 @@ std::string RealEstateAd::getDescription(const std::string& id) const
 
 }
 
+const std::unordered_map<std::string, std::string>& RealEstateAd::GetAllDescriptions() const
+{
+   return m_adDescription;
+}
+
 }
 }

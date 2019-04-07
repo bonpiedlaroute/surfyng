@@ -3,20 +3,7 @@
 * Should refactory with it later on
 */
 
-#include <iostream>
-#include <vector>
-#include <map>
-#include <sstream>
-#include <dynamodb_access.h>
-#include <dynamodb_access_types.h>
-#include "rapidjson/document.h"
-#include <Logger.h>
-#include <thrift/protocol/TBinaryProtocol.h>
-#include <thrift/transport/TSocket.h>
-#include <thrift/transport/TBufferTransports.h>
-#include <boost/algorithm/string.hpp>
-#include <numeric>
-#include <set>
+#include "TransformTable.h"
 
 const int port = 5050;
 using namespace ::apache::thrift;
@@ -38,6 +25,36 @@ using Log = surfyn::utils::Logger;
    fieldName##Value.fieldtype = Type::type::STRING;   \
    valuesToPut[fieldName] = fieldName##Value;
 
+#define CHECK_SIMILAR_ANNOUNCE_ATTRIBUTE_AS_INT(attribute, filedName) \
+   std::string left##attribute##Str = leftAnnounce.getDescription(filedName); \
+   std::string right##attribute##Str = rightAnnounce.getDescription(filedName); \
+   if (!left##attribute##Str.empty() && !right##attribute##Str.empty()) \
+   { \
+      int left##attribute##Nb = atoi(left##attribute##Str.c_str()); \
+      int right##attribute##Nb = atoi(right##attribute##Str.c_str()); \
+      if (left##attribute##Nb != right##attribute##Nb) \
+      { \
+         logStream << leftAnnounce.getId() << " ##attribute##[" << left##attribute##Nb << "] and " << rightAnnounce.getId() << " ##attribute##[" \
+            << right##attribute##Nb << "] are not similar as their ##attribute## differ"; \
+         Log::getInstance()->info(logStream.str()); \
+         return false; \
+      } \
+   }
+
+#define CHECK_SIMILAR_ANNOUNCE_ATTRIBUTE_AS_STRING(attribute, filedName) \
+   std::string left##attribute##Str = leftAnnounce.getDescription(filedName); \
+   std::string right##attribute##Str = rightAnnounce.getDescription(filedName); \
+   if (!left##attribute##Str.empty() && !right##attribute##Str.empty()) \
+   { \
+      if (left##attribute##Str != right##attribute##Str) \
+      { \
+         logStream << leftAnnounce.getId() << " ##attribute##[" << left##attribute##Str << "] and " << rightAnnounce.getId() << " ##attribute##[" \
+            << right##attribute##Str << "] are not similar as their ##attribute## differ"; \
+         Log::getInstance()->info(logStream.str()); \
+         return false; \
+      } \
+   }
+
 namespace surfyn
 {
    // Fields copied from sf_classifier
@@ -51,7 +68,7 @@ namespace surfyn
    const std::string REGION = "REGION";
    const std::string SEARCH_TYPE = "SEARCH_TYPE";
    const std::string TIMESTAMP = "TIMESTAMP";
-   const std::string SIMILAR_ANNOUNCE = "SIMILAR_ANNOUNCE";
+   const std::string SIMILAR_ANNOUNCE = "TF_SIMILAR_ANNOUNCE";
 
    const char* RealEstatePrice = "PRICE";
    const char* RealEstateSurface = "SURFACE";
@@ -85,8 +102,78 @@ namespace surfyn
    const std::string CELLAR = "CELLAR";
    const std::string DUPLICATES = "DUPLICATES";
 
-   void ProcessSelogerJSON(const std::string json, std::map<std::string, ValueType>& valuesToPut)
+   void RemoveElementFromVectorString(std::string& output, std::string toRemove)
    {
+      std::vector<std::string> elements;
+      boost::split(elements, output, [](char c) { return c == ','; });
+      std::set<std::string> tmp;
+      for (auto e : elements)
+      {
+         if (e != toRemove)
+         {
+            tmp.insert(e);
+         }
+      }
+      output = std::accumulate(std::begin(tmp),
+         std::end(tmp),
+         std::string{},
+         [](const std::string& a, const std::string &b)
+      {
+         return a.empty() ? b : a + ',' + b;
+      });
+   }
+
+   ValueType BuildValueType(const std::string& fieldName, const std::string& fieldValue)
+   {
+      ValueType fieldNameValue;
+      fieldNameValue.field = fieldValue;
+      fieldNameValue.fieldtype = Type::type::STRING;
+      return fieldNameValue;
+   }
+
+   bool IsSimilarAnnounces(const classifier::RealEstateAd& leftAnnounce, const classifier::RealEstateAd& rightAnnounce)
+   {
+      std::stringstream logStream;
+      std::string leftPriceStr = leftAnnounce.getDescription(RealEstatePrice);
+      std::string rightPriceStr = rightAnnounce.getDescription(RealEstatePrice);
+      if (!leftPriceStr.empty() && !rightPriceStr.empty())
+      {
+         double leftPrice = atof(leftPriceStr.c_str());
+         double rightPrice = atof(rightPriceStr.c_str());
+         if (abs(leftPrice - rightPrice) / leftPrice > 0.02)
+         {
+            logStream << leftAnnounce.getId() << " price[" << leftPrice << "] and " << rightAnnounce.getId() << " price[" 
+               << rightPrice << "] are not similar as their prices differ";
+            Log::getInstance()->info(logStream.str());
+            return false;
+         }
+      }
+      std::string leftSurfaceStr = leftAnnounce.getDescription(RealEstateSurface);
+      std::string rightSurfaceStr = rightAnnounce.getDescription(RealEstateSurface);
+      if (!leftSurfaceStr.empty() && !rightSurfaceStr.empty())
+      {
+         double leftSurface = atof(leftSurfaceStr.c_str());
+         double rightSurface = atof(rightSurfaceStr.c_str());
+         if (abs(leftSurface - rightSurface) / leftSurface > 0.05)
+         {
+            logStream << leftAnnounce.getId() << " surface[" << leftSurface << "] and " << rightAnnounce.getId() << " surface["
+               << rightSurface << "] are not similar as their surfaces differ";
+            Log::getInstance()->info(logStream.str());
+            return false;
+         }
+      }
+      CHECK_SIMILAR_ANNOUNCE_ATTRIBUTE_AS_INT(Room, RealEstateRooms);
+      CHECK_SIMILAR_ANNOUNCE_ATTRIBUTE_AS_INT(Bed, RealEstateBeds);
+      CHECK_SIMILAR_ANNOUNCE_ATTRIBUTE_AS_INT(Floor, RealEstateFloor);
+      CHECK_SIMILAR_ANNOUNCE_ATTRIBUTE_AS_STRING(RealEstateType, RealEstateType); 
+      CHECK_SIMILAR_ANNOUNCE_ATTRIBUTE_AS_STRING(RealEstateSearchType, RealEstateSearchType);
+      return true;
+   }
+
+   void DataFormater::ReadSelogerJSON(const std::string json, classifier::RealEstateAd& realEstate)
+   {
+      std::locale::global(std::locale(""));
+
       rapidjson::Document document;
       document.Parse(json.c_str());
       if (document.HasMember("infos_acquereur"))
@@ -98,7 +185,7 @@ namespace surfyn
             if (prix.HasMember("prix"))
             {
                double price = prix["prix"].GetDouble();
-               ADD_STRING_FIELD_TO_PUT(RealEstatePrice, std::to_string(price));
+               realEstate.setDescription(RealEstatePrice, std::to_string(price));
             }
          }
       }
@@ -125,18 +212,19 @@ namespace surfyn
                         std::string value = object["value"].GetString();
                         if (order == 2430)
                         {
-                           ADD_STRING_FIELD_TO_PUT(CELLAR, "1");
+                           realEstate.setDescription(CELLAR, "1");
                         }
                         else if (order == 2410)
                         {
-                           ADD_STRING_FIELD_TO_PUT(RealEstateLift, "1");
+                           realEstate.setDescription(RealEstateLift, "1");
                         }
                         else if (order == 2450)
                         {
                            auto index = value.find_first_of(' ');
                            if (index != std::string::npos)
                            {
-                              ADD_STRING_FIELD_TO_PUT(RealEstateBalcony, value.substr(0, index));
+                              std::string balcony = value.substr(0, index);
+                              realEstate.setDescription(RealEstateLift, balcony);
                            }
                         }
                      }
@@ -144,8 +232,7 @@ namespace surfyn
                }
                else if (2 == id)
                {
-                  char surface[20];
-                  char floor[10];
+                  std::string surface, floor;
                   int bedroomNb = 0, pieceNb = 0, constructionYear = 1970, buildingTotalFloor = 1;
                   for (rapidjson::SizeType j = 0; j < criteria.Size(); j++)
                   {
@@ -156,7 +243,8 @@ namespace surfyn
                         std::string value = object["value"].GetString();
                         if (2090 == order)
                         {
-                           sscanf(value.c_str(), "Surface de %s m2", surface);
+                           auto it = floor.find_last_of(' ');
+                           surface = value.substr(10, it - 10);
                         }
                         else if (2092 == order)
                         {
@@ -168,7 +256,8 @@ namespace surfyn
                         }
                         else if (2096 == order)
                         {
-                           sscanf(value.c_str(), "Au %s étage", floor);
+                           auto it = floor.find_last_of(' ');
+                           floor = value.substr(3, it - 3);
                         }
                         else if (2140 == order)
                         {
@@ -181,12 +270,11 @@ namespace surfyn
                      }
                   }
 
-                  ADD_STRING_FIELD_TO_PUT(RealEstateSurface, std::string(surface));
-                  ADD_STRING_FIELD_TO_PUT(RealEstateConstructionYear, std::to_string(constructionYear));
-                  ADD_STRING_FIELD_TO_PUT(RealEstateBeds, std::to_string(bedroomNb));
-                  ADD_STRING_FIELD_TO_PUT(RealEstateRooms, std::to_string(pieceNb));
-                  ADD_STRING_FIELD_TO_PUT(RealEstateFloor, std::string(floor));
-
+                  realEstate.setDescription(RealEstateSurface, std::string(surface));
+                  realEstate.setDescription(RealEstateConstructionYear, std::to_string(constructionYear));
+                  realEstate.setDescription(RealEstateBeds, std::to_string(bedroomNb));
+                  realEstate.setDescription(RealEstateRooms, std::to_string(pieceNb));
+                  realEstate.setDescription(RealEstateFloor, std::string(floor));
                }
                else if (3 == id)
                {
@@ -199,7 +287,7 @@ namespace surfyn
                         const std::string value = object["value"].GetString();
                         if (order == 2540)
                         {
-                           ADD_STRING_FIELD_TO_PUT(RealEstateTypeOfHeating, value);
+                           realEstate.setDescription(RealEstateTypeOfHeating, value);
                         }
                      }
                   }
@@ -218,7 +306,8 @@ namespace surfyn
                            auto index = value.find_first_of(' ');
                            if (index != std::string::npos)
                            {
-                              ADD_STRING_FIELD_TO_PUT(RealEstateParking, value.substr(0, index));
+                              std::string parking = value.substr(0, index);
+                              realEstate.setDescription(RealEstateParking, parking);
                            }
                         }
                         else if (order == 2470)
@@ -226,21 +315,18 @@ namespace surfyn
                            auto index = value.find_first_of(' ');
                            if (index != std::string::npos)
                            {
-                              ADD_STRING_FIELD_TO_PUT(RealEstateBox, value.substr(0, index));
+                              std::string box = value.substr(0, index);
+                              realEstate.setDescription(RealEstateBox, box);
                            }
                         }
                         else if (order == 3250)
                         {
                            float landSurface = 0;
                            sscanf(value.c_str(), "Terrain de %f m2", &landSurface);
-                           ADD_STRING_FIELD_TO_PUT(RealEstateLandSurface, std::to_string(landSurface));
+                           realEstate.setDescription(RealEstateLandSurface, std::to_string(landSurface));
                         }
                      }
                   }
-               }
-               else
-               {
-
                }
             }
          }
@@ -248,14 +334,14 @@ namespace surfyn
       }
    }
 
-   void ProcessLeboncoinJSON(const std::string json, std::map<std::string, ValueType>& valuesToPut)
+   void DataFormater::ReadLeboncoinJSON(const std::string json, classifier::RealEstateAd& realEstate)
    {
       rapidjson::Document document;
       document.Parse(json.c_str());
       if (document.HasMember("price"))
       {
          double price = document["price"][0].GetDouble();
-         ADD_STRING_FIELD_TO_PUT(RealEstatePrice, std::to_string(price));
+         realEstate.setDescription(RealEstatePrice, std::to_string(price));
       }
       if (document.HasMember("attributes"))
       {
@@ -280,10 +366,10 @@ namespace surfyn
             }
          }
 
-         ADD_STRING_FIELD_TO_PUT(RealEstateSurface, surface);
-         ADD_STRING_FIELD_TO_PUT(RealEstateRooms, pieceNb);
+         realEstate.setDescription(RealEstateSurface, surface);
+         realEstate.setDescription(RealEstateRooms, pieceNb);
       }
-      if (document.HasMember("images"))
+      /*if (document.HasMember("images"))
       {
          const rapidjson::Value& images = document["images"];
          if (images.HasMember("nb_images"))
@@ -293,15 +379,22 @@ namespace surfyn
          }
          if (images.HasMember("urls"))
          {
-            std::string imageUrls = images["urls"].GetString();
-            ADD_STRING_FIELD_TO_PUT(IMAGE, imageUrls);
+            std::stringstream ss;
+            bool first = true;
+            const rapidjson::Value& imageUrls = images["urls"];
+            for (rapidjson::SizeType j = 0; j < imageUrls.Size(); j++)
+            {
+               if (!first) ss << ',';
+               ss << "\"" << imageUrls[j].GetString() << "\"";
+            }
+            ADD_STRING_FIELD_TO_PUT(IMAGE, ss.str());
          }
-      }
+      }*/
    }
 
-   void ProcessTable(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& srcTable, const std::string& destTable)
+   void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tableName)
    {
-      std::locale::global(std::locale{ "" });
+      std::locale::global(std::locale(""));
 
       std::map<std::string, ValueType> attributestoget;
 
@@ -327,44 +420,55 @@ namespace surfyn
       do
       {
          ScanReqResult scanReturn;
-         client->scan(scanReturn, srcTable, attributestoget, "");
+         client->scan(scanReturn, tableName, attributestoget, "");
 
          std::stringstream logstream;
          logstream << "Adapt model: " << scanReturn.values.size() << " elements scan\n";
 
          Log::getInstance()->info(logstream.str());
 
+         // TODO find a way to scan a part of entries into memories. Now we import all
+         /*std::unordered_map<int64_t, std::map<std::string, std::string>> scanValuesByID;
+         for (auto scanValue : scanReturn.values)
+         {
+            int64_t id = atol(scanValue[RealEstateKey].c_str());
+            scanValuesByID[id] = scanValue;
+         }*/
+
          for (auto iter = scanReturn.values.begin(); iter != scanReturn.values.end(); ++iter)
          {
             int64_t id = atol((*iter)[RealEstateKey].c_str());
-            std::map<std::string, ValueType> valuesToPut;
+            classifier::RealEstateAd realEstate(id);
+
+            /*std::map<std::string, ValueType> valuesToPut;
 
             ValueType IDValue;
             IDValue.field = std::to_string(id);
             IDValue.fieldtype = Type::type::NUMBER;
-            valuesToPut[ID] = IDValue;
+            valuesToPut[ID] = IDValue;*/
 
             std::map<std::string, std::string>::const_iterator it_field;
             if ((it_field = iter->find(ANNOUNCE_LINK)) != iter->end())
             {
-               ADD_STRING_FIELD_TO_PUT(ANNOUNCE_LINK, it_field->second);
+               realEstate.setDescription(ANNOUNCE_LINK, it_field->second);
             }
             if ((it_field = iter->find(RealEstateCity)) != iter->end())
             {
-               ADD_STRING_FIELD_TO_PUT(RealEstateCity, it_field->second);
+               realEstate.setDescription(RealEstateCity, it_field->second);
             }
             if ((it_field = iter->find(RealEstateType)) != iter->end())
             {
-               ADD_STRING_FIELD_TO_PUT(RealEstateType, it_field->second);
+               realEstate.setDescription(RealEstateType, it_field->second);
             }
             if ((it_field = iter->find(RealEstateSearchType)) != iter->end())
             {
-               ADD_STRING_FIELD_TO_PUT(RealEstateSearchType, it_field->second);
+               realEstate.setDescription(RealEstateSearchType, it_field->second);
             }
             std::string announceSource;
             if ((it_field = iter->find(ANNOUNCE_SOURCE)) != iter->end())
             {
                announceSource = it_field->second;
+               realEstate.setDescription(ANNOUNCE_SOURCE, announceSource);
             }
             if ((it_field = iter->find(PROPERTY_DESCRIPTION)) != iter->end())
             {
@@ -373,71 +477,50 @@ namespace surfyn
                {
                   if (announceSource == "seloger")
                   {
-                     ProcessSelogerJSON(json, valuesToPut);
+                     ReadSelogerJSON(json, realEstate);
+                     //ADD_STRING_FIELD_TO_PUT(IMAGE, "data/annonce_1.jpg");
                   }
                   else if (announceSource == "leboncoin")
                   {
-                     ProcessLeboncoinJSON(json, valuesToPut);
+                     ReadLeboncoinJSON(json, realEstate);
                   }
                }
                else
                {
-                  ProcessSelogerJSON(json, valuesToPut);
+                  ReadSelogerJSON(json, realEstate);
                }
                
             }
 
             //TODO to add more fields
-            if ((it_field = iter->find(RealEstateTimeToPublicTransport)) != iter->end())
+            /*if ((it_field = iter->find(RealEstateTimeToPublicTransport)) != iter->end())
             {
                ADD_STRING_FIELD_TO_PUT(RealEstateTimeToPublicTransport, it_field->second);
             }
             if ((it_field = iter->find(TIMESTAMP)) != iter->end())
             {
                ADD_STRING_FIELD_TO_PUT(TIMESTAMP, it_field->second);
-            }
+            }*/
             if ((it_field = iter->find(SIMILAR_ANNOUNCE)) != iter->end())
             {
-               std::string similarAnnouces = it_field->second;
-               ADD_STRING_FIELD_TO_PUT(DUPLICATES, similarAnnouces);
+               //std::string similarAnnouces = it_field->second;
+               realEstate.setDescription(SIMILAR_ANNOUNCE, it_field->second);
+               //ADD_STRING_FIELD_TO_PUT(DUPLICATES, similarAnnouces);
 
-               std::vector<std::string> annoucesIDs;
+               /*std::vector<std::string> annoucesIDs;
                boost::split(annoucesIDs, similarAnnouces, [](char c) { return c == ','; });
                std::set<std::string> sources;
-               for (std::string similarID : annoucesIDs)
+               for (std::string similarIDStr : annoucesIDs)
                {
-                  GetResult getResult;
-                  KeyValue key;
-                  key.key = ID;
-                  ValueType keyValue;
-                  keyValue.field = similarID;
-                  keyValue.fieldtype = Type::type::NUMBER;
-                  key.value = keyValue;
-
-                  std::map<std::string, ValueType> attributes;
-
-                  ValueType valueToGet;
-                  valueToGet.field = "";
-                  valueToGet.fieldtype = Type::type::NUMBER;
-                  attributes[ID] = valueToGet;
-
-                  valueToGet.fieldtype = Type::type::STRING;
-
-                  attributes[ANNOUNCE_SOURCE] = valueToGet;
-
-                  client->get(getResult, srcTable, key, attributes);
-                  if (getResult.result.success)
+                  int64_t otherID = atol(similarIDStr.c_str());
+                  std::map<std::string, std::string> otherAnnounceValues = scanValuesByID[otherID];
+                  auto it_other = otherAnnounceValues.find(ANNOUNCE_SOURCE);
+                  if (it_other != otherAnnounceValues.end())
                   {
-                     auto it_get = getResult.values.find(ANNOUNCE_SOURCE);
-                     if (it_get != getResult.values.end())
-                     {
-                        sources.insert(it_get->second);
-                     }
+                     sources.insert(it_other->second);
                   }
-                  else
-                  {
-                     Log::getInstance()->error("Failed to get annouce of ID " + similarID);
-                  }
+
+                  
                }
                if (!sources.empty())
                {
@@ -449,17 +532,18 @@ namespace surfyn
                         return a.empty() ? b : a + ',' + b;
                         });
                   ADD_STRING_FIELD_TO_PUT(SOURCES, annouceSources);
-               }
+               }*/
             }
-            ADD_STRING_FIELD_TO_PUT(IMAGE, "data/annonce_1.jpg");
-            ADD_STRING_FIELD_TO_PUT(SOURCE_LOGO, "data/SL0.svg");
 
-            OperationResult result;
+            //ADD_STRING_FIELD_TO_PUT(SOURCE_LOGO, "data/SL0.svg");
+
+            /*OperationResult result;
             client->put(result, destTable, valuesToPut);
             if (!result.success)
             {
                Log::getInstance()->error("Failed to put " + std::to_string(id) + " into table " + destTable + " error : " + result.error);
-            }
+            }*/
+            m_AnnouncesByID[id] = realEstate;
          }
          scanend = scanReturn.scanend;
       } while (!scanend);
@@ -467,6 +551,102 @@ namespace surfyn
 
       Log::getInstance()->info("Read table contents finished");
    }
+
+   void DataFormater::CheckSimilarAnnounces()
+   {
+      for (auto it = m_AnnouncesByID.begin(); it != m_AnnouncesByID.end(); ++it)
+      {
+         classifier::RealEstateAd& realEstate = it->second;
+         const std::string& similarAnnouces = realEstate.getDescription(SIMILAR_ANNOUNCE);
+         if (!similarAnnouces.empty())
+         {
+            std::vector<std::string> annoucesIDs;
+            boost::split(annoucesIDs, similarAnnouces, [](char c) { return c == ','; });
+            std::set<std::string> sources;
+            std::vector<std::string> checkedSimilarIDs;
+            for (std::string similarIDStr : annoucesIDs)
+            {
+               int64_t otherID = atol(similarIDStr.c_str());
+               classifier::RealEstateAd& otherRealEstate = m_AnnouncesByID[otherID];
+
+               if (IsSimilarAnnounces(realEstate, otherRealEstate))
+               {
+                  std::string otherAnnounceSource = otherRealEstate.getDescription(ANNOUNCE_SOURCE);
+                  if (!otherAnnounceSource.empty())
+                  {
+                     sources.insert(otherAnnounceSource);
+                  }
+                  checkedSimilarIDs.push_back(similarIDStr);
+               }
+               else
+               {
+                  std::string otherSimilarAnnounces = otherRealEstate.getDescription(SIMILAR_ANNOUNCE);
+                  RemoveElementFromVectorString(otherSimilarAnnounces, std::to_string(realEstate.getId()));
+                  otherRealEstate.setDescription(SIMILAR_ANNOUNCE, otherSimilarAnnounces);
+               }
+            }
+            if (!checkedSimilarIDs.empty())
+            {
+               std::string duplicates = std::accumulate(std::begin(checkedSimilarIDs),
+                  std::end(checkedSimilarIDs),
+                  std::string{},
+                  [](const std::string& a, const std::string &b)
+               {
+                  return a.empty() ? b : a + ',' + b;
+               });
+               realEstate.setDescription(DUPLICATES, duplicates);
+            }
+            if (!sources.empty())
+            {
+               std::string annouceSources = std::accumulate(std::begin(sources),
+                  std::end(sources),
+                  std::string{},
+                  [](const std::string& a, const std::string &b)
+                     {
+                     return a.empty() ? b : a + ',' + b;
+                     });
+               realEstate.setDescription(SOURCES, annouceSources);
+            }
+         }
+      } // end of for
+   } // end of CheckSimilarAnnounces
+
+   void DataFormater::PutTargetTable(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tableName)
+   {
+      for (auto it = m_AnnouncesByID.begin(); it != m_AnnouncesByID.end(); ++it)
+      {
+         std::map<std::string, ValueType> valuesToPut;
+         int64_t id = it->first;
+         ValueType IDValue;
+         IDValue.field = std::to_string(id);
+         IDValue.fieldtype = Type::type::NUMBER;
+         valuesToPut[ID] = IDValue;
+
+         const auto& descriptions = it->second.GetAllDescriptions();
+         for (auto iter = descriptions.begin(); iter != descriptions.end(); ++iter)
+         {
+            const std::string& fieldName = iter->first;
+            const std::string& fieldValue = iter->second;
+            if (!fieldValue.empty())
+            {
+               ValueType value = BuildValueType(fieldName, iter->second);
+               valuesToPut[fieldName] = value;
+            }
+         }
+         if (valuesToPut.empty())
+         {
+            Log::getInstance()->error("ValuesToPut is empty for item " + std::to_string(id));
+         }
+
+         OperationResult result;
+         client->put(result, tableName, valuesToPut);
+         if (!result.success)
+         {
+            Log::getInstance()->error("Failed to put " + std::to_string(id) + " into table " + tableName + " error : " + result.error);
+         }
+      }
+   }
+
 }
 
 int main(int argc, char* argv[])
@@ -479,7 +659,10 @@ int main(int argc, char* argv[])
 
    transport->open();
 
-   surfyn::ProcessTable(client, "FR_PROPERTIES", "FR_SUMMARY");
+   surfyn::DataFormater dataFormater;
+   dataFormater.ReadTableAndFormatEntries(client, "FR_PROPERTIES");
+   dataFormater.CheckSimilarAnnounces();
+   dataFormater.PutTargetTable(client, "FR_SUMMARY");
 
    return 0;
 }
