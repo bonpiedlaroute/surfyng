@@ -24,6 +24,12 @@ namespace utils
 
 Logger* Logger::m_instance = nullptr;
 std::mutex  Logger::m_logger_mutex;
+std::string Logger::m_filename_prefix = "";
+
+void Logger::Init(std::string&& prefix)
+{
+   m_filename_prefix = prefix;
+}
 
 void Logger::writelog()
 {
@@ -31,14 +37,14 @@ void Logger::writelog()
    char filename[MAX_DATE_TIME_FORMAT];
    setDateTimeFormat(filename);
 
-   logfilenamestreamer << filename << ".log";
+   logfilenamestreamer << m_filename_prefix;
+   logfilenamestreamer << "_" << filename << ".log";
 
    m_logfile.open(logfilenamestreamer.str().c_str(), std::ios_base::out );
    while(true)
    {
        std::unique_lock<std::mutex> lck(m_logger_mutex_queue);
-       m_logger_cv.wait(lck);
-
+       
        while(!m_log_messages.empty())
        {
          std::string log;
@@ -56,7 +62,7 @@ void Logger::writelog()
          m_logfile << logstreamer.str() << std::flush;
        }
 
-
+       m_logger_cv.wait(lck); 
    }
 }
 

@@ -32,7 +32,7 @@ public:
    void info(const std::string& msg);
    void warn(const std::string& msg);
    void error(const std::string& msg);
-
+   static void Init(std::string&& prefix);
 private:
    Logger();
    ~Logger();
@@ -48,6 +48,7 @@ private:
    std::condition_variable m_logger_cv;
    std::future<void> m_log_fut;
    std::fstream      m_logfile;
+   static std::string       m_filename_prefix;
 };
 
 }

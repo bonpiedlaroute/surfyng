@@ -71,6 +71,7 @@ dynamodb_accessHandler::dynamodb_accessHandler()
    std::string allocation_tag = ddb_conf.getStringValue("allocation_tag").c_str();
    std::shared_ptr<Aws::Utils::RateLimits::RateLimiterInterface> limiter = Aws::MakeShared<Aws::Utils::RateLimits::DefaultRateLimiter<>>(allocation_tag.c_str(), 200000);
 
+   Log::Init("dynamodb_access");
    Log::getInstance()->info(" Starting dynamodb Access ");
 
    ClientConfiguration config;
