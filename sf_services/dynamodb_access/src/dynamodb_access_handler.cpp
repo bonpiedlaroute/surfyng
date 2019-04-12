@@ -346,9 +346,10 @@ void dynamodb_accessHandler::deleteTable(OperationResult& _return, const std::st
    fillResult(_return, deleteTableOutcome);
 }
 
-void dynamodb_accessHandler::scan(ScanReqResult& _return, const std::string& tablename, const std::map<std::string, ValueType> & attributestoget, const std::string& filterexpression)
+void dynamodb_accessHandler::scan(ScanReqResult& _return, const std::string& tablename, const std::map<std::string, ValueType> & attributestoget, const std::string& filterexpression, const std::map<std::string, ValueType> & exprValues)
 {
    // TODO manage the case of concurrent access
+   // in case of concurrent access to this function m_lastEvaluatedKey could be wrong
    ScanRequest scanRequest;
 
    scanRequest.WithTableName(tablename.c_str());
@@ -363,7 +364,30 @@ void dynamodb_accessHandler::scan(ScanReqResult& _return, const std::string& tab
    scanRequest.SetAttributesToGet(attToget);
 
    if(!filterexpression.empty())
+   {
       scanRequest.SetFilterExpression(filterexpression.c_str());
+      Aws::Map<Aws::String, AttributeValue> awsExprValues;
+      for( auto value : exprValues)
+      {
+         AttributeValue attrValue;
+         switch(value.second.fieldtype)
+         {
+            case Type::NUMBER:
+            {
+               attrValue.SetN(value.second.field.c_str());
+               break;
+            }
+            default:
+            {
+               attrValue.SetS(value.second.field.c_str());
+               break;
+            }
+         }
+         awsExprValues[value.first.c_str()] = attrValue;
+      }
+
+      scanRequest.SetExpressionAttributeValues(awsExprValues);
+   }
 
    if(!m_lastEvaluatedKey.empty())
       scanRequest.WithExclusiveStartKey(m_lastEvaluatedKey);

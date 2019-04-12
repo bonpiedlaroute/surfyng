@@ -5,18 +5,24 @@
 # All rights reserved
 
 import scrapy
+import json
+import os
 
 from hash_id import *
 from search_features import *
 from url_builder import *
 from Serializer import *
 
+IMAGES_FOLDER_NAME='images'
+
 class LogicImmoSpider(scrapy.Spider):
       
    name = "logicimmo"
 
-   def __init__(self):
-      
+   def __init__(self): 
+      if not os.path.exists(IMAGES_FOLDER_NAME):
+         os.mkdir(IMAGES_FOLDER_NAME)
+ 
       self.nextpage = dict()
       self.nextpage[APART_ID] = 1
       self.nextpage[HOUSE_ID] = 1
@@ -58,8 +64,40 @@ class LogicImmoSpider(scrapy.Spider):
    def parse_announce(self, response, id_prop, announce_url, search_type):
       announce_title = response.xpath('//title/text()').extract()
       announce_description = response.xpath('//div[@class="offer-description-text"]').xpath('.//meta/@content').extract()
+      desc_data = {}
+      desc_data['offer-desc'] = announce_description[0]
+      ad_detail = response.xpath('//div[contains(@class, "offer-view-content-wrapper")]').xpath('.//div[contains(@class, "toaster-content")]')
+      area_number = ad_detail.xpath('//div[@class="cell area"]').xpath('//span[@class="offer-area-number"]/text()').extract()
+      if area_number:
+         desc_data['surface'] = area_number[0]
 
-      self.serializer.send(hash_id(announce_url),id_prop, announce_description[0], "Houilles","ile de france",announce_url,"LogicImmo", announce_title[0], search_type)
+      rooms_number = xpath('//div[@class="cell rooms"]').xpath('//span[@class="offer-rooms-number"]/text()').extract()
+      if rooms_number:
+         desc_data['nb_room'] = rooms_number[0]
+
+      price = ad_detail.xpath('//div[@class="cell price"]').xpath('//h2[@class="main-price"]/text()').extract()
+
+      if price:
+         desc_data['price'] = price[0]
+   
+      json_desc = json.dumps(desc_data)
+
+      imgs = response.xpath('//div[@class="carousel-wrapper"]').xpath('.//li/a/img/@src').extract()
+      announce_image = ""
+      img_ct = 0
+
+      if imgs:
+         announce_image = imgs[0]
+         img_ct = len(imgs)
+
+      image_count = 1
+      ID = hash_id(announce_url)
+      for image in imgs:
+         image_name = os.path.join(IMAGES_FOLDER_NAME, str(ID) + '_' + str(image_count) + '.jpg')
+         urllib.urlretrieve(image, image_name)
+         image_count = image_count + 1
+
+      self.serializer.send(ID, id_prop, json_desc, "Paris","ile de france",announce_url,"logicimmo", announce_title[0], search_type, announce_image, img_ct)
 
       self.announce_cnt+=1
 

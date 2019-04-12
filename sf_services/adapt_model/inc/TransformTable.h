@@ -5,7 +5,7 @@
 #include <dynamodb_access.h>
 #include <dynamodb_access_types.h>
 #include "rapidjson/document.h"
-#include <Logger.h>
+#include <sf_services/sf_utils/inc/Logger.h>
 #include <thrift/protocol/TBinaryProtocol.h>
 #include <thrift/transport/TSocket.h>
 #include <thrift/transport/TBufferTransports.h>
@@ -15,7 +15,7 @@
 #include <locale>
 #include <unordered_map>
 
-#include "RealEstateAd.h"
+#include "sf_services/sf_classifier/inc/RealEstateAd.h"
 
 namespace surfyn
 {

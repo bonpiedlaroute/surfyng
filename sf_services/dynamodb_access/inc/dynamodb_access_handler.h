@@ -32,7 +32,7 @@ public:
 
    void get(GetResult& _return, const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & attributestoget);
 
-   void scan(ScanReqResult& _return, const std::string& tablename, const std::map<std::string, ValueType> & attributestoget, const std::string& filterexpression);
+   void scan(ScanReqResult& _return, const std::string& tablename, const std::map<std::string, ValueType> & attributestoget, const std::string& filterexpression, const std::map<std::string, ValueType> & exprValues);
 
    void remove(OperationResult& _return, const std::string& tablename, const KeyValue& key);
 
