@@ -35,8 +35,8 @@ for file_index, i in enumerate(infiles):
 t.build(trees)
 
 # create a nearest neighbors json file for each input
-if not os.path.exists('seloger_nearest_neighbors'):
-   os.makedirs('seloger_nearest_neighbors')
+if not os.path.exists('nearest_neighbors'):
+   os.makedirs('nearest_neighbors')
 
 serializer = Serializer('localhost', 5050)
 
@@ -91,7 +91,7 @@ for i in file_index_to_file_name.keys():
       ret = serializer.client.update(tablename, item_key, values)
       print (ret)
 
-   with open('seloger_nearest_neighbors/' + master_file_name + '.json', 'w') as out:
+   with open('nearest_neighbors/' + master_file_name + '.json', 'w') as out:
       json.dump(named_nearest_neighbors, out)
 
 serializer.close()

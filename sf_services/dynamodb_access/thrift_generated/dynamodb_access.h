@@ -23,7 +23,7 @@ class dynamodb_accessIf {
   virtual ~dynamodb_accessIf() {}
   virtual void put(OperationResult& _return, const std::string& tablename, const std::map<std::string, ValueType> & values) = 0;
   virtual void get(GetResult& _return, const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & attributestoget) = 0;
-  virtual void scan(ScanReqResult& _return, const std::string& tablename, const std::map<std::string, ValueType> & attributestoget, const std::string& filterexpression) = 0;
+  virtual void scan(ScanReqResult& _return, const std::string& tablename, const std::map<std::string, ValueType> & attributestoget, const std::string& filterexpression, const std::map<std::string, ValueType> & exprValues) = 0;
   virtual void remove(OperationResult& _return, const std::string& tablename, const KeyValue& key) = 0;
   virtual void update(OperationResult& _return, const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & values) = 0;
   virtual void createTable(OperationResult& _return, const std::string& tablename, const KeyValue& key, const std::map<std::string, std::string> & properties) = 0;
@@ -63,7 +63,7 @@ class dynamodb_accessNull : virtual public dynamodb_accessIf {
   void get(GetResult& /* _return */, const std::string& /* tablename */, const KeyValue& /* key */, const std::map<std::string, ValueType> & /* attributestoget */) {
     return;
   }
-  void scan(ScanReqResult& /* _return */, const std::string& /* tablename */, const std::map<std::string, ValueType> & /* attributestoget */, const std::string& /* filterexpression */) {
+  void scan(ScanReqResult& /* _return */, const std::string& /* tablename */, const std::map<std::string, ValueType> & /* attributestoget */, const std::string& /* filterexpression */, const std::map<std::string, ValueType> & /* exprValues */) {
     return;
   }
   void remove(OperationResult& /* _return */, const std::string& /* tablename */, const KeyValue& /* key */) {
@@ -310,10 +310,11 @@ class dynamodb_access_get_presult {
 };
 
 typedef struct _dynamodb_access_scan_args__isset {
-  _dynamodb_access_scan_args__isset() : tablename(false), attributestoget(false), filterexpression(false) {}
+  _dynamodb_access_scan_args__isset() : tablename(false), attributestoget(false), filterexpression(false), exprValues(false) {}
   bool tablename :1;
   bool attributestoget :1;
   bool filterexpression :1;
+  bool exprValues :1;
 } _dynamodb_access_scan_args__isset;
 
 class dynamodb_access_scan_args {
@@ -328,6 +329,7 @@ class dynamodb_access_scan_args {
   std::string tablename;
   std::map<std::string, ValueType>  attributestoget;
   std::string filterexpression;
+  std::map<std::string, ValueType>  exprValues;
 
   _dynamodb_access_scan_args__isset __isset;
 
@@ -337,6 +339,8 @@ class dynamodb_access_scan_args {
 
   void __set_filterexpression(const std::string& val);
 
+  void __set_exprValues(const std::map<std::string, ValueType> & val);
+
   bool operator == (const dynamodb_access_scan_args & rhs) const
   {
     if (!(tablename == rhs.tablename))
@@ -344,6 +348,8 @@ class dynamodb_access_scan_args {
     if (!(attributestoget == rhs.attributestoget))
       return false;
     if (!(filterexpression == rhs.filterexpression))
+      return false;
+    if (!(exprValues == rhs.exprValues))
       return false;
     return true;
   }
@@ -367,6 +373,7 @@ class dynamodb_access_scan_pargs {
   const std::string* tablename;
   const std::map<std::string, ValueType> * attributestoget;
   const std::string* filterexpression;
+  const std::map<std::string, ValueType> * exprValues;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
@@ -905,6 +912,7 @@ class dynamodb_accessClient : virtual public dynamodb_accessIf {
     return poprot_;
   }
 #else
+ 
   dynamodb_accessClient(boost::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
     setProtocol(prot);
   }
@@ -929,14 +937,15 @@ class dynamodb_accessClient : virtual public dynamodb_accessIf {
     return poprot_;
   }
 #endif
+
   void put(OperationResult& _return, const std::string& tablename, const std::map<std::string, ValueType> & values);
   void send_put(const std::string& tablename, const std::map<std::string, ValueType> & values);
   void recv_put(OperationResult& _return);
   void get(GetResult& _return, const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & attributestoget);
   void send_get(const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & attributestoget);
   void recv_get(GetResult& _return);
-  void scan(ScanReqResult& _return, const std::string& tablename, const std::map<std::string, ValueType> & attributestoget, const std::string& filterexpression);
-  void send_scan(const std::string& tablename, const std::map<std::string, ValueType> & attributestoget, const std::string& filterexpression);
+  void scan(ScanReqResult& _return, const std::string& tablename, const std::map<std::string, ValueType> & attributestoget, const std::string& filterexpression, const std::map<std::string, ValueType> & exprValues);
+  void send_scan(const std::string& tablename, const std::map<std::string, ValueType> & attributestoget, const std::string& filterexpression, const std::map<std::string, ValueType> & exprValues);
   void recv_scan(ScanReqResult& _return);
   void remove(OperationResult& _return, const std::string& tablename, const KeyValue& key);
   void send_remove(const std::string& tablename, const KeyValue& key);
@@ -955,6 +964,7 @@ class dynamodb_accessClient : virtual public dynamodb_accessIf {
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   std::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
 #else
+ 
   boost::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   boost::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
 #endif
@@ -967,6 +977,7 @@ class dynamodb_accessProcessor : public ::apache::thrift::TDispatchProcessor {
 #ifdef _WIN32
   std::shared_ptr<dynamodb_accessIf> iface_;
 #else
+
   boost::shared_ptr<dynamodb_accessIf> iface_;
 #endif
   virtual bool dispatchCall(::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, const std::string& fname, int32_t seqid, void* callContext);
@@ -987,6 +998,7 @@ class dynamodb_accessProcessor : public ::apache::thrift::TDispatchProcessor {
 #else
      dynamodb_accessProcessor(boost::shared_ptr<dynamodb_accessIf> iface) :
 #endif
+ 
     iface_(iface) {
     processMap_["put"] = &dynamodb_accessProcessor::process_put;
     processMap_["get"] = &dynamodb_accessProcessor::process_get;
@@ -1053,13 +1065,13 @@ class dynamodb_accessMultiface : virtual public dynamodb_accessIf {
     return;
   }
 
-  void scan(ScanReqResult& _return, const std::string& tablename, const std::map<std::string, ValueType> & attributestoget, const std::string& filterexpression) {
+  void scan(ScanReqResult& _return, const std::string& tablename, const std::map<std::string, ValueType> & attributestoget, const std::string& filterexpression, const std::map<std::string, ValueType> & exprValues) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->scan(_return, tablename, attributestoget, filterexpression);
+      ifaces_[i]->scan(_return, tablename, attributestoget, filterexpression, exprValues);
     }
-    ifaces_[i]->scan(_return, tablename, attributestoget, filterexpression);
+    ifaces_[i]->scan(_return, tablename, attributestoget, filterexpression, exprValues);
     return;
   }
 
@@ -1139,8 +1151,8 @@ class dynamodb_accessConcurrentClient : virtual public dynamodb_accessIf {
   void get(GetResult& _return, const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & attributestoget);
   int32_t send_get(const std::string& tablename, const KeyValue& key, const std::map<std::string, ValueType> & attributestoget);
   void recv_get(GetResult& _return, const int32_t seqid);
-  void scan(ScanReqResult& _return, const std::string& tablename, const std::map<std::string, ValueType> & attributestoget, const std::string& filterexpression);
-  int32_t send_scan(const std::string& tablename, const std::map<std::string, ValueType> & attributestoget, const std::string& filterexpression);
+  void scan(ScanReqResult& _return, const std::string& tablename, const std::map<std::string, ValueType> & attributestoget, const std::string& filterexpression, const std::map<std::string, ValueType> & exprValues);
+  int32_t send_scan(const std::string& tablename, const std::map<std::string, ValueType> & attributestoget, const std::string& filterexpression, const std::map<std::string, ValueType> & exprValues);
   void recv_scan(ScanReqResult& _return, const int32_t seqid);
   void remove(OperationResult& _return, const std::string& tablename, const KeyValue& key);
   int32_t send_remove(const std::string& tablename, const KeyValue& key);
