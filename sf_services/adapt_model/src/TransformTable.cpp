@@ -3,6 +3,7 @@
 * Should refactory with it later on
 */
 
+
 #include "TransformTable.h"
 
 const int port = 5050;
@@ -69,6 +70,8 @@ namespace surfyn
    const std::string SEARCH_TYPE = "SEARCH_TYPE";
    const std::string TIMESTAMP = "TIMESTAMP";
    const std::string SIMILAR_ANNOUNCE = "TF_SIMILAR_ANNOUNCE";
+   const std::string ANNOUNCE_IMAGE = "ANNOUNCE_IMAGE";
+
 
    const char* RealEstatePrice = "PRICE";
    const char* RealEstateSurface = "SURFACE";
@@ -248,11 +251,11 @@ namespace surfyn
                         }
                         else if (2092 == order)
                         {
-                           sscanf(value.c_str(), "Année de construction %d", &constructionYear);
+                           sscanf(value.c_str(), "AnnÃ©e de construction %d", &constructionYear);
                         }
                         else if (2094 == order)
                         {
-                           sscanf(value.c_str(), "Bâtiment de %d étage", &buildingTotalFloor);
+                           sscanf(value.c_str(), "BÃ¢timent de %d Ã©tages", &buildingTotalFloor);
                         }
                         else if (2096 == order)
                         {
@@ -261,7 +264,7 @@ namespace surfyn
                         }
                         else if (2140 == order)
                         {
-                           sscanf(value.c_str(), "%d Pièces", &pieceNb);
+                           sscanf(value.c_str(), "%d PiÃ¨ces", &pieceNb);
                         }
                         else if (2165 == order)
                         {
@@ -275,6 +278,7 @@ namespace surfyn
                   realEstate.setDescription(RealEstateBeds, std::to_string(bedroomNb));
                   realEstate.setDescription(RealEstateRooms, std::to_string(pieceNb));
                   realEstate.setDescription(RealEstateFloor, std::string(floor));
+
                }
                else if (3 == id)
                {
@@ -386,13 +390,36 @@ namespace surfyn
             {
                if (!first) ss << ',';
                ss << "\"" << imageUrls[j].GetString() << "\"";
+
             }
             ADD_STRING_FIELD_TO_PUT(IMAGE, ss.str());
          }
       }*/
    }
 
-   void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tableName)
+
+   void ReadLogicImmoJSON(const std::string json, classifier::RealEstateAd& realEstate)
+   {
+      rapidjson::Document document;
+      document.Parse(json.c_str());
+      if (document.HasMember("price"))
+      {
+         std::string price = document["price"][0].GetString();
+         realEstate.setDescription(RealEstatePrice, price);
+      }
+      if (document.HasMember("surface"))
+      {
+         std::string surface = document["surface"][0].GetString();
+         realEstate.setDescription(RealEstateSurface, surface);
+      }
+      if (document.HasMember("nb_room"))
+      {
+         std::string nb_room = document["nb_room"][0].GetString();
+         realEstate.setDescription(RealEstateRooms, nb_room);
+      }
+   }
+
+void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tableName)
    {
       std::locale::global(std::locale(""));
 
@@ -415,6 +442,7 @@ namespace surfyn
       attributestoget[SEARCH_TYPE] = value;
       attributestoget[TIMESTAMP] = value;
       attributestoget[SIMILAR_ANNOUNCE] = value;
+      attributestoget[IMAGE_COUNT] = value;
 
       bool scanend = false;
       do
@@ -438,10 +466,11 @@ namespace surfyn
          for (auto iter = scanReturn.values.begin(); iter != scanReturn.values.end(); ++iter)
          {
             int64_t id = atol((*iter)[RealEstateKey].c_str());
+
             classifier::RealEstateAd realEstate(id);
+            std::string CurrentImageCount = "", CurrentAnnounceImage="";
 
             /*std::map<std::string, ValueType> valuesToPut;
-
             ValueType IDValue;
             IDValue.field = std::to_string(id);
             IDValue.fieldtype = Type::type::NUMBER;
@@ -464,6 +493,15 @@ namespace surfyn
             {
                realEstate.setDescription(RealEstateSearchType, it_field->second);
             }
+            if ((it_field = iter->find(IMAGE_COUNT)) != iter->end())
+            {
+               CurrentImageCount = it_field->second;
+
+            }
+            if ((it_field = iter->find(ANNOUNCE_IMAGE)) != iter->end())
+            {
+               CurrentAnnounceImage = it_field->second;
+            }
             std::string announceSource;
             if ((it_field = iter->find(ANNOUNCE_SOURCE)) != iter->end())
             {
@@ -477,13 +515,26 @@ namespace surfyn
                {
                   if (announceSource == "seloger")
                   {
+
                      ReadSelogerJSON(json, realEstate);
-                     //ADD_STRING_FIELD_TO_PUT(IMAGE, "data/annonce_1.jpg");
+                     realEstate.setDescription(SOURCE_LOGO, "data/SL0.svg");
+                     realEstate.setDescription(IMAGE_COUNT, CurrentImageCount);
+                     realEstate.setDescription(IMAGE, CurrentAnnounceImage);
                   }
                   else if (announceSource == "leboncoin")
                   {
                      ReadLeboncoinJSON(json, realEstate);
+                     realEstate.setDescription(SOURCE_LOGO, "data/lbc0.svg");
+
                   }
+                  else if( announceSource == "logicimmo")
+                  {
+                     ReadLogicImmoJSON(json, realEstate);
+                     realEstate.setDescription(SOURCE_LOGO, "data/li0.svg");
+                     realEstate.setDescription(IMAGE_COUNT, CurrentImageCount);
+                     realEstate.setDescription(IMAGE, CurrentAnnounceImage);
+                  }
+
                }
                else
                {
@@ -534,6 +585,7 @@ namespace surfyn
                   ADD_STRING_FIELD_TO_PUT(SOURCES, annouceSources);
                }*/
             }
+
 
             //ADD_STRING_FIELD_TO_PUT(SOURCE_LOGO, "data/SL0.svg");
 
