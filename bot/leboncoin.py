@@ -83,6 +83,7 @@ class LeboncoinSpider(scrapy.Spider):
       data = json.loads(response.text)
       
       announce_image = ""
+      image_cnt = 1
       # store images on disk
       if 'images' in data and 'urls' in data['images']:
          images = data['images']['urls']
@@ -90,7 +91,6 @@ class LeboncoinSpider(scrapy.Spider):
          if images: 
             announce_image = images[0]
 
-         image_cnt = 1
          for img_url in images:
             filename =  str(ID) + '_' + str(image_cnt) + '.jpg'
             fullfilename = os.path.join(IMAGES_FOLDER_NAME,filename)
