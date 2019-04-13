@@ -7,6 +7,7 @@
 import scrapy
 import json
 import os
+import urllib
 
 from hash_id import *
 from search_features import *
@@ -71,7 +72,7 @@ class LogicImmoSpider(scrapy.Spider):
       if area_number:
          desc_data['surface'] = area_number[0]
 
-      rooms_number = xpath('//div[@class="cell rooms"]').xpath('//span[@class="offer-rooms-number"]/text()').extract()
+      rooms_number = ad_detail.xpath('//div[@class="cell rooms"]').xpath('//span[@class="offer-rooms-number"]/text()').extract()
       if rooms_number:
          desc_data['nb_room'] = rooms_number[0]
 

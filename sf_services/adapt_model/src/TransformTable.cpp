@@ -179,6 +179,19 @@ namespace surfyn
 
       rapidjson::Document document;
       document.Parse(json.c_str());
+
+      if(document.HasParseError())
+      {
+         std::stringstream error;
+         error << "failed to parse seloger json: error code [";
+         error << document.GetParseError();
+         error << "] error offset :[";
+         error << document.GetErrorOffset();
+         error << "]";
+         Log::getInstance()->error(error.str());
+
+         return;
+      }
       if (document.HasMember("infos_acquereur"))
       {
          const rapidjson::Value& info_acquereur = document["infos_acquereur"];
@@ -188,7 +201,7 @@ namespace surfyn
             if (prix.HasMember("prix"))
             {
                double price = prix["prix"].GetDouble();
-               realEstate.setDescription(RealEstatePrice, std::to_string(price));
+               realEstate.setDescription(RealEstatePrice, std::to_string((int)price));
             }
          }
       }
@@ -340,12 +353,28 @@ namespace surfyn
 
    void DataFormater::ReadLeboncoinJSON(const std::string json, classifier::RealEstateAd& realEstate)
    {
+      std::locale::global(std::locale(""));
+
       rapidjson::Document document;
       document.Parse(json.c_str());
+
+      if(document.HasParseError())
+      {
+         std::stringstream error;
+         error << "failed to parse leboncoin json: error code [";
+         error << document.GetParseError();
+         error << "] error offset :[";
+         error << document.GetErrorOffset();
+         error << "]";
+         Log::getInstance()->error(error.str());
+
+         return;
+      }
+
       if (document.HasMember("price"))
       {
          double price = document["price"][0].GetDouble();
-         realEstate.setDescription(RealEstatePrice, std::to_string(price));
+         realEstate.setDescription(RealEstatePrice, std::to_string((int)price));
       }
       if (document.HasMember("attributes"))
       {
@@ -379,42 +408,61 @@ namespace surfyn
          if (images.HasMember("nb_images"))
          {
             int imageCount = images["nb_images"].GetInt();
-            ADD_STRING_FIELD_TO_PUT(IMAGE_COUNT, std::to_string(imageCount));
+            realEstate.setDescription(IMAGE_COUNT, std::to_string(imageCount));
          }
          if (images.HasMember("urls"))
          {
             std::stringstream ss;
-            bool first = true;
+            //bool first = true;
             const rapidjson::Value& imageUrls = images["urls"];
-            for (rapidjson::SizeType j = 0; j < imageUrls.Size(); j++)
-            {
-               if (!first) ss << ',';
-               ss << "\"" << imageUrls[j].GetString() << "\"";
+            //for (rapidjson::SizeType j = 0; j < imageUrls.Size(); j++)
+            //{
+            //   if (!first) ss << ',';
+               //ss << "\"" << imageUrls[j].GetString() << "\"";
+            ss << imageUrls[0].GetString();
 
-            }
-            ADD_STRING_FIELD_TO_PUT(IMAGE, ss.str());
+            //}
+            realEstate.setDescription(IMAGE, ss.str());
          }
       }*/
    }
 
 
-   void ReadLogicImmoJSON(const std::string json, classifier::RealEstateAd& realEstate)
+   void DataFormater::ReadLogicImmoJSON(const std::string json, classifier::RealEstateAd& realEstate)
    {
+      std::locale::global(std::locale(""));
+
       rapidjson::Document document;
       document.Parse(json.c_str());
+
+      if(document.HasParseError())
+      {
+         std::stringstream error;
+         error << "failed to parse logicimmo json: error code [";
+         error << document.GetParseError();
+         error << "] error offset :[";
+         error << document.GetErrorOffset();
+         error << "]";
+         Log::getInstance()->error(error.str());
+
+         return;
+      }
+
       if (document.HasMember("price"))
       {
-         std::string price = document["price"][0].GetString();
+         std::string price = document["price"].GetString();
+         auto pos = price.find_last_of(' ');
+         price = price.substr(0, pos);
          realEstate.setDescription(RealEstatePrice, price);
       }
       if (document.HasMember("surface"))
       {
-         std::string surface = document["surface"][0].GetString();
+         std::string surface = document["surface"].GetString();
          realEstate.setDescription(RealEstateSurface, surface);
       }
       if (document.HasMember("nb_room"))
       {
-         std::string nb_room = document["nb_room"][0].GetString();
+         std::string nb_room = document["nb_room"].GetString();
          realEstate.setDescription(RealEstateRooms, nb_room);
       }
    }
@@ -448,7 +496,7 @@ void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_acce
       do
       {
          ScanReqResult scanReturn;
-         client->scan(scanReturn, tableName, attributestoget, "");
+         client->scan(scanReturn, tableName, attributestoget, "", std::map<std::string, ValueType>());
 
          std::stringstream logstream;
          logstream << "Adapt model: " << scanReturn.values.size() << " elements scan\n";
