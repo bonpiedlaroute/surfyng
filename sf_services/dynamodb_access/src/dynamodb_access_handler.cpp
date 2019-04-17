@@ -354,15 +354,6 @@ void dynamodb_accessHandler::scan(ScanReqResult& _return, const std::string& tab
 
    scanRequest.WithTableName(tablename.c_str());
 
-   Aws::Vector<Aws::String> attToget;
-
-   for( auto att : attributestoget )
-   {
-      attToget.push_back(att.first.c_str());
-   }
-
-   scanRequest.SetAttributesToGet(attToget);
-
    if(!filterexpression.empty())
    {
       scanRequest.SetFilterExpression(filterexpression.c_str());
@@ -387,6 +378,29 @@ void dynamodb_accessHandler::scan(ScanReqResult& _return, const std::string& tab
       }
 
       scanRequest.SetExpressionAttributeValues(awsExprValues);
+
+      Aws::String projectionExpression = "";
+      for( auto iter_att = attributestoget.begin(); iter_att != attributestoget.end(); ++iter_att )
+      {
+         if( iter_att != attributestoget.begin())
+         projectionExpression += ',';
+
+         projectionExpression += iter_att->first.c_str();
+      }
+
+      scanRequest.SetProjectionExpression(projectionExpression);
+   }
+   else
+   {
+      Aws::Vector<Aws::String> attToget;
+
+      for( auto att : attributestoget )
+      {
+         attToget.push_back(att.first.c_str());
+      }
+
+      scanRequest.SetAttributesToGet(attToget);
+
    }
 
    if(!m_lastEvaluatedKey.empty())

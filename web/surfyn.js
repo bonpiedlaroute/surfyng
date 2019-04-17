@@ -372,7 +372,7 @@ function submit_request(event)
   url_results += "?search_city=";
   url_results += city.value;
 
-  url_results+="?search_type=";
+  url_results+="&search_type=";
   url_results+=searchType;
 
   var formattingLength= 0;
@@ -381,9 +381,9 @@ function submit_request(event)
   else
     formattingLength = 2;
 
-  url_results+="?price_min=";
+  url_results+="&price_min=";
   url_results+= valuePriceMin.innerHTML.substring(0, valuePriceMin.innerHTML.length - formattingLength);
-  url_results+="?price_max=";
+  url_results+="&price_max=";
   url_results+= valuePriceMax.innerHTML.substring(0, valuePriceMax.innerHTML.length - formattingLength);
 
   if(isSelected[propertyType.loft])
@@ -405,9 +405,9 @@ function submit_request(event)
     updatePropertyTypeResult("3");
   }
 
-  url_results+="?area_min=";
+  url_results+="&area_min=";
   url_results+= valueAreaMin.innerHTML.substring(0, valueAreaMin.innerHTML.length - 14);
-  url_results+="?area_max=";
+  url_results+="&area_max=";
   url_results+= valueAreaMax.innerHTML.substring(0, valueAreaMax.innerHTML.length - 14);;
   isFirstTimePropType = true;
   validate.href = url_results;
