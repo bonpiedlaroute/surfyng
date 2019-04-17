@@ -259,7 +259,7 @@ namespace surfyn
                         std::string value = object["value"].GetString();
                         if (2090 == order)
                         {
-                           auto it = floor.find_last_of(' ');
+                           auto it = value.find_last_of(' ');
                            surface = value.substr(10, it - 10);
                         }
                         else if (2092 == order)
@@ -272,16 +272,16 @@ namespace surfyn
                         }
                         else if (2096 == order)
                         {
-                           auto it = floor.find_last_of(' ');
+                           auto it = value.find_last_of(' ');
                            floor = value.substr(3, it - 3);
                         }
                         else if (2140 == order)
                         {
-                           sscanf(value.c_str(), "%d Pièces", &pieceNb);
+                           sscanf(value.c_str(), "%d", &pieceNb);
                         }
                         else if (2165 == order)
                         {
-                           sscanf(value.c_str(), "%d Chambre", &bedroomNb);
+                           sscanf(value.c_str(), "%d", &bedroomNb);
                         }
                      }
                   }
@@ -491,6 +491,7 @@ void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_acce
       attributestoget[TIMESTAMP] = value;
       attributestoget[SIMILAR_ANNOUNCE] = value;
       attributestoget[IMAGE_COUNT] = value;
+      attributestoget[ANNOUNCE_IMAGE] = value;
 
       bool scanend = false;
       do
@@ -535,7 +536,24 @@ void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_acce
             }
             if ((it_field = iter->find(RealEstateType)) != iter->end())
             {
-               realEstate.setDescription(RealEstateType, it_field->second);
+               //FR_PROPERTIES table store realestatetype in english
+               //work-around conversion in french, so that i don't need to relaunch the scrawler, and rerun
+               //tensorflow
+               //TODO change this
+               if(it_field->second == "apartment")
+               {
+                  realEstate.setDescription(RealEstateType, "Appartement");
+               }
+               else
+               {
+                  if(it_field->second == "house")
+                  {
+                     realEstate.setDescription(RealEstateType, "Maison");
+                  }
+                  else
+                     realEstate.setDescription(RealEstateType, it_field->second);
+               }
+
             }
             if ((it_field = iter->find(RealEstateSearchType)) != iter->end())
             {
@@ -573,6 +591,8 @@ void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_acce
                   {
                      ReadLeboncoinJSON(json, realEstate);
                      realEstate.setDescription(SOURCE_LOGO, "data/lbc0.svg");
+                     realEstate.setDescription(IMAGE_COUNT, CurrentImageCount);
+                     realEstate.setDescription(IMAGE, CurrentAnnounceImage);
 
                   }
                   else if( announceSource == "logicimmo")
@@ -662,8 +682,9 @@ void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_acce
          {
             std::vector<std::string> annoucesIDs;
             boost::split(annoucesIDs, similarAnnouces, [](char c) { return c == ','; });
-            std::set<std::string> sources;
+            std::vector<std::string> sources;
             std::vector<std::string> checkedSimilarIDs;
+            sources.push_back(realEstate.getDescription(ANNOUNCE_SOURCE));
             for (std::string similarIDStr : annoucesIDs)
             {
                int64_t otherID = atol(similarIDStr.c_str());
@@ -674,7 +695,7 @@ void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_acce
                   std::string otherAnnounceSource = otherRealEstate.getDescription(ANNOUNCE_SOURCE);
                   if (!otherAnnounceSource.empty())
                   {
-                     sources.insert(otherAnnounceSource);
+                     sources.push_back(otherAnnounceSource);
                   }
                   checkedSimilarIDs.push_back(similarIDStr);
                }
@@ -707,6 +728,10 @@ void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_acce
                      });
                realEstate.setDescription(SOURCES, annouceSources);
             }
+         }
+         else
+         {
+            realEstate.setDescription(SOURCES, realEstate.getDescription(ANNOUNCE_SOURCE));
          }
       } // end of for
    } // end of CheckSimilarAnnounces
