@@ -21,7 +21,7 @@ using namespace utility;
 using namespace http::experimental::listener;
 
 using surfyn::rest_server::HttpRequestHandler;
-
+using Log = surfyn::utils::Logger;
 
 
 std::unique_ptr<HttpRequestHandler> g_httpHandler;
@@ -52,7 +52,10 @@ void on_initialize(const string_t& address)
     g_httpHandler = std::make_unique<HttpRequestHandler>(addr, conf);
     g_httpHandler->open().wait();
 
-    ucout << utility::string_t(U("Listening for requests at: ")) << addr << std::endl;
+    //ucout << utility::string_t(U("Listening for requests at: ")) << addr << std::endl;
+    std::string msg = "Listening for requests at: ";
+    msg += addr;
+    Log::getInstance()->info(msg);
 
     return;
 }
@@ -62,7 +65,7 @@ void on_shutdown()
      g_httpHandler->close().wait();
     return;
 }
-using Log = surfyn::utils::Logger;
+
 
 #ifdef _WIN32
 int wmain(int argc, wchar_t *argv[])
