@@ -5,8 +5,8 @@
 		"IMAGE": "data/annonce_2.jpg",
       "IMAGE_COUNT":"2",
       "TRANSPORT": "3mn de la gare",
-		"SURFACE": "53 m<sup>2",
-		"NB_ROOMS": "3 pièces",
+		"SURFACE": "53",
+		"NB_ROOMS": "3",
 		"LOCATION": "quartier centre ville",
 		"SOURCE_LOGO": "data/SL0.svg"
 
@@ -17,8 +17,8 @@
 		"IMAGE": "data/annonce_2.jpg",
       "IMAGE_COUNT":"3",
       "TRANSPORT": "3mn de la gare",
-		"SURFACE": "53 m<sup>2",
-		"NB_ROOMS": "3 pièces",
+		"SURFACE": "53",
+		"NB_ROOMS": "3",
 		"LOCATION": "centre ville",
       "FLOOR":"2ème étage",
 		"SOURCE_LOGO": "data/SL0.svg"

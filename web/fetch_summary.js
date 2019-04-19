@@ -95,15 +95,26 @@ function loadJSON(path, success, error) {
                ad_summary_details_p.className = "announce_summary_details";
                ad_summary_details_p.innerHTML = data[i].PROPERTY_TYPE;
                ad_summary_details_p.innerHTML += "<br/>";
-               ad_summary_details_p.innerHTML += data[i].SURFACE;
-               ad_summary_details_p.innerHTML += " - ";
-               ad_summary_details_p.innerHTML += data[i].NB_ROOMS;
+
+               if(data[i].hasOwnProperty('SURFACE'))
+               {
+                 ad_summary_details_p.innerHTML += data[i].SURFACE;
+                 ad_summary_details_p.innerHTML += " m<sup>2";
+               }
+
+               if(data[i].hasOwnProperty('NB_ROOMS'))
+               {
+                 ad_summary_details_p.innerHTML += " - ";
+                 ad_summary_details_p.innerHTML += data[i].NB_ROOMS;
+                 ad_summary_details_p.innerHTML += "pièce(s)";
+               }
 
                ad_summary_desc_div1.appendChild(ad_summary_details_p);
 
                var ad_summary_refresh_time_p = createNode("p");
                ad_summary_refresh_time_p.className = "announce_summary_refresh_time";
-               ad_summary_refresh_time_p.innerHTML = data[i].HISTORY;
+               //ad_summary_refresh_time_p.innerHTML = data[i].HISTORY;
+               ad_summary_refresh_time_p.innerHTML = "il y a 1h";
 
                ad_summary_desc_div1.appendChild(ad_summary_refresh_time_p);
 
@@ -125,6 +136,7 @@ function loadJSON(path, success, error) {
               ad_price_p.style.float = "right";
               ad_price_p.style.color = "#4c94bc";
               ad_price_p.innerHTML = data[i].PRICE;
+              ad_price_p.innerHTML += " €";
               ad_summary_desc_div2.appendChild(ad_price_p);
 
               ad_summary_container_div.appendChild(ad_summary_desc_div2);
