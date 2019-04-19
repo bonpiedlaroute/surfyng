@@ -18,7 +18,7 @@ HttpRequestHandler::HttpRequestHandler()
 {
 
 }
-HttpRequestHandler::HttpRequestHandler(utility::string_t url):m_listener(url)
+HttpRequestHandler::HttpRequestHandler(utility::string_t url, http_listener_config conf):m_listener(url, conf)
 {
     m_listener.support(methods::GET, [this](http_request message) { handle_get(message);});
     m_listener.support(methods::PUT, [this](http_request message) { handle_put(message);});
