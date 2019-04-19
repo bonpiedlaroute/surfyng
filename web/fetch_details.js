@@ -177,6 +177,7 @@ function generate_details_page(data)
         if(ismobile)
         det_surface_span.style.fontSize = "12px";
         det_surface_span.innerHTML = data[i].SURFACE;
+        det_surface_span.innerHTML += " m<sup>2";
 
         det_surface_container_div.appendChild(det_surface_span);
         det_desc_container_div.appendChild(det_surface_container_div);
@@ -195,6 +196,7 @@ function generate_details_page(data)
         if(ismobile)
         det_nb_rooms_span.style.fontSize = "12px";
         det_nb_rooms_span.innerHTML = data[i].NB_ROOMS;
+        det_nb_rooms_span.innerHTML += "pièce(s)";
 
         det_nb_rooms_container_div.appendChild(det_nb_rooms_span);
         det_desc_container_div.appendChild(det_nb_rooms_container_div);
@@ -253,6 +255,7 @@ function generate_details_page(data)
         if(ismobile)
         det_ad_floor_span.style.fontSize = "12px";
         det_ad_floor_span.innerHTML = data[i].FLOOR;
+        det_ad_floor_span.innerHTML +=" étage"
 
         det_ad_floor_div.appendChild(det_ad_floor_span);
 

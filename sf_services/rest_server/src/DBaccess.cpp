@@ -77,7 +77,7 @@ std::string searchTypeValue = "";
       filterexpression << paramvalue;
       ValueType exprValue;
       exprValue.field = value.c_str();
-      exprValue.fieldtype = Type::type::STRING;
+      exprValue.fieldtype = param == "PRICE" ? Type::type::NUMBER : Type::type::STRING;
       expressionValue[paramvalue] = exprValue;
    }
    void DBaccess::fetchSummary(utility::stringstream_t& sstream, const std::map<utility::string_t,  utility::string_t>& query )
@@ -104,7 +104,7 @@ std::string searchTypeValue = "";
       value.fieldtype = Type::type::STRING;
       attributestoget[id_history] = value;
 
-      value.fieldtype = Type::type::STRING;
+      value.fieldtype = Type::type::NUMBER;
       attributestoget[id_price] = value;
 
       value.fieldtype = Type::type::STRING;
@@ -119,6 +119,7 @@ std::string searchTypeValue = "";
       sstream << U("[\n");
       // search anounces on summary table
       // and construct a json string
+      bool firsttime = true;
       do
       {
          ScanReqResult scanReturn;
@@ -186,7 +187,8 @@ std::string searchTypeValue = "";
             for(auto value : output)
             {
                filterExpression << " and ";
-               fillFilterExprAndExprValue(filterExpression, expressionValue, "PROPERTY_TYPE", exprval_propType, value, "=");
+               std::string propertyType = value == "1" ? "Appartement" : "Maison";
+               fillFilterExprAndExprValue(filterExpression, expressionValue, "PROPERTY_TYPE", exprval_propType, propertyType, "=");
             }
          }
          iter = query.find("area_min");
@@ -203,6 +205,7 @@ std::string searchTypeValue = "";
             fillFilterExprAndExprValue(filterExpression, expressionValue, "SURFACE", exprval_areaMax, (iter->second).c_str(), "<=");
          }
 
+
          m_client->scan(scanReturn, "FR_SUMMARY", attributestoget, filterExpression.str(), expressionValue);
 
          time_t current_time = time(nullptr);
@@ -215,7 +218,11 @@ std::string searchTypeValue = "";
 
          for(auto table_entry_iter = scanReturn.values.begin(); table_entry_iter != scanReturn.values.end();++table_entry_iter)
          {
-            if(table_entry_iter != scanReturn.values.begin())
+            if(firsttime)
+            {
+               firsttime = false;
+            }
+            else
             {
                sstream << U(",\n");
             }
