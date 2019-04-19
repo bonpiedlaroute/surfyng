@@ -23,7 +23,7 @@ namespace rest_server
    {
        public:
            HttpRequestHandler();
-           HttpRequestHandler(utility::string_t url);
+           HttpRequestHandler(utility::string_t url, http_listener_config conf);
            virtual ~HttpRequestHandler();
 
            pplx::task<void>open(){return m_listener.open();}
