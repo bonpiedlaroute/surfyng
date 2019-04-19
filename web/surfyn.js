@@ -343,7 +343,7 @@ var url_results = "";
 
 function updatePropertyTypeUrlParam()
 {
-  url_results+="?prop_type=";
+  url_results+="&prop_type=";
   isFirstTimePropType = false;
 }
 function updatePropertyTypeResult( value)

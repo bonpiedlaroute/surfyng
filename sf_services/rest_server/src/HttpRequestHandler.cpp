@@ -94,6 +94,7 @@ void HttpRequestHandler::handle_get(http_request message)
        }
     }
 
+    //std::cout << sstream.str() << "\n";
     auto body_text = utility::conversions::to_utf8string(sstream.str());
     auto length = body_text.size();
 

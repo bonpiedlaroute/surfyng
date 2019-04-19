@@ -130,12 +130,14 @@ namespace surfyn
    {
       ValueType fieldNameValue;
       fieldNameValue.field = fieldValue;
-      fieldNameValue.fieldtype = Type::type::STRING;
+      fieldNameValue.fieldtype = fieldName == "PRICE"? Type::type::NUMBER : Type::type::STRING;
       return fieldNameValue;
    }
 
    bool IsSimilarAnnounces(const classifier::RealEstateAd& leftAnnounce, const classifier::RealEstateAd& rightAnnounce)
    {
+      if( leftAnnounce.getId() == rightAnnounce.getId())
+         return false;
       std::stringstream logStream;
       std::string leftPriceStr = leftAnnounce.getDescription(RealEstatePrice);
       std::string rightPriceStr = rightAnnounce.getDescription(RealEstatePrice);
