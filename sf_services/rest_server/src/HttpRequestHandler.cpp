@@ -49,7 +49,8 @@ void HttpRequestHandler::handle_error(pplx::task<void>& t)
 //
 void HttpRequestHandler::handle_get(http_request message)
 {
-    ucout <<  message.to_string() << std::endl;
+    //ucout <<  message.to_string() << std::endl;
+   Log::getInstance()->info(std::string(message.to_string()));
 
     auto paths = http::uri::split_path(http::uri::decode(message.relative_uri().path()));
 
