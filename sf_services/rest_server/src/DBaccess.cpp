@@ -12,6 +12,7 @@
 #include <thrift/transport/TBufferTransports.h>
 #include "sf_services/sf_utils/inc/Str.h"
 #include "sf_services/sf_utils/inc/Logger.h"
+#include <boost/algorithm/string.hpp>
 
 
 using Log = surfyn::utils::Logger;
@@ -129,7 +130,17 @@ std::string searchTypeValue = "";
          auto iter = query.find("search_city");
          if( iter != query.end() )
          {
-            fillFilterExprAndExprValue(filterExpression, expressionValue, "CITY", exprval_city, iter->second, "=");
+            std::string city = iter->second;
+            boost::to_upper(city);
+            if( city == "PARIS")
+            {
+               city = "Paris";
+            }
+            else
+            {
+               city = iter->second;
+            }
+            fillFilterExprAndExprValue(filterExpression, expressionValue, "CITY", exprval_city, city, "=");
          }
 
          iter = query.find("search_type");
