@@ -28,8 +28,7 @@ function loadJSON(path, success, error) {
   }
 
 
-  //const url = 'http://surfyn.xyz/search/all'+ window.location.search;
-  const url = 'http://127.0.0.1:7878/search/all'+ window.location.search;
+  const url = 'https://surfyn.fr:7878/search/all'+ window.location.search;
 
 
   fetch(url)

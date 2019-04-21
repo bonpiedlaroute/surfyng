@@ -4,7 +4,7 @@ project(rest_server)
 
 set(CMAKE_CXX_STANDARD 17)
 
-SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -g")
+SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -O2")
 
 
 include_directories(../..)
