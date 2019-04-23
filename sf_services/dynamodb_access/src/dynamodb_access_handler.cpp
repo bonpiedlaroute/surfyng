@@ -60,6 +60,7 @@ namespace ddba
 void dynamodb_accessHandler::Init()
 {
    Aws::SDKOptions options;
+   options.httpOptions.installSigPipeHandler = true;
    Aws::InitAPI(options);
 }
 
