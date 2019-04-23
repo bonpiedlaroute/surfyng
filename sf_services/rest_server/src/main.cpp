@@ -38,15 +38,16 @@ void on_initialize(const string_t& address)
         ctx.set_options(boost::asio::ssl::context::default_workarounds);
 
         // Password callback needs to be set before setting cert and key.
-        ctx.set_password_callback([](std::size_t max_length, boost::asio::ssl::context::password_purpose purpose)
+        /*ctx.set_password_callback([](std::size_t max_length, boost::asio::ssl::context::password_purpose purpose)
         {
             return "";
-        });
+        });*/
 
-        ctx.use_certificate_file(certificate_file.c_str(), boost::asio::ssl::context::pem);
-        ctx.use_private_key_file(private_key_file.c_str(), boost::asio::ssl::context::pem);
+        //ctx.use_certificate_file(certificate_file.c_str(), boost::asio::ssl::context::pem);
         ctx.use_certificate_chain_file(certificate_chain_file.c_str());
-    });
+
+        ctx.use_private_key_file(private_key_file.c_str(), boost::asio::ssl::context::pem);
+     });
 
     auto addr = uri.to_uri().to_string();
     g_httpHandler = std::make_unique<HttpRequestHandler>(addr, conf);
@@ -75,7 +76,7 @@ int main(int argc, char *argv[])
 {
     utility::string_t port = U("7878");
     utility::string_t address = U("http://127.0.0.1:");
-
+    Log::Init("rest_server");
     Log::getInstance()->info("Starting rest server ...");
 
     if(argc == 2)
