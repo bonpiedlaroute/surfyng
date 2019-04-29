@@ -192,15 +192,27 @@ std::string searchTypeValue = "";
          iter = query.find("prop_type");
          if( iter != query.end() )
          {
-
+            filterExpression << " and ";
+            filterExpression << "PROPERTY_TYPE";
+            filterExpression << " in (";
             std::vector<std::string> output;
             surfyn::utils::split((iter->second).c_str(), ",", output);
-            for(auto value : output)
+            for(auto iter_value = output.begin();iter_value != output.end(); ++iter_value)
             {
-               filterExpression << " and ";
-               std::string propertyType = value == "1" ? "Appartement" : "Maison";
-               fillFilterExprAndExprValue(filterExpression, expressionValue, "PROPERTY_TYPE", exprval_propType, propertyType, "=");
+               if( iter_value != output.begin() )
+               filterExpression << ",";
+               std::string propertyType = *iter_value == "1" ? "Appartement" : "Maison";
+
+               std::string expr = exprval_propType + *iter_value;
+               filterExpression << expr;
+
+               ValueType exprValue;
+               exprValue.field = propertyType.c_str();
+               exprValue.fieldtype = Type::type::STRING;
+               expressionValue[expr] = exprValue;
+               //fillFilterExprAndExprValue(filterExpression, expressionValue, "PROPERTY_TYPE", exprval_propType, propertyType, "=");
             }
+            filterExpression << ")";
          }
          iter = query.find("area_min");
          if( iter != query.end() )
