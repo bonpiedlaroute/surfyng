@@ -129,8 +129,19 @@ namespace surfyn
    ValueType BuildValueType(const std::string& fieldName, const std::string& fieldValue)
    {
       ValueType fieldNameValue;
-      fieldNameValue.field = fieldValue;
-      fieldNameValue.fieldtype = fieldName == "PRICE"? Type::type::NUMBER : Type::type::STRING;
+      if(fieldName == "PRICE" )
+      {
+         std::string price = fieldValue;
+         boost::erase_all(price, " ");
+         fieldNameValue.field = price;
+         fieldNameValue.fieldtype = Type::type::NUMBER;
+      }
+      else
+      {
+         fieldNameValue.field = fieldValue;
+         fieldNameValue.fieldtype = Type::type::STRING;
+      }
+
       return fieldNameValue;
    }
 
