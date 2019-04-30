@@ -195,7 +195,7 @@ function generate_details_page(data)
         if(ismobile)
         det_nb_rooms_span.style.fontSize = "12px";
         det_nb_rooms_span.innerHTML = data[i].NB_ROOMS;
-        det_nb_rooms_span.innerHTML += "pièce(s)";
+        det_nb_rooms_span.innerHTML += " pièce(s)";
 
         det_nb_rooms_container_div.appendChild(det_nb_rooms_span);
         det_desc_container_div.appendChild(det_nb_rooms_container_div);
@@ -273,6 +273,7 @@ function generate_details_page(data)
         if(ismobile)
         det_ad_cellar_span.style.fontSize = "12px";
         det_ad_cellar_span.innerHTML = data[i].CELLAR;
+        det_ad_cellar_span.innerHTML += " Cave(s)";
 
         det_ad_cellar_div.appendChild(det_ad_cellar_span);
 

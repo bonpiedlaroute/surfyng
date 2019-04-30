@@ -210,7 +210,6 @@ std::string searchTypeValue = "";
                exprValue.field = propertyType.c_str();
                exprValue.fieldtype = Type::type::STRING;
                expressionValue[expr] = exprValue;
-               //fillFilterExprAndExprValue(filterExpression, expressionValue, "PROPERTY_TYPE", exprval_propType, propertyType, "=");
             }
             filterExpression << ")";
          }
