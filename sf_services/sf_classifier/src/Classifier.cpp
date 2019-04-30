@@ -110,7 +110,8 @@ void detectSimilarRealEstateAd(const std::shared_ptr<dynamodb_accessClient>& cli
    do
    {
       ScanReqResult scanReturn;
-      client->scan(scanReturn, tablename, attributestoget, "");
+      std::map<std::string, ValueType> expressionValue;
+      client->scan(scanReturn, tablename, attributestoget, "", expressionValue);
 
       std::stringstream logstream;
       logstream << "Classifier: " << scanReturn.values.size() << " elements scan\n";

@@ -16,11 +16,16 @@ from Serializer import *
 
 search_base_url = "https://api.leboncoin.fr/finder/classified/"
 
+IMAGES_FOLDER_NAME='images'
+
 class LeboncoinSpider(scrapy.Spider):
    
    name = "leboncoin"
 
-   def __init__(self):
+   def __init__(self): 
+      if not os.path.exists(IMAGES_FOLDER_NAME):
+         os.mkdir(IMAGES_FOLDER_NAME)
+
       self.mapping_url_ptype = dict()
       self.mapping_url_stype = dict()
       self.announces_cnt = 0
@@ -34,7 +39,7 @@ class LeboncoinSpider(scrapy.Spider):
          prop_id = getLeboncoinPropertiesId(ptype)
          search_id = getLeboncoinSearchTypeId(stype)        
 
-         url = buildleboncoinurl(prop_id, search_id, 'Houilles')
+         url = buildleboncoinurl(prop_id, search_id, 'Paris')
          self.mapping_url_ptype[url] = ptype
          self.mapping_url_stype[url] = stype
          yield scrapy.Request(url=url, callback=self.parse)
@@ -77,21 +82,27 @@ class LeboncoinSpider(scrapy.Spider):
       ID = hash_id(ad_url)
       data = json.loads(response.text)
       
+      announce_image = ""
+      image_cnt = 1
       # store images on disk
       if 'images' in data and 'urls' in data['images']:
          images = data['images']['urls']
-      
-         image_cnt = 1
+     
+         if images: 
+            announce_image = images[0]
+
          for img_url in images:
             filename =  str(ID) + '_' + str(image_cnt) + '.jpg'
-            fullfilename = os.path.join('images',filename)
+            fullfilename = os.path.join(IMAGES_FOLDER_NAME,filename)
             urllib.urlretrieve(img_url, fullfilename)
             image_cnt += 1
 
+      
       # send data to db
-      self.serializer.send(ID, property_type, response.text, 'Houilles', 'ile de france', ad_url, 'leboncoin', data['subject'], search_type, str(image_cnt), ','.join(images))
+      self.serializer.send(ID, property_type, response.text, 'Paris', 'ile de france', ad_url, 'leboncoin', data['subject'], search_type, announce_image, image_cnt-1)
 
-
+       
+ 
    def closed(self, reason):
       print "Announces found: %d\n" %self.announces_cnt
       self.serializer.close()

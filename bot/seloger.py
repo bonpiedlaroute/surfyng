@@ -15,7 +15,7 @@ from url_builder import *
 from Serializer import *
 
 IMAGES_FOLDER_NAME='images'
-IMAGE_VECTORS_FOLDER_NAME='images'
+
 
 class SelogerSpider(scrapy.Spider):
    
@@ -46,7 +46,7 @@ class SelogerSpider(scrapy.Spider):
 
    def parse(self, response):
       original_request = str(response.request)
-      links = response.xpath('//section[@class="liste_resultat"]').xpath('.//a[contains(@href, "ci=780311")]/@href').extract()
+      links = response.xpath('//section[@class="liste_resultat"]').xpath('.//a[contains(@href, "ci=750056")]/@href').extract()
       #links = response.xpath('//section[@class="liste_resultat"]').xpath('.//a[contains(@href, "ci=920025")]/@href').extract()
       id_prop = 0
       id_search = 0
@@ -66,10 +66,10 @@ class SelogerSpider(scrapy.Spider):
 
          yield response.follow(new_link, self.parse)
 
-   def parse_prop_description(self, response, announce_url, id_property, ID, id_search, image_count, image_urls):
+   def parse_prop_description(self, response, announce_url, id_property, ID, id_search, announce_image, img_cnt):
       self.announces_cnt += 1
 
-      self.serializer.send(ID, id_property, response.text, "Paris","ile de france", announce_url, announce_url[12:19], self.announce_title[ID], id_search, image_count, image_urls)
+      self.serializer.send(ID, id_property, response.text, "Paris","ile de france", announce_url, announce_url[12:19], self.announce_title[ID], id_search, announce_image, img_cnt)
             
    def parse_announce_title(self, response, announce_url, id_property, id_search):
 
@@ -82,20 +82,24 @@ class SelogerSpider(scrapy.Spider):
          image_divs.append(json.loads(image_div)['url'])
 
       image_count = 1
-      urls = []
+      announce_image = ""
+      if image_divs:
+         announce_image = 'http:'+ image_divs[0]
+
       for image_div in image_divs:
          image_url  = 'http:' + image_div
-         urls.append(image_url)
          image_name = os.path.join(IMAGES_FOLDER_NAME, str(ID) + '_' + str(image_count) + '.jpg')
          urllib.urlretrieve(image_url, image_name)
          image_count = image_count + 1
 
-      if title is not None:
-         self.announce_title[ID] = title[0].strip()
-      else:
+      img_cnt = image_count - 1
+      if not title:
          self.announce_title[ID] = ""
+      else:
+         self.announce_title[ID] = title[0].strip()
+      
 
-      yield scrapy.Request(buildselogerdescriptionurl(announce_url), callback= lambda r, url = announce_url, id_prop = id_property, ID = ID, id_search = id_search, image_count = str(image_count), image_urls = ','.join(urls):self.parse_prop_description(r,url, id_prop, ID, id_search, image_count, image_urls))
+      yield scrapy.Request(buildselogerdescriptionurl(announce_url), callback= lambda r, url = announce_url, id_prop = id_property, ID = ID, id_search = id_search, announce_image=announce_image, img_cnt=img_cnt:self.parse_prop_description(r,url, id_prop, ID, id_search, announce_image, img_cnt))
 
    def closed(self, reason):
       print "Announces found: %d\n" %self.announces_cnt

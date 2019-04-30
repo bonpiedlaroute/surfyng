@@ -18,7 +18,7 @@ HttpRequestHandler::HttpRequestHandler()
 {
 
 }
-HttpRequestHandler::HttpRequestHandler(utility::string_t url):m_listener(url)
+HttpRequestHandler::HttpRequestHandler(utility::string_t url, http_listener_config conf):m_listener(url, conf)
 {
     m_listener.support(methods::GET, [this](http_request message) { handle_get(message);});
     m_listener.support(methods::PUT, [this](http_request message) { handle_put(message);});
@@ -49,7 +49,8 @@ void HttpRequestHandler::handle_error(pplx::task<void>& t)
 //
 void HttpRequestHandler::handle_get(http_request message)
 {
-    ucout <<  message.to_string() << std::endl;
+    //ucout <<  message.to_string() << std::endl;
+   Log::getInstance()->info(std::string(message.to_string()));
 
     auto paths = http::uri::split_path(http::uri::decode(message.relative_uri().path()));
 
@@ -94,6 +95,7 @@ void HttpRequestHandler::handle_get(http_request message)
        }
     }
 
+    //std::cout << sstream.str() << "\n";
     auto body_text = utility::conversions::to_utf8string(sstream.str());
     auto length = body_text.size();
 

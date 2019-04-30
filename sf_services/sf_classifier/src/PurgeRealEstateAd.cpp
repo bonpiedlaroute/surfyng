@@ -54,7 +54,8 @@ void purgeRealEstateAd(const std::shared_ptr<dynamodb_accessClient>& client, con
    do
    {
       ScanReqResult scanReturn;
-      client->scan(scanReturn, tablename, attributestoget, "");
+      std::map<std::string, ValueType> expressionValue;
+      client->scan(scanReturn, tablename, attributestoget, "", expressionValue);
 
       time_t current_time = time(nullptr);
 

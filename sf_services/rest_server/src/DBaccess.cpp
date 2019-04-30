@@ -12,6 +12,7 @@
 #include <thrift/transport/TBufferTransports.h>
 #include "sf_services/sf_utils/inc/Str.h"
 #include "sf_services/sf_utils/inc/Logger.h"
+#include <boost/algorithm/string.hpp>
 
 
 using Log = surfyn::utils::Logger;
@@ -48,7 +49,16 @@ const std::string id_sourcelogo = "SOURCE_LOGO";
 const std::string id_floor = "FLOOR";
 const std::string id_cellar = "CELLAR";
 
-const std::string details_table = "FR_DETAILS_TEST";
+const std::string details_table = "FR_SUMMARY";
+const std::string exprval_city = ":ct";
+const std::string exprval_searchType = ":st";
+const std::string exprval_priceMin = ":pi";
+const std::string exprval_priceMax = ":pa";
+const std::string exprval_propType = ":py";
+const std::string exprval_areaMin = ":ai";
+const std::string exprval_areaMax = ":aa";
+
+std::string searchTypeValue = "";
 
    DBaccess::DBaccess()
    {
@@ -58,6 +68,18 @@ const std::string details_table = "FR_DETAILS_TEST";
       m_client = std::make_shared<dynamodb_accessClient>(protocol);
 
       transport->open();
+   }
+   void DBaccess::fillFilterExprAndExprValue(std::stringstream &filterexpression, std::map<std::string, ValueType> &expressionValue,
+                                   const std::string &param, const std::string& paramvalue, const std::string & value,
+                                   const std::string &Operator)
+   {
+      filterexpression << param;
+      filterexpression << " " << Operator << " ";
+      filterexpression << paramvalue;
+      ValueType exprValue;
+      exprValue.field = value.c_str();
+      exprValue.fieldtype = param == "PRICE" ? Type::type::NUMBER : Type::type::STRING;
+      expressionValue[paramvalue] = exprValue;
    }
    void DBaccess::fetchSummary(utility::stringstream_t& sstream, const std::map<utility::string_t,  utility::string_t>& query )
    {
@@ -83,7 +105,7 @@ const std::string details_table = "FR_DETAILS_TEST";
       value.fieldtype = Type::type::STRING;
       attributestoget[id_history] = value;
 
-      value.fieldtype = Type::type::STRING;
+      value.fieldtype = Type::type::NUMBER;
       attributestoget[id_price] = value;
 
       value.fieldtype = Type::type::STRING;
@@ -98,11 +120,115 @@ const std::string details_table = "FR_DETAILS_TEST";
       sstream << U("[\n");
       // search anounces on summary table
       // and construct a json string
+      bool firsttime = true;
       do
       {
          ScanReqResult scanReturn;
          ///TODO enter the filter in the last parameter depending on the user query
-         m_client->scan(scanReturn, "FR_SUMMARY_TEST", attributestoget, "");
+         std::stringstream filterExpression;
+         std::map<std::string, ValueType> expressionValue;
+         auto iter = query.find("search_city");
+         if( iter != query.end() )
+         {
+            std::string city = iter->second;
+            boost::to_upper(city);
+            if( city == "PARIS")
+            {
+               city = "Paris";
+            }
+            else
+            {
+               city = iter->second;
+            }
+            fillFilterExprAndExprValue(filterExpression, expressionValue, "CITY", exprval_city, city, "=");
+         }
+
+         iter = query.find("search_type");
+         if( iter != query.end() )
+         {
+            filterExpression << " and ";
+            searchTypeValue = strcmp((iter->second).c_str(), "1") == 0 ? "For sale":"For rent";
+            fillFilterExprAndExprValue(filterExpression, expressionValue, "SEARCH_TYPE", exprval_searchType, searchTypeValue , "=");
+         }
+
+         iter = query.find("price_min");
+         if( iter != query.end() )
+         {
+            filterExpression << " and ";
+            std::string formatPrice;
+            if( searchTypeValue == "For sale")
+            {
+               int64_t price = atoi((iter->second).c_str());
+               price *= 1000;
+               formatPrice = std::to_string(price);
+            }
+            else
+            {
+               formatPrice = iter->second;
+            }
+
+            fillFilterExprAndExprValue(filterExpression, expressionValue, "PRICE", exprval_priceMin, formatPrice, ">=");
+         }
+
+         iter = query.find("price_max");
+         if( iter != query.end() )
+         {
+            filterExpression << " and ";
+            std::string formatPrice;
+            if( searchTypeValue == "For sale")
+            {
+               int64_t price = atoi((iter->second).c_str());
+               price *= 1000;
+               formatPrice = std::to_string(price);
+            }
+            else
+            {
+               formatPrice = iter->second;
+            }
+
+            fillFilterExprAndExprValue(filterExpression, expressionValue, "PRICE", exprval_priceMax, formatPrice, "<=");
+         }
+
+         iter = query.find("prop_type");
+         if( iter != query.end() )
+         {
+            filterExpression << " and ";
+            filterExpression << "PROPERTY_TYPE";
+            filterExpression << " in (";
+            std::vector<std::string> output;
+            surfyn::utils::split((iter->second).c_str(), ",", output);
+            for(auto iter_value = output.begin();iter_value != output.end(); ++iter_value)
+            {
+               if( iter_value != output.begin() )
+               filterExpression << ",";
+               std::string propertyType = *iter_value == "1" ? "Appartement" : "Maison";
+
+               std::string expr = exprval_propType + *iter_value;
+               filterExpression << expr;
+
+               ValueType exprValue;
+               exprValue.field = propertyType.c_str();
+               exprValue.fieldtype = Type::type::STRING;
+               expressionValue[expr] = exprValue;
+            }
+            filterExpression << ")";
+         }
+         iter = query.find("area_min");
+         if( iter != query.end() )
+         {
+            filterExpression << " and ";
+            fillFilterExprAndExprValue(filterExpression, expressionValue, "SURFACE", exprval_areaMin, (iter->second).c_str(), ">=");
+         }
+
+         iter = query.find("area_max");
+         if( iter != query.end() )
+         {
+            filterExpression << " and ";
+            fillFilterExprAndExprValue(filterExpression, expressionValue, "SURFACE", exprval_areaMax, (iter->second).c_str(), "<=");
+         }
+
+
+         m_client->scan(scanReturn, "FR_SUMMARY", attributestoget, filterExpression.str(), expressionValue);
 
          time_t current_time = time(nullptr);
 
@@ -112,11 +238,13 @@ const std::string details_table = "FR_DETAILS_TEST";
          Log::getInstance()->info(logstream.str());
 
 
-
-
          for(auto table_entry_iter = scanReturn.values.begin(); table_entry_iter != scanReturn.values.end();++table_entry_iter)
          {
-            if(table_entry_iter != scanReturn.values.begin())
+            if(firsttime)
+            {
+               firsttime = false;
+            }
+            else
             {
                sstream << U(",\n");
             }

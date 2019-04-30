@@ -24,6 +24,10 @@ public:
    DBaccess();
    void fetchSummary(utility::stringstream_t& sstream, const std::map<utility::string_t,  utility::string_t>& query );
    void fetchDetails(utility::stringstream_t& sstream, const std::map<utility::string_t,  utility::string_t>& query );
+private:
+   static void fillFilterExprAndExprValue(std::stringstream &filterexpression, std::map<std::string, ValueType> &expressionValue,
+                                      const std::string &param, const std::string& paramvalue, const std::string & value,
+                                      const std::string& Operator);
 };
 
 }
