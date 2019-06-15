@@ -29,7 +29,6 @@ class LeboncoinSpider(scrapy.Spider):
       self.mapping_url_ptype = dict()
       self.mapping_url_stype = dict()
       self.announces_cnt = 0
-
       self.serializer = Serializer('localhost', 5050)
 
    def start_requests(self):
@@ -42,10 +41,10 @@ class LeboncoinSpider(scrapy.Spider):
          url = buildleboncoinurl(prop_id, search_id, 'Paris')
          self.mapping_url_ptype[url] = ptype
          self.mapping_url_stype[url] = stype
-         yield scrapy.Request(url=url, callback=self.parse)
+         yield scrapy.Request(url=url, callback= lambda r, nextpage=2: self.parse(r, nextpage))
 
 
-   def parse(self, response):
+   def parse(self, response, nextpage):
       original_request = str(response.request)
 
       search_type = self.mapping_url_stype[original_request[5:-1]]
@@ -66,14 +65,16 @@ class LeboncoinSpider(scrapy.Spider):
 
          yield scrapy.Request(search_url, callback = lambda r, ad_url = ad_url, search_type = search_type, property_type = property_type:self.parse_data(r, ad_url, search_type, property_type))
       
+      n = "page="+str(nextpage)
       # parse next link
-      next_link = response.xpath('//link[@rel="next"]/@href').extract()
+      next_link = response.xpath('//div[@class="_1evK6"]').xpath('.//a[@class="_1f-eo" and contains(@href,$nextp)]/@href', nextp=n).extract()
 
       if next_link:
          new_link = "https://www.leboncoin.fr" + next_link[0]
          self.mapping_url_ptype[new_link] = property_type
          self.mapping_url_stype[new_link] = search_type
-         yield response.follow(new_link, self.parse)
+         nextp = nextpage + 1
+         yield response.follow(new_link, callback= lambda r, nextp = nextp : self.parse(r, nextp))
 
   
    def parse_data(self, response, ad_url, search_type, property_type):
