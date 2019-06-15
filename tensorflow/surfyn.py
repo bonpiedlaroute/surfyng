@@ -1,8 +1,8 @@
+import numpy as np
 from annoy import AnnoyIndex
 from scipy import spatial
 from nltk import ngrams
 import random, json, glob, os, codecs, random
-import numpy as np
 
 from thrift_generated.dynamodb_access.ttypes import Type
 from thrift_generated.dynamodb_access.ttypes import ValueType
@@ -21,7 +21,8 @@ chart_image_positions = {}
 dims = 2048
 n_nearest_neighbors = 5
 similarity_threshold=0.9
-trees = 10000
+#trees = 10000
+trees = 1000
 infiles = glob.glob('image_vectors/*.npz')
 
 # build ann index
@@ -32,6 +33,7 @@ for file_index, i in enumerate(infiles):
    file_index_to_file_name[file_index] = file_name
    file_index_to_file_vector[file_index] = file_vector
    t.add_item(file_index, file_vector)
+print "building trees ..."
 t.build(trees)
 
 # create a nearest neighbors json file for each input
