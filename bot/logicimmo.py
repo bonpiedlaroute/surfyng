@@ -24,9 +24,6 @@ class LogicImmoSpider(scrapy.Spider):
       if not os.path.exists(IMAGES_FOLDER_NAME):
          os.mkdir(IMAGES_FOLDER_NAME)
  
-      self.nextpage = dict()
-      self.nextpage[APART_ID] = 1
-      self.nextpage[HOUSE_ID] = 1
       self.prop_record = []
       self.announce_cnt = 0
       self.serializer = Serializer('localhost', 5050)
@@ -37,30 +34,31 @@ class LogicImmoSpider(scrapy.Spider):
             
       for ptype, stype in prop_list:
          url = buildLogicImmoUrl(ptype, stype)
-         yield scrapy.Request(url=url, callback= lambda response, id_prop = ptype, search_type = stype: self.parse(response,id_prop, search_type))
+         yield scrapy.Request(url=url, callback= lambda response, id_prop = ptype, search_type = stype, nextpage=2: self.parse(response,id_prop, search_type, nextpage))
 
-   def parse(self, response, id_property, search_type):
+   def parse(self, response, id_property, search_type, nextpage):
 
       if search_type == BUY_ID:
-         links = response.xpath('//p[@class="offer-type"]').xpath('.//a[contains(@href, "detail-vente")]/@href').extract()
+         links =  response.xpath('//div[contains(@class, "offer-list-item")]').xpath('.//a[contains(@href, "detail-vente")]/@href').extract()
       else:
-         links = response.xpath('//p[@class="offer-type"]').xpath('.//a[contains(@href, "detail-location")]/@href').extract()
+         links = response.xpath('//div[contains(@class, "offer-list-item")]').xpath('.//a[contains(@href, "detail-location")]/@href').extract()
 
       for url in links:
          yield scrapy.Request(url, callback= lambda r, id_prop=id_property, announce_url = url, search_type = search_type: self.parse_announce(r, id_prop, announce_url, search_type))
 
-      self.nextpage[id_property]+=1
 
-      n ='page='+str(self.nextpage[id_property])
+      n ='page='+str(nextpage)
 
-      following_link = response.xpath('//section[@class="offer-pagination-wrapper"]').xpath('.//a[contains(@href,$next)]/@href', next=n).extract()
-      
+      following_link = response.xpath('//section[@class="offer-pagination-wrapper"]').xpath('.//a[contains(@href,$nextp)]/@href', nextp=n).extract()
+
+      nextindex = nextpage + 1
+
       if following_link:
-         yield scrapy.Request(following_link[0], callback= lambda response, id_prop=id_property, search_type = search_type : self.parse(response, id_prop, search_type))
+         yield scrapy.Request(following_link[0], callback= lambda response, id_prop=id_property, search_type = search_type, nextindex = nextindex : self.parse(response, id_prop, search_type, nextindex))
       else:
-         following_link = response.xpath('//link[contains(@href,$next)]/@href', next=n).extract()
+         following_link = response.xpath('//link[contains(@href,$nextp)]/@href', nextp=n).extract()
          if following_link:
-            yield scrapy.Request(following_link[0], callback= lambda response, id_prop=id_property, search_type = search_type : self.parse(response, id_prop, search_type))
+            yield scrapy.Request(following_link[0], callback= lambda response, id_prop=id_property, search_type = search_type, nextindex = nextindex : self.parse(response, id_prop, search_type, nextindex))
 
    def parse_announce(self, response, id_prop, announce_url, search_type):
       announce_title = response.xpath('//title/text()').extract()
