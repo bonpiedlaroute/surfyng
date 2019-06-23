@@ -7,6 +7,7 @@
 #include "HttpRequestHandler.h"
 #include "sf_services/sf_utils/inc/Logger.h"
 
+#include <iostream>
 using Log = surfyn::utils::Logger;
 
 namespace surfyn
@@ -56,43 +57,41 @@ void HttpRequestHandler::handle_get(http_request message)
 
     utility::stringstream_t sstream;
 
-    if( paths.size() != 2)
-    {
-       std::string error = "Unknown path ";
-       for( auto valuepath : paths)
-       {
-          error += valuepath;
-          error +="/";
-       }
-       Log::getInstance()->error(error);
-
-       message.reply(status_codes::NotFound, "resource not found!");
-       return;
-    }
-
-    if( paths[0] == "search" && paths[1] == "all")
+    if( paths.size() == 2  && paths[0] == "search" && paths[1] == "all")
     {
        auto query = http::uri::split_query(http::uri::decode(message.relative_uri().query()));
        m_dbaccess.fetchSummary(sstream, query);
     }
     else
     {
-       if(paths[0] == "search" && paths[1] == "ad")
+       if(paths.size() == 2  && paths[0] == "search" && paths[1] == "ad")
        {
           auto query = http::uri::split_query(http::uri::decode(message.relative_uri().query()));
           m_dbaccess.fetchDetails(sstream, query);
        }
        else
        {
-          std::string error = "Unknown requested service:";
-          error+=paths[0];
-          error+="/";
-          error+=paths[1];
-          Log::getInstance()->error(error);
-          message.reply(status_codes::NotFound, "resource not found!");
-          return;
+          if(paths.size() == 1  && paths[0] == "predict")
+           {
+              auto query = http::uri::split_query(http::uri::decode(message.relative_uri().query()));
+              m_estimatoraccess.fetchHousePrice(sstream, query);
 
+           }
+           else
+           {
+              std::string error = "Unknown requested service: ";
+              for( auto valuepath : paths)
+              {
+                  error += valuepath;
+                  error +="/";
+              }
+              Log::getInstance()->error(error);
+              message.reply(status_codes::NotFound, "resource not found!");
+              return;
+
+           }
        }
+
     }
 
     //std::cout << sstream.str() << "\n";
