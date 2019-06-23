@@ -9,6 +9,7 @@
 #include <iostream>
 #include "stdafx.h"
 #include "DBaccess.h"
+#include "EstimatorAccess.h"
 
 using namespace web;
 using namespace http;
@@ -39,6 +40,8 @@ namespace rest_server
            void handle_error(pplx::task<void>& t);
            http_listener m_listener;
            DBaccess m_dbaccess;
+           EstimatorAccess m_estimatoraccess;
+
    };
 }
 }
