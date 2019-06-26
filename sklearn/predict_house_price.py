@@ -24,6 +24,9 @@ from thrift.protocol import TBinaryProtocol
 from thrift.server import TServer
 import logging
 from datetime import datetime
+import configparser
+
+
 
 class DataFrameSelector(BaseEstimator, TransformerMixin):
     def __init__(self, attribute_names):
@@ -35,12 +38,12 @@ class DataFrameSelector(BaseEstimator, TransformerMixin):
 
 
 class PredictorHandler(Iface):
-   def __init__(self):
+   def __init__(self, config):
       logging.info("Loading pipeline ...")
-      self.full_pipeline = joblib.load("model_pipeline_geo_16062019.pkl")
+      self.full_pipeline = joblib.load(config['DEFAULT']['pipeline'])
       logging.info("Loading pipeline finished.")
       logging.info("Loading model ...")
-      self.model_loaded = joblib.load("model_paris_all_geo_05062019.pkl")
+      self.model_loaded = joblib.load(config['DEFAULT']['model'])
       logging.info("Loading model finished.")
 
       self.df = pd.DataFrame(columns=[["date_mutation","code_postal","lot1_surface_carrez","lot2_surface_carrez","lot3_surface_carrez","lot4_surface_carrez","lot5_surface_carrez","nombre_lots","code_type_local","surface_reelle_bati","nombre_pieces_principales","surface_terrain","longitude","latitude"]])
@@ -82,7 +85,10 @@ if __name__ == '__main__':
    log_filename ="predict_house_price_" + now.strftime("%Y-%m-%d-%H-%M-%S") + ".log"
    logging.basicConfig(filename=log_filename,level=logging.INFO, format='%(asctime)s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
    logging.info("Starting House predictor ...")
-   handler = PredictorHandler()
+   config = configparser.ConfigParser()
+   config.read('config.ini')
+
+   handler = PredictorHandler(config)
    processor = Processor(handler)
    transport = TSocket.TServerSocket(host='127.0.0.1', port=6060)
    tfactory = TTransport.TBufferedTransportFactory()
