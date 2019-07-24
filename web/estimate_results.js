@@ -12,8 +12,8 @@ if(!mobile)
   }
 }
 
-//var url = "https://surfyn.fr:7878/predict?";
-var url = "http://127.0.0.1:7878/predict?";
+var url = "https://surfyn.fr:7878/predict?";
+//var url = "http://127.0.0.1:7878/predict?";
 
 
 const Params = new URLSearchParams(window.location.search);
