@@ -26,14 +26,15 @@
 
    <body style="background-color:#222545;">
 
-    <div style="height:350px;" class="row mx-auto">
+    <div style="height:300px;" class="row mx-auto" >
 
          <img src="logo.svg" class="home_logo mx-auto d-block"  />
 
     </div>
-    <div style="height:350px;display:flex; align-items:center; justify-content:center; width:100%;" >
+    <div style="height:370px; width:100%;" >
 
 
+    <div style="height:180px;width:100%;display:flex; align-items:center; justify-content:center;">
       <div class="search_type_button buy_settings" style="cursor:pointer;" onclick="location.href='criteria.html?search_type=1';">
           <div class="search_type_header">
             <div class="search_type_icon buy_icon">
@@ -55,12 +56,35 @@
           <div class="search_type_footer no_select"><a class="search_type_text" style="color:white;"> Louer</a>
           </div>
       </div>
+  </div>
+  <div style="margin-top:40px;height:140px;width:100%;display:flex; align-items:center; justify-content:center;">
+     <div class="estimate_button estimate_settings" style="cursor:pointer;" onclick="location.href='estimate_criteria.html';">
+        <div class="estimate_header">
+          <div class="estimate_icon_box estimate_icon">
 
+          </div>
+        </div>
+        <div class="estimate_footer no_select"><a class="search_type_text" style="color:white;"> Estimer votre bien</a>
+        </div>
+    </div>
+  </div>
 
     </div>
 
+    <div class="contact_info">
+      <a id="contact_info" style="color:white;"></a>
+    </div>
 
-
+    <script language="JavaScript" type="text/javascript">
+    var part1 = "contact";
+    var part2 = Math.pow(2,6);
+    var part3 = String.fromCharCode(part2);
+    var part4 = "surfyn.fr";
+    var part5 = part1 + String.fromCharCode(part2) + part4;
+    var contact_info = document.getElementById("contact_info");
+    contact_info.href = "mai" + "lto" + ":"+ part5;
+    contact_info.innerHTML = part1 + part3 + part4 ;
+    </script>
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
