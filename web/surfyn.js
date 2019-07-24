@@ -13,8 +13,6 @@ var eventdown = mobile ? "touchstart" : "mousedown";
 var eventmove = mobile ? "touchmove" : "mousemove";
 var eventup = mobile ? "touchend" : "mouseup";
 
-console.log("mobile : " + mobile);
-console.log(" useragent : " + navigator.userAgent);
 
 var inputType = Object.freeze({"priceMin":0, "priceMax":1, "areaMin":2, "areaMax":3});
 

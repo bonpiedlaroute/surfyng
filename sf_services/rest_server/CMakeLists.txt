@@ -18,9 +18,13 @@ add_executable(rest_server
   src/main.cpp
   src/HttpRequestHandler.cpp
   src/DBaccess.cpp
+  src/EstimatorAccess.cpp
   ../../sf_services/dynamodb_access/thrift_generated/dynamodb_access_constants.cpp
   ../../sf_services/dynamodb_access/thrift_generated/dynamodb_access_types.cpp
   ../../sf_services/dynamodb_access/thrift_generated/dynamodb_access.cpp
+  ../../sklearn/thrift_generated/house_prediction_constants.cpp
+  ../../sklearn/thrift_generated/house_prediction.cpp
+  ../../sklearn/thrift_generated/house_prediction_types.cpp
   )
 
 target_link_libraries(rest_server boost_system crypto ssl cpprest ${SF_UTILS_LIB} thrift)
