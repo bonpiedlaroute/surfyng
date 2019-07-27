@@ -528,7 +528,7 @@ function submit_request()
 {
 
 
-  var results_url = "estimate_results.html?" + Params;
+  var results_url = "estimate_loading.html?" + Params;
   var nb_floor_value = document.getElementById("nb_floor_value");
   if(nb_floor_value)
   {

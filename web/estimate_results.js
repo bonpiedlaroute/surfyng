@@ -1,16 +1,5 @@
 var mobile   = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
 
-if(!mobile)
-{
-  var footerImage1 = document.getElementById("footer_image1");
-  var footerImage2 = document.getElementById("footer_image2");
-
-  if( footerImage1 && footerImage2)
-  {
-    footerImage1.className = "estimate_results_footer_image";
-    footerImage2.className = "estimate_results_footer_image_last";
-  }
-}
 
 var url = "https://surfyn.fr:7878/predict?";
 //var url = "http://127.0.0.1:7878/predict?";
@@ -108,11 +97,12 @@ let today = new Date().toISOString().slice(0, 10);
 
 url += "&date_mutation=";
 url += today;
-
+var next_url="";
 fetch(url)
 .then(function(resp) { return resp.json(); } )
 .then(function(data) {
   set_predicted_price(data);
+  window.location.href = next_url;
 })
 .catch(function(error) {
 
@@ -136,9 +126,9 @@ function set_predicted_price(data)
 {
   if(data.length > 0 )
   {
-    var price = document.getElementById("predicted_price");
-    price.innerHTML = formatPrice(String(data[0]));
-    price.innerHTML += " € <sup>* ";
+    next_url += "estimate_results.html?predicted_price=";
+    next_url += formatPrice(String(data[0]));
+
   }
 
 }
