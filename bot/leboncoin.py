@@ -38,7 +38,7 @@ class LeboncoinSpider(scrapy.Spider):
          prop_id = getLeboncoinPropertiesId(ptype)
          search_id = getLeboncoinSearchTypeId(stype)        
 
-         url = buildleboncoinurl(prop_id, search_id, 'Paris')
+         url = buildleboncoinurl(prop_id, search_id, 'Colombes_92700')
          self.mapping_url_ptype[url] = ptype
          self.mapping_url_stype[url] = stype
          yield scrapy.Request(url=url, callback= lambda r, nextpage=2: self.parse(r, nextpage))

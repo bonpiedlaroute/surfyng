@@ -54,3 +54,19 @@ def getSeLogerSearchTypeId(surfyn_searchtype):
 
 def getLeboncoinSearchTypeId(surfyn_searchtype):
    return LeboncoinSearchTypeMapping[surfyn_searchtype]
+
+BienIciPropertiesMapping = dict()
+BienIciPropertiesMapping[APART_ID] = 'flat'
+BienIciPropertiesMapping[HOUSE_ID] = 'house'
+
+BienIciSearchTypeMapping = dict()
+BienIciSearchTypeMapping[BUY_ID] = 'buy'
+BienIciSearchTypeMapping[RENT_ID] = 'rent'
+
+
+
+def getBienIciPropertiesId(surfyn_properties_id):
+   return BienIciPropertiesMapping[surfyn_properties_id]
+
+def getBienIciSearchTypeId(surfyn_searchtype):
+   return BienIciSearchTypeMapping[surfyn_searchtype]

@@ -46,30 +46,29 @@ class SelogerSpider(scrapy.Spider):
 
    def parse(self, response):
       original_request = str(response.request)
-      links = response.xpath('//section[@class="liste_resultat"]').xpath('.//a[contains(@href, "ci=750056")]/@href').extract()
-      #links = response.xpath('//section[@class="liste_resultat"]').xpath('.//a[contains(@href, "ci=920025")]/@href').extract()
+      all_links = announces = response.xpath('//section[@class="liste_resultat"]').xpath('.//a[contains(@href, "annonces")]/@href').extract()
+      links = set(all_links)
       id_prop = 0
       id_search = 0
       for url in links:
-         if "annonces" in url:
-            id_prop = self.mapping_url_ptype[original_request[5:-1]]
-            id_search = self.mapping_url_stype[original_request[5:-1]] 
+         id_prop = self.mapping_url_ptype[urllib.unquote(original_request[5:-1])]
+         id_search = self.mapping_url_stype[urllib.unquote(original_request[5:-1])] 
 
-            yield scrapy.Request(url, callback= lambda r, url = url, id_prop = id_prop, id_search = id_search :self.parse_announce_title(r, url, id_prop, id_search)) 
+         yield scrapy.Request(url, callback= lambda r, url = url, id_prop = id_prop, id_search = id_search :self.parse_announce_title(r, url, id_prop, id_search)) 
 
       following_link = response.xpath('//a[@title="Page suivante"]/@href').extract()
 
       if following_link:
          new_link = following_link[0]
-         self.mapping_url_ptype[new_link] = self.mapping_url_ptype[original_request[5:-1]]
-         self.mapping_url_stype[new_link] = self.mapping_url_stype[original_request[5:-1]]
+         self.mapping_url_ptype['https:'+new_link] = self.mapping_url_ptype[urllib.unquote(original_request[5:-1])]
+         self.mapping_url_stype['https:'+new_link] = self.mapping_url_stype[urllib.unquote(original_request[5:-1])]
 
          yield response.follow(new_link, self.parse)
 
    def parse_prop_description(self, response, announce_url, id_property, ID, id_search, announce_image, img_cnt):
       self.announces_cnt += 1
 
-      self.serializer.send(ID, id_property, response.text, "Paris","ile de france", announce_url, announce_url[12:19], self.announce_title[ID], id_search, announce_image, img_cnt)
+      self.serializer.send(ID, id_property, response.text, "Colombes","ile de france", announce_url, announce_url[12:19], self.announce_title[ID], id_search, announce_image, img_cnt)
             
    def parse_announce_title(self, response, announce_url, id_property, id_search):
 
