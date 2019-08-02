@@ -105,7 +105,7 @@ class LeboncoinSpider(scrapy.Spider):
        
  
    def closed(self, reason):
-      print "Announces found: %d\n" %self.announces_cnt
+      print("Announces found: %d "+ self.announces_cnt + "\n")
       self.serializer.close()
 
 
