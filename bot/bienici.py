@@ -114,7 +114,7 @@ class BieniciSpider(scrapy.Spider):
      
  
    def closed(self, reason):
-      print("Announces found: %d " + str(self.announces_cnt) + "\n")
+      print("Announces found: " + str(self.announces_cnt) + "\n")
       self.serializer.close()
 
 
