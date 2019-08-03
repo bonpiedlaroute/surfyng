@@ -91,10 +91,11 @@ class BieniciSpider(scrapy.Spider):
 
          for img in images:
             fullfilename = os.path.join(IMAGES_FOLDER_NAME,img['photo'])
-            urllib.urlretrieve(img['url_photo'], fullfilename)
+            urllib.urlretrieve(img['url'], fullfilename)
             image_cnt += 1
 
 
+         self.announces_cnt += 1
 
          # send data to db
          self.serializer.send(ID, property_type, response.text, 'Colombes', 'ile de france', ad_url, 'bienici', ad['title'], search_type, announce_image, image_cnt-1)
