@@ -90,8 +90,8 @@ class BieniciSpider(scrapy.Spider):
          image_cnt = 1
 
          for img in images:
-            fullfilename = os.path.join(IMAGES_FOLDER_NAME,img['photo'])
-            urllib.urlretrieve(img['url'], fullfilename)
+            image_name = os.path.join(IMAGES_FOLDER_NAME, str(ID) + '_' + str(image_cnt) + '.jpg')
+            urllib.urlretrieve(img['url'], image_name)
             image_cnt += 1
 
 
