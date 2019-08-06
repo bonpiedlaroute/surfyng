@@ -38,7 +38,7 @@ values[inputType.areaMin] = 10;
 values[inputType.areaMax] = 400;
 
 
-var startPosition = [inputPriceMin?inputPriceMin.offsetLeft:0, inputPriceMax?inputPriceMax.offsetLeft:0,
+tartPosition = [inputPriceMin?inputPriceMin.offsetLeft:0, inputPriceMax?inputPriceMax.offsetLeft:0,
   inputAreaMin?inputAreaMin.offsetLeft:0, inputAreaMax?inputAreaMax.offsetLeft:0];
 var lastPosition = [inputPriceMin?inputPriceMin.offsetLeft:0, inputPriceMax?inputPriceMax.offsetLeft:0,
   inputAreaMin?inputAreaMin.offsetLeft:0, inputAreaMax?inputAreaMax.offsetLeft:0];
@@ -420,7 +420,7 @@ function checkCity()
   var new_city = document.getElementById("search_city");
   var error_msg = document.getElementById("error_msg");
 
-  if( new_city.value.trim().toUpperCase() == "PARIS" )
+  if( new_city.value.trim().toUpperCase() == "COLOMBES" )
   {
     new_city.className = "form-control";
     error_msg.innerHTML = "";
@@ -429,7 +429,7 @@ function checkCity()
   else
   {
     new_city.className = "form-control is-invalid";
-    error_msg.innerHTML = "Désolé, pour l'instant nous supportons uniquement la Ville de Paris";
+    error_msg.innerHTML = "Désolé, pour l'instant nous supportons uniquement la Ville de Colombes";
 
     return false;
   }
