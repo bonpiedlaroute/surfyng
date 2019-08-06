@@ -38,7 +38,7 @@ values[inputType.areaMin] = 10;
 values[inputType.areaMax] = 400;
 
 
-tartPosition = [inputPriceMin?inputPriceMin.offsetLeft:0, inputPriceMax?inputPriceMax.offsetLeft:0,
+var startPosition = [inputPriceMin?inputPriceMin.offsetLeft:0, inputPriceMax?inputPriceMax.offsetLeft:0,
   inputAreaMin?inputAreaMin.offsetLeft:0, inputAreaMax?inputAreaMax.offsetLeft:0];
 var lastPosition = [inputPriceMin?inputPriceMin.offsetLeft:0, inputPriceMax?inputPriceMax.offsetLeft:0,
   inputAreaMin?inputAreaMin.offsetLeft:0, inputAreaMax?inputAreaMax.offsetLeft:0];
