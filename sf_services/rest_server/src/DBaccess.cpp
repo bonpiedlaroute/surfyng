@@ -131,15 +131,8 @@ std::string searchTypeValue = "";
          if( iter != query.end() )
          {
             std::string city = iter->second;
-            boost::to_upper(city);
-            if( city == "PARIS")
-            {
-               city = "Paris";
-            }
-            else
-            {
-               city = iter->second;
-            }
+            boost::to_lower(city);
+
             fillFilterExprAndExprValue(filterExpression, expressionValue, "CITY", exprval_city, city, "=");
          }
 
