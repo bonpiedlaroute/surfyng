@@ -6,6 +6,7 @@
 */
 #include <iostream>
 #include "sf_services/sf_utils/inc/Logger.h"
+#include "sf_services/sf_utils/inc/Config.h"
 #include "PurgeRealEstateAd.h"
 #include "Classifier.h"
 
@@ -31,16 +32,31 @@ using Log = surfyn::utils::Logger;
 
 int main(int argc, char* argv[])
 {
-
    Log::getInstance()->info("Starting Classifier ...");
+   std::string tablename = "";
+   if(argc == 2)
+   {
+      surfyn::utils::Config conf(argv[1]);
+      conf.loadconfig();
+      tablename = conf.getStringValue("tablename");
+   }
+   else
+   {
+      Log::getInstance()->error("No config file set! you need to set the tablename in the config file");
+      return 1;
+   }
+
+
    shared_ptr<TTransport> socket(new TSocket("localhost", port));
    shared_ptr<TTransport> transport(new TBufferedTransport(socket));
    shared_ptr<TProtocol> protocol(new TBinaryProtocol(transport));
    auto client= std::make_shared<dynamodb_accessClient>(protocol);
 
+
+
    transport->open();
 
-   surfyn::classifier::purgeRealEstateAd(client, "FR_PROPERTIES");
+   surfyn::classifier::purgeRealEstateAd(client, tablename);
 
    //surfyn::classifier::detectSimilarRealEstateAd(client, "FR_PROPERTIES");
 

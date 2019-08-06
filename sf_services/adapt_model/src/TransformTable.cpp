@@ -156,7 +156,7 @@ namespace surfyn
       {
          double leftPrice = atof(leftPriceStr.c_str());
          double rightPrice = atof(rightPriceStr.c_str());
-         if (abs(leftPrice - rightPrice) / leftPrice > 0.02)
+         if (abs(leftPrice - rightPrice) / leftPrice > 0.05)
          {
             logStream << leftAnnounce.getId() << " price[" << leftPrice << "] and " << rightAnnounce.getId() << " price[" 
                << rightPrice << "] are not similar as their prices differ";
@@ -628,11 +628,11 @@ void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_acce
             /*if ((it_field = iter->find(RealEstateTimeToPublicTransport)) != iter->end())
             {
                ADD_STRING_FIELD_TO_PUT(RealEstateTimeToPublicTransport, it_field->second);
-            }
+            }*/
             if ((it_field = iter->find(TIMESTAMP)) != iter->end())
             {
-               ADD_STRING_FIELD_TO_PUT(TIMESTAMP, it_field->second);
-            }*/
+               realEstate.setDescription(TIMESTAMP, it_field->second);
+            }
             if ((it_field = iter->find(SIMILAR_ANNOUNCE)) != iter->end())
             {
                //std::string similarAnnouces = it_field->second;
@@ -782,6 +782,9 @@ void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_acce
          {
             Log::getInstance()->error("Failed to put " + std::to_string(id) + " into table " + tableName + " error : " + result.error);
          }
+         // TODO manage bandwith limit
+         // work-around
+         std::this_thread::sleep_for(std::chrono::milliseconds(50));
       }
    }
 
