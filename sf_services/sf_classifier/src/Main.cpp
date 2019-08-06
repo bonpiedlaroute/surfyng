@@ -32,6 +32,7 @@ using Log = surfyn::utils::Logger;
 
 int main(int argc, char* argv[])
 {
+   Log::Init("sf_classifier");
    Log::getInstance()->info("Starting Classifier ...");
    std::string tablename = "";
    if(argc == 2)

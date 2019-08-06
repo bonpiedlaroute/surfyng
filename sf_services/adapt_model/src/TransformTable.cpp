@@ -792,6 +792,7 @@ void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_acce
 
 int main(int argc, char* argv[])
 {
+   Log::Init("adapt_model");
    Log::getInstance()->info("Starting adapt model ...");
    shared_ptr<TTransport> socket(new TSocket("localhost", port));
    shared_ptr<TTransport> transport(new TBufferedTransport(socket));
