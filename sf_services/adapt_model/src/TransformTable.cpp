@@ -480,6 +480,45 @@ namespace surfyn
       }
    }
 
+   void DataFormater::ReadBienIciJSON(const std::string json, classifier::RealEstateAd& realEstate)
+   {
+      std::locale::global(std::locale(""));
+
+      rapidjson::Document document;
+      document.Parse(json.c_str());
+
+      if(document.HasParseError())
+      {
+         std::stringstream error;
+         error << "failed to parse logicimmo json: error code [";
+         error << document.GetParseError();
+         error << "] error offset :[";
+         error << document.GetErrorOffset();
+         error << "]";
+         Log::getInstance()->error(error.str());
+
+         return;
+      }
+
+      if (document.HasMember("price"))
+      {
+         std::string price = document["price"].GetString();
+         auto pos = price.find_last_of(' ');
+         price = price.substr(0, pos);
+         realEstate.setDescription(RealEstatePrice, price);
+      }
+      if (document.HasMember("surfaceArea"))
+      {
+         std::string surface = document["surfaceArea"].GetString();
+         realEstate.setDescription(RealEstateSurface, surface);
+      }
+      if (document.HasMember("roomsQuantity"))
+      {
+         std::string nb_room = document["roomsQuantity"].GetString();
+         realEstate.setDescription(RealEstateRooms, nb_room);
+      }
+   }
+
 void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tableName)
    {
       std::locale::global(std::locale(""));
@@ -607,15 +646,20 @@ void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_acce
                      realEstate.setDescription(IMAGE_COUNT, CurrentImageCount);
                      realEstate.setDescription(IMAGE, CurrentAnnounceImage);
 
-                  }
-                  else if( announceSource == "logicimmo")
+                  }else if( announceSource == "logicimmo")
                   {
                      ReadLogicImmoJSON(json, realEstate);
                      realEstate.setDescription(SOURCE_LOGO, "data/li0.svg");
                      realEstate.setDescription(IMAGE_COUNT, CurrentImageCount);
                      realEstate.setDescription(IMAGE, CurrentAnnounceImage);
                   }
-
+                  else if( announceSource == "bienici")
+                  {
+                     ReadBienIciJSON(json, realEstate);
+                     realEstate.setDescription(SOURCE_LOGO, "data/bienici.png");
+                     realEstate.setDescription(IMAGE_COUNT, CurrentImageCount);
+                     realEstate.setDescription(IMAGE, CurrentAnnounceImage);
+                  }
                }
                else
                {

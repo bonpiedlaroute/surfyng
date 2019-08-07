@@ -98,7 +98,7 @@ class BieniciSpider(scrapy.Spider):
          self.announces_cnt += 1
 
          # send data to db
-         self.serializer.send(ID, property_type, response.text, 'colombes', 'ile de france', ad_url, 'bienici', ad['title'], search_type, announce_image, image_cnt-1)
+         self.serializer.send(ID, property_type, json.dumps(ad), 'colombes', 'ile de france', ad_url, 'bienici', ad['title'], search_type, announce_image, image_cnt-1)
       if (data['perPage'] + data['from']) < data['total'] :
          # check for next data   
          original_request = str(response.request)

@@ -150,7 +150,8 @@ function loadJSON(path, success, error) {
               {
               seloger:"data/SL0.svg",
               logicimmo:"data/li0.svg",
-              leboncoin: "data/lbc0.svg"
+              leboncoin: "data/lbc0.svg",
+              bienici: "data/bienici.png"
               }
               var max_offset = 40;
               var max_zindex = 10;
