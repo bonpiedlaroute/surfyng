@@ -502,18 +502,20 @@ namespace surfyn
 
       if (document.HasMember("price"))
       {
-         std::string price = std::to_string(document["price"].GetUint64());
+         std::string price = std::to_string(document["price"].GetUint());
 
          realEstate.setDescription(RealEstatePrice, price);
       }
       if (document.HasMember("surfaceArea"))
       {
-         std::string surface = std::to_string(document["surfaceArea"].GetUint64());
+         std::string surface = std::to_string(document["surfaceArea"].GetDouble());
+
          realEstate.setDescription(RealEstateSurface, surface);
       }
       if (document.HasMember("roomsQuantity"))
       {
-         std::string nb_room = std::to_string(document["roomsQuantity"].GetUint64());
+         std::string nb_room = std::to_string(document["roomsQuantity"].GetUint());
+
          realEstate.setDescription(RealEstateRooms, nb_room);
       }
    }

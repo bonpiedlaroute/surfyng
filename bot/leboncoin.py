@@ -100,7 +100,8 @@ class LeboncoinSpider(scrapy.Spider):
 
       
       # send data to db
-      self.serializer.send(ID, property_type, response.text, 'colombes', 'ile de france', ad_url, 'leboncoin', data['subject'], search_type, announce_image, image_cnt-1)
+      ret = self.serializer.send(ID, property_type, response.text, 'colombes', 'ile de france', ad_url, 'leboncoin', data['subject'], search_type, announce_image, image_cnt-1)
+      print (ret)
 
        
  

@@ -68,7 +68,8 @@ class SelogerSpider(scrapy.Spider):
    def parse_prop_description(self, response, announce_url, id_property, ID, id_search, announce_image, img_cnt):
       self.announces_cnt += 1
 
-      self.serializer.send(ID, id_property, response.text, "colombes","ile de france", announce_url, announce_url[12:19], self.announce_title[ID], id_search, announce_image, img_cnt)
+      ret = self.serializer.send(ID, id_property, response.text, "colombes","ile de france", announce_url, announce_url[12:19], self.announce_title[ID], id_search, announce_image, img_cnt)
+      print (ret)
             
    def parse_announce_title(self, response, announce_url, id_property, id_search):
 

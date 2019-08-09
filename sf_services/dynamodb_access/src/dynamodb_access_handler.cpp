@@ -16,6 +16,7 @@
 #include <aws/core/utils/ratelimiter/DefaultRateLimiter.h>
 #include <aws/core/utils/threading/Executor.h>
 #include <aws/core/utils/memory/AWSMemory.h>
+#include <aws/core/client/DefaultRetryStrategy.h>
 #include <aws/dynamodb/model/CreateTableRequest.h>
 #include <aws/dynamodb/model/DeleteTableRequest.h>
 #include <aws/dynamodb/model/DescribeTableRequest.h>
@@ -85,6 +86,7 @@ dynamodb_accessHandler::dynamodb_accessHandler()
    config.httpLibOverride = Aws::Http::TransferLibType::DEFAULT_CLIENT;
    config.executor = Aws::MakeShared<Aws::Utils::Threading::PooledThreadExecutor>(allocation_tag.c_str(), 4);
    config.region = ddb_conf.getStringValue("region").c_str();
+   config.retryStrategy = Aws::MakeShared<Aws::Client::DefaultRetryStrategy>(allocation_tag.c_str(), ddb_conf.getLongValue("max_retry")/*maxRetry*/, ddb_conf.getLongValue("scale_factor")/*Interval factor between retry (exp backoff), first retry wait 1ms, second retry wait 2ms*/);
 
    m_client = Aws::MakeShared<DynamoDBClient>(allocation_tag.c_str(), config);
 
