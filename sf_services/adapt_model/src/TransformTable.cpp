@@ -589,24 +589,7 @@ void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_acce
             }
             if ((it_field = iter->find(RealEstateType)) != iter->end())
             {
-               //FR_PROPERTIES table store realestatetype in english
-               //work-around conversion in french, so that i don't need to relaunch the scrawler, and rerun
-               //tensorflow
-               //TODO change this
-               if(it_field->second == "apartment")
-               {
-                  realEstate.setDescription(RealEstateType, "Appartement");
-               }
-               else
-               {
-                  if(it_field->second == "house")
-                  {
-                     realEstate.setDescription(RealEstateType, "Maison");
-                  }
-                  else
-                     realEstate.setDescription(RealEstateType, it_field->second);
-               }
-
+               realEstate.setDescription(RealEstateType, it_field->second);
             }
             if ((it_field = iter->find(RealEstateSearchType)) != iter->end())
             {
