@@ -96,9 +96,14 @@ class BieniciSpider(scrapy.Spider):
 
 
          self.announces_cnt += 1
+         announce_title = ""
+         if not ad['title']:
+            announce_title = "Appartement" if property_type == APART_ID else "Maison"
+         else:
+            announce_title = ad['title']
 
          # send data to db
-         ret = self.serializer.send(ID, property_type, json.dumps(ad), 'colombes', 'ile de france', ad_url, 'bienici', ad['title'], search_type, announce_image, image_cnt-1)
+         ret = self.serializer.send(ID, property_type, json.dumps(ad), 'colombes', 'ile de france', ad_url, 'bienici', announce_title, search_type, announce_image, image_cnt-1)
          print (ret)
       if (data['perPage'] + data['from']) < data['total'] :
          # check for next data   

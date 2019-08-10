@@ -37,9 +37,9 @@ class Serializer:
 
       property_type_value = ttypes.ValueType()
       if property_type == APART_ID:
-         property_type_value.field = "apartment"
+         property_type_value.field = "Appartement"
       else:
-         property_type_value.field = "house"
+         property_type_value.field = "Maison"
 
       property_type_value.fieldtype = ttypes.Type.STRING
 

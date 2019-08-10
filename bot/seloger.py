@@ -94,7 +94,7 @@ class SelogerSpider(scrapy.Spider):
 
       img_cnt = image_count - 1
       if not title:
-         self.announce_title[ID] = ""
+         self.announce_title[ID] = "Appartement" if id_property == APART_ID else "Maison"
       else:
          self.announce_title[ID] = title[0].strip()
       
