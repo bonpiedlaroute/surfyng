@@ -97,7 +97,6 @@ namespace surfyn
    const std::string HISTORY = "HISTORY";
    const std::string IMAGE = "IMAGE";
    const std::string IMAGE_COUNT = "IMAGE_COUNT";
-   const std::string NBROOMS = "NB_ROOMS";
    const std::string SOURCES = "SOURCES";
    const std::string LOCATION = "LOCATION";
    const std::string SOURCE_LOGO = "SOURCE_LOGO";
@@ -129,11 +128,11 @@ namespace surfyn
    ValueType BuildValueType(const std::string& fieldName, const std::string& fieldValue)
    {
       ValueType fieldNameValue;
-      if(fieldName == "PRICE" )
+      if(fieldName == RealEstatePrice || fieldName == RealEstateRooms || fieldName == RealEstateSurface)
       {
-         std::string price = fieldValue;
-         boost::erase_all(price, " ");
-         fieldNameValue.field = price;
+         std::string number_value = fieldValue;
+         boost::erase_all(number_value, " ");
+         fieldNameValue.field = number_value;
          fieldNameValue.fieldtype = Type::type::NUMBER;
       }
       else

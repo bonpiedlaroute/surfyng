@@ -36,7 +36,7 @@ const std::string id_field = "ID";
 const std::string id_city = "CITY";
 const std::string id_property_type = "PROPERTY_TYPE";
 const std::string id_surface = "SURFACE";
-const std::string id_nbrooms = "NB_ROOMS";
+const std::string id_nbrooms = "ROOMS";
 const std::string id_history = "HISTORY";
 const std::string id_price = "PRICE";
 const std::string id_image = "IMAGE";
@@ -78,11 +78,81 @@ std::string searchTypeValue = "";
       filterexpression << paramvalue;
       ValueType exprValue;
       exprValue.field = value.c_str();
-      exprValue.fieldtype = param == "PRICE" ? Type::type::NUMBER : Type::type::STRING;
+      exprValue.fieldtype = (param == "PRICE" || param == "SURFACE") ? Type::type::NUMBER : Type::type::STRING;
       expressionValue[paramvalue] = exprValue;
    }
    void DBaccess::fetchSummary(utility::stringstream_t& sstream, const std::map<utility::string_t,  utility::string_t>& query )
    {
+      // for quick testing ...
+      /*sstream << U("[\n");
+      sstream << U("{\n");
+      sstream << U("\"ID\":\"1\",\n");
+      sstream << U("\"PROPERTY_TYPE\": \"Appartement\",\n");
+      sstream << U("\"SURFACE\": \"46\",\n");
+      sstream << U("\"ROOMS\": \"2\",\n");
+      sstream << U("\"CITY\": \"Colombes\",\n");
+      sstream << U("\"HISTORY\": \"il y'a 3h\", \n");
+
+      sstream << U("\"PRICE\": \"320000\", \n");
+      sstream << U("\"IMAGE\": \"data/annonce_1.jpg\",\n");
+      sstream << U("\"SOURCES\": [\n\
+         \"seloger\",\n\
+         \"bienici\",\n\
+         \"leboncoin\"\n\
+      ]");
+      sstream << U("},\n");
+
+      sstream << U("{\n");
+      sstream << U("\"ID\":\"2\",\n");
+      sstream << U("\"PROPERTY_TYPE\": \"Appartement\",\n");
+      sstream << U("\"SURFACE\": \"53\",\n");
+      sstream << U("\"ROOMS\": \"3\",\n");
+      sstream << U("\"CITY\": \"Colombes\",\n");
+      sstream << U("\"HISTORY\": \"il y'a 2h\", \n");
+
+      sstream << U("\"PRICE\": \"339000\", \n");
+      sstream << U("\"IMAGE\": \"data/annonce_2.jpg\",\n");
+      sstream << U("\"SOURCES\": [\n\
+         \"seloger\",\n\
+         \"seloger\"]\n");
+      sstream << U("},\n");
+
+      sstream << U("{\n");
+      sstream << U("\"ID\":\"3\",\n");
+      sstream << U("\"PROPERTY_TYPE\": \"Maison\",\n");
+      sstream << U("\"SURFACE\": \"228\",\n");
+      sstream << U("\"ROOMS\": \"8\",\n");
+      sstream << U("\"CITY\": \"Colombes\",\n");
+      sstream << U("\"HISTORY\": \"il y'a 1h\", \n");
+
+      sstream << U("\"PRICE\": \"800000\", \n");
+      sstream << U("\"IMAGE\": \"data/annonce_3.jpg\",\n");
+      sstream << U("\"SOURCES\": [\n\
+         \"leboncoin\"\n\
+      ]");
+      sstream << U("},\n");
+
+      sstream << U("{\n");
+      sstream << U("\"ID\":\"4\",\n");
+      sstream << U("\"PROPERTY_TYPE\": \"Appartement\",\n");
+      sstream << U("\"SURFACE\": \"63\",\n");
+      sstream << U("\"ROOMS\": \"3\",\n");
+      sstream << U("\"CITY\": \"Colombes\",\n");
+      sstream << U("\"HISTORY\": \"il y'a 2h\", \n");
+
+      sstream << U("\"PRICE\": \"215000\", \n");
+      sstream << U("\"IMAGE\": \"data/annonce_5.jpg\",\n");
+      sstream << U("\"SOURCES\": [\n\
+         \"seloger\",\n\
+         \"bienici\",\n\
+         \"leboncoin\"\n\
+      ]");
+      sstream << U("}\n");
+
+      sstream << U("\n]\n");
+
+      return;*/
+
       std::map<std::string, ValueType> attributestoget;
 
       ValueType value;
@@ -96,10 +166,10 @@ std::string searchTypeValue = "";
       value.fieldtype = Type::type::STRING;
       attributestoget[id_property_type] = value;
 
-      value.fieldtype = Type::type::STRING;
+      value.fieldtype = Type::type::NUMBER;
       attributestoget[id_surface] = value;
 
-      value.fieldtype = Type::type::STRING;
+      value.fieldtype = Type::type::NUMBER;
       attributestoget[id_nbrooms] = value;
 
       value.fieldtype = Type::type::STRING;
@@ -223,7 +293,6 @@ std::string searchTypeValue = "";
 
          m_client->scan(scanReturn, "FR_SUMMARY", attributestoget, filterExpression.str(), expressionValue);
 
-         time_t current_time = time(nullptr);
 
          std::stringstream logstream;
          logstream << "fetchSummary: " << scanReturn.values.size() << " elements scan\n";
@@ -308,7 +377,7 @@ std::string searchTypeValue = "";
       value.fieldtype = Type::type::STRING;
       attributestoget[id_surface] = value;
 
-      value.fieldtype = Type::type::STRING;
+      value.fieldtype = Type::type::NUMBER;
       attributestoget[id_nbrooms] = value;
 
       value.fieldtype = Type::type::STRING;

@@ -2,14 +2,14 @@
       "ID":"1",
       "PROPERTY_TYPE": "Appartement",
 		"SURFACE": "46",
-		"NB_ROOMS": "2",
-		"CITY": "Paris",
+		"ROOMS": "2",
+		"CITY": "Colombes",
 		"HISTORY": "il y a 3h",
-		"PRICE": "320 000",
+		"PRICE": "320000",
 		"IMAGE": "data/annonce_1.jpg",
 		"SOURCES": [
 			"seloger",
-			"logicimmo",
+			"bienici",
 			"leboncoin"
 		]
 	},
@@ -17,10 +17,10 @@
       "ID":"2",
 		"PROPERTY_TYPE": "Appartement",
 		"SURFACE": "53",
-		"NB_ROOMS": "3",
-		"CITY": "Paris",
+		"ROOMS": "3",
+		"CITY": "Colombes",
 		"HISTORY": "il y a 2h",
-		"PRICE": "339 000",
+		"PRICE": "339000",
 		"IMAGE": "data/annonce_2.jpg",
 		"SOURCES": [
 			"seloger",
@@ -31,10 +31,10 @@
       "ID":"3",
 		"PROPERTY_TYPE": "Maison",
 		"SURFACE": "228",
-		"NB_ROOMS": "8",
-		"CITY": "Paris",
+		"ROOMS": "8",
+		"CITY": "Colombes",
 		"HISTORY": "il y a 1h",
-		"PRICE": "800 000",
+		"PRICE": "800000",
 		"IMAGE": "data/annonce_3.jpg",
 		"SOURCES": [
 			"leboncoin"
@@ -44,14 +44,14 @@
       "ID":"4",
 		"PROPERTY_TYPE": "Appartement",
 		"SURFACE": "63",
-		"NB_ROOMS": "3",
-		"CITY": "Paris",
+		"ROOMS": "3",
+		"CITY": "Colombes",
 		"HISTORY": "il y a 2h",
-		"PRICE": "215 000",
+		"PRICE": "210000",
 		"IMAGE": "data/annonce_5.jpg",
 		"SOURCES": [
 			"seloger",
-			"logicimmo",
+			"bienici",
 			"leboncoin"
 		]
 	}

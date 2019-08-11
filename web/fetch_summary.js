@@ -29,7 +29,7 @@ function loadJSON(path, success, error) {
 
 
   const url = 'https://surfyn.fr:7878/search/all'+ window.location.search;
-
+  //const url = 'http://127.0.0.1:7878/search/all'+ window.location.search;
 
   fetch(url)
   .then(function(resp) { return resp.json(); } )
@@ -42,6 +42,19 @@ function loadJSON(path, success, error) {
     function (data) { generate_summary_page(JSON.parse(data.response));}, function(err) {console.log(err);})
     console.log(error);
   });
+
+  function reverse(s){
+      return s.split("").reverse().join("");
+  }
+
+  function formatPrice(p)
+  {
+    var val = reverse(p);
+
+    var tmp = val.replace(/(.{3})/g,"$1 ");
+
+    return reverse(tmp);
+  }
 
   function generate_summary_page(data)
   {
@@ -101,21 +114,21 @@ function loadJSON(path, success, error) {
                  ad_summary_details_p.innerHTML += " m<sup>2";
                }
 
-               if(data[i].hasOwnProperty('NB_ROOMS'))
+               if(data[i].hasOwnProperty('ROOMS'))
                {
                  ad_summary_details_p.innerHTML += " - ";
-                 ad_summary_details_p.innerHTML += data[i].NB_ROOMS;
-                 ad_summary_details_p.innerHTML += "pièce(s)";
+                 ad_summary_details_p.innerHTML += data[i].ROOMS;
+                 ad_summary_details_p.innerHTML += " pièce(s)";
                }
 
                ad_summary_desc_div1.appendChild(ad_summary_details_p);
 
-               var ad_summary_refresh_time_p = createNode("p");
-               ad_summary_refresh_time_p.className = "announce_summary_refresh_time";
+               //var ad_summary_refresh_time_p = createNode("p");
+               //ad_summary_refresh_time_p.className = "announce_summary_refresh_time";
                //ad_summary_refresh_time_p.innerHTML = data[i].HISTORY;
-               ad_summary_refresh_time_p.innerHTML = "il y a 1h";
+               //ad_summary_refresh_time_p.innerHTML = "il y a 1h";
 
-               ad_summary_desc_div1.appendChild(ad_summary_refresh_time_p);
+               //ad_summary_desc_div1.appendChild(ad_summary_refresh_time_p);
 
                ad_summary_container_div.appendChild(ad_summary_desc_div1);
 
@@ -134,7 +147,7 @@ function loadJSON(path, success, error) {
               var ad_price_p = createNode("p");
               ad_price_p.style.float = "right";
               ad_price_p.style.color = "#4c94bc";
-              ad_price_p.innerHTML = data[i].PRICE;
+              ad_price_p.innerHTML = formatPrice(String(data[i].PRICE));
               ad_price_p.innerHTML += " €";
               ad_summary_desc_div2.appendChild(ad_price_p);
 
