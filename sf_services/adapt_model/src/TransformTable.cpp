@@ -5,6 +5,7 @@
 
 
 #include "TransformTable.h"
+#include <algorithm>
 
 const int port = 5050;
 using namespace ::apache::thrift;
@@ -273,6 +274,7 @@ namespace surfyn
                         {
                            auto it = value.find_last_of(' ');
                            surface = value.substr(10, it - 10);
+                           std::replace(surface.begin(), surface.end(), ',', '.');
                         }
                         else if (2092 == order)
                         {
@@ -403,6 +405,7 @@ namespace surfyn
                if ("square" == key)
                {
                   surface = value;
+                  std::replace(surface.begin(), surface.end(), ',', '.');
                }
                else if ("rooms" == key)
                {
@@ -508,7 +511,7 @@ namespace surfyn
       if (document.HasMember("surfaceArea"))
       {
          std::string surface = std::to_string(document["surfaceArea"].GetDouble());
-
+         std::replace(surface.begin(), surface.end(), ',', '.');
          realEstate.setDescription(RealEstateSurface, surface);
       }
       if (document.HasMember("roomsQuantity"))
