@@ -10,6 +10,7 @@
 #include <map>
 #include "sf_services/dynamodb_access/thrift_generated/dynamodb_access.h"
 #include <memory>
+#include <set>
 
 namespace surfyn
 {
@@ -28,6 +29,8 @@ private:
    static void fillFilterExprAndExprValue(std::stringstream &filterexpression, std::map<std::string, ValueType> &expressionValue,
                                       const std::string &param, const std::string& paramvalue, const std::string & value,
                                       const std::string& Operator);
+   static bool isAlreadyProvided(const std::map<std::string, std::string>& table_entry, const std::set<int64_t>& adprovided);
+   static void updateProvidedAd(const std::map<std::string, std::string>& table_entry,  std::set<int64_t>& adprovided);
 };
 
 }

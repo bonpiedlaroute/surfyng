@@ -48,6 +48,7 @@ const std::string id_location = "LOCATION";
 const std::string id_sourcelogo = "SOURCE_LOGO";
 const std::string id_floor = "FLOOR";
 const std::string id_cellar = "CELLAR";
+const std::string id_duplicates = "DUPLICATES";
 
 const std::string details_table = "FR_SUMMARY";
 const std::string exprval_city = ":ct";
@@ -80,6 +81,39 @@ std::string searchTypeValue = "";
       exprValue.field = value.c_str();
       exprValue.fieldtype = (param == "PRICE" || param == "SURFACE") ? Type::type::NUMBER : Type::type::STRING;
       expressionValue[paramvalue] = exprValue;
+   }
+   bool DBaccess::isAlreadyProvided(const std::map<std::string, std::string>& table_entry, const std::set<int64_t>& adprovided)
+   {
+      const auto iter = table_entry.find("ID");
+      if(iter!= table_entry.end())
+      {
+         return adprovided.find(atol((iter->second).c_str())) != adprovided.end();
+      }
+      return false;
+   }
+   void DBaccess::updateProvidedAd(const std::map<std::string, std::string>& table_entry,  std::set<int64_t>& adprovided)
+   {
+      /* insert the ID of the ad */
+      const auto iter = table_entry.find("ID");
+      if(iter!= table_entry.end())
+      {
+         adprovided.insert(atol((iter->second).c_str()));
+      }
+
+      /* insert the duplicate id */
+      const auto iter_dup = table_entry.find(id_duplicates);
+      if(iter_dup!= table_entry.end())
+      {
+         std::vector<std::string> duplicates;
+         surfyn::utils::split(iter_dup->second, ",", duplicates);
+
+         for(auto item : duplicates)
+         {
+            adprovided.insert(atol(item.c_str()));
+         }
+      }
+
+
    }
    void DBaccess::fetchSummary(utility::stringstream_t& sstream, const std::map<utility::string_t,  utility::string_t>& query )
    {
@@ -154,6 +188,7 @@ std::string searchTypeValue = "";
       return;*/
 
       std::map<std::string, ValueType> attributestoget;
+      std::set<int64_t> adProvided;
 
       ValueType value;
       value.field = "";
@@ -184,6 +219,8 @@ std::string searchTypeValue = "";
       value.fieldtype = Type::type::STRING;
       attributestoget[id_source] = value;
 
+      value.fieldtype = Type::type::STRING;
+      attributestoget[id_duplicates] = value;
 
       bool scanend = false;
 
@@ -302,6 +339,8 @@ std::string searchTypeValue = "";
 
          for(auto table_entry_iter = scanReturn.values.begin(); table_entry_iter != scanReturn.values.end();++table_entry_iter)
          {
+            if(isAlreadyProvided(*table_entry_iter, adProvided))
+                  continue;
             if(firsttime)
             {
                firsttime = false;
@@ -347,6 +386,7 @@ std::string searchTypeValue = "";
 
             }
             sstream << U("\n}");
+            updateProvidedAd(*table_entry_iter, adProvided);
          }
          scanend = scanReturn.scanend;
       }while(!scanend);
@@ -412,7 +452,7 @@ std::string searchTypeValue = "";
       sstream << U("{\n");
       for(auto iter_item = _return.values.begin(); iter_item != _return.values.end(); ++iter_item)
       {
-         if(iter_item->first != "DUPLICATES")
+         if(iter_item->first != id_duplicates)
          {
             if( iter_item != _return.values.begin())
             {
@@ -434,10 +474,10 @@ std::string searchTypeValue = "";
 
       if( iter_duplicate_ad != _return.values.end())
       {
-         std::vector<std::string> id_duplicates;
-         surfyn::utils::split(iter_duplicate_ad->second, ",", id_duplicates);
+         std::vector<std::string> duplicates;
+         surfyn::utils::split(iter_duplicate_ad->second, ",", duplicates);
 
-         for(auto item : id_duplicates)
+         for(auto item : duplicates)
          {
             key.value.field = item;
             m_client->get(_return, details_table,key , attributestoget);
@@ -445,7 +485,7 @@ std::string searchTypeValue = "";
             sstream << U(",\n{\n");
             for(auto iter_item = _return.values.begin(); iter_item != _return.values.end(); ++iter_item)
             {
-               if(iter_item->first != "DUPLICATES")
+               if(iter_item->first != id_duplicates)
                {
                   if( iter_item != _return.values.begin())
                   {
