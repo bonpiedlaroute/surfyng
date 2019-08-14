@@ -154,38 +154,69 @@ function loadJSON(path, success, error) {
               ad_summary_container_div.appendChild(ad_summary_desc_div2);
 
               var ad_source_frame_div = createNode("div");
-              ad_source_frame_div.className = "announce_summary_desc_logo";
+              ad_source_frame_div.className = "ad_summary_src";
 
               var ad_source_div = createNode("div");
-              ad_source_div.className = "announce_source"
+              ad_source_div.className = "ad_summary_src_text_cont";
 
-              var img_url =
-              {
-              seloger:"data/SL0.svg",
-              logicimmo:"data/li0.svg",
-              leboncoin: "data/lbc0.svg",
-              bienici: "data/bienici.png"
-              }
-              var max_offset = 40;
-              var max_zindex = 10;
-              for(var j = 0; j < data[i].SOURCES.length; j++)
-              {
-                var ad_source_container_div = createNode("div");
-                ad_source_container_div.className = "announce_source_container";
-                var new_offset = max_offset - j * 20;
-                ad_source_container_div.style.right = new_offset + "px";
-                var new_zindex = max_zindex - j;
-                ad_source_container_div.style.zIndex = new_zindex;
-
-                var img_logo = createNode("img");
-                img_logo.src = img_url[data[i].SOURCES[j]];
-                img_logo.className = "announce_source_logo";
-                ad_source_container_div.appendChild(img_logo);
-
-                ad_source_div.appendChild(ad_source_container_div);
-              }
+              var ad_sum_src_text = createNode("p");
+              ad_sum_src_text.className = "ad_summary_src_text";
+              ad_sum_src_text.innerHTML = "Ce bien apparaît sur:";
+              ad_source_div.appendChild(ad_sum_src_text);
 
               ad_source_frame_div.appendChild(ad_source_div);
+
+              var added_src =
+              {
+              seloger:false,
+              logicimmo:false,
+              leboncoin: false,
+              bienici: false
+              }
+              var ad_sum_src_provider_cont = createNode("div");
+              ad_sum_src_provider_cont.className = "ad_summary_src_provider_cont";
+              for(var j = 0; j < data[i].SOURCES.length; j++)
+              {
+                if(added_src[data[i].SOURCES[j]] == false)
+                {
+                  var ad_sum_src_provider = createNode("div");
+                  ad_sum_src_provider.className = "ad_summary_src_provider";
+                  if(data[i].SOURCES[j] == "seloger")
+                  {
+                    ad_sum_src_provider.style.border = "2px solid red";
+                    var ad_sum_src_provider_text = createNode("p");
+                    ad_sum_src_provider_text.className = "ad_summary_src_provider_text";
+                    ad_sum_src_provider_text.style.color ="red";
+                    ad_sum_src_provider_text.innerHTML ="SeLoger";
+                    ad_sum_src_provider.appendChild(ad_sum_src_provider_text);
+                  }else {
+                    if(data[i].SOURCES[j] == "leboncoin")
+                    {
+                      ad_sum_src_provider.style.border = "2px solid orange";
+                      var ad_sum_src_provider_text = createNode("div");
+                      ad_sum_src_provider_text.className = "ad_summary_src_provider_text";
+                      ad_sum_src_provider_text.style.color ="orange";
+                      ad_sum_src_provider_text.innerHTML ="Leboncoin";
+                      ad_sum_src_provider.appendChild(ad_sum_src_provider_text);
+                    }
+                    else {
+                      if(data[i].SOURCES[j] == "bienici")
+                      {
+                        ad_sum_src_provider.style.border = "2px solid #FFC331";
+                        var ad_sum_src_provider_text = createNode("div");
+                        ad_sum_src_provider_text.className = "ad_summary_src_provider_text";
+                        ad_sum_src_provider_text.style.color ="#FFC331";
+                        ad_sum_src_provider_text.innerHTML ="Bien'ici";
+                        ad_sum_src_provider.appendChild(ad_sum_src_provider_text);
+                      }
+                    }
+                  }
+                  ad_sum_src_provider_cont.appendChild(ad_sum_src_provider);
+                  added_src[data[i].SOURCES[j]] = true;
+                }
+              }
+
+              ad_source_frame_div.appendChild(ad_sum_src_provider_cont);
 
               ad_summary_container_div.appendChild(ad_source_frame_div);
 
