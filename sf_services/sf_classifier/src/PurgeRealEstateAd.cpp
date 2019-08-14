@@ -57,6 +57,10 @@ void purgeRealEstateAd(const std::shared_ptr<dynamodb_accessClient>& client, con
       std::map<std::string, ValueType> expressionValue;
       client->scan(scanReturn, tablename, attributestoget, "", expressionValue);
 
+      if (!scanReturn.result.success)
+      {
+        Log::getInstance()->error("Failed to scan into table " + tablename + " error : " + scanReturn.result.error);
+      }
       time_t current_time = time(nullptr);
 
       std::stringstream logstream;
