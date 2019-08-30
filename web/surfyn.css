@@ -418,6 +418,7 @@ width:100%;
   height:70px;
   width:30%;
   border-radius:5px;
+  flex-direction:column;
 }
 .det_ad_desc_border
 {
@@ -428,6 +429,18 @@ width:100%;
   display:flex;
   align-items:center;
   justify-content: center;
+}
+.det_ad_ticker
+{
+  width:100%;height:15px;
+}
+.det_ad_ticker_icon
+{
+  align-self: center;font-size: 15px !important;
+}
+.det_ad_span_box
+{
+  width:100%;height:55px; text-align:center;display:flex;justify-content:center;align-items:center;
 }
 .det_ad_logo_container
 {

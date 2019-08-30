@@ -49,6 +49,10 @@ const std::string id_sourcelogo = "SOURCE_LOGO";
 const std::string id_floor = "FLOOR";
 const std::string id_cellar = "CELLAR";
 const std::string id_duplicates = "DUPLICATES";
+const std::string id_lift = "LIFT";
+const std::string id_typeofheating = "TYPE_OF_HEATING";
+const std::string id_constructionyear = "CONSTRUCTION_YEAR";
+const std::string id_parking = "PARKING";
 
 const std::string details_table = "FR_SUMMARY";
 const std::string exprval_city = ":ct";
@@ -414,7 +418,7 @@ std::string searchTypeValue = "";
       value.fieldtype = Type::type::STRING;
       attributestoget[id_imagecount] = value;
 
-      value.fieldtype = Type::type::STRING;
+      value.fieldtype = Type::type::NUMBER;
       attributestoget[id_surface] = value;
 
       value.fieldtype = Type::type::NUMBER;
@@ -437,6 +441,21 @@ std::string searchTypeValue = "";
 
       value.fieldtype = Type::type::STRING;
       attributestoget[id_cellar] = value;
+
+      value.fieldtype = Type::type::NUMBER;
+      attributestoget[id_price] = value;
+
+      value.fieldtype = Type::type::STRING;
+      attributestoget[id_constructionyear] = value;
+
+      value.fieldtype = Type::type::STRING;
+      attributestoget[id_lift] = value;
+
+      value.fieldtype = Type::type::STRING;
+      attributestoget[id_typeofheating] = value;
+
+      value.fieldtype = Type::type::STRING;
+      attributestoget[id_parking] = value;
 
       GetResult _return;
       KeyValue key;

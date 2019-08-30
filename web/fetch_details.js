@@ -161,59 +161,116 @@ function generate_details_page(data)
         det_desc_container_div.appendChild(det_transport_desc_container_div);
 
       }
-
-      if(data[i].hasOwnProperty('SURFACE'))
+      /* PRICE */
       {
-        count_desc++;
+        var det_price_container_div = createNode("div");
+        det_price_container_div.className = "det_ad_desc_shape det_ad_desc_border det_ad_desc_center";
 
+        var det_ad_ticker_div = createNode("div");
+        det_ad_ticker_div.className = "det_ad_ticker";
+        var det_ad_ticker = createNode("i");
+        det_ad_ticker.className ="fas fa-check-circle det_ad_ticker_icon";
+        det_ad_ticker.style.color = "green";
+        det_ad_ticker_div.appendChild(det_ad_ticker);
+        det_price_container_div.appendChild(det_ad_ticker);
+
+        var det_price_span_div = createNode("div");
+        det_price_span_div.className = "det_ad_span_box";
+
+        var det_price_span = createNode("span");
+        det_price_span.className = "no_select";
+        det_price_span.style.fontWeight ="bold";
+        det_price_span.style.color = "#4C8E99";
+        if(ismobile)
+        det_price_span.style.fontSize = "12px";
+
+        var prop_price = data[i].PRICE / 1000 ;
+
+        det_price_span.innerHTML = String(prop_price);
+        det_price_span.innerHTML += " K€";
+
+        det_price_span_div.appendChild(det_price_span);
+
+        det_price_container_div.appendChild(det_price_span_div);
+        det_desc_container_div.appendChild(det_price_container_div);
+      }
+      /* SURFACE */
+      {
         var det_surface_container_div = createNode("div");
         det_surface_container_div.className = "det_ad_desc_shape det_ad_desc_border det_ad_desc_center";
+
+        if(!data[i].hasOwnProperty('SURFACE'))
+        det_surface_container_div.style = "border:3px solid lightgray";
+
+
+        var det_ad_ticker_div = createNode("div");
+        det_ad_ticker_div.className = "det_ad_ticker";
+        var det_ad_ticker = createNode("i");
+        det_ad_ticker.className ="fas fa-check-circle det_ad_ticker_icon";
+
+        if(!data[i].hasOwnProperty('SURFACE'))
+        det_ad_ticker.style.color = "lightgray";
+        else
+        det_ad_ticker.style.color = "green";
+
+        det_ad_ticker_div.appendChild(det_ad_ticker);
+        det_surface_container_div.appendChild(det_ad_ticker);
+
+        var det_surface_span_div = createNode("div");
+        det_surface_span_div.className = "det_ad_span_box";
 
         var det_surface_span = createNode("span");
         det_surface_span.className = "no_select";
         det_surface_span.style.fontWeight ="bold";
+
+        if(data[i].hasOwnProperty('SURFACE'))
         det_surface_span.style.color = "#4C8E99";
+        else
+        det_surface_span.style.color = "lightgray";
+
         if(ismobile)
         det_surface_span.style.fontSize = "12px";
-        det_surface_span.innerHTML = data[i].SURFACE;
+
+        if(data[i].hasOwnProperty('SURFACE'))
+        det_surface_span.innerHTML = String(data[i].SURFACE);
+
         det_surface_span.innerHTML += " m<sup>2";
 
-        det_surface_container_div.appendChild(det_surface_span);
+        det_surface_span_div.appendChild(det_surface_span);
+
+        det_surface_container_div.appendChild(det_surface_span_div);
         det_desc_container_div.appendChild(det_surface_container_div);
       }
-
-      if(data[i].hasOwnProperty('NB_ROOMS'))
+        /* LOCATION */
       {
-        count_desc++;
-
-        var det_nb_rooms_container_div = createNode("div");
-        det_nb_rooms_container_div.className = "det_ad_desc_shape det_ad_desc_border det_ad_desc_center";
-        var det_nb_rooms_span = createNode("span");
-        det_nb_rooms_span.className = "no_select";
-        det_nb_rooms_span.style.fontWeight = "bold";
-        det_nb_rooms_span.style.color = "#4C8E99";
-        if(ismobile)
-        det_nb_rooms_span.style.fontSize = "12px";
-        det_nb_rooms_span.innerHTML = data[i].NB_ROOMS;
-        det_nb_rooms_span.innerHTML += " pièce(s)";
-
-        det_nb_rooms_container_div.appendChild(det_nb_rooms_span);
-        det_desc_container_div.appendChild(det_nb_rooms_container_div);
-      }
-
-      if(data[i].hasOwnProperty('LOCATION'))
-      {
-        count_desc++;
         var det_location_container_div = createNode("div");
         det_location_container_div.className = "det_ad_desc_shape det_ad_desc_border";
+
+        if(!data[i].hasOwnProperty('LOCATION'))
+        det_location_container_div.style = "border:3px solid lightgray";
+
         var det_location_icon_container_div = createNode("div");
         det_location_icon_container_div.className = "det_ad_desc_center";
         det_location_icon_container_div.style.width = "100%";
         det_location_icon_container_div.style.height = "50%";
 
+        var det_ad_ticker = createNode("i");
+        det_ad_ticker.className ="fas fa-check-circle det_ad_ticker_icon";
+
+        if(!data[i].hasOwnProperty('LOCATION'))
+        det_ad_ticker.style.color = "lightgray";
+        else
+        det_ad_ticker.style.color = "green";
+
+        det_location_icon_container_div.appendChild(det_ad_ticker);
+
         var det_location_icon = createNode("i");
         det_location_icon.className = "fas fa-map-marker-alt";
+
+        if(data[i].hasOwnProperty('LOCATION'))
         det_location_icon.style.color = "#4C8E99";
+        else
+        det_location_icon.style.color = "lightgray";
 
         det_location_icon_container_div.appendChild(det_location_icon);
 
@@ -227,55 +284,302 @@ function generate_details_page(data)
         var det_location_text_span = createNode("span");
         det_location_text_span.className = "no_select";
         det_location_text_span.style.fontWeight = "bold";
+
+        if(data[i].hasOwnProperty('LOCATION'))
         det_location_text_span.style.color = "#4C8E99";
+        else
+        det_location_text_span.style.color = "lightgray";
+
         if(ismobile)
         det_location_text_span.style.fontSize = "12px";
-        det_location_text_span.innerHTML = "Position";
+        det_location_text_span.innerHTML = "Localisation";
 
         det_location_text_div.appendChild(det_location_text_span);
         det_location_container_div.appendChild(det_location_text_div);
 
         det_desc_container_div.appendChild(det_location_container_div);
+      }
+      /* ROOMS */
+      {
+        var det_nb_rooms_container_div = createNode("div");
+        det_nb_rooms_container_div.className = "det_ad_desc_shape det_ad_desc_border det_ad_desc_center";
 
+        if(!data[i].hasOwnProperty('ROOMS'))
+        det_nb_rooms_container_div.style = "border:3px solid lightgray";
+
+
+        var det_ad_ticker_div = createNode("div");
+        det_ad_ticker_div.className = "det_ad_ticker";
+        var det_ad_ticker = createNode("i");
+        det_ad_ticker.className ="fas fa-check-circle det_ad_ticker_icon";
+
+        if(!data[i].hasOwnProperty('ROOMS'))
+        det_ad_ticker.style.color = "lightgray";
+        else
+        det_ad_ticker.style.color = "green";
+
+        det_ad_ticker_div.appendChild(det_ad_ticker);
+        det_nb_rooms_container_div.appendChild(det_ad_ticker);
+
+        var det_nb_rooms_span_div = createNode("div");
+        det_nb_rooms_span_div.className = "det_ad_span_box";
+
+        var det_nb_rooms_span = createNode("span");
+        det_nb_rooms_span.className = "no_select";
+        det_nb_rooms_span.style.fontWeight = "bold";
+
+        if(data[i].hasOwnProperty('ROOMS'))
+        det_nb_rooms_span.style.color = "#4C8E99";
+        else
+        det_nb_rooms_span.style.color = "lightgray";
+
+        if(ismobile)
+        det_nb_rooms_span.style.fontSize = "12px";
+
+        if(data[i].hasOwnProperty('ROOMS'))
+        det_nb_rooms_span.innerHTML = String(data[i].ROOMS);
+
+        det_nb_rooms_span.innerHTML += " pièce(s)";
+
+        det_nb_rooms_span_div.appendChild(det_nb_rooms_span);
+
+        det_nb_rooms_container_div.appendChild(det_nb_rooms_span_div);
+        det_desc_container_div.appendChild(det_nb_rooms_container_div);
       }
 
-      if(data[i].hasOwnProperty('FLOOR'))
+      /* CONSTRUCTION_YEAR */
       {
-        count_desc++;
+        var det_year_container_div = createNode("div");
+        det_year_container_div.className = "det_ad_desc_shape det_ad_desc_border det_ad_desc_center";
 
+        if(!data[i].hasOwnProperty('CONSTRUCTION_YEAR'))
+        det_year_container_div.style = "border:3px solid lightgray";
+
+
+        var det_ad_ticker_div = createNode("div");
+        det_ad_ticker_div.className = "det_ad_ticker";
+        var det_ad_ticker = createNode("i");
+        det_ad_ticker.className ="fas fa-check-circle det_ad_ticker_icon";
+
+        if(!data[i].hasOwnProperty('CONSTRUCTION_YEAR'))
+        det_ad_ticker.style.color = "lightgray";
+        else
+        det_ad_ticker.style.color = "green";
+
+        det_ad_ticker_div.appendChild(det_ad_ticker);
+        det_year_container_div.appendChild(det_ad_ticker);
+
+        var det_year_span_div = createNode("div");
+        det_year_span_div.className = "det_ad_span_box";
+
+        var det_year_span = createNode("span");
+        det_year_span.className = "no_select";
+        det_year_span.style.fontWeight = "bold";
+
+        if(data[i].hasOwnProperty('CONSTRUCTION_YEAR'))
+        det_year_span.style.color = "#4C8E99";
+        else
+        det_year_span.style.color = "lightgray";
+
+        if(ismobile)
+        det_year_span.style.fontSize = "12px";
+
+        if(data[i].hasOwnProperty('CONSTRUCTION_YEAR'))
+        det_year_span.innerHTML = data[i].CONSTRUCTION_YEAR;
+
+        det_year_span_div.appendChild(det_year_span);
+
+        det_year_container_div.appendChild(det_year_span_div);
+        det_desc_container_div.appendChild(det_year_container_div);
+      }
+      /* TYPE Of HEATING */
+      {
+        var det_heating_container_div = createNode("div");
+        det_heating_container_div.className = "det_ad_desc_shape det_ad_desc_border det_ad_desc_center";
+
+        if(!data[i].hasOwnProperty('TYPE_OF_HEATING'))
+        det_heating_container_div.style = "border:3px solid lightgray";
+
+
+        var det_ad_ticker_div = createNode("div");
+        det_ad_ticker_div.className = "det_ad_ticker";
+        var det_ad_ticker = createNode("i");
+        det_ad_ticker.className ="fas fa-check-circle det_ad_ticker_icon";
+
+        if(!data[i].hasOwnProperty('TYPE_OF_HEATING'))
+        det_ad_ticker.style.color = "lightgray";
+        else
+        det_ad_ticker.style.color = "green";
+
+        det_ad_ticker_div.appendChild(det_ad_ticker);
+        det_heating_container_div.appendChild(det_ad_ticker);
+
+        var det_heating_span_div = createNode("div");
+        det_heating_span_div.className = "det_ad_span_box";
+
+        var det_heating_span = createNode("span");
+        det_heating_span.className = "no_select";
+        det_heating_span.style.fontWeight = "bold";
+
+        if(data[i].hasOwnProperty('TYPE_OF_HEATING'))
+        det_heating_span.style.color = "#4C8E99";
+        else
+        det_heating_span.style.color = "lightgray";
+
+        if(ismobile)
+        det_heating_span.style.fontSize = "12px";
+
+        if(data[i].hasOwnProperty('TYPE_OF_HEATING'))
+        det_heating_span.innerHTML = data[i].TYPE_OF_HEATING;
+
+        det_heating_span_div.appendChild(det_heating_span);
+
+        det_heating_container_div.appendChild(det_heating_span_div);
+        det_desc_container_div.appendChild(det_heating_container_div);
+      }
+
+      /* PARKING */
+      {
+        var det_parking_container_div = createNode("div");
+        det_parking_container_div.className = "det_ad_desc_shape det_ad_desc_border det_ad_desc_center";
+
+        if(!data[i].hasOwnProperty('PARKING'))
+        det_parking_container_div.style = "border:3px solid lightgray";
+
+
+        var det_ad_ticker_div = createNode("div");
+        det_ad_ticker_div.className = "det_ad_ticker";
+        var det_ad_ticker = createNode("i");
+        det_ad_ticker.className ="fas fa-check-circle det_ad_ticker_icon";
+
+        if(!data[i].hasOwnProperty('PARKING'))
+        det_ad_ticker.style.color = "lightgray";
+        else
+        det_ad_ticker.style.color = "green";
+
+        det_ad_ticker_div.appendChild(det_ad_ticker);
+        det_parking_container_div.appendChild(det_ad_ticker);
+
+        var det_parking_span_div = createNode("div");
+        det_parking_span_div.className = "det_ad_span_box";
+
+        var det_parking_span = createNode("span");
+        det_parking_span.className = "no_select";
+        det_parking_span.style.fontWeight = "bold";
+
+        if(data[i].hasOwnProperty('PARKING'))
+        det_parking_span.style.color = "#4C8E99";
+        else
+        det_parking_span.style.color = "lightgray";
+
+        if(ismobile)
+        det_parking_span.style.fontSize = "12px";
+
+        if(data[i].hasOwnProperty('PARKING'))
+        det_parking_span.innerHTML = data[i].PARKING;
+
+        det_parking_span.innerHTML += " parking";
+
+        det_parking_span_div.appendChild(det_parking_span);
+
+        det_parking_container_div.appendChild(det_parking_span_div);
+        det_desc_container_div.appendChild(det_parking_container_div);
+      }
+
+      /* FLOOR */
+      {
         var det_ad_floor_div = createNode("div");
 
         det_ad_floor_div.className = "det_ad_desc_shape det_ad_desc_border det_ad_desc_center";
+
+        if(!data[i].hasOwnProperty('FLOOR'))
+        det_ad_floor_div.style = "border:3px solid lightgray";
+
+        var det_ad_ticker_div = createNode("div");
+        det_ad_ticker_div.className = "det_ad_ticker";
+        var det_ad_ticker = createNode("i");
+        det_ad_ticker.className ="fas fa-check-circle det_ad_ticker_icon";
+
+        if(!data[i].hasOwnProperty('FLOOR'))
+        det_ad_ticker.style.color = "lightgray";
+        else
+        det_ad_ticker.style.color = "green";
+
+        det_ad_ticker_div.appendChild(det_ad_ticker);
+        det_ad_floor_div.appendChild(det_ad_ticker);
+
+        var det_floor_span_div = createNode("div");
+        det_floor_span_div.className = "det_ad_span_box";
+
         var det_ad_floor_span = createNode("span");
         det_ad_floor_span.className = "no_select";
         det_ad_floor_span.style.fontWeight = "bold";
+
+        if(data[i].hasOwnProperty('FLOOR'))
         det_ad_floor_span.style.color = "#4C8E99";
+        else
+        det_ad_floor_span.style.color = "lightgray";
+
         det_ad_floor_span.style.marginLeft = "10px";
         if(ismobile)
         det_ad_floor_span.style.fontSize = "12px";
+
+        if(data[i].hasOwnProperty('FLOOR'))
         det_ad_floor_span.innerHTML = data[i].FLOOR;
+
+        if(data[i].FLOOR != "rez-de-chaussée")
         det_ad_floor_span.innerHTML +=" étage"
 
-        det_ad_floor_div.appendChild(det_ad_floor_span);
+        det_floor_span_div.appendChild(det_ad_floor_span);
+        det_ad_floor_div.appendChild(det_floor_span_div);
 
         det_desc_container_div.appendChild(det_ad_floor_div);
       }
+      /* CELLAR */
 
-      if(data[i].hasOwnProperty('CELLAR'))
       {
         count_desc++;
         var det_ad_cellar_div = createNode("div");
         det_ad_cellar_div.className = "det_ad_desc_shape det_ad_desc_border det_ad_desc_center";
+
+        if(!data[i].hasOwnProperty('CELLAR'))
+        det_ad_cellar_div.style = "border:3px solid lightgray";
+
+        var det_ad_ticker_div = createNode("div");
+        det_ad_ticker_div.className = "det_ad_ticker";
+        var det_ad_ticker = createNode("i");
+        det_ad_ticker.className ="fas fa-check-circle det_ad_ticker_icon";
+
+        if(!data[i].hasOwnProperty('CELLAR'))
+        det_ad_ticker.style.color = "lightgray";
+        else
+        det_ad_ticker.style.color = "green";
+
+        det_ad_ticker_div.appendChild(det_ad_ticker);
+        det_ad_cellar_div.appendChild(det_ad_ticker);
+
+        var det_cellar_span_div = createNode("div");
+        det_cellar_span_div.className = "det_ad_span_box";
+
         var det_ad_cellar_span = createNode("span");
         det_ad_cellar_span.className = "no_select";
         det_ad_cellar_span.style.fontWeight = "bold";
+
+        if(data[i].hasOwnProperty('CELLAR'))
         det_ad_cellar_span.style.color = "#4C8E99";
+        else
+        det_ad_cellar_span.style.color = "lightgray";
+
         if(ismobile)
         det_ad_cellar_span.style.fontSize = "12px";
+        if(data[i].hasOwnProperty('CELLAR'))
         det_ad_cellar_span.innerHTML = data[i].CELLAR;
+
         det_ad_cellar_span.innerHTML += " Cave(s)";
 
-        det_ad_cellar_div.appendChild(det_ad_cellar_span);
+        det_cellar_span_div.appendChild(det_ad_cellar_span);
+
+        det_ad_cellar_div.appendChild(det_cellar_span_div);
 
         det_desc_container_div.appendChild(det_ad_cellar_div);
       }

@@ -22,7 +22,7 @@ extern const char* RealEstateCity;
 extern const char* RealEstateType;
 extern const char* RealEstateRooms;
 extern const char* RealEstateTypeOfHeating;
-extern const char* RealEstateCellars;
+extern const char* RealEstateCellar;
 extern const char* RealEstateFloor;
 extern const char* RealEstateParking;
 extern const char* RealEstateBox;

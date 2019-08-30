@@ -22,7 +22,7 @@ const char* RealEstateCity = "CITY";
 const char* RealEstateType = "PROPERTY_TYPE";
 const char* RealEstateRooms = "ROOMS";
 const char* RealEstateTypeOfHeating = "TYPE_OF_HEATING";
-const char* RealEstateCellars = "CELLARS";
+const char* RealEstateCellar = "CELLAR";
 const char* RealEstateFloor = "FLOOR";
 const char* RealEstateParking = "PARKING";
 const char* RealEstateBox = "BOX";
@@ -256,12 +256,12 @@ CriteriaCellars::CriteriaCellars() : Criteria(CriteriaID::Value::Cellars)
 
 bool CriteriaCellars::isEquals(const RealEstateAd& p1, const RealEstateAd& p2) const
 {
-   return p1.getDescription(RealEstateCellars) == p2.getDescription(RealEstateCellars) ;
+   return p1.getDescription(RealEstateCellar) == p2.getDescription(RealEstateCellar) ;
 }
 
 bool CriteriaCellars::isValid(const RealEstateAd& p) const
 {
-   return p.getDescription(RealEstateCellars) != "";
+   return p.getDescription(RealEstateCellar) != "";
 }
 
 CriteriaFloor::CriteriaFloor() : Criteria(CriteriaID::Value::Floor)

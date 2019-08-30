@@ -83,7 +83,7 @@ namespace surfyn
    const char* RealEstateType = "PROPERTY_TYPE";
    const char* RealEstateRooms = "ROOMS";
    const char* RealEstateTypeOfHeating = "TYPE_OF_HEATING";
-   const char* RealEstateCellars = "CELLARS";
+   const char* RealEstateCellar = "CELLAR";
    const char* RealEstateFloor = "FLOOR";
    const char* RealEstateParking = "PARKING";
    const char* RealEstateBox = "BOX";
@@ -93,6 +93,7 @@ namespace surfyn
    const char* RealEstateBalcony = "BALCONY";
    const char* RealEstateKey = "ID";
    const char* RealEstateSimilarAd = "SIMILAR_AD";
+   const char* RealEstateLocation = "LOCATION";
 
    // Fields for table FR_SUMMARY
    const std::string HISTORY = "HISTORY";
@@ -241,7 +242,7 @@ namespace surfyn
                         std::string value = object["value"].GetString();
                         if (order == 2430)
                         {
-                           realEstate.setDescription(CELLAR, "1");
+                           realEstate.setDescription(RealEstateCellar, "1");
                         }
                         else if (order == 2410)
                         {
@@ -261,8 +262,8 @@ namespace surfyn
                }
                else if (2 == id)
                {
-                  std::string surface, floor;
-                  int bedroomNb = 0, pieceNb = 0, constructionYear = 1970, buildingTotalFloor = 1;
+                  std::string surface="", floor="";
+                  int bedroomNb = 0, pieceNb = 0, constructionYear = 0, buildingTotalFloor = 1;
                   for (rapidjson::SizeType j = 0; j < criteria.Size(); j++)
                   {
                      const rapidjson::Value& object = criteria[j];
@@ -300,11 +301,20 @@ namespace surfyn
                      }
                   }
 
-                  realEstate.setDescription(RealEstateSurface, std::string(surface));
+                  if(!surface.empty())
+                  realEstate.setDescription(RealEstateSurface, surface);
+
+                  if(constructionYear != 0)
                   realEstate.setDescription(RealEstateConstructionYear, std::to_string(constructionYear));
+
+                  if(bedroomNb != 0)
                   realEstate.setDescription(RealEstateBeds, std::to_string(bedroomNb));
+
+                  if(pieceNb != 0)
                   realEstate.setDescription(RealEstateRooms, std::to_string(pieceNb));
-                  realEstate.setDescription(RealEstateFloor, std::string(floor));
+
+                  if(!floor.empty())
+                  realEstate.setDescription(RealEstateFloor, floor);
 
                }
                else if (3 == id)
@@ -519,6 +529,37 @@ namespace surfyn
          std::string nb_room = std::to_string(document["roomsQuantity"].GetUint());
 
          realEstate.setDescription(RealEstateRooms, nb_room);
+      }
+      if (document.HasMember("floor"))
+      {
+         std::string floor = std::to_string(document["floor"].GetUint());
+
+         realEstate.setDescription(RealEstateFloor, floor);
+      }
+      if (document.HasMember("hasCellar"))
+      {
+         if(document["hasCellar"].GetBool())
+            realEstate.setDescription(RealEstateCellar, "1");
+         else
+            realEstate.setDescription(RealEstateCellar, "0");
+      }
+      if (document.HasMember("blurInfo"))
+      {
+         auto blurInfo = document["blurInfo"];
+         if(blurInfo.HasMember("position"))
+         {
+            auto position = blurInfo["position"];
+
+            if(position.HasMember("lat") && position.HasMember("lon"))
+            {
+               std::string location = "lat=";
+               location += std::to_string(position["lat"].GetDouble());
+               location += ";";
+               location += "lon=";
+               location += std::to_string(position["lon"].GetDouble());
+               realEstate.setDescription(RealEstateLocation, location);
+            }
+         }
       }
    }
 

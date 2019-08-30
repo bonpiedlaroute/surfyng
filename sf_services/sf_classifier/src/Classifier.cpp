@@ -183,7 +183,7 @@ void detectSimilarRealEstateAd(const std::shared_ptr<dynamodb_accessClient>& cli
                               std::string value = object["value"].GetString();
                               if (order == 2430)
                               {
-                                 prop.setDescription(RealEstateCellars, "1");
+                                 prop.setDescription(RealEstateCellar, "1");
                               }
                               else if (order == 2410)
                               {
