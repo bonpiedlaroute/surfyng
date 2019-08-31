@@ -545,10 +545,10 @@ namespace surfyn
       }
       if (document.HasMember("blurInfo"))
       {
-         auto blurInfo = document["blurInfo"];
+         const auto& blurInfo = document["blurInfo"];
          if(blurInfo.HasMember("position"))
          {
-            auto position = blurInfo["position"];
+            const auto& position = blurInfo["position"];
 
             if(position.HasMember("lat") && position.HasMember("lon"))
             {
