@@ -184,7 +184,7 @@ function generate_details_page(data)
         if(ismobile)
         det_price_span.style.fontSize = "12px";
 
-        var prop_price = data[i].PRICE / 1000 ;
+        var prop_price = (data[i].PRICE / 1000) | 0 ;
 
         det_price_span.innerHTML = String(prop_price);
         det_price_span.innerHTML += " K€";
@@ -253,6 +253,7 @@ function generate_details_page(data)
         det_location_icon_container_div.className = "det_ad_desc_center";
         det_location_icon_container_div.style.width = "100%";
         det_location_icon_container_div.style.height = "50%";
+        det_location_icon_container_div.style.flexDirection = "column";
 
         var det_ad_ticker = createNode("i");
         det_ad_ticker.className ="fas fa-check-circle det_ad_ticker_icon";
@@ -292,7 +293,7 @@ function generate_details_page(data)
 
         if(ismobile)
         det_location_text_span.style.fontSize = "12px";
-        det_location_text_span.innerHTML = "Localisation";
+        det_location_text_span.innerHTML = "position";
 
         det_location_text_div.appendChild(det_location_text_span);
         det_location_container_div.appendChild(det_location_text_div);
@@ -426,7 +427,7 @@ function generate_details_page(data)
         else
         det_heating_span.style.color = "lightgray";
 
-        if(ismobile)
+        //if(ismobile)
         det_heating_span.style.fontSize = "12px";
 
         if(data[i].hasOwnProperty('TYPE_OF_HEATING'))

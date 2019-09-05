@@ -62,6 +62,7 @@ const std::string exprval_priceMax = ":pa";
 const std::string exprval_propType = ":py";
 const std::string exprval_areaMin = ":ai";
 const std::string exprval_areaMax = ":aa";
+const std::string exprval_rooms = ":ro";
 
 std::string searchTypeValue = "";
 
@@ -83,7 +84,7 @@ std::string searchTypeValue = "";
       filterexpression << paramvalue;
       ValueType exprValue;
       exprValue.field = value.c_str();
-      exprValue.fieldtype = (param == "PRICE" || param == "SURFACE") ? Type::type::NUMBER : Type::type::STRING;
+      exprValue.fieldtype = (param == "PRICE" || param == "SURFACE" || param == "ROOMS") ? Type::type::NUMBER : Type::type::STRING;
       expressionValue[paramvalue] = exprValue;
    }
    bool DBaccess::isAlreadyProvided(const std::map<std::string, std::string>& table_entry, const std::set<int64_t>& adprovided)
@@ -329,6 +330,13 @@ std::string searchTypeValue = "";
          {
             filterExpression << " and ";
             fillFilterExprAndExprValue(filterExpression, expressionValue, "SURFACE", exprval_areaMax, (iter->second).c_str(), "<=");
+         }
+         iter = query.find("rooms");
+         if( iter != query.end() )
+         {
+            filterExpression << " and ";
+
+            fillFilterExprAndExprValue(filterExpression, expressionValue, "ROOMS", exprval_rooms, (iter->second).c_str(), "=");
          }
 
 

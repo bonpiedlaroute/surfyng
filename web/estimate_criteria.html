@@ -45,7 +45,7 @@
 
 
 
-     <div style="height:140px;" class="row mx-auto">
+     <div style="height:210px;" class="row mx-auto">
         <div class="estimate_place mx-auto d-block ">
           <div style="width:100%;height:70px; display:flex; justify-content:center;align-items:center;flex-direction:row;">
              <div class="estimate_place_left"></div>
@@ -63,13 +63,17 @@
            <div class="estimate_place_right"></div>
           </div>
 
-          <div style="width:100%;height:70px;display:flex; justify-content:center;align-items:center;flex-direction:row;">
+          <div style="width:100%;height:140px;display:flex; justify-content:center;align-items:center;flex-direction:row;">
             <div class="estimate_place_left"></div>
              <div class="estimate_city">
               <input class="form-control sf_form_decoration" type="search" placeholder="Ville"
               name="city" id ="estimate_city">
               </input>
-              <div class ="invalid-feedback" id="addr_error_msg"></div>
+              <!-- <div class ="invalid-feedback" id="addr_error_msg"></div> -->
+              <div class="feedback_box good_feedback" style="width:100%;" id="city_check_msg">
+                <a style="color:#61AEB5;font-weight:bold" id="msg_type">Info</a>
+                <a id="feedback_msg"> : Uniquement les biens du département des hauts-de-seine pour l'instant &#128515;</a>
+              </div>
             </div>
             <div class="estimate_place_right"></div>
           </div>

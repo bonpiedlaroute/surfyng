@@ -356,6 +356,30 @@ function updatePropertyTypeResult( value)
   }
   url_results+=value;
 }
+
+var rooms = document.querySelectorAll('.sf_rooms');
+var i = 0;
+var isRoomsSelected = new Map();
+if( rooms )
+{
+  for(i = 0; i < rooms.length; ++i)
+  {
+    isRoomsSelected.set(rooms[i], false);
+  }
+}
+
+function isOneRoomsSelected()
+{
+  for(i = 0; i < rooms.length; ++i)
+  {
+    if(isRoomsSelected.get(rooms[i]) == true)
+    {
+      return [true,(i+1).toString()];
+    }
+  }
+  return [false];
+}
+
 function submit_request(event)
 {
   var city = document.getElementById("search_city");
@@ -408,6 +432,14 @@ function submit_request(event)
   url_results+="&area_max=";
   url_results+= valueAreaMax.innerHTML.substring(0, valueAreaMax.innerHTML.length - 14);;
   isFirstTimePropType = true;
+
+  var selectedRooms = isOneRoomsSelected();
+  if( selectedRooms[0] )
+  {
+    url_results += "&rooms="
+    url_results += selectedRooms[1];
+  }
+
   validate.href = url_results;
 }
 
@@ -418,19 +450,63 @@ validate.onclick=submit_request;
 function checkCity()
 {
   var new_city = document.getElementById("search_city");
-  var error_msg = document.getElementById("error_msg");
-
+  var feedback_msg = document.getElementById("feedback_msg");
+  var msg_type = document.getElementById("msg_type");
+  var city_check_msg = document.getElementById("city_check_msg");
   if( new_city.value.trim().toUpperCase() == "COLOMBES" )
   {
     new_city.className = "form-control";
-    error_msg.innerHTML = "";
+    city_check_msg.className = "feedback_box good_feedback";
+    msg_type.innerHTML = "Info"
+    feedback_msg.innerHTML = " : Uniquement la ville de Colombes pour l'instant &#128515;";
+    feedback_msg.style.color ="black";
     return true;
   }
   else
   {
     new_city.className = "form-control is-invalid";
-    error_msg.innerHTML = "Désolé, pour l'instant nous supportons uniquement la Ville de Colombes";
-
+    city_check_msg.className = "feedback_box bad_feedback";
+    msg_type.innerHTML = ""
+    feedback_msg.innerHTML = " Désolé, nous supportons uniquement la ville de Colombes";
+    feedback_msg.style.color ="red";
     return false;
+  }
+}
+
+/* Handle rooms buttons */
+
+function handleEvtDownRooms(event)
+{
+  if(isRoomsSelected.get(event.currentTarget) )
+  {
+    isRoomsSelected.set(event.currentTarget, false);
+    event.currentTarget.style.transform = "scale(0.85)";
+    event.currentTarget.style.border = "";
+  }
+  else
+  {
+      isRoomsSelected.set(event.currentTarget, true);
+      event.currentTarget.style.transform = "scale(1)";
+      event.currentTarget.style.border = "solid 3px #222545";
+      roomsErrorMsg.innerHTML = "";
+      roomsErrorMsg.style.color = "";
+      for(i = 0; i < rooms.length; ++i)
+      {
+          if( rooms[i] != event.currentTarget )
+          {
+            isRoomsSelected.set(rooms[i], false);
+            rooms[i].style.transform = "scale(0.85)";
+            rooms[i].style.border = "";
+          }
+      }
+
+  }
+}
+
+if( rooms )
+{
+  for(i = 0; i < rooms.length; i++)
+  {
+    rooms[i].addEventListener(eventdown, handleEvtDownRooms, true);
   }
 }

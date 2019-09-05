@@ -20,13 +20,18 @@ function checkAddress()
 
   // we first check that we handle this city
   var new_city = document.getElementById("estimate_city");
-  var error_msg = document.getElementById("addr_error_msg");
+  var feedback_msg = document.getElementById("feedback_msg");
+  var msg_type = document.getElementById("msg_type");
+  var city_check_msg = document.getElementById("city_check_msg");
   var city = new_city.value.trim().toUpperCase();
   //console.log("checkAddress");
   if( !cityMap.has(city))
   {
     new_city.className = "form-control is-invalid";
-    error_msg.innerHTML = "Désolé, pour l'instant nous supportons uniquement les villes du département des hauts-de-seine";
+    city_check_msg.className = "feedback_box bad_feedback";
+    msg_type.innerHTML = ""
+    feedback_msg.innerHTML = "Désolé, pour l'instant nous supportons uniquement les villes du département des hauts-de-seine";
+    feedback_msg.style.color ="red";
     return false;
   }
   var road_number = document.getElementById("road_number");
@@ -66,7 +71,12 @@ function checkAddress()
       new_city.className = "form-control is-invalid sf_form_error";
       road_number.className = "form-control is-invalid sf_form_error";
       estimate_road.className = "form-control is-invalid sf_form_error";
-      error_msg.innerHTML = "Désolé, nous ne retrouvons pas l'adresse que vous avez rentré";
+
+      city_check_msg.className = "feedback_box bad_feedback";
+      msg_type.innerHTML = ""
+      feedback_msg.innerHTML = "Désolé, nous ne retrouvons pas l'adresse que vous avez rentré";
+      feedback_msg.style.color ="red";
+
       return false;
     }
 
@@ -353,13 +363,19 @@ function gotonextpage(event)
   /* check if it is a valid address and populate gps coordinates */
   // we first check that we handle this city
   var new_city = document.getElementById("estimate_city");
-  var error_msg = document.getElementById("addr_error_msg");
+  var feedback_msg = document.getElementById("feedback_msg");
+  var msg_type = document.getElementById("msg_type");
+  var city_check_msg = document.getElementById("city_check_msg");
   var city = new_city.value.trim().toUpperCase();
 
   if( !cityMap.has(city))
   {
     new_city.className = "form-control is-invalid";
-    error_msg.innerHTML = "Désolé, pour l'instant nous supportons uniquement les villes du département des hauts-de-seine";
+    city_check_msg.className = "feedback_box bad_feedback";
+    msg_type.innerHTML = ""
+    feedback_msg.innerHTML = " Désolé, nous supportons uniquement les villes du département des hauts-de-seine";
+    feedback_msg.style.color ="red";
+
     return false;
   }
   var road_number = document.getElementById("road_number");
@@ -367,7 +383,10 @@ function gotonextpage(event)
   new_city.className = "form-control sf_form_decoration";
   road_number.className = "form-control sf_form_decoration";
   estimate_road.className = "form-control sf_form_decoration";
-  error_msg.innerHTML = "";
+  city_check_msg.className = "feedback_box good_feedback";
+  msg_type.innerHTML = "Info"
+  feedback_msg.innerHTML = " : Uniquement les biens du département des hauts-de-seine pour l'instant &#128515;";
+  feedback_msg.style.color ="black";
 
  //https://api-adresse.data.gouv.fr/search/?q=16+avenue+henri+barbusse+colombes&postcode=92700
 
@@ -402,7 +421,10 @@ function gotonextpage(event)
       new_city.className = "form-control is-invalid sf_form_error";
       road_number.className = "form-control is-invalid sf_form_error";
       estimate_road.className = "form-control is-invalid sf_form_error";
-      error_msg.innerHTML = "Désolé, nous ne retrouvons pas l'adresse que vous avez rentré";
+      city_check_msg.className = "feedback_box bad_feedback";
+      msg_type.innerHTML = ""
+      feedback_msg.innerHTML = " Désolé, nous ne retrouvons pas votre adresse";
+      feedback_msg.style.color ="red";
       validate.href = "#";
       return ;
     }

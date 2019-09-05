@@ -49,11 +49,14 @@
         <div class="sf_search_block mx-auto d-block">
          <div class="sf_input_block">
            <i class="fa fa-search sf_search_icon"></i>
-           <input class="form-control" type="search" placeholder="Ville"
+           <input class="form-control" type="search" placeholder="Ville" value="Colombes"
            name="city" style ="padding-left:30px; width:250px;" id ="search_city" onblur="checkCity()">
            </input>
-           <div class ="invalid-feedback" id="error_msg"></div>
+
+           <div class="feedback_box good_feedback" id="city_check_msg">
+             <a style="color:#61AEB5;font-weight:bold" id="msg_type">Info</a><a id="feedback_msg"> : Uniquement la ville de Colombes pour l'instant &#128515;</a></div>
          </div>
+
        </div>
      </div>
 
@@ -129,7 +132,7 @@
         <div class="sf_range_slider_input sf_slider_max no_select" id = "area_max"><a style="color:#61AEB5;font-weight:bold" id = "value_area_max">400 m<sup>2</a></div>
       </div>
     </div>
-    <div class="sf_line row mx-auto">
+    <!-- <div class="sf_line row mx-auto">
       <a style="font-size:18px; color:black;" class="mx-auto">Temps de trajet</a>
     </div>
     <div style="height:150px;" class="row mx-auto">
@@ -147,6 +150,39 @@
             </div>
             <div class="property_type_text_box no_select"> <a class="property_type_text" style="color:#61AEB5;">Ecole</a>
             </div>
+        </div>
+
+      </div>
+
+    </div> -->
+    <div class="sf_line row mx-auto">
+      <a style="font-size:18px; color:black;" class="mx-auto">Nombre de pièces</a>
+    </div>
+    <div style="height:150px;" class="row mx-auto">
+      <div style ="display: flex; align-items: center;flex-direction:row;width:100%;justify-content: space-evenly;flex-wrap:wrap;">
+        <div class="sf_rooms no_select">
+          <a style="color:#61AEB5;font-size:18px;">1</a>
+        </div>
+        <div class="sf_rooms no_select">
+          <a style="color:#61AEB5;font-size:18px;">2</a>
+        </div>
+        <div class="sf_rooms no_select">
+          <a style="color:#61AEB5;font-size:18px;">3</a>
+        </div>
+        <div class="sf_rooms no_select">
+          <a style="color:#61AEB5;font-size:18px;">4</a>
+        </div>
+        <div class="sf_rooms no_select">
+          <a style="color:#61AEB5;font-size:18px;">5</a>
+        </div>
+        <div class="sf_rooms no_select">
+          <a style="color:#61AEB5;font-size:18px;">6</a>
+        </div>
+        <div class="sf_rooms no_select">
+          <a style="color:#61AEB5;font-size:18px;">7</a>
+        </div>
+        <div class="sf_rooms no_select">
+          <a style="color:#61AEB5;font-size:18px;">8</a>
         </div>
 
       </div>
