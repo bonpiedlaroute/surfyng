@@ -84,7 +84,7 @@ class SelogerSpider(scrapy.Spider):
       image_count = 1
       announce_image = ""
       if image_divs:
-         announce_image = 'http:'+ image_divs[0]
+         announce_image = 'https:'+ image_divs[0]
 
       for image_div in image_divs:
          image_url  = 'http:' + image_div

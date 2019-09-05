@@ -532,7 +532,22 @@ namespace surfyn
       }
       if (document.HasMember("floor"))
       {
-         std::string floor = std::to_string(document["floor"].GetUint());
+         std::string floor;
+         auto nb_floor = document["floor"].GetUint();
+
+         if( nb_floor == 0 )
+            floor = "rez-de-chaussée";
+         else
+         {
+            if( nb_floor == 1)
+            {
+               floor = "1er";
+            }
+            else
+            {
+               floor = std::to_string(nb_floor) + "ème";
+            }
+         }
 
          realEstate.setDescription(RealEstateFloor, floor);
       }
