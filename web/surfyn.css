@@ -384,6 +384,7 @@ width:100%;
   margin-top:10px;
   display:flex;
   position:relative;
+  justify-content: center;
 }
 .det_ad_image
 {
@@ -769,6 +770,7 @@ margin-left:10%;
     width:45%;
     border-radius:8px;
     display:flex;
+    justify-content: center;
   }
   .announce_summary_container
   {
@@ -832,6 +834,7 @@ margin-left:10%;
     margin-top:10px;
     display:flex;
     position:relative;
+    justify-content: center;
   }
   .det_ad_desc_container
   {

@@ -94,7 +94,7 @@ function generate_details_page(data)
 
       var det_ad_img = createNode("img");
       det_ad_img.className = "det_ad_image";
-      det_ad_img.src = data[i].IMAGE;
+      det_ad_img.src = data[i].hasOwnProperty('IMAGE')? data[i].IMAGE: "logo.svg";
       det_ad_image_frame_div.appendChild(det_ad_img);
 
       var det_icon_div = createNode("div");
@@ -184,10 +184,17 @@ function generate_details_page(data)
         if(ismobile)
         det_price_span.style.fontSize = "12px";
 
-        var prop_price = (data[i].PRICE / 1000) | 0 ;
+        if(data[i].hasOwnProperty('SEARCH_TYPE') && data[i].SEARCH_TYPE == "For rent")
+        {
+          det_price_span.innerHTML = String(data[i].PRICE);
+          det_price_span.innerHTML += " €";
+        }
+        else {
+          var prop_price = (data[i].PRICE / 1000) | 0 ;
 
-        det_price_span.innerHTML = String(prop_price);
-        det_price_span.innerHTML += " K€";
+          det_price_span.innerHTML = String(prop_price);
+          det_price_span.innerHTML += " K€";
+        }
 
         det_price_span_div.appendChild(det_price_span);
 

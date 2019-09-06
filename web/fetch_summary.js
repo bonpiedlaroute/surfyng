@@ -92,7 +92,7 @@ function loadJSON(path, success, error) {
                ad_image_container_div.className = "announce_image_container";
 
                var ad_image = createNode("img");
-               ad_image.src = data[i].IMAGE;
+               ad_image.src = data[i].hasOwnProperty('IMAGE')? data[i].IMAGE: "logo.svg";
                ad_image.className = "announce_image";
 
                ad_image_container_div.appendChild(ad_image);
