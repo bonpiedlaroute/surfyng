@@ -514,8 +514,8 @@ namespace surfyn
 
       if (document.HasMember("price"))
       {
-         std::string price = std::to_string(document["price"].GetUint());
-
+         std::string price = std::to_string(document["price"].GetDouble());
+         std::replace(price.begin(), price.end(), ',', '.');
          realEstate.setDescription(RealEstatePrice, price);
       }
       if (document.HasMember("surfaceArea"))
