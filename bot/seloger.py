@@ -77,15 +77,16 @@ class SelogerSpider(scrapy.Spider):
 
       title = response.xpath('//h1[@class="detail-title title1"]/text()').extract()
       image_divs = response.xpath('//div[@class="carrousel_slide"]/img/@src').extract()
+      announce_image = ""
+      if image_divs:
+         announce_image = 'https:'+ image_divs[0]
+
+
       image_divs2 = response.xpath('//div[@class="carrousel_slide"]/div/@data-lazy').extract()
       for image_div in image_divs2:
          image_divs.append(json.loads(image_div)['url'])
 
       image_count = 1
-      announce_image = ""
-      if image_divs:
-         announce_image = 'https:'+ image_divs[0]
-
       for image_div in image_divs:
          image_url  = 'http:' + image_div
          image_name = os.path.join(IMAGES_FOLDER_NAME, str(ID) + '_' + str(image_count) + '.jpg')
