@@ -13,6 +13,7 @@
    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
     <!--  Surfyn styles -->
     <link href="surfyn.css" rel="stylesheet">
+    <link href="autocomplete.css" rel="stylesheet">
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-140583317-1"></script>
     <script>
@@ -66,9 +67,11 @@
           <div style="width:100%;height:140px;display:flex; justify-content:center;align-items:center;flex-direction:row;">
             <div class="estimate_place_left"></div>
              <div class="estimate_city">
+               <div class="autocomplete" style="width:100%;">
               <input class="form-control sf_form_decoration" type="search" placeholder="Ville"
               name="city" id ="estimate_city">
               </input>
+              </div>
               <!-- <div class ="invalid-feedback" id="addr_error_msg"></div> -->
               <div class="feedback_box good_feedback" style="width:100%;" id="city_check_msg">
                 <a style="color:#61AEB5;font-weight:bold" id="msg_type">Info</a>
@@ -217,6 +220,7 @@
 
     </script>
     <script src="estimate_house_price.js"></script>
+    <script src="autocomplete.js"></script>
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
