@@ -488,8 +488,7 @@ function handleEvtDownRooms(event)
       isRoomsSelected.set(event.currentTarget, true);
       event.currentTarget.style.transform = "scale(1)";
       event.currentTarget.style.border = "solid 3px #222545";
-      roomsErrorMsg.innerHTML = "";
-      roomsErrorMsg.style.color = "";
+
       for(i = 0; i < rooms.length; ++i)
       {
           if( rooms[i] != event.currentTarget )

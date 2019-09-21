@@ -31,17 +31,44 @@ function loadJSON(path, success, error) {
   const url = 'https://surfyn.fr:7878/search/all'+ window.location.search;
   //const url = 'http://127.0.0.1:7878/search/all'+ window.location.search;
 
-  fetch(url)
-  .then(function(resp) { return resp.json(); } )
-  .then(function(data) {
-    generate_summary_page(data);
+  var summary_json_data = sessionStorage.getItem("summary_json_data");
+  var needtosort = sessionStorage.getItem("needtosort");
+  if(needtosort && summary_json_data)
+  {
+    var newdata = JSON.parse(summary_json_data);
+    if(needtosort == "byprice")
+    {
+      newdata.sort(function(lhs, rhs)
+          {
+            return lhs.PRICE - rhs.PRICE;
+          });
+    }
+    else
+    {
+      if(needtosort == "bysurface")
+      {
+        newdata.sort(function(lhs, rhs)
+            {
+              return lhs.SURFACE - rhs.SURFACE;
+            });
+      }
+    }
 
-  })
-  .catch(function(error) {
-    loadJSON("data/announces_summary.json",
-    function (data) { generate_summary_page(JSON.parse(data.response));}, function(err) {console.log(err);})
-    console.log(error);
-  });
+    generate_summary_page(newdata);
+  }
+  else {
+    fetch(url)
+    .then(function(resp) { return resp.json(); } )
+    .then(function(data) {
+      generate_summary_page(data);
+      sessionStorage.setItem("summary_json_data", JSON.stringify(data));
+    })
+    .catch(function(error) {
+      loadJSON("data/announces_summary.json",
+      function (data) { generate_summary_page(JSON.parse(data.response));}, function(err) {console.log(err);})
+      console.log(error);
+    });
+  }
 
   function reverse(s){
       return s.split("").reverse().join("");

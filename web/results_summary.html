@@ -39,8 +39,18 @@
                 <a style="font-size:15px; color:white; margin-left:5px;" id="nb_announces_found" ></a>
               </div>
               <div style="height:60px; display:flex;flex-direction:row;justify-content:flex-end;" class="header_title_right_box">
-                <i class="fas fa-sliders-h" style="font-size: 30px !important; color:white;margin-top:10px; margin-right:20px;">
-                </i>
+                <div class="sf_dropdown">
+                  <div style="display:block;width:124px;height:43px;">
+                    <a onclick="show_dropdown_list()" id="sf_dropdown_link">
+                    <i class="fas fa-sliders-h" style="font-size: 30px !important; color:white;margin-top:10px; float:right;">
+                    </i>
+                    </a>
+                  </div>
+                <div id="filter_parameter" class="parameter_content">
+                  <a href="#" onclick="sortbyprice()"> Trier par prix</a>
+                  <a href="#" onclick="sortbysurface()"> Trier par m<sup>2</a>
+                </div>
+                </div>
               </div>
             </div>
           </div>

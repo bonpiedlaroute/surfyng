@@ -6,6 +6,8 @@ function gotopreviouspage()
 {
   sessionStorage.setItem("scrollX", "0");
   sessionStorage.setItem("scrollY", "0");
+  sessionStorage.setItem("needtosort", "");
+  sessionStorage.setItem("summary_json_data", "");
   window.history.back();
 }
 
@@ -22,3 +24,41 @@ var init = function () {
      parseInt(sessionStorage.getItem("scrollY"), 10)) ;}, 100);
 };
 window.onload = init;
+
+var nb_dropdown_click = 0;
+function show_dropdown_list()
+{
+
+  var filter_parameter = document.getElementById("filter_parameter");
+  filter_parameter.className = "parameter_content show_parameter_content";
+  nb_dropdown_click += 1;
+}
+
+window.onclick = function(event) {
+
+  if (event.target.className != "fas fa-sliders-h" || ( (nb_dropdown_click % 2) == 0) )
+  {
+    var dropdowns = document.getElementsByClassName("parameter_content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show_parameter_content')) {
+        openDropdown.classList.remove('show_parameter_content');
+      }
+    }
+    nb_dropdown_click = 0;
+  }
+
+}
+
+function sortbyprice()
+{
+  sessionStorage.setItem("needtosort", "byprice");
+  location.reload();
+}
+
+function sortbysurface()
+{
+  sessionStorage.setItem("needtosort", "bysurface");
+  location.reload();
+}

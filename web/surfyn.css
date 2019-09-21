@@ -652,6 +652,43 @@ margin-left:10%;
 {
   border:1px solid red;
 }
+.sf_dropdown
+{
+  position:relative;
+  display: inline-block;
+}
+.sf_dropdown_link
+{
+
+}
+.parameter_content
+{
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 124px;
+  z-index: 2;
+  border: 2px solid #bfe5f5;
+}
+.parameter_content a {
+  color: #61AEB5;
+  padding: 8px 12px;
+  text-decoration: none;
+  display: block;
+  font-size: bold;
+}
+.parameter_content a:hover
+{
+  /*background-color: #ddd;*/
+  background-color: #bfe5f5;
+}
+
+.show_parameter_content
+{
+  display:block;
+}
+
+
 @media (max-width:1024px) {
   .estimate_button
   {
@@ -951,6 +988,7 @@ margin-left:10%;
   .ad_summary_src_provider{
     height:70%; width:32%; border-radius:10px;text-align:center;margin-left:2px;
   }
+
 } /* end of @media (max-width:1024px)  */
 
 @media (max-height:700px)
