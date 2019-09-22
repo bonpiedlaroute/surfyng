@@ -30,4 +30,4 @@ cd ~/software/surfyng/sf_services/sf_classifier/build/
 ./sf_classifier config_fr_summary.ini
 cd ~/software/surfyng/sf_services/dynamodb_access/build
 ./stop_dyndb
-
+rm -f ~/scrapy_env/surfyn_bot/surfyn_bot/images/*
