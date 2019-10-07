@@ -383,7 +383,7 @@ function isOneRoomsSelected()
 function submit_request(event)
 {
   var city = document.getElementById("search_city");
-  url_results = "results_summary.html";
+  url_results = "liste_annonces.html";
 
   if( checkCity() == false )
   {

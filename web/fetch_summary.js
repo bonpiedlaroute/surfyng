@@ -106,7 +106,7 @@ function loadJSON(path, success, error) {
           {
                var ad_link = createNode("a");
                ad_link.style.display = "block";
-               ad_link.href = "results_details.html?"+data[i].ID;
+               ad_link.href = "annonce_detaille.html?"+data[i].ID;
 
                var ad_div = createNode("div");
                ad_div.className = "row mx-auto announce_frame";
