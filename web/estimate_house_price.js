@@ -358,7 +358,7 @@ function completenexturl()
 function gotonextpage(event)
 {
 
-  next_url = "estimate_criteria_det.html";
+  next_url = "estimation_immobiliere_detaille.html";
 
   /* check if it is a valid address and populate gps coordinates */
   // we first check that we handle this city
@@ -464,14 +464,14 @@ else {
 }
 var divCaveY = document.getElementById("cave_y");
 var divCaveN = document.getElementById("cave_n");
-var caveState = true;
+var caveState = false;
 function handleEvtDownCaveY(event)
 {
   if(caveState == false )
   {
     caveState = true;
-    divCaveY.style.backgroundColor = "white";
-    divCaveN.style.backgroundColor = "#bfe5f5";
+    divCaveY.style.backgroundColor = "#bfe5f5";
+    divCaveN.style.backgroundColor = "white";
   }
 }
 function handleEvtDownCaveN(event)
@@ -479,8 +479,8 @@ function handleEvtDownCaveN(event)
   if(caveState == true )
   {
     caveState = false;
-    divCaveY.style.backgroundColor = "#bfe5f5";
-    divCaveN.style.backgroundColor = "white";
+    divCaveY.style.backgroundColor = "white";
+    divCaveN.style.backgroundColor = "#bfe5f5";
   }
 }
 
@@ -550,7 +550,7 @@ function submit_request()
 {
 
 
-  var results_url = "estimate_loading.html?" + Params;
+  var results_url = "estimation_encours.html?" + Params;
   var nb_floor_value = document.getElementById("nb_floor_value");
   if(nb_floor_value)
   {

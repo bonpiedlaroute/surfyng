@@ -126,7 +126,7 @@ function set_predicted_price(data)
 {
   if(data.length > 0 )
   {
-    next_url += "estimate_results.html?predicted_price=";
+    next_url += "resultat_estimation.html?predicted_price=";
     next_url += formatPrice(String(data[0]));
 
   }

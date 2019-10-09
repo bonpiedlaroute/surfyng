@@ -394,6 +394,9 @@ function generate_details_page(data)
 
         if(data[i].hasOwnProperty('CONSTRUCTION_YEAR'))
         det_year_span.innerHTML = data[i].CONSTRUCTION_YEAR;
+        else {
+          det_year_span.innerHTML = "année de construction";
+        }
 
         det_year_span_div.appendChild(det_year_span);
 
@@ -439,6 +442,9 @@ function generate_details_page(data)
 
         if(data[i].hasOwnProperty('TYPE_OF_HEATING'))
         det_heating_span.innerHTML = data[i].TYPE_OF_HEATING;
+        else {
+          det_heating_span.innerHTML = "type de chauffage";
+        }
 
         det_heating_span_div.appendChild(det_heating_span);
 
