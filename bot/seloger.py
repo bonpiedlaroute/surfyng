@@ -46,7 +46,7 @@ class SelogerSpider(scrapy.Spider):
 
    def parse(self, response):
       original_request = str(response.request)
-      all_links = announces = response.xpath('//section[@class="liste_resultat"]').xpath('.//a[contains(@href, "annonces")]/@href').extract()
+      all_links = response.xpath('//div[@class="c-wrap-main"]').xpath('.//a[@name="classified-link"]/@href').extract()
       links = set(all_links)
       id_prop = 0
       id_search = 0
