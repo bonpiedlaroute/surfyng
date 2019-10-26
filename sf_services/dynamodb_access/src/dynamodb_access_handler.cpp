@@ -336,6 +336,31 @@ void dynamodb_accessHandler::createTable(OperationResult& _return, const std::st
 
    fillResult(_return, createTableOutcome);
 
+   WaitUntilActive(tablename.c_str());
+}
+
+DescribeTableResult dynamodb_accessHandler::WaitUntilActive(const Aws::String tableName)
+{
+  DescribeTableRequest describeTableRequest;
+  describeTableRequest.SetTableName(tableName);
+  bool shouldContinue = true;
+  DescribeTableOutcome outcome = m_client->DescribeTable(describeTableRequest);
+
+  while (shouldContinue)
+  {
+      if (outcome.IsSuccess() && outcome.GetResult().GetTable().GetTableStatus() == TableStatus::ACTIVE)
+      {
+          break;
+      }
+      else
+      {
+          std::this_thread::sleep_for(std::chrono::seconds(1));
+      }
+
+      outcome = m_client->DescribeTable(describeTableRequest);
+  }
+
+  return outcome.GetResult();
 }
 
 void dynamodb_accessHandler::deleteTable(OperationResult& _return, const std::string& tablename)
