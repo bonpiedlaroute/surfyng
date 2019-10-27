@@ -15,6 +15,7 @@
 #include <unordered_map>
 #include <utility>
 #include <aws/dynamodb/DynamoDBErrors.h>
+#include <aws/dynamodb/model/DescribeTableRequest.h>
 #include <chrono>
 
 
@@ -55,6 +56,7 @@ private:
    void manageBandwitdhLimit(const std::string& service, const std::chrono::high_resolution_clock::time_point& lasttime, const int64_t& minimum_interval);
    Type::type findAttrType(const std::string& attr, const KeyValue& key, const std::map<std::string, ValueType>& attributestoget) const;
    Type::type findAttrType(const std::string& attr, const std::map<std::string, ValueType>& attributestoget) const;
+   Aws::DynamoDB::Model::DescribeTableResult WaitUntilActive(const Aws::String tableName);
 private:
    std::shared_ptr<Aws::DynamoDB::DynamoDBClient> m_client;
    Aws::Map<Aws::String, Aws::DynamoDB::Model::AttributeValue> m_lastEvaluatedKey;
