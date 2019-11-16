@@ -1,0 +1,21 @@
+version: '2'
+
+services:
+  postgres:
+    image: postgres
+    container_name: "portaldb"
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: postgres
+
+  portal:
+    build: .
+    container_name: portal
+    ports:
+      - "9090:8080"
+      - '9797:8787'
+    depends_on:
+      - postgres

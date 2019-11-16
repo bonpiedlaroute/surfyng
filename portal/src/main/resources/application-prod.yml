@@ -1,0 +1,55 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/users
+    username: admin
+    password: password
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      minimumIdle: 10
+      idleTimeout: 60000
+      maximumPoolSize: 100
+      connectionTimeout: 30000
+  jta:
+    enabled: false
+
+  jpa:
+    show_sql: false
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        #  generate_statistics: true
+        #  format_sql: true
+        temp:
+          use_jdbc_metadata_defaults: false
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 1080663386908-75irf7rtb430o2foidk95j2bloa8ut0s.apps.googleusercontent.com
+            clientSecret: KeREL988Gm88IrlOVmoGpvKt
+            redirectUriTemplate: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - profile
+          facebook:
+            clientId: 467157600564935
+            clientSecret: a55890f1cb6ded2276fc844c9fbbbfa2
+            redirectUriTemplate: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - public_profile
+        provider:
+          facebook:
+            authorizationUri: https://www.facebook.com/v3.0/dialog/oauth
+            tokenUri: https://graph.facebook.com/v3.0/oauth/access_token
+            userInfoUri: https://graph.facebook.com/v3.0/me?fields=id,first_name,middle_name,last_name,name,email,verified,is_verified,picture.width(250).height(250)
+
+app:
+  oauth2:
+    # After successfully authenticating with the OAuth2 Provider
+    authorizedRedirectUris:
+      - http://localhost:8080/oauth2/redirect
