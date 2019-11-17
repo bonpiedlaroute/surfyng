@@ -1,2 +1,2 @@
-# surfyng
+# surfyn
 Simplify Real Estate Finding
