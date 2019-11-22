@@ -70,3 +70,47 @@ def getBienIciPropertiesId(surfyn_properties_id):
 
 def getBienIciSearchTypeId(surfyn_searchtype):
    return BienIciSearchTypeMapping[surfyn_searchtype]
+
+LaforetPropertiesMapping = dict()
+LaforetPropertiesMapping[APART_ID] = 'appartement'
+LaforetPropertiesMapping[HOUSE_ID] = 'maison'
+
+LaforetSearchTypeMapping = dict()
+LaforetSearchTypeMapping[BUY_ID] = 'acheter'
+LaforetSearchTypeMapping[RENT_ID] = 'louer'
+
+def getLaforetPropertiesId(_id):
+   return LaforetPropertiesMapping[_id]
+
+def getLaforetSearchTypeId(_id):
+   return LaforetSearchTypeMapping[_id]
+
+OrpiPropertiesMapping = dict()
+OrpiPropertiesMapping[APART_ID] = 'appartement'
+OrpiPropertiesMapping[HOUSE_ID] = 'maison'
+
+OrpiSearchTypeMapping = dict()
+OrpiSearchTypeMapping[BUY_ID] = 'buy'
+OrpiSearchTypeMapping[RENT_ID] = 'rent'
+
+def getOrpiPropertiesId(_id):
+   return OrpiPropertiesMapping[_id]
+
+def getOrpiSearchTypeId(_id):
+   return OrpiSearchTypeMapping[_id]
+
+
+StephanePlazaImoPropertiesMapping = dict()
+StephanePlazaImoPropertiesMapping[APART_ID] = '1'
+StephanePlazaImoPropertiesMapping[HOUSE_ID] = '2'
+
+StephanePlazaImoSearchTypeMapping = dict()
+StephanePlazaImoSearchTypeMapping[BUY_ID] = 'buy'
+StephanePlazaImoSearchTypeMapping[RENT_ID] = 'rent'
+
+def getStephanePlazaImoPropertiesId(_id):
+   return StephanePlazaImoPropertiesMapping[_id]
+
+def getStephanePlazaImoSearchTypeId(_id):
+   return StephanePlazaImoSearchTypeMapping[_id]
+
