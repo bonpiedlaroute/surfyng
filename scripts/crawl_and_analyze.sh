@@ -13,6 +13,12 @@ DATE=$(date +%Y_%m_%d"_"%H_%M_%S)
 scrapy crawl leboncoin >> "leboncoin_"$DATE".log" 2>&1
 DATE=$(date +%Y_%m_%d"_"%H_%M_%S)
 scrapy crawl bienici >> "bienici_"$DATE".log" 2>&1
+DATE=$(date +%Y_%m_%d"_"%H_%M_%S)
+scrapy crawl laforet >> "laforet_"$DATE".log" 2>&1
+DATE=$(date +%Y_%m_%d"_"%H_%M_%S)
+scrapy crawl orpi >> "orpi_"$DATE".log" 2>&1
+DATE=$(date +%Y_%m_%d"_"%H_%M_%S)
+scrapy crawl stephaneplazaimo >> "stephaneplazaimo_"$DATE".log" 2>&1
 deactivate
 cd ~/software/surfyng/sf_services/sf_classifier/build/
 ./sf_classifier config_fr_properties.ini

@@ -8,13 +8,23 @@ import scrapy
 import json
 import urllib
 import os
+import configparser
 
 from hash_id import *
 from search_features import *
 from url_builder import *
-from Serializer import *
+from Serializer import Serializer
 
-IMAGES_FOLDER_NAME='images'
+
+config_seloger = configparser.ConfigParser()
+config_seloger.read('spiders/config.ini')
+
+IMAGES_FOLDER_NAME=config_seloger['COMMON']['images']
+city = config_seloger['COMMON']['city']
+region = config_seloger['COMMON']['region']
+ip = config_seloger['COMMON']['db_access_ip']
+port = int(config_seloger['COMMON']['db_access_port'])
+
 
 
 class SelogerSpider(scrapy.Spider):
@@ -30,7 +40,7 @@ class SelogerSpider(scrapy.Spider):
       self.announces_cnt = 0
       self.announce_title = dict()
 
-      self.serializer = Serializer('localhost', 5050)
+      self.serializer = Serializer(ip, port)
 
    def start_requests(self):
       prop_list = [(APART_ID, BUY_ID), (HOUSE_ID, BUY_ID), (APART_ID, RENT_ID), (HOUSE_ID, RENT_ID)]
@@ -68,7 +78,7 @@ class SelogerSpider(scrapy.Spider):
    def parse_prop_description(self, response, announce_url, id_property, ID, id_search, announce_image, img_cnt):
       self.announces_cnt += 1
 
-      ret = self.serializer.send(ID, id_property, response.text, "colombes","ile de france", announce_url, announce_url[12:19], self.announce_title[ID], id_search, announce_image, img_cnt)
+      ret = self.serializer.send(ID, id_property, response.text, city, region, announce_url, announce_url[12:19], self.announce_title[ID], id_search, announce_image, img_cnt)
       print (ret)
             
    def parse_announce_title(self, response, announce_url, id_property, id_search):

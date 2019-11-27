@@ -8,15 +8,25 @@ import scrapy
 import json
 import urllib
 import os
+import configparser
 
 from hash_id import *
 from search_features import *
 from url_builder import *
-from Serializer import *
+from Serializer import Serializer
 
 search_base_url = "https://api.leboncoin.fr/finder/classified/"
 
-IMAGES_FOLDER_NAME='images'
+config_leboncoin = configparser.ConfigParser()
+config_leboncoin.read('spiders/config.ini')
+
+IMAGES_FOLDER_NAME=config_leboncoin['COMMON']['images']
+city = config_leboncoin['COMMON']['city']
+region = config_leboncoin['COMMON']['region']
+ip = config_leboncoin['COMMON']['db_access_ip']
+port = int(config_leboncoin['COMMON']['db_access_port'])
+city_url = config_leboncoin['LEBONCOIN']['city_url']
+
 
 class LeboncoinSpider(scrapy.Spider):
    
@@ -29,7 +39,7 @@ class LeboncoinSpider(scrapy.Spider):
       self.mapping_url_ptype = dict()
       self.mapping_url_stype = dict()
       self.announces_cnt = 0
-      self.serializer = Serializer('localhost', 5050)
+      self.serializer = Serializer(ip, port)
 
    def start_requests(self):
       prop_list = [(APART_ID, BUY_ID), (HOUSE_ID, BUY_ID), (APART_ID, RENT_ID), (HOUSE_ID, RENT_ID)]
@@ -38,7 +48,7 @@ class LeboncoinSpider(scrapy.Spider):
          prop_id = getLeboncoinPropertiesId(ptype)
          search_id = getLeboncoinSearchTypeId(stype)        
 
-         url = buildleboncoinurl(prop_id, search_id, 'Colombes_92700')
+         url = buildleboncoinurl(prop_id, search_id, city_url)
          self.mapping_url_ptype[url] = ptype
          self.mapping_url_stype[url] = stype
          yield scrapy.Request(url=url, callback= lambda r, nextpage=2: self.parse(r, nextpage))
@@ -100,7 +110,7 @@ class LeboncoinSpider(scrapy.Spider):
 
       
       # send data to db
-      ret = self.serializer.send(ID, property_type, response.text, 'colombes', 'ile de france', ad_url, 'leboncoin', data['subject'], search_type, announce_image, image_cnt-1)
+      ret = self.serializer.send(ID, property_type, response.text, city, region, ad_url, 'leboncoin', data['subject'], search_type, announce_image, image_cnt-1)
       print (ret)
 
        

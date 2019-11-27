@@ -187,7 +187,17 @@ namespace surfyn
       return true;
    }
 
-   void DataFormater::ReadSelogerJSON(const std::string json, classifier::RealEstateAd& realEstate)
+   DataFormater::DataFormater()
+   {
+      m_ReaderBySources["seloger"] = [this](const std::string& json, classifier::RealEstateAd& realEstate) { ReadSelogerJSON(json, realEstate);};
+      m_ReaderBySources["leboncoin"] = [this](const std::string& json, classifier::RealEstateAd& realEstate) { ReadLeboncoinJSON(json, realEstate);};
+      m_ReaderBySources["bienici"] = [this](const std::string& json, classifier::RealEstateAd& realEstate) { ReadBienIciJSON(json, realEstate);};
+      m_ReaderBySources["laforet"] = [this](const std::string& json, classifier::RealEstateAd& realEstate) { ReadLaForetJSON(json, realEstate);};
+      m_ReaderBySources["orpi"] = [this](const std::string& json, classifier::RealEstateAd& realEstate) { ReadOrpiJSON(json, realEstate);};
+      m_ReaderBySources["stephaneplazaimo"] = [this](const std::string& json, classifier::RealEstateAd& realEstate) { ReadStephanePlazaImoJSON(json, realEstate);};
+
+   }
+   void DataFormater::ReadSelogerJSON(const std::string& json, classifier::RealEstateAd& realEstate)
    {
       std::locale::global(std::locale(""));
 
@@ -373,9 +383,10 @@ namespace surfyn
          }
 
       }
+      realEstate.setDescription(SOURCE_LOGO, "data/SL0.svg");
    }
 
-   void DataFormater::ReadLeboncoinJSON(const std::string json, classifier::RealEstateAd& realEstate)
+   void DataFormater::ReadLeboncoinJSON(const std::string& json, classifier::RealEstateAd& realEstate)
    {
       std::locale::global(std::locale(""));
 
@@ -450,10 +461,11 @@ namespace surfyn
             realEstate.setDescription(IMAGE, ss.str());
          }
       }*/
+      realEstate.setDescription(SOURCE_LOGO, "data/lbc0.svg");
    }
 
 
-   void DataFormater::ReadLogicImmoJSON(const std::string json, classifier::RealEstateAd& realEstate)
+   void DataFormater::ReadLogicImmoJSON(const std::string& json, classifier::RealEstateAd& realEstate)
    {
       std::locale::global(std::locale(""));
 
@@ -492,7 +504,7 @@ namespace surfyn
       }
    }
 
-   void DataFormater::ReadBienIciJSON(const std::string json, classifier::RealEstateAd& realEstate)
+   void DataFormater::ReadBienIciJSON(const std::string& json, classifier::RealEstateAd& realEstate)
    {
       std::locale::global(std::locale(""));
 
@@ -576,7 +588,326 @@ namespace surfyn
             }
          }
       }
+      realEstate.setDescription(SOURCE_LOGO, "data/bienici.png");
    }
+
+void DataFormater::ReadLaForetJSON(const std::string& json, classifier::RealEstateAd& realEstate)
+{
+   std::locale::global(std::locale(""));
+
+   rapidjson::Document document;
+   document.Parse(json.c_str());
+
+   if(document.HasParseError())
+   {
+      std::stringstream error;
+      error << "failed to parse laforet json: error code [";
+      error << document.GetParseError();
+      error << "] error offset :[";
+      error << document.GetErrorOffset();
+      error << "]";
+      Log::getInstance()->error(error.str());
+
+      return;
+   }
+
+   if( document.HasMember("roomsQuantity"))
+   {
+      std::string nb_room = document["roomsQuantity"].GetString();
+
+      realEstate.setDescription(RealEstateRooms, nb_room);
+   }
+   if( document.HasMember("surface"))
+   {
+      std::string area = document["surface"].GetString();
+
+      realEstate.setDescription(RealEstateSurface, area);
+   }
+   if (document.HasMember("floor"))
+   {
+      std::string floor;
+      auto nb_floor = atoi(document["floor"].GetString());
+
+      if( nb_floor == 0 )
+         floor = "rez-de-chaussée";
+      else
+      {
+         if( nb_floor == 1)
+         {
+            floor = "1er";
+         }
+         else
+         {
+            floor = std::to_string(nb_floor) + "ème";
+         }
+      }
+
+      realEstate.setDescription(RealEstateFloor, floor);
+   }
+   if (document.HasMember("cellar"))
+   {
+      std::string cellar = document["cellar"].GetString();
+
+      realEstate.setDescription(RealEstateCellar, cellar);
+   }
+   if (document.HasMember("price"))
+   {
+      std::string price = document["price"].GetString();
+
+      realEstate.setDescription(RealEstatePrice, price);
+   }
+   if (document.HasMember("lift"))
+   {
+      std::string lift = document["lift"].GetString();
+
+      realEstate.setDescription(RealEstateLift, lift);
+   }
+   if(document.HasMember("latitude") && document.HasMember("longitude"))
+   {
+      std::string location = "lat=";
+      location += document["latitude"].GetString();
+      location += ";";
+      location += "lon=";
+      location += document["longitude"].GetString();
+      realEstate.setDescription(RealEstateLocation, location);
+
+   }
+   if (document.HasMember("heatingNature") && document["heatingNature"].IsString())
+   {
+      std::string heating = "Chauffage ";
+      heating += document["heatingNature"].GetString();
+
+      realEstate.setDescription(RealEstateTypeOfHeating, heating);
+   }
+   if (document.HasMember("parkingInsidesQuantity"))
+   {
+      std::string parking = document["parkingInsidesQuantity"].GetString();
+      realEstate.setDescription(RealEstateParking, parking);
+   }
+
+   realEstate.setDescription(SOURCE_LOGO, "data/laforet.jpg");
+}
+
+void DataFormater::ReadOrpiJSON(const std::string& json, classifier::RealEstateAd& realEstate)
+{
+   std::locale::global(std::locale(""));
+
+   rapidjson::Document document;
+   document.Parse(json.c_str());
+
+   if(document.HasParseError())
+   {
+      std::stringstream error;
+      error << "failed to parse orpi json: error code [";
+      error << document.GetParseError();
+      error << "] error offset :[";
+      error << document.GetErrorOffset();
+      error << "]";
+      Log::getInstance()->error(error.str());
+
+      return;
+   }
+   if (document.HasMember("price"))
+   {
+      std::string price = std::to_string(document["price"].GetDouble());
+      std::replace(price.begin(), price.end(), ',', '.');
+      realEstate.setDescription(RealEstatePrice, price);
+   }
+
+   if( document.HasMember("surface"))
+   {
+     std::string area = std::to_string(document["surface"].GetDouble());
+     std::replace(area.begin(), area.end(), ',', '.');
+     realEstate.setDescription(RealEstateSurface, area);
+   }
+   if( document.HasMember("nbRooms"))
+   {
+      std::string nb_room = std::to_string(document["nbRooms"].GetUint());
+
+      realEstate.setDescription(RealEstateRooms, nb_room);
+   }
+   if( document.HasMember("constructionYear"))
+   {
+      std::string year = std::to_string(document["constructionYear"].GetUint());
+
+      realEstate.setDescription(RealEstateConstructionYear, year);
+   }
+   if (document.HasMember("cellar"))
+   {
+      if(document["cellar"].GetBool())
+         realEstate.setDescription(RealEstateCellar, "1");
+      else
+         realEstate.setDescription(RealEstateCellar, "0");
+   }
+   if (document.HasMember("nbParkingSpaces"))
+   {
+      std::string parking = std::to_string(document["nbParkingSpaces"].GetUint());
+      realEstate.setDescription(RealEstateParking, parking);
+   }
+   if (document.HasMember("storyLocation"))
+   {
+      std::string floor;
+      auto nb_floor = document["storyLocation"].GetUint();
+
+      if( nb_floor == 0 )
+         floor = "rez-de-chaussée";
+      else
+      {
+         if( nb_floor == 1)
+         {
+            floor = "1er";
+         }
+         else
+         {
+            floor = std::to_string(nb_floor) + "ème";
+         }
+      }
+
+      realEstate.setDescription(RealEstateFloor, floor);
+   }
+
+
+   if (document.HasMember("elevator"))
+   {
+
+      if(document["elevator"].GetBool())
+         realEstate.setDescription(RealEstateLift, "1");
+      else
+         realEstate.setDescription(RealEstateLift, "0");
+   }
+   if(document.HasMember("latitude") && document.HasMember("longitude"))
+   {
+      std::string location = "lat=";
+      location += document["latitude"].GetString();
+      location += ";";
+      location += "lon=";
+      location += document["longitude"].GetString();
+      realEstate.setDescription(RealEstateLocation, location);
+
+   }
+   /*if (document.HasMember("heatingNature") && document["heatingNature"].IsString())
+   {
+      std::string heating = "Chauffage ";
+      heating += document["heatingNature"].GetString();
+
+      realEstate.setDescription(RealEstateTypeOfHeating, heating);
+   }*/
+
+
+   realEstate.setDescription(SOURCE_LOGO, "data/orpi.jpg");
+}
+
+void DataFormater::ReadStephanePlazaImoJSON(const std::string& json, classifier::RealEstateAd& realEstate)
+{
+   std::locale::global(std::locale(""));
+
+   rapidjson::Document document;
+   document.Parse(json.c_str());
+
+   if(document.HasParseError())
+   {
+      std::stringstream error;
+      error << "failed to parse stephaneplazaimo json: error code [";
+      error << document.GetParseError();
+      error << "] error offset :[";
+      error << document.GetErrorOffset();
+      error << "]";
+      Log::getInstance()->error(error.str());
+
+      return;
+   }
+   if (document.HasMember("price"))
+   {
+      std::string price = document["price"].GetString();
+
+      realEstate.setDescription(RealEstatePrice, price);
+   }
+   if(document.HasMember("lat") && document.HasMember("lon"))
+   {
+      std::string location = "lat=";
+      location += std::to_string(document["lat"].GetDouble());
+      location += ";";
+      location += "lon=";
+      location += std::to_string(document["lon"].GetDouble());
+      realEstate.setDescription(RealEstateLocation, location);
+   }
+
+   if(document.HasMember("properties"))
+   {
+      const auto& properties = document["properties"];
+      if( properties.HasMember("anneeConstruction"))
+      {
+         std::string year = std::to_string(properties["anneeConstruction"].GetInt());
+         realEstate.setDescription(RealEstateConstructionYear, year);
+      }
+
+      if( properties.HasMember("lift"))
+      {
+         std::string lift = properties["lift"].GetBool()? "1":"0";
+         realEstate.setDescription(RealEstateLift, lift);
+      }
+
+      if( properties.HasMember("floor"))
+      {
+         std::string floor;
+         auto nb_floor = properties["floor"].GetUint();
+
+         if( nb_floor == 0 )
+            floor = "rez-de-chaussée";
+         else
+         {
+            if( nb_floor == 1)
+            {
+               floor = "1er";
+            }
+            else
+            {
+               floor = std::to_string(nb_floor) + "ème";
+            }
+         }
+
+         realEstate.setDescription(RealEstateFloor, floor);
+      }
+      if (properties.HasMember("heating-mode"))
+      {
+         std::string heating = "Chauffage ";
+         heating += properties["heating-mode"].GetString();
+
+         realEstate.setDescription(RealEstateTypeOfHeating, heating);
+      }
+      if( properties.HasMember("room"))
+      {
+         std::string nb_room = std::to_string(properties["room"].GetUint());
+
+         realEstate.setDescription(RealEstateRooms, nb_room);
+      }
+      if( properties.HasMember("surface") )
+      {
+         std::string value = properties["surface"].GetString();
+         auto pos = value.find_first_of(' ');
+         if( pos != std::string::npos)
+         {
+            std::string area = value.substr(0, pos);
+            realEstate.setDescription(RealEstateSurface, area);
+         }
+      }
+      if (properties.HasMember("cellar"))
+      {
+        std::string cellar = std::to_string(properties["cellar"].GetUint());
+
+        realEstate.setDescription(RealEstateCellar, cellar);
+      }
+      if (properties.HasMember("parking-spot"))
+      {
+        std::string parking = std::to_string(properties["parking-spot"].GetUint());
+
+        realEstate.setDescription(RealEstateParking, parking);
+      }
+   }
+
+   realEstate.setDescription(SOURCE_LOGO, "stephaneplazaimo.png");
+}
+
 
 void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tableName)
    {
@@ -673,39 +1004,20 @@ void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_acce
                std::string json = it_field->second;
                if (!announceSource.empty())
                {
-                  if (announceSource == "seloger")
+                  auto it_reader = m_ReaderBySources.find(announceSource);
+                  if( it_reader != m_ReaderBySources.end())
                   {
-
-                     ReadSelogerJSON(json, realEstate);
-                     realEstate.setDescription(SOURCE_LOGO, "data/SL0.svg");
-                     realEstate.setDescription(IMAGE_COUNT, CurrentImageCount);
-                     realEstate.setDescription(IMAGE, CurrentAnnounceImage);
+                     it_reader->second(json, realEstate);
                   }
-                  else if (announceSource == "leboncoin")
-                  {
-                     ReadLeboncoinJSON(json, realEstate);
-                     realEstate.setDescription(SOURCE_LOGO, "data/lbc0.svg");
-                     realEstate.setDescription(IMAGE_COUNT, CurrentImageCount);
-                     realEstate.setDescription(IMAGE, CurrentAnnounceImage);
-
-                  }else if( announceSource == "logicimmo")
-                  {
-                     ReadLogicImmoJSON(json, realEstate);
-                     realEstate.setDescription(SOURCE_LOGO, "data/li0.svg");
-                     realEstate.setDescription(IMAGE_COUNT, CurrentImageCount);
-                     realEstate.setDescription(IMAGE, CurrentAnnounceImage);
-                  }
-                  else if( announceSource == "bienici")
-                  {
-                     ReadBienIciJSON(json, realEstate);
-                     realEstate.setDescription(SOURCE_LOGO, "data/bienici.png");
-                     realEstate.setDescription(IMAGE_COUNT, CurrentImageCount);
-                     realEstate.setDescription(IMAGE, CurrentAnnounceImage);
-                  }
+                  realEstate.setDescription(IMAGE_COUNT, CurrentImageCount);
+                  realEstate.setDescription(IMAGE, CurrentAnnounceImage);
                }
                else
                {
-                  ReadSelogerJSON(json, realEstate);
+                  std::stringstream errorstream;
+                  errorstream << "Announce id [" << id << "] has no source !";
+
+                  Log::getInstance()->error(errorstream.str());
                }
                
             }

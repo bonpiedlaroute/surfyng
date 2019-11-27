@@ -68,4 +68,45 @@ def buildLogicImmoUrl(ptype, stype):
       return logicimmo_paris_sale_baseurl + getLogicImmoPropertiesId(ptype)
    else:
       return logicimmo_paris_rent_baseurl + getLogicImmoPropertiesId(ptype)
+
+laforet_url = 'http://www.laforet.com/agence-immobiliere///rechercher?localisation=&=on'
+
+def buildLaforetUrl(city, ptype, stype):
+   url = insert_in_url(laforet_url,42,city)
+   url = insert_in_url(url, 51,stype)
+   pos = 83 if stype == 'acheter' else 81
+   url = insert_in_url(url, pos, city)
+   pos = 92 if stype == 'acheter' else 90
+   url = insert_in_url(url, pos,ptype)
+
+   return url
+
+orpi_url = 'https://www.orpi.com/recherche/?realEstateTypes[0]=&locations[0][value]='
+
+def buildOrpiUrl(city, ptype, stype):
+   url = insert_in_url(orpi_url,31,stype)
+   pos = 54 if stype == 'buy' else 55
+   url = insert_in_url(url, pos,ptype)
  
+   url += city
+
+   return url
+
+inseecodeByCity = dict()
+inseecodeByCity['colombes'] = '92025'
+
+stephaneplazaimo_url = "https://www.stephaneplazaimmobilier.com/search/?target=&type[]=&location[]="
+
+def buildStephanePlazaImoUrl(city, ptype, stype):
+   url = insert_in_url(stephaneplazaimo_url,47,stype)
+   pos = 58 if stype == 'buy' else 58
+   url = insert_in_url(url, pos, stype)
+ 
+   pos = 69 if stype == 'buy' else 71
+   url = insert_in_url(url, pos, ptype)
+ 
+   url += inseecodeByCity[city]
+
+   return url
+
+
