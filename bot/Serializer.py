@@ -12,8 +12,13 @@ from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
 from search_features import *
 import datetime
+import configparser 
 
-tablename ="FR_PROPERTIES"
+
+config_serializer = configparser.ConfigParser()
+config_serializer.read('spiders/config.ini')
+
+tablename = config_serializer['COMMON']['tablename']
 
 class Serializer:
    def __init__(self, ip, port):

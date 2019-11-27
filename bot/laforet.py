@@ -8,15 +8,23 @@ import scrapy
 import json
 import urllib
 import os
+import configparser
 
 from hash_id import *
 from search_features import *
 from url_builder import *
-from Serializer import *
+from Serializer import Serializer
 
-IMAGES_FOLDER_NAME='images'
-city = "colombes"
-region = "ile de france"
+
+config_laforet = configparser.ConfigParser()
+config_laforet.read('spiders/config.ini')
+
+IMAGES_FOLDER_NAME=config_laforet['COMMON']['images']
+city = config_laforet['COMMON']['city']
+region = config_laforet['COMMON']['region']
+ip = config_laforet['COMMON']['db_access_ip']
+port = int(config_laforet['COMMON']['db_access_port'])
+
 
 class LaforetSpider(scrapy.Spider):
    
@@ -26,12 +34,9 @@ class LaforetSpider(scrapy.Spider):
       if not os.path.exists(IMAGES_FOLDER_NAME):
          os.mkdir(IMAGES_FOLDER_NAME)
 
-      self.mapping_url_ptype = dict()
-      self.mapping_url_stype = dict()
       self.announces_cnt = 0
       self.announce_title = dict()
-
-      self.serializer = Serializer('localhost', 5050)
+      self.serializer = Serializer(ip, port)
 
    def start_requests(self):
       prop_list = [(APART_ID, BUY_ID), (HOUSE_ID, BUY_ID), (APART_ID, RENT_ID), (HOUSE_ID, RENT_ID)]
@@ -41,8 +46,6 @@ class LaforetSpider(scrapy.Spider):
          search_id = getLaforetSearchTypeId(stype)        
 
          url = buildLaforetUrl(city, announcers_id, search_id)
-         self.mapping_url_ptype[url] = ptype
-         self.mapping_url_stype[url] = stype
          yield scrapy.Request(url=url, callback= lambda r, ptype = ptype, stype = stype :self.parse(r, ptype, stype))
 
    def parse(self, response, ptype, stype):

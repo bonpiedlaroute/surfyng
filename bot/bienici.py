@@ -8,11 +8,12 @@ import scrapy
 import json
 import urllib
 import os
+import configparser
 
 from hash_id import *
 from search_features import *
 from url_builder import *
-from Serializer import *
+from Serializer import Serializer
 
 search_base_url = "https://www.bienici.com/realEstateAds.json?filters="
 
@@ -22,7 +23,16 @@ base_filter = "{\"size\":24,\"from\":0,\"filterType\":\"buy\",\"propertyType\":[
 ad_flat_base_url = 'https://www.bienici.com/annonce/vente/colombes/appartement/'
 ad_house_base_url = 'https://www.bienici.com/annonce/vente/colombes/maison/'
 
-IMAGES_FOLDER_NAME='images'
+
+config_bienici = configparser.ConfigParser()
+config_bienici.read('spiders/config.ini')
+
+IMAGES_FOLDER_NAME=config_bienici['COMMON']['images']
+city = config_bienici['COMMON']['city']
+region = config_bienici['COMMON']['region']
+ip = config_bienici['COMMON']['db_access_ip']
+port = int(config_bienici['COMMON']['db_access_port'])
+
 
 class BieniciSpider(scrapy.Spider):
    
@@ -35,7 +45,7 @@ class BieniciSpider(scrapy.Spider):
       self.mapping_url_ptype = dict()
       self.mapping_url_stype = dict()
       self.announces_cnt = 0
-      self.serializer = Serializer('localhost', 5050)
+      self.serializer = Serializer(ip, port)
 
    def start_requests(self):
       prop_list = [(APART_ID, BUY_ID), (HOUSE_ID, BUY_ID), (APART_ID, RENT_ID), (HOUSE_ID, RENT_ID)]
@@ -103,7 +113,7 @@ class BieniciSpider(scrapy.Spider):
             announce_title = ad['title']
 
          # send data to db
-         ret = self.serializer.send(ID, property_type, json.dumps(ad), 'colombes', 'ile de france', ad_url, 'bienici', announce_title, search_type, announce_image, image_cnt-1)
+         ret = self.serializer.send(ID, property_type, json.dumps(ad), city, region, ad_url, 'bienici', announce_title, search_type, announce_image, image_cnt-1)
          print (ret)
       if (data['perPage'] + data['from']) < data['total'] :
          # check for next data   

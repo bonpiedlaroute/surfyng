@@ -8,15 +8,25 @@ import scrapy
 import json
 import urllib
 import os
+import configparser
+
 
 from hash_id import *
 from search_features import *
 from url_builder import *
-from Serializer import *
+from Serializer import Serializer
 
-IMAGES_FOLDER_NAME='images'
-city = "colombes"
-region = "ile de france"
+
+config_orpi = configparser.ConfigParser()
+config_orpi.read('spiders/config.ini')
+
+IMAGES_FOLDER_NAME=config_orpi['COMMON']['images']
+city = config_orpi['COMMON']['city']
+region = config_orpi['COMMON']['region']
+ip = config_orpi['COMMON']['db_access_ip']
+port = int(config_orpi['COMMON']['db_access_port'])
+
+
 
 class OrpiSpider(scrapy.Spider):
    
@@ -31,7 +41,7 @@ class OrpiSpider(scrapy.Spider):
       self.announces_cnt = 0
       self.announce_title = dict()
 
-      self.serializer = Serializer('localhost', 5050)
+      self.serializer = Serializer(ip, port)
 
    def start_requests(self):
       prop_list = [(APART_ID, BUY_ID), (HOUSE_ID, BUY_ID), (APART_ID, RENT_ID), (HOUSE_ID, RENT_ID)]
