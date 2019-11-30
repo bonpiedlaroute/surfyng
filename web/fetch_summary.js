@@ -27,6 +27,72 @@ function loadJSON(path, success, error) {
     return parent.appendChild(el);
   }
 
+  function SelogerProcessor(ad_sum_src_provider)
+  {
+    ad_sum_src_provider.style.border = "2px solid red";
+    var ad_sum_src_provider_text = createNode("p");
+    ad_sum_src_provider_text.className = "ad_summary_src_provider_text";
+    ad_sum_src_provider_text.style.color ="red";
+    ad_sum_src_provider_text.innerHTML ="SeLoger";
+    ad_sum_src_provider.appendChild(ad_sum_src_provider_text);
+  }
+  function LeboncoinProcessor(ad_sum_src_provider)
+  {
+    ad_sum_src_provider.style.border = "2px solid orange";
+    var ad_sum_src_provider_text = createNode("div");
+    ad_sum_src_provider_text.className = "ad_summary_src_provider_text";
+    ad_sum_src_provider_text.style.color ="orange";
+    ad_sum_src_provider_text.innerHTML ="Leboncoin";
+    ad_sum_src_provider.appendChild(ad_sum_src_provider_text);
+  }
+
+  function BieniciProcessor(ad_sum_src_provider)
+  {
+    ad_sum_src_provider.style.border = "2px solid #FFC331";
+    var ad_sum_src_provider_text = createNode("div");
+    ad_sum_src_provider_text.className = "ad_summary_src_provider_text";
+    ad_sum_src_provider_text.style.color ="#FFC331";
+    ad_sum_src_provider_text.innerHTML ="Bien'ici";
+    ad_sum_src_provider.appendChild(ad_sum_src_provider_text);
+  }
+
+  function LaforetProcessor(ad_sum_src_provider)
+  {
+    ad_sum_src_provider.style.border = "2px solid blue";
+    var ad_sum_src_provider_text = createNode("div");
+    ad_sum_src_provider_text.className = "ad_summary_src_provider_text";
+    ad_sum_src_provider_text.style.color ="blue";
+    ad_sum_src_provider_text.innerHTML ="Laforêt";
+    ad_sum_src_provider.appendChild(ad_sum_src_provider_text);
+  }
+  function OrpiProcessor(ad_sum_src_provider)
+  {
+    ad_sum_src_provider.style.border = "2px solid red";
+    var ad_sum_src_provider_text = createNode("div");
+    ad_sum_src_provider_text.className = "ad_summary_src_provider_text";
+    ad_sum_src_provider_text.style.color ="red";
+    ad_sum_src_provider_text.innerHTML ="Orpi";
+    ad_sum_src_provider.appendChild(ad_sum_src_provider_text);
+  }
+
+  function SPlazaImProcessor(ad_sum_src_provider)
+  {
+    ad_sum_src_provider.style.border = "2px solid red";
+    var ad_sum_src_provider_text = createNode("div");
+    ad_sum_src_provider_text.className = "ad_summary_src_provider_text";
+    ad_sum_src_provider_text.style.color ="red";
+    ad_sum_src_provider_text.innerHTML ="SPlazaIm";
+    ad_sum_src_provider.appendChild(ad_sum_src_provider_text);
+  }
+
+  var ProcessorBySource = new Map();
+  ProcessorBySource.set("seloger", SelogerProcessor);
+  ProcessorBySource.set("leboncoin", LeboncoinProcessor);
+  ProcessorBySource.set("bienici", BieniciProcessor);
+  ProcessorBySource.set("laforet", LaforetProcessor);
+  ProcessorBySource.set("orpi", OrpiProcessor);
+  ProcessorBySource.set("stephaneplazaimo", SPlazaImProcessor);
+
 
   const url = 'https://surfyn.fr:7878/search/all'+ window.location.search;
   //const url = 'http://127.0.0.1:7878/search/all'+ window.location.search;
@@ -83,71 +149,6 @@ function loadJSON(path, success, error) {
     return reverse(tmp);
   }
 
-function SelogerProcessor(ad_sum_src_provider)
-{
-  ad_sum_src_provider.style.border = "2px solid red";
-  var ad_sum_src_provider_text = createNode("p");
-  ad_sum_src_provider_text.className = "ad_summary_src_provider_text";
-  ad_sum_src_provider_text.style.color ="red";
-  ad_sum_src_provider_text.innerHTML ="SeLoger";
-  ad_sum_src_provider.appendChild(ad_sum_src_provider_text);
-}
-function LeboncoinProcessor(ad_sum_src_provider)
-{
-  ad_sum_src_provider.style.border = "2px solid orange";
-  var ad_sum_src_provider_text = createNode("div");
-  ad_sum_src_provider_text.className = "ad_summary_src_provider_text";
-  ad_sum_src_provider_text.style.color ="orange";
-  ad_sum_src_provider_text.innerHTML ="Leboncoin";
-  ad_sum_src_provider.appendChild(ad_sum_src_provider_text);
-}
-
-function BieniciProcessor(ad_sum_src_provider)
-{
-  ad_sum_src_provider.style.border = "2px solid #FFC331";
-  var ad_sum_src_provider_text = createNode("div");
-  ad_sum_src_provider_text.className = "ad_summary_src_provider_text";
-  ad_sum_src_provider_text.style.color ="#FFC331";
-  ad_sum_src_provider_text.innerHTML ="Bien'ici";
-  ad_sum_src_provider.appendChild(ad_sum_src_provider_text);
-}
-
-function LaforetProcessor(ad_sum_src_provider)
-{
-  ad_sum_src_provider.style.border = "2px solid blue";
-  var ad_sum_src_provider_text = createNode("div");
-  ad_sum_src_provider_text.className = "ad_summary_src_provider_text";
-  ad_sum_src_provider_text.style.color ="blue";
-  ad_sum_src_provider_text.innerHTML ="Laforêt";
-  ad_sum_src_provider.appendChild(ad_sum_src_provider_text);
-}
-function OrpiProcessor(ad_sum_src_provider)
-{
-  ad_sum_src_provider.style.border = "2px solid red";
-  var ad_sum_src_provider_text = createNode("div");
-  ad_sum_src_provider_text.className = "ad_summary_src_provider_text";
-  ad_sum_src_provider_text.style.color ="red";
-  ad_sum_src_provider_text.innerHTML ="Orpi";
-  ad_sum_src_provider.appendChild(ad_sum_src_provider_text);
-}
-
-function SPlazaImProcessor(ad_sum_src_provider)
-{
-  ad_sum_src_provider.style.border = "2px solid red";
-  var ad_sum_src_provider_text = createNode("div");
-  ad_sum_src_provider_text.className = "ad_summary_src_provider_text";
-  ad_sum_src_provider_text.style.color ="red";
-  ad_sum_src_provider_text.innerHTML ="SPlazaIm";
-  ad_sum_src_provider.appendChild(ad_sum_src_provider_text);
-}
-
-var ProcessorBySource = new Map();
-ProcessorBySource.set("seloger", SelogerProcessor);
-ProcessorBySource.set("leboncoin", LeboncoinProcessor);
-ProcessorBySource.set("bienici", BieniciProcessor);
-ProcessorBySource.set("laforet", LaforetProcessor);
-ProcessorBySource.set("orpi", OrpiProcessor);
-ProcessorBySource.set("stephaneplazaimo", SPlazaImProcessor);
 
 var ismobile   = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
 
