@@ -1,4 +1,4 @@
-# Surfyng Portal
+# Surfyn Portal
 
 
 + **Build portal**
