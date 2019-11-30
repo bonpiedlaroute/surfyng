@@ -76,7 +76,7 @@ class SignupForm extends Component {
 
         signup(signUpRequest)
         .then(response => {
-            Alert.success("Vous vous êtes bien inscrit. Connectez-vous!");
+            //Alert.success("Vous vous êtes bien inscrit. Connectez-vous!");
             this.props.history.push("/login");
         }).catch(error => {
             Alert.error((error && error.message) || 'Oops! Une erreur est survenue. Veuillez recommencer!');

@@ -89,8 +89,12 @@ class LoginForm extends Component {
         login(loginRequest)
         .then(response => {
             localStorage.setItem(ACCESS_TOKEN, response.accessToken);
-            Alert.success("Vous vous êtes connecté avec succès !");
+            //Alert.success("Vous vous êtes connecté avec succès !");
+            this.state = {
+                authenticated: true
+            }
             this.props.history.push("/");
+            window.location.reload();
         }).catch(error => {
             Alert.error((error && error.message) || 'Oops! Une erreur est survenue. Veuillez recommencer!');
         });

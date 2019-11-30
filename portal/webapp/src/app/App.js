@@ -57,7 +57,7 @@ class App extends Component {
       authenticated: false,
       currentUser: null
     });
-    Alert.success("Vous vous êtes deconnecté avec succès !!");
+    //Alert.success("Vous vous êtes deconnecté avec succès !!");
   }
 
   componentDidMount() {

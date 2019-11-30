@@ -21,11 +21,10 @@ class Home extends Component {
                             <div className="graf-circle"></div>
                         </div>
                     </div>
-                    <h1 className="home-title">Surfyng</h1>
+                    <h1 className="home-title">Surfyn</h1>
                 </div>
             </div>
         )
     }
 }
-
 export default Home;
