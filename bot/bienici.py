@@ -32,7 +32,7 @@ city = config_bienici['COMMON']['city']
 region = config_bienici['COMMON']['region']
 ip = config_bienici['COMMON']['db_access_ip']
 port = int(config_bienici['COMMON']['db_access_port'])
-
+tablename = config_bienici['COMMON']['tablename']
 
 class BieniciSpider(scrapy.Spider):
    
@@ -45,7 +45,7 @@ class BieniciSpider(scrapy.Spider):
       self.mapping_url_ptype = dict()
       self.mapping_url_stype = dict()
       self.announces_cnt = 0
-      self.serializer = Serializer(ip, port)
+      self.serializer = Serializer(ip, port, tablename)
 
    def start_requests(self):
       prop_list = [(APART_ID, BUY_ID), (HOUSE_ID, BUY_ID), (APART_ID, RENT_ID), (HOUSE_ID, RENT_ID)]

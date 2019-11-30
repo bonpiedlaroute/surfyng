@@ -12,16 +12,13 @@ from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
 from search_features import *
 import datetime
-import configparser 
 
 
-config_serializer = configparser.ConfigParser()
-config_serializer.read('spiders/config.ini')
 
-tablename = config_serializer['COMMON']['tablename']
 
 class Serializer:
-   def __init__(self, ip, port):
+   def __init__(self, ip, port, tablename):
+      self.tablename = tablename
       self.transport = TSocket.TSocket(ip, port)
 
       self.transport = TTransport.TBufferedTransport(self.transport)
@@ -108,7 +105,7 @@ class Serializer:
 
       values["SEARCH_TYPE"] = search_type
 
-      return self.client.put(tablename, values)
+      return self.client.put(self.tablename, values)
 
    def close(self):
       self.transport.close()

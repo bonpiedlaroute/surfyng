@@ -26,7 +26,7 @@ region = config_leboncoin['COMMON']['region']
 ip = config_leboncoin['COMMON']['db_access_ip']
 port = int(config_leboncoin['COMMON']['db_access_port'])
 city_url = config_leboncoin['LEBONCOIN']['city_url']
-
+tablename = config_leboncoin['COMMON']['tablename']
 
 class LeboncoinSpider(scrapy.Spider):
    
@@ -39,7 +39,7 @@ class LeboncoinSpider(scrapy.Spider):
       self.mapping_url_ptype = dict()
       self.mapping_url_stype = dict()
       self.announces_cnt = 0
-      self.serializer = Serializer(ip, port)
+      self.serializer = Serializer(ip, port, tablename)
 
    def start_requests(self):
       prop_list = [(APART_ID, BUY_ID), (HOUSE_ID, BUY_ID), (APART_ID, RENT_ID), (HOUSE_ID, RENT_ID)]

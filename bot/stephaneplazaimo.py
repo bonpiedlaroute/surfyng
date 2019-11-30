@@ -23,7 +23,7 @@ city = config_spimo['COMMON']['city']
 region = config_spimo['COMMON']['region']
 ip = config_spimo['COMMON']['db_access_ip']
 port = int(config_spimo['COMMON']['db_access_port'])
-
+tablename = config_spimo['COMMON']['tablename']
 
 class StephanePlazaImoSpider(scrapy.Spider):
    
@@ -38,7 +38,7 @@ class StephanePlazaImoSpider(scrapy.Spider):
       self.announces_cnt = 0
       self.announce_title = dict()
 
-      self.serializer = Serializer(ip, port)
+      self.serializer = Serializer(ip, port, tablename)
 
    def start_requests(self):
       prop_list = [(APART_ID, BUY_ID), (HOUSE_ID, BUY_ID), (APART_ID, RENT_ID), (HOUSE_ID, RENT_ID)]

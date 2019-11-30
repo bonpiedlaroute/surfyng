@@ -40,7 +40,7 @@ t.build(trees)
 if not os.path.exists('nearest_neighbors'):
    os.makedirs('nearest_neighbors')
 
-serializer = Serializer('localhost', 5050)
+serializer = Serializer('localhost', 5050, tablename)
 
 for i in file_index_to_file_name.keys():
    master_file_name = file_index_to_file_name[i]

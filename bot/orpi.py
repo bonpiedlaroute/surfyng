@@ -25,7 +25,7 @@ city = config_orpi['COMMON']['city']
 region = config_orpi['COMMON']['region']
 ip = config_orpi['COMMON']['db_access_ip']
 port = int(config_orpi['COMMON']['db_access_port'])
-
+tablename = config_orpi['COMMON']['tablename']
 
 
 class OrpiSpider(scrapy.Spider):
@@ -41,7 +41,7 @@ class OrpiSpider(scrapy.Spider):
       self.announces_cnt = 0
       self.announce_title = dict()
 
-      self.serializer = Serializer(ip, port)
+      self.serializer = Serializer(ip, port, tablename)
 
    def start_requests(self):
       prop_list = [(APART_ID, BUY_ID), (HOUSE_ID, BUY_ID), (APART_ID, RENT_ID), (HOUSE_ID, RENT_ID)]
