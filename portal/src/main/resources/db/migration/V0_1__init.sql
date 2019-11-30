@@ -2,7 +2,7 @@
 
 CREATE TABLE users (
 
-  id int identity primary key,
+  id SERIAL primary key,
 
   name VARCHAR(255) NOT NULL,
 
@@ -30,6 +30,5 @@ CREATE TABLE users (
 
   timezone VARCHAR(255) DEFAULT NULL,
 
-  preferred_language VARCHAR(255) DEFAULT NULL,
-
+  preferred_language VARCHAR(255) DEFAULT NULL
 );

@@ -1,7 +1,7 @@
 spring:
 
   profiles:
-    active: ${ACTIVE_PROFILE:default}
+    active: ${ACTIVE_PROFILE:prod}
 
   datasource:
     url: jdbc:h2:mem:testdb
@@ -35,6 +35,13 @@ spring:
             scope:
               - email
               - public_profile
+          github:
+            clientId: d3e47fc2ddd966fa4352
+            clientSecret: 3bc0f6b8332f93076354c2a5bada2f5a05aea60d
+            redirectUriTemplate: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - user:email
+              - read:user
         provider:
           facebook:
             authorizationUri: https://www.facebook.com/v3.0/dialog/oauth
@@ -50,6 +57,6 @@ app:
     # redirectUri mentioned by the client in the /oauth2/authorize request.
     # We're not using cookies because they won't work well in mobile clients.
     authorizedRedirectUris:
-      - http://localhost:8080/oauth2/redirect
+      - http://localhost:3000/oauth2/redirect
       - myandroidapp://oauth2/redirect
       - myiosapp://oauth2/redirect
