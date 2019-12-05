@@ -109,4 +109,16 @@ def buildStephanePlazaImoUrl(city, ptype, stype):
 
    return url
 
+postalcodeByCity = dict()
+postalcodeByCity['colombes'] = '92700'
 
+foncia_url = "https://fr.foncia.com/"
+
+def buildFonciaUrl(city, ptype, stype):
+   url = foncia_url + stype + '/'
+   url += city
+   url += '-'
+   url += postalcodeByCity[city]
+   url += '/'
+   url += ptype
+   return url
