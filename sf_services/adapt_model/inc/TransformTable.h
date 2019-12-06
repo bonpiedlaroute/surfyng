@@ -37,6 +37,7 @@ namespace surfyn
       void ReadLaForetJSON(const std::string& json, classifier::RealEstateAd& realEstate);
       void ReadOrpiJSON(const std::string& json, classifier::RealEstateAd& realEstate);
       void ReadStephanePlazaImoJSON(const std::string& json, classifier::RealEstateAd& realEstate);
+      void ReadFonciaJSON(const std::string& json, classifier::RealEstateAd& realEstate);
 
    private:
       std::unordered_map<int64_t, classifier::RealEstateAd> m_AnnouncesByID;

@@ -195,7 +195,7 @@ namespace surfyn
       m_ReaderBySources["laforet"] = [this](const std::string& json, classifier::RealEstateAd& realEstate) { ReadLaForetJSON(json, realEstate);};
       m_ReaderBySources["orpi"] = [this](const std::string& json, classifier::RealEstateAd& realEstate) { ReadOrpiJSON(json, realEstate);};
       m_ReaderBySources["stephaneplazaimo"] = [this](const std::string& json, classifier::RealEstateAd& realEstate) { ReadStephanePlazaImoJSON(json, realEstate);};
-
+      m_ReaderBySources["foncia"] = [this](const std::string& json, classifier::RealEstateAd& realEstate) { ReadFonciaJSON(json, realEstate);};
    }
    void DataFormater::ReadSelogerJSON(const std::string& json, classifier::RealEstateAd& realEstate)
    {
@@ -905,7 +905,102 @@ void DataFormater::ReadStephanePlazaImoJSON(const std::string& json, classifier:
       }
    }
 
-   realEstate.setDescription(SOURCE_LOGO, "stephaneplazaimo.png");
+   realEstate.setDescription(SOURCE_LOGO, "data/stephaneplazaimo.png");
+}
+
+void DataFormater::ReadFonciaJSON(const std::string& json, classifier::RealEstateAd& realEstate)
+{
+   std::locale::global(std::locale(""));
+
+   rapidjson::Document document;
+   document.Parse(json.c_str());
+
+   if(document.HasParseError())
+   {
+      std::stringstream error;
+      error << "failed to parse foncia json: error code [";
+      error << document.GetParseError();
+      error << "] error offset :[";
+      error << document.GetErrorOffset();
+      error << "]";
+      Log::getInstance()->error(error.str());
+
+      return;
+   }
+   if (document.HasMember(RealEstatePrice))
+   {
+      realEstate.setDescription(RealEstatePrice, document[RealEstatePrice].GetString());
+   }
+
+   if( document.HasMember(RealEstateSurface))
+   {
+     std::string area = document[RealEstateSurface].GetString();
+     auto pos = area.find_first_of(' ');
+     if( pos != std::string::npos)
+     {
+       std::string real_area = area.substr(0, pos);
+       realEstate.setDescription(RealEstateSurface, real_area);
+     }
+
+   }
+   if( document.HasMember(RealEstateRooms))
+   {
+      realEstate.setDescription(RealEstateRooms, document[RealEstateRooms].GetString());
+   }
+   if( document.HasMember(RealEstateConstructionYear))
+   {
+      realEstate.setDescription(RealEstateConstructionYear, document[RealEstateConstructionYear].GetString());
+   }
+   if (document.HasMember(RealEstateCellar))
+   {
+      realEstate.setDescription(RealEstateCellar, document[RealEstateCellar].GetString());
+   }
+   if (document.HasMember(RealEstateParking))
+   {
+      realEstate.setDescription(RealEstateParking, document[RealEstateParking].GetString());
+   }
+   if (document.HasMember(RealEstateFloor))
+   {
+      std::string floor;
+      std::string nb_floor = document[RealEstateFloor].GetString();
+
+      if( nb_floor == "RDC" )
+         floor = "rez-de-chaussée";
+      else
+      {
+         if( atoi(nb_floor.c_str()) == 1)
+         {
+            floor = "1er";
+         }
+         else
+         {
+            floor = nb_floor + "ème";
+         }
+      }
+
+      realEstate.setDescription(RealEstateFloor, floor);
+   }
+
+
+   if (document.HasMember(RealEstateLift))
+   {
+      realEstate.setDescription(RealEstateLift, document[RealEstateLift].GetString());
+   }
+
+   if (document.HasMember(RealEstateTypeOfHeating))
+   {
+      std::string heating = "Chauffage ";
+      heating += document[RealEstateTypeOfHeating].GetString();
+
+      realEstate.setDescription(RealEstateTypeOfHeating, heating);
+   }
+
+   if (document.HasMember(RealEstateBalcony))
+    {
+       realEstate.setDescription(RealEstateBalcony, document[RealEstateBalcony].GetString());
+    }
+
+   realEstate.setDescription(SOURCE_LOGO, "data/foncia.png");
 }
 
 

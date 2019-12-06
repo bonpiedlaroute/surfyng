@@ -114,3 +114,19 @@ def getStephanePlazaImoPropertiesId(_id):
 def getStephanePlazaImoSearchTypeId(_id):
    return StephanePlazaImoSearchTypeMapping[_id]
 
+FonciaPropertiesMapping = dict()
+FonciaPropertiesMapping[APART_ID] = 'appartement'
+FonciaPropertiesMapping[HOUSE_ID] = 'maison'
+
+FonciaSearchTypeMapping = dict()
+FonciaSearchTypeMapping[BUY_ID] = 'achat'
+FonciaSearchTypeMapping[RENT_ID] = 'location'
+
+def getFonciaPropertiesId(_id):
+   return FonciaPropertiesMapping[_id]
+
+def getFonciaSearchTypeId(_id):
+   return FonciaSearchTypeMapping[_id]
+
+
+
