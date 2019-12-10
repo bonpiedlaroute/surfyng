@@ -24,6 +24,7 @@ city = config_foncia['COMMON']['city']
 region = config_foncia['COMMON']['region']
 ip = config_foncia['COMMON']['db_access_ip']
 port = int(config_foncia['COMMON']['db_access_port'])
+tablename = config_foncia['COMMON']['tablename']
 
 
 def remove_accent(string):
@@ -42,7 +43,7 @@ class FonciaSpider(scrapy.Spider):
          os.mkdir(IMAGES_FOLDER_NAME)
 
       self.announces_cnt = 0
-      self.serializer = Serializer(ip, port)
+      self.serializer = Serializer(ip, port, tablename)
       self.fieldmapping = dict()
       self.fieldmapping['Cave(s)'] = 'CELLAR'
       self.fieldmapping['Nombre de pieces'] = 'ROOMS'
