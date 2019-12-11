@@ -87,10 +87,11 @@ if __name__ == '__main__':
    logging.info("Starting House predictor ...")
    config = configparser.ConfigParser()
    config.read('config.ini')
-
+   host = config['DEFAULT']['host']
+   port = int(config['DEFAULT']['port'])
    handler = PredictorHandler(config)
    processor = Processor(handler)
-   transport = TSocket.TServerSocket(host='127.0.0.1', port=6060)
+   transport = TSocket.TServerSocket(host, port)
    tfactory = TTransport.TBufferedTransportFactory()
    pfactory = TBinaryProtocol.TBinaryProtocolFactory()
 
