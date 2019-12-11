@@ -110,7 +110,7 @@ class SelogerSpider(scrapy.Spider):
          self.announce_title[ID] = title[0].strip()
       
       if not announce_image:
-         print("Seloger announce [" + str(announce_url) + "] has no announce image \n")
+         print("Seloger announce [" + str(response.request) + "] has no announce image \n")
 
       yield scrapy.Request(buildselogerdescriptionurl(announce_url), callback= lambda r, url = announce_url, id_prop = id_property, ID = ID, id_search = id_search, announce_image=announce_image, img_cnt=img_cnt:self.parse_prop_description(r,url, id_prop, ID, id_search, announce_image, img_cnt))
 
