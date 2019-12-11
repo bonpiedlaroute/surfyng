@@ -11,7 +11,7 @@
 #include <thrift/transport/TBufferTransports.h>
 #include <stdlib.h>
 
-const int port = 6060;
+
 using namespace ::apache::thrift;
 using namespace ::apache::thrift::protocol;
 using namespace ::apache::thrift::transport;
@@ -26,9 +26,9 @@ namespace surfyn
 {
 namespace rest_server
 {
-   EstimatorAccess::EstimatorAccess()
+   EstimatorAccess::EstimatorAccess(const std::string& host, int port)
    {
-      shared_ptr<TTransport> socket(new TSocket("localhost", port));
+      shared_ptr<TTransport> socket(new TSocket(host, port));
       shared_ptr<TTransport> transport(new TBufferedTransport(socket));
       shared_ptr<TProtocol> protocol(new TBinaryProtocol(transport));
       m_client = std::make_shared<house_predictionClient>(protocol);

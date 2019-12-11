@@ -29,7 +29,7 @@ std::string certificate_file = "";
 std::string private_key_file = "";
 std::string certificate_chain_file = "";
 
-void on_initialize(const string_t& address)
+void on_initialize(const string_t& address, const std::string& dbaccess_host, int dbaccess_port,  const std::string& estimator_host, int estimator_port)
 {
     uri_builder uri(address);
     web::http::experimental::listener::http_listener_config             conf;
@@ -50,7 +50,7 @@ void on_initialize(const string_t& address)
      });
 
     auto addr = uri.to_uri().to_string();
-    g_httpHandler = std::make_unique<HttpRequestHandler>(addr, conf);
+    g_httpHandler = std::make_unique<HttpRequestHandler>(addr, conf, dbaccess_host, dbaccess_port, estimator_host, estimator_port);
     g_httpHandler->open().wait();
 
     //ucout << utility::string_t(U("Listening for requests at: ")) << addr << std::endl;
@@ -78,6 +78,10 @@ int main(int argc, char *argv[])
     utility::string_t address = U("http://127.0.0.1:");
     Log::Init("rest_server");
     Log::getInstance()->info("Starting rest server ...");
+    std::string dbaccess_host = "localhost";
+    int         dbaccess_port = 5050;
+    std::string estimator_host = "localhost";
+    int         estimator_port = 12200;
 
     if(argc == 2)
     {
@@ -97,13 +101,17 @@ int main(int argc, char *argv[])
        private_key_file = restserver_conf.getStringValue("private_key_file");
        certificate_chain_file = restserver_conf.getStringValue("certificate_chain_file");
 
+       dbaccess_host = restserver_conf.getStringValue("dbaccess_host");
+       dbaccess_port = restserver_conf.getIntValue("dbaccess_port");
+       estimator_host = restserver_conf.getStringValue("estimator_host");
+       estimator_port = restserver_conf.getIntValue("estimator_port");
     }
 
     address.append(port);
 
     try
     {
-      on_initialize(address);
+      on_initialize(address, dbaccess_host, dbaccess_port, estimator_host, estimator_port);
       Log::getInstance()->info("Listening to request at " + address);
       Log::getInstance()->info("rest server started");
       while(true) std::this_thread::sleep_for(std::chrono::hours(1)); // loop forever

@@ -22,7 +22,7 @@ class DBaccess
 private:
    std::shared_ptr<dynamodb_accessClient> m_client;
 public:
-   DBaccess();
+   DBaccess(const std::string& host, int port);
    void fetchSummary(utility::stringstream_t& sstream, const std::map<utility::string_t,  utility::string_t>& query );
    void fetchDetails(utility::stringstream_t& sstream, const std::map<utility::string_t,  utility::string_t>& query );
 private:

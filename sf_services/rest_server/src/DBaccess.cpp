@@ -17,7 +17,7 @@
 
 using Log = surfyn::utils::Logger;
 
-const int port = 5050;
+
 using namespace ::apache::thrift;
 using namespace ::apache::thrift::protocol;
 using namespace ::apache::thrift::transport;
@@ -67,9 +67,9 @@ const std::string exprval_rooms = ":ro";
 
 std::string searchTypeValue = "";
 
-   DBaccess::DBaccess()
+   DBaccess::DBaccess(const std::string& host, int port)
    {
-      shared_ptr<TTransport> socket(new TSocket("localhost", port));
+      shared_ptr<TTransport> socket(new TSocket(host, port));
       shared_ptr<TTransport> transport(new TBufferedTransport(socket));
       shared_ptr<TProtocol> protocol(new TBinaryProtocol(transport));
       m_client = std::make_shared<dynamodb_accessClient>(protocol);

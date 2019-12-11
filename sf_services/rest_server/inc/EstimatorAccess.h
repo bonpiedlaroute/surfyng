@@ -20,7 +20,7 @@ namespace rest_server
    private:
       std::shared_ptr<house_predictionClient> m_client;
    public:
-      EstimatorAccess();
+      EstimatorAccess(const std::string& host, int port);
       void fetchHousePrice(utility::stringstream_t& sstream, const std::map<utility::string_t,  utility::string_t>& query);
 
    };

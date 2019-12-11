@@ -23,8 +23,9 @@ namespace rest_server
    class HttpRequestHandler
    {
        public:
-           HttpRequestHandler();
-           HttpRequestHandler(utility::string_t url, http_listener_config conf);
+           HttpRequestHandler(utility::string_t url, http_listener_config conf,
+                              const std::string& dbaccess_host, int dbaccess_port,
+                              const std::string& estimator_host, int estimator_port);
            virtual ~HttpRequestHandler();
 
            pplx::task<void>open(){return m_listener.open();}

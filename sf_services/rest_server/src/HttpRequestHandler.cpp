@@ -15,11 +15,10 @@ namespace surfyn
 namespace rest_server
 {
 
-HttpRequestHandler::HttpRequestHandler()
-{
-
-}
-HttpRequestHandler::HttpRequestHandler(utility::string_t url, http_listener_config conf):m_listener(url, conf)
+HttpRequestHandler::HttpRequestHandler(utility::string_t url, http_listener_config conf, const std::string& dbaccess_host, int dbaccess_port,
+                                       const std::string& estimator_host, int estimator_port):m_listener(url, conf),
+                                             m_dbaccess(dbaccess_host, dbaccess_port),
+                                             m_estimatoraccess(estimator_host, estimator_port)
 {
     m_listener.support(methods::GET, [this](http_request message) { handle_get(message);});
     m_listener.support(methods::PUT, [this](http_request message) { handle_put(message);});
