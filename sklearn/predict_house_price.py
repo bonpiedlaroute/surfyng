@@ -25,7 +25,7 @@ from thrift.server import TServer
 import logging
 from datetime import datetime
 import configparser
-
+import os
 
 
 class DataFrameSelector(BaseEstimator, TransformerMixin):
@@ -82,7 +82,7 @@ class PredictorHandler(Iface):
 
 if __name__ == '__main__':
    now = datetime.now()
-   log_filename ="predict_house_price_" + now.strftime("%Y-%m-%d-%H-%M-%S") + ".log"
+   log_filename = os.path.join("logs", "predict_house_price_" + now.strftime("%Y-%m-%d-%H-%M-%S") + ".log")
    logging.basicConfig(filename=log_filename,level=logging.INFO, format='%(asctime)s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
    logging.info("Starting House predictor ...")
    config = configparser.ConfigParser()
