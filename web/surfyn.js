@@ -19,6 +19,10 @@ var inputType = Object.freeze({"priceMin":0, "priceMax":1, "areaMin":2, "areaMax
 var offset = [0, 0, 0, 0];
 var isDown = [false, false, false, false];
 var values = [];
+sessionStorage.setItem("scrollX", "0");
+sessionStorage.setItem("scrollY", "0");
+sessionStorage.setItem("needtosort", "");
+sessionStorage.setItem("summary_json_data", "");
 const Params = new URLSearchParams(window.location.search);
 const searchType = Params.get('search_type');
 if( searchType == "1")
