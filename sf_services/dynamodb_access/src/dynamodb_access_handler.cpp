@@ -65,10 +65,10 @@ void dynamodb_accessHandler::Init()
    Aws::InitAPI(options);
 }
 
-dynamodb_accessHandler::dynamodb_accessHandler()
+dynamodb_accessHandler::dynamodb_accessHandler(const std::string& config_filename)
 {
 
-   surfyn::utils::Config ddb_conf("dynamodb_access.ini");
+   surfyn::utils::Config ddb_conf(config_filename);
    ddb_conf.loadconfig();
    std::string allocation_tag = ddb_conf.getStringValue("allocation_tag").c_str();
    std::shared_ptr<Aws::Utils::RateLimits::RateLimiterInterface> limiter = Aws::MakeShared<Aws::Utils::RateLimits::DefaultRateLimiter<>>(allocation_tag.c_str(), 200000);

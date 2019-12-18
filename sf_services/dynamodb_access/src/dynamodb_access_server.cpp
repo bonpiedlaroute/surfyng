@@ -11,6 +11,7 @@
 #include <thrift/transport/TServerSocket.h>
 #include <thrift/transport/TBufferTransports.h>
 #include "dynamodb_access_handler.h"
+#include "sf_services/sf_utils/inc/Config.h"
 
 using namespace ::apache::thrift;
 using namespace ::apache::thrift::protocol;
@@ -25,11 +26,20 @@ using boost::shared_ptr;
 
 int main(int argc, char **argv)
 {
-  int port = 5050;
+
   ddba::dynamodb_accessHandler::Init();
-  shared_ptr<ddba::dynamodb_accessHandler> handler(new ddba::dynamodb_accessHandler());
+  std::string config_filename = "dynamodb_access.ini";
+  if(argc == 2)
+      config_filename = argv[1];
+
+  shared_ptr<ddba::dynamodb_accessHandler> handler(new ddba::dynamodb_accessHandler(config_filename));
   shared_ptr<TProcessor> processor(new dynamodb_accessProcessor(handler));
-  shared_ptr<TServerTransport> serverTransport(new TServerSocket(port));
+
+  surfyn::utils::Config conf(config_filename);
+  conf.loadconfig();
+  std::string address = conf.getStringValue("host");
+  int port = conf.getIntValue("port");
+  shared_ptr<TServerTransport> serverTransport(new TServerSocket(address, port));
   shared_ptr<TTransportFactory> transportFactory(new TBufferedTransportFactory());
   shared_ptr<TProtocolFactory> protocolFactory(new TBinaryProtocolFactory());
 

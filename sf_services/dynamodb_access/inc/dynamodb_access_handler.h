@@ -27,7 +27,7 @@ class dynamodb_accessHandler : virtual public dynamodb_accessIf
 {
 public:
    static void Init();
-   dynamodb_accessHandler();
+   dynamodb_accessHandler(const std::string& config_filename);
 
    void put(OperationResult& _return, const std::string& tablename, const std::map<std::string, ValueType> & values);
 
