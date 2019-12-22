@@ -72,12 +72,12 @@ def getBienIciSearchTypeId(surfyn_searchtype):
    return BienIciSearchTypeMapping[surfyn_searchtype]
 
 LaforetPropertiesMapping = dict()
-LaforetPropertiesMapping[APART_ID] = 'appartement'
-LaforetPropertiesMapping[HOUSE_ID] = 'maison'
+LaforetPropertiesMapping[APART_ID] = 'apartment'
+LaforetPropertiesMapping[HOUSE_ID] = 'house'
 
 LaforetSearchTypeMapping = dict()
-LaforetSearchTypeMapping[BUY_ID] = 'acheter'
-LaforetSearchTypeMapping[RENT_ID] = 'louer'
+LaforetSearchTypeMapping[BUY_ID] = 'buy'
+LaforetSearchTypeMapping[RENT_ID] = 'rent'
 
 def getLaforetPropertiesId(_id):
    return LaforetPropertiesMapping[_id]

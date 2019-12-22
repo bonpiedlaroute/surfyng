@@ -49,17 +49,19 @@ class LaforetSpider(scrapy.Spider):
          yield scrapy.Request(url=url, callback= lambda r, ptype = ptype, stype = stype :self.parse(r, ptype, stype))
 
    def parse(self, response, ptype, stype):
-      all_data = response.xpath('//ul[@class="results-compact"]').xpath('.//li[@class="js-stats-property-roll"]/@data-json').extract()
+      all_data = json.loads(response.text)['data']
 
       for data in all_data:
-         part_url = json.loads(data)['url']
-         announce_url = "http://www.laforet.com" + part_url
-         yield scrapy.Request(url=announce_url, callback = lambda r, url = announce_url, json_data = data, ptype = ptype, stype = stype: self.parse_img(r, url, json_data, ptype, stype))
+         announce_url = data['links']['self']
+         yield scrapy.Request(url=announce_url, callback = lambda r, ptype = ptype, stype = stype: self.parse_desc(r, ptype, stype))
 
 
-   def parse_img(self, response, url, json_data, ptype, stype):
+   def parse_desc(self, response, ptype, stype):
+      data = json.loads(response.text)
+      url = data['url']
       ID = hash_id(url)
-      images = response.xpath('//div[@class="cycle-slideshow"]/div/img/@src').extract()
+
+      images = data['photos']
 
       image_count = 1
       for img in images:
@@ -68,10 +70,13 @@ class LaforetSpider(scrapy.Spider):
          image_count = image_count + 1
 
       img_cnt = len(images)
-      data = json.loads(json_data)
-      announce_image = data['imageUrl']
-      announce_title = data['title']
-      ret = self.serializer.send(ID, ptype, json_data, city, region, url, "laforet", announce_title, stype, announce_image, img_cnt)
+
+      announce_image = ""
+      if images:
+         announce_image = images[0]
+
+      announce_title = data['slug']
+      ret = self.serializer.send(ID, ptype, response.text, city, region, url, "laforet", announce_title, stype, announce_image, img_cnt)
       print (ret)
       self.announces_cnt += 1
             

@@ -6,6 +6,10 @@
 import re
 from search_features import *
 
+inseecodeByCity = dict()
+inseecodeByCity['colombes'] = '92025'
+
+
 seloger_prop_type_pos = 39
 seloger_search_type_pos = 49
 
@@ -69,15 +73,12 @@ def buildLogicImmoUrl(ptype, stype):
    else:
       return logicimmo_paris_rent_baseurl + getLogicImmoPropertiesId(ptype)
 
-laforet_url = 'http://www.laforet.com/agence-immobiliere///rechercher?localisation=&=on'
+laforet_url = 'https://www.laforet.com/api/immo/properties?cities=&types=&transaction='
 
 def buildLaforetUrl(city, ptype, stype):
-   url = insert_in_url(laforet_url,42,city)
-   url = insert_in_url(url, 51,stype)
-   pos = 83 if stype == 'acheter' else 81
-   url = insert_in_url(url, pos, city)
-   pos = 92 if stype == 'acheter' else 90
-   url = insert_in_url(url, pos,ptype)
+   url = insert_in_url(laforet_url,51 , inseecodeByCity[city])
+   url = insert_in_url(url, 63, ptype)
+   url += stype
 
    return url
 
@@ -91,9 +92,6 @@ def buildOrpiUrl(city, ptype, stype):
    url += city
 
    return url
-
-inseecodeByCity = dict()
-inseecodeByCity['colombes'] = '92025'
 
 stephaneplazaimo_url = "https://www.stephaneplazaimmobilier.com/search/?target=&type[]=&location[]="
 

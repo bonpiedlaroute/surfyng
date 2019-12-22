@@ -6,8 +6,8 @@
 
 #include "TransformTable.h"
 #include <algorithm>
+#include "sf_services/sf_utils/inc/Config.h"
 
-const int port = 5050;
 using namespace ::apache::thrift;
 using namespace ::apache::thrift::protocol;
 using namespace ::apache::thrift::transport;
@@ -594,6 +594,13 @@ namespace surfyn
 void DataFormater::ReadLaForetJSON(const std::string& json, classifier::RealEstateAd& realEstate)
 {
    std::locale::global(std::locale(""));
+   static std::unordered_map<std::string, std::string> heatingTranslation;
+   if(heatingTranslation.empty())
+   {
+      heatingTranslation["gas"] = "gaz";
+      heatingTranslation["electric"] = "electrique";
+      heatingTranslation["city_gas"] = "gaz de ville";
+   }
 
    rapidjson::Document document;
    document.Parse(json.c_str());
@@ -611,22 +618,24 @@ void DataFormater::ReadLaForetJSON(const std::string& json, classifier::RealEsta
       return;
    }
 
-   if( document.HasMember("roomsQuantity"))
+   if( document.HasMember("rooms"))
    {
-      std::string nb_room = document["roomsQuantity"].GetString();
+      std::string nb_room = std::to_string(document["rooms"].GetUint());
 
       realEstate.setDescription(RealEstateRooms, nb_room);
    }
+
    if( document.HasMember("surface"))
    {
-      std::string area = document["surface"].GetString();
-
+      std::string area = std::to_string(document["surface"].GetDouble());
+      std::replace(area.begin(), area.end(), ',', '.');
       realEstate.setDescription(RealEstateSurface, area);
    }
-   if (document.HasMember("floor"))
+
+   if (document.HasMember("floor") && !document["floor"].IsNull())
    {
       std::string floor;
-      auto nb_floor = atoi(document["floor"].GetString());
+      auto nb_floor = document["floor"].GetUint();
 
       if( nb_floor == 0 )
          floor = "rez-de-chaussée";
@@ -644,45 +653,64 @@ void DataFormater::ReadLaForetJSON(const std::string& json, classifier::RealEsta
 
       realEstate.setDescription(RealEstateFloor, floor);
    }
-   if (document.HasMember("cellar"))
-   {
-      std::string cellar = document["cellar"].GetString();
 
-      realEstate.setDescription(RealEstateCellar, cellar);
-   }
    if (document.HasMember("price"))
    {
-      std::string price = document["price"].GetString();
-
+      std::string price = std::to_string(document["price"].GetDouble());
+      std::replace(price.begin(), price.end(), ',', '.');
       realEstate.setDescription(RealEstatePrice, price);
    }
-   if (document.HasMember("lift"))
-   {
-      std::string lift = document["lift"].GetString();
 
-      realEstate.setDescription(RealEstateLift, lift);
+   if (document.HasMember("has_lift"))
+   {
+
+      if( document["has_lift"].GetBool())
+         realEstate.setDescription(RealEstateLift, "1");
+      else
+         realEstate.setDescription(RealEstateLift, "0");
    }
-   if(document.HasMember("latitude") && document.HasMember("longitude"))
+
+   if(document.HasMember("lat") && document.HasMember("lng"))
    {
       std::string location = "lat=";
-      location += document["latitude"].GetString();
+      location += std::to_string(document["lat"].GetDouble());
       location += ";";
       location += "lon=";
-      location += document["longitude"].GetString();
+      location += std::to_string(document["lng"].GetDouble());
       realEstate.setDescription(RealEstateLocation, location);
 
    }
-   if (document.HasMember("heatingNature") && document["heatingNature"].IsString())
+
+   if (document.HasMember("heating_nature") && document["heating_nature"].IsString())
    {
       std::string heating = "Chauffage ";
-      heating += document["heatingNature"].GetString();
+      std::string laforetheating = document["heating_nature"].GetString();
+      auto iter = heatingTranslation.find(laforetheating);
+
+      if(iter != heatingTranslation.end())
+         heating += iter->second;
+      else
+         heating += laforetheating;
 
       realEstate.setDescription(RealEstateTypeOfHeating, heating);
    }
-   if (document.HasMember("parkingInsidesQuantity"))
+
+   if (document.HasMember("parkings") && !document["parkings"].IsNull())
    {
-      std::string parking = document["parkingInsidesQuantity"].GetString();
+      std::string parking = std::to_string(document["parkings"].GetUint());
       realEstate.setDescription(RealEstateParking, parking);
+   }
+
+   if(document.HasMember("year_of_construction") && !document["year_of_construction"].IsNull())
+   {
+      std::string year = std::to_string(document["year_of_construction"].GetUint());
+      realEstate.setDescription(RealEstateConstructionYear, year);
+   }
+
+   if(document.HasMember("cellars") && !document["cellars"].IsNull() )
+   {
+      std::string cellar = std::to_string(document["cellars"].GetUint());
+      realEstate.setDescription(RealEstateCellar, cellar);
    }
 
    realEstate.setDescription(SOURCE_LOGO, "data/laforet.jpg");
@@ -1287,7 +1315,26 @@ int main(int argc, char* argv[])
 {
    Log::Init("adapt_model");
    Log::getInstance()->info("Starting adapt model ...");
-   shared_ptr<TTransport> socket(new TSocket("localhost", port));
+
+   std::string input_tablename = "", output_tablename = "";
+   std::string host = "";
+   int port = 0;
+   if(argc == 2)
+   {
+      surfyn::utils::Config conf(argv[1]);
+      conf.loadconfig();
+      input_tablename = conf.getStringValue("input_tablename");
+      output_tablename = conf.getStringValue("output_tablename");
+      host = conf.getStringValue("host");
+      port = conf.getIntValue("port");
+   }
+   else
+   {
+      Log::getInstance()->error("No config file set! you need to set the host/port/input_tablename/target_tablename in the config file");
+      return 1;
+   }
+
+   shared_ptr<TTransport> socket(new TSocket(host, port));
    shared_ptr<TTransport> transport(new TBufferedTransport(socket));
    shared_ptr<TProtocol> protocol(new TBinaryProtocol(transport));
    auto client = std::make_shared<dynamodb_accessClient>(protocol);
@@ -1295,9 +1342,9 @@ int main(int argc, char* argv[])
    transport->open();
 
    surfyn::DataFormater dataFormater;
-   dataFormater.ReadTableAndFormatEntries(client, "FR_PROPERTIES");
+   dataFormater.ReadTableAndFormatEntries(client, input_tablename);
    dataFormater.CheckSimilarAnnounces();
-   dataFormater.PutTargetTable(client, "FR_SUMMARY");
+   dataFormater.PutTargetTable(client, output_tablename);
 
    return 0;
 }
