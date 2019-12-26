@@ -9,6 +9,7 @@ import json
 import urllib
 import os
 import configparser
+import re
 
 from hash_id import *
 from search_features import *
@@ -69,11 +70,13 @@ class LeboncoinSpider(scrapy.Spider):
 
       
       for link in links:
-         ad_id = link[21:-5]
-         search_url = search_base_url + ad_id
-         ad_url = "https://www.leboncoin.fr" + link[:-1]
+         match = re.search('([0-9]+).htm', link)
+         if match.group(0):
+            ad_id = match.group(0)[0:-4]
+            search_url = search_base_url + ad_id
+            ad_url = "https://www.leboncoin.fr" + link[:-1]
 
-         yield scrapy.Request(search_url, callback = lambda r, ad_url = ad_url, search_type = search_type, property_type = property_type:self.parse_data(r, ad_url, search_type, property_type))
+            yield scrapy.Request(search_url, callback = lambda r, ad_url = ad_url, search_type = search_type, property_type = property_type:self.parse_data(r, ad_url, search_type, property_type))
       
       n = "page="+str(nextpage)
       # parse next link
