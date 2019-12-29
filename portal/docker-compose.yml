@@ -6,10 +6,18 @@ services:
     image: surfyn:latest
     environment:
       - ACTIVE_PROFILE=prod
+      - ACTIVE_CONTEXT=/portal
       - POSTGRES_HOST=postgres
       - POSTGRES_PORT=5432
       - POSTGRES_USERNAME=surfyn
       - POSTGRES_PASSWORD=psurfyn
+      - JAVA_MAIL_SUPPORT_EMAIL=USERNAME@gmail.com
+      - JAVA_MAIL_USERNAME=USERNAME@gmail.com
+      - JAVA_MAIL_PASSWORD=password
+      - GOOGLE_CLIENT_ID=1080663386908-75irf7rtb430o2foidk95j2bloa8ut0s.apps.googleusercontent.com
+      - GOOGLE_CLIENT_SECRET=KeREL988Gm88IrlOVmoGpvKt
+      - FACEBOOK_CLIENT_ID=467157600564935
+      - FACEBOOK_CLIENT_SECRET=a55890f1cb6ded2276fc844c9fbbbfa2
     ports:
       - "8080:8080"
     links:
