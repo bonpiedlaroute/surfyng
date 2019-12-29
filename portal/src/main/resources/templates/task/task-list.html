@@ -30,17 +30,17 @@
 <div th:insert="task/layout :: content(~{ :: #task-list})">
     <div id="task-list">
         <table class="table table-bordered table-striped">
-            <thead>
+            <!--thead>
             <tr>
                 <td>Identifiant</td>
                 <td>Titre</td>
                 <td>Description</td>
                 <td>Date</td>
             </tr>
-            </thead>
+            </thead-->
             <tbody>
             <tr th:if="${tasks.empty}">
-                <td colspan="4">Aucun résultat trouvé</td>
+                <td colspan="4">Veuillez revenir plus tard, nous mettons tout en oeuvre pour rendre cette fonctionalité disponible</td>
             </tr>
             <tr th:each="task : ${tasks}">
                 <td th:text="${task.id}">1</td>
@@ -55,7 +55,7 @@
     </div>
 </div>
 
-<footer th:replace="task/layout :: footer">Footer</footer>
+<div th:insert="~{fragments/footer :: footer}">&copy; 2019 DiguinTech</div>
 
 </body>
 </html>

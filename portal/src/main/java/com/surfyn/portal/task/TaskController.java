@@ -1,6 +1,10 @@
 package com.surfyn.portal.task;
 
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -28,8 +32,14 @@ class TaskController {
 
     @RequestMapping(value = "/task", method = RequestMethod.GET)
     public String tasks(Model model) {
-        model.addAttribute("tasks", taskService.findAll());
-        return "task/task-list";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication instanceof AnonymousAuthenticationToken) {
+            return "redirect:/signin";
+        } else {
+            model.addAttribute("tasks", taskService.findAll());
+            return "task/task-list";
+        }
+
     }
 
     @RequestMapping(value = "/task/{id}", method = RequestMethod.GET)
