@@ -125,6 +125,7 @@ public class PasswordController {
     private String getAppUrl(HttpServletRequest request) {
         String profile = env.getProperty("spring.profiles.active");
         String scheme = profile != null && profile.equals("prod") ? "https://" : "http://";
-        return scheme + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+        String port =  profile != null && profile.equals("prod") ?  "" : ":" + Integer.valueOf(request.getServerPort()) ;
+        return scheme + request.getServerName() + port + request.getContextPath();
     }
 }
