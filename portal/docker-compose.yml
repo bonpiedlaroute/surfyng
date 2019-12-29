@@ -3,7 +3,7 @@ version: '2'
 services:
 
   portal:
-    image: surfyng:latest
+    image: surfyn:latest
     environment:
       - ACTIVE_PROFILE=prod
       - POSTGRES_HOST=postgres
