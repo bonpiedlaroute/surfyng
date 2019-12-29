@@ -21,5 +21,12 @@
     </th:block>
     <h3><label th:text="#{signup.welcome}">Welcome :</label> <span th:utext="${#request.userPrincipal.name}"></span></h3>
 </div>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script th:inline="javascript">
+/*<![CDATA[*/
+var username = /*[[${#request.userPrincipal.name}]]*/ '';
+sessionStorage.setItem('username', username);
+/*]]>*/
+</script>
 </body>
 </html>
