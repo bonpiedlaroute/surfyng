@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="#{app.login}">Sign In</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/core.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/social.css}"/>
+    <script src="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+    <script src="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}">Header</div>
+
+<form class="form-narrow form-horizontal" action="#" method="post" th:action="@{/signin}" th:object="${loginForm}"   th:fragment="loginForm">
+    <img class="logo" th:src="@{/images/logo.svg}"/>
+    <!--/* Show general error message when form contains errors */-->
+    <th:block th:if="${#fields.hasErrors('${loginForm.*}')}">
+        <div th:replace="fragments/alert :: alert (type='danger', message=#{signin.form.error})">Form contains errors. Please try again</div>
+    </th:block>
+    <th:block>
+        <div th:if="${param.message != null}" class="alert alert-info" th:text="${param.message[0]}">message</div>
+    </th:block>
+    <fieldset>
+        <legend th:text="#{signin.auth}">Please Sign In</legend>
+        <div class="form-group" th:classappend="${#fields.hasErrors('email')}? 'has-error'">
+            <label for="email">Email</label>
+            <input type="text" class="form-control" id="email" placeholder="Email" name="email" required="required"/>
+            <span class="help-block" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Incorrect email</span>
+        </div>
+        <div class="form-group" th:classappend="${#fields.hasErrors('password')}? 'has-error'">
+            <label for="password"  th:text="#{signin.password}">Password</label>
+            <input type="password" class="form-control" id="password" placeholder="Password" name="password" required="required"/>
+            <span class="help-block" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Incorrect format</span>
+        </div>
+        <div class="form-group">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="_spring_security_remember_me" /> <span th:text="#{signin.remenber}">Remember me</span>
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-success" th:text="#{signin.auth}">Sign in</button>
+        </div>
+        <div class="form-group">
+            <p><span>Mot de passe oublié?</span> <a href="signup" th:href="@{/forgot}">Réinitialiser</a></p>
+        </div>
+        <div class="form-group">
+            <p><span th:text="#{signin.new }">New here?</span> <a href="signup" th:href="@{/signup}" th:text="#{signup.please }">Sign Up</a></p>
+        </div>
+    </fieldset>
+    <fieldset>
+        <div class="form-group">
+            <a th:href="@{/auth/facebook}" class="fb btn">
+                <i class="fa fa-facebook fa-fw"></i> <label th:text="#{signup.facebook}">Signup with with Facebook</label>
+            </a>
+            <a th:href="@{/auth/google}" class="google btn">
+                <i class="fa fa-google fa-fw"></i> <label th:text="#{signup.google}">Signup with Google+</label>
+            </a>
+        </div>
+    </fieldset>
+</form>
+<div th:insert="~{fragments/footer :: footer}">&copy; 2019 DiguinTech</div>
+</body>
+</html>

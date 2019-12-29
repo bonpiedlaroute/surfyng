@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="#{app.title}">Surfyn</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/core.css}"/>
+    <script src="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+    <script src="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}">Header</div>
+<div class="container">
+    <div class="text-center">
+
+        <h1 th:text="#{app.name}">Surfyn</h1>
+    </div>
+    <th:block>
+        <div th:if="${param.message != null}" class="alert alert-info" th:text="${param.message[0]}">message</div>
+    </th:block>
+    <div th:insert="~{fragments/footer :: footer}">&copy; 2019 Surfyn</div>
+</div>
+</body>
+</html>

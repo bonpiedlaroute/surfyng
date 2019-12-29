@@ -3,10 +3,9 @@ version: '2'
 services:
 
   portal:
-    image: surfyng-portal-0.0.1:latest
+    image: surfyng:latest
     environment:
       - ACTIVE_PROFILE=prod
-      - APP_OAUTH2_AUTHORIZED_REDIRECT_URI=https://surfyn.fr/oauth2/redirect
       - POSTGRES_HOST=postgres
       - POSTGRES_PORT=5432
       - POSTGRES_USERNAME=surfyn

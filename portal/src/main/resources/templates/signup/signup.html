@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="#{app.logout}">Signup</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/core.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/social.css}"/>
+    <script src="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+    <script src="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}">Header</div>
+<fieldset class="container">
+<form class="form-narrow form-horizontal" th:object="${myForm}" th:action="@{/signup}" method="POST" th:fragment="myForm">
+    <img class="logo" th:src="@{/images/logo.svg}"/>
+    <input type="hidden" th:field="*{userId}"  />
+    <input type="hidden" th:field="*{signInProvider}" />
+    <!--/* Show general error message when form contains errors */-->
+    <th:block th:if="${#fields.hasErrors('${myForm.*}')}">
+        <div th:replace="fragments/alert :: alert (type='danger', message=#{signup.form.error})">Form contains errors. Please try again</div>
+    </th:block>
+    <fieldset>
+        <legend th:text="#{signup.please}">Please Sign Up</legend>
+        <div class="form-group" th:classappend="${#fields.hasErrors('lastName')}? 'has-error'">
+            <label for="lastName" th:text="#{signup.lastName}">Last Name</label>
+            <input type="text" class="form-control" id="lastName" placeholder="Last Name" th:field="*{lastName}" required="required"/>
+            <span class="help-block" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Incorrect format</span>
+        </div>
+        <div class="form-group" th:classappend="${#fields.hasErrors('firstName')}? 'has-error'">
+            <label for="firstName"  th:text="#{signup.firstName}">First Name</label>
+            <input type="text" class="form-control" id="firstName" placeholder="First Name" th:field="*{firstName}" required="required"/>
+            <span class="help-block" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">Incorrect format</span>
+        </div>
+        <div class="form-group" th:classappend="${#fields.hasErrors('email')}? 'has-error'">
+            <label for="email"  th:text="#{signup.email}">Email</label>
+            <input type="text" class="form-control" id="email" placeholder="Email" th:field="*{email}" required="required"/>
+            <span class="help-block" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Incorrect email</span>
+        </div>
+        <div class="form-group" th:classappend="${#fields.hasErrors('password')}? 'has-error'">
+            <label for="password"  th:text="#{signup.password}">Password</label>
+            <input type="password" class="form-control" id="password" placeholder="Password" th:field="*{password}" required="required"/>
+            <span class="help-block" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Incorrect password</span>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary" th:text="#{signup.ins}">Sign up</button>
+        </div>
+        <div class="form-group">
+            <p><label th:text="#{signup.alreadyAccount}">Already have an account?</label> <a href="signin" th:href="@{/signin}"th:text="#{signup.signin}">Sign In</a></p>
+        </div>
+    </fieldset>
+    <fieldset>
+        <div class="form-group">
+                <a th:href="@{/auth/facebook}" class="fb btn">
+                    <i class="fa fa-facebook fa-fw"></i> <label th:text="#{signup.facebook}">Signup with with Facebook</label>
+                </a>
+                <a th:href="@{/auth/google}" class="google btn">
+                    <i class="fa fa-google fa-fw"></i> <label th:text="#{signup.google}">Signup with Google+</label>
+                </a>
+
+        </div>
+    </fieldset>
+</form>
+</fieldset>
+</div>
+<div th:insert="~{fragments/footer :: footer}">&copy; 2019 DiguinTech</div>
+</body>
+</html>

@@ -11,10 +11,10 @@ VOLUME /tmp
 EXPOSE 8080
 
 # The application's jar file
-ARG JAR_FILE=target/portal-0.0.1-SNAPSHOT.jar
+ARG JAR_FILE=target/surfyn-0.0.1-SNAPSHOT.jar
 
 # Add the application's jar to the container
-ADD ${JAR_FILE} portal-0.0.1.jar
+ADD ${JAR_FILE} surfyn-0.0.1.jar
 
 # Run the jar file
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/portal-0.0.1.jar"]
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/surfyn-0.0.1.jar"]
