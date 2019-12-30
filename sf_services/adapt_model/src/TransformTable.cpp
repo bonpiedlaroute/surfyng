@@ -196,6 +196,7 @@ namespace surfyn
       m_ReaderBySources["orpi"] = [this](const std::string& json, classifier::RealEstateAd& realEstate) { ReadOrpiJSON(json, realEstate);};
       m_ReaderBySources["stephaneplazaimo"] = [this](const std::string& json, classifier::RealEstateAd& realEstate) { ReadStephanePlazaImoJSON(json, realEstate);};
       m_ReaderBySources["foncia"] = [this](const std::string& json, classifier::RealEstateAd& realEstate) { ReadFonciaJSON(json, realEstate);};
+      m_ReaderBySources["century21"] = [this](const std::string& json, classifier::RealEstateAd& realEstate) { ReadCentury21JSON(json, realEstate);};
    }
    void DataFormater::ReadSelogerJSON(const std::string& json, classifier::RealEstateAd& realEstate)
    {
@@ -1029,6 +1030,83 @@ void DataFormater::ReadFonciaJSON(const std::string& json, classifier::RealEstat
     }
 
    realEstate.setDescription(SOURCE_LOGO, "data/foncia.png");
+}
+
+void DataFormater::ReadCentury21JSON(const std::string& json, classifier::RealEstateAd& realEstate)
+{
+   std::locale::global(std::locale(""));
+
+   rapidjson::Document document;
+   document.Parse(json.c_str());
+
+   if(document.HasParseError())
+   {
+      std::stringstream error;
+      error << "failed to parse century21 json: error code [";
+      error << document.GetParseError();
+      error << "] error offset :[";
+      error << document.GetErrorOffset();
+      error << "]";
+      Log::getInstance()->error(error.str());
+
+      return;
+   }
+   if (document.HasMember(RealEstatePrice))
+   {
+      realEstate.setDescription(RealEstatePrice, document[RealEstatePrice].GetString());
+   }
+
+   if( document.HasMember(RealEstateSurface))
+   {
+     std::string area = document[RealEstateSurface].GetString();
+     auto pos = area.find_first_of(' ');
+     if( pos != std::string::npos)
+     {
+       std::string real_area = area.substr(0, pos);
+       std::replace(real_area.begin(), real_area.end(), ',', '.');
+       realEstate.setDescription(RealEstateSurface, real_area);
+     }
+
+   }
+   if( document.HasMember(RealEstateRooms))
+   {
+      realEstate.setDescription(RealEstateRooms, document[RealEstateRooms].GetString());
+   }
+   if( document.HasMember(RealEstateConstructionYear))
+   {
+      realEstate.setDescription(RealEstateConstructionYear, document[RealEstateConstructionYear].GetString());
+   }
+
+   if (document.HasMember(RealEstateLift))
+   {
+      realEstate.setDescription(RealEstateLift, document[RealEstateLift].GetString());
+   }
+
+   if (document.HasMember(RealEstateTypeOfHeating))
+   {
+      std::string heating = "Chauffage ";
+      std::string value = document[RealEstateTypeOfHeating].GetString();
+      auto pos = value.find_last_of(' ');
+
+      if( pos !=  std::string::npos)
+      {
+         auto heating_type = value.substr(pos+1);
+         heating += heating_type == "electricite"? "electrique": heating_type;
+      }
+      else
+      {
+         heating += value;
+      }
+
+      realEstate.setDescription(RealEstateTypeOfHeating, heating);
+   }
+
+   if( document.HasMember(RealEstateConstructionYear))
+   {
+      realEstate.setDescription(RealEstateConstructionYear, document[RealEstateConstructionYear].GetString());
+   }
+
+   realEstate.setDescription(SOURCE_LOGO, "data/century21.png");
 }
 
 

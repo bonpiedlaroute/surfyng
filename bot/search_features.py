@@ -128,5 +128,16 @@ def getFonciaPropertiesId(_id):
 def getFonciaSearchTypeId(_id):
    return FonciaSearchTypeMapping[_id]
 
+Century21PropertiesMapping = dict()
+Century21PropertiesMapping[APART_ID] = 'appartement'
+Century21PropertiesMapping[HOUSE_ID] = 'maison'
 
+Century21SearchTypeMapping = dict()
+Century21SearchTypeMapping[BUY_ID] = 'achat'
+Century21SearchTypeMapping[RENT_ID] = 'location'
 
+def getCentury21PropertiesId(_id):
+   return Century21PropertiesMapping[_id]
+
+def getCentury21SearchTypeId(_id):
+   return Century21SearchTypeMapping[_id]

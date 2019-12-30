@@ -120,3 +120,13 @@ def buildFonciaUrl(city, ptype, stype):
    url += '/'
    url += ptype
    return url
+
+century21_url = "https://www.century21.fr/annonces/"
+
+def buildCentury21Url(city, ptype, stype):
+   url = century21_url + stype
+   url += '-'
+   url += ptype
+   url += '/v-'
+   url += city
+   return url
