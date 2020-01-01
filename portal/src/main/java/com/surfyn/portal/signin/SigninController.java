@@ -40,6 +40,7 @@ public class SigninController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
     private UserRepository userRepository;
 
     @RequestMapping(value = { "/signin" }, method = RequestMethod.GET)

@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void changeUserPassword(final User user, final String password) {
-        user.setEncrytedPassword( EncrytedPasswordUtils.encrytePassword(password));
+        user.setEncrytedPassword(EncrytedPasswordUtils.encrytePassword(password));
         userRepository.save(user);
     }
 
