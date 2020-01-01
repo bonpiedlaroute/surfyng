@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--/* Title of this template will be passed to the head fragment along with custom links and scripts */-->
+<head th:replace="user/layout :: head(~{this :: title}, ~{this :: .custom-link}, ~{this :: .custom-script})">
+    <title>List des utilisateurs</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/core.css}"/>
+
+    <!-- Custom links for this page only -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/task/task.css}" />
+
+    <script src="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+    <script src="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+
+    <!-- Custom scripts for this page only -->
+    <script src="text/javascript"  th:src="@{/js/task/task.js}"></script>
+</head>
+<body>
+
+<!--/* The element with breadcrumb class will be passed to the header fragment */-->
+<header th:insert="user/layout :: header(~{ :: .breadcrumb})">
+    <ol class="breadcrumb container">
+        <li><a href="/">Accueil</a></li>
+        <li><a href="#">Mes recherches</a></li>
+    </ol>
+</header>
+
+<!--/* Insert content fragment with content of the element with id = 'user-list' */-->
+<div th:insert="user/layout :: content(~{ :: #user-list})">
+    <div id="user-list">
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <td>Email</td>
+                <td>Nom</td>
+                <td>Prénom</td>
+                <td>Date d'inscription</td>
+                <td>Dernière connexion</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${users.empty}">
+                <td colspan="4">Aucun utilisateur trouvé</td>
+            </tr>
+            <tr th:each="user : ${users}">
+                <td>
+                    <a href="#" th:href="@{/private/admin/user/{id}(id=${user.userId})}" th:text="${user.email}">Email</a>
+                </td>
+                <td th:text="${user.lastName}">Nom ...</td>
+                <td th:text="${user.firstName}">Prénom ...</td>
+                <td th:text="${#calendars.format(user.createdOn)}">July 11, 2017 2:17:16 PM CDT</td>
+                <td th:text="${#calendars.format(user.lastLogin)}">July 11, 2017 2:17:16 PM CDT</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div th:insert="~{fragments/footer :: footer}">&copy; 2019 DiguinTech</div>
+
+</body>
+</html>

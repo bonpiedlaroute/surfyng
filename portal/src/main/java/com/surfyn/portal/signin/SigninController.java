@@ -1,7 +1,9 @@
 package com.surfyn.portal.signin;
 
 
+import com.surfyn.portal.entity.User;
 import com.surfyn.portal.form.UserForm;
+import com.surfyn.portal.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -21,6 +23,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Date;
+import java.util.Optional;
+
 @Controller
 public class SigninController {
 
@@ -34,6 +39,8 @@ public class SigninController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    private UserRepository userRepository;
 
     @RequestMapping(value = { "/signin" }, method = RequestMethod.GET)
     public String signupPage(WebRequest request, Model model) {
@@ -74,7 +81,9 @@ public class SigninController {
                             appUserForm.getEmail(),
                             appUserForm.getPassword()
                     ));
-
+            Optional<User> user = userRepository.findByEmail(appUserForm.getEmail());
+            user.get().setLastLogin(new Date());
+            userRepository.save(user.get());
         } catch (BadCredentialsException bce) {
             result.rejectValue("", "", "Bad credentiels.");
             return SIGNIN_VIEW_NAME;

@@ -5,10 +5,15 @@ package com.surfyn.portal.service;
 
 import com.surfyn.portal.entity.User;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
     public Optional<User> findUserByEmail(String email);
+
+    public Optional<User> findOne(Long id);
+
+    public List<User> findAll();
 
     public Optional<User> findUserByResetToken(String resetToken);
 

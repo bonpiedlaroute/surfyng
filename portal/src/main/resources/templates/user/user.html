@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<!--/* Title of this template will be passed to the head fragment along with custom links and scripts */-->
+<head th:replace="user/layout :: head(~{this :: title}, ~{this :: .custom-link}, ~{this :: .custom-script})">
+    <title>Utilisateur</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/core.css}"/>
+    
+    <!-- Custom links for this page only -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/task/task.css}" />
+
+    <script src="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+    <script src="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+    
+    <!-- Custom scripts for this page only -->
+    <script src="text/javascript"  th:src="@{/js/task/task.js}"></script>
+    
+</head>
+<body>
+
+<!--/* The element with breadcrumb class will be passed to the header fragment */-->
+<header th:insert="user/layout :: header(~{ :: .breadcrumb})">
+    <ol class="breadcrumb container">
+        <li><a href="#">Accueil</a></li>
+        <li><a href="#" th:href="@{/private/admin/users}">Utilisateurs</a></li>
+    </ol>
+</header>
+
+<!--/* Insert content fragment with content of the element with id = 'user-details' */-->
+<div th:insert="user/layout :: content(~{ :: #user-details})">
+    <div id="user-details">
+        Email: <div th:text="${user.email}">email</div>
+        Nom: <div th:text="${user.firstName}">Nom</div>
+        Prénom: <div th:text="${user.lastName}">Prénom</div>
+        Date d'inscription: <div th:text="${user.createdOn}">Date d'inscription</div>
+        Dernière connexion: <div th:text="${user.lastLogin}">Dernière connexion</div>
+    </div>
+</div>
+
+</body>
+</html>

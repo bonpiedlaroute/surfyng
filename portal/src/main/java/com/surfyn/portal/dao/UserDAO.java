@@ -16,6 +16,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -137,6 +138,8 @@ public class UserDAO {
         appUser.setFirstName(appUserForm.getFirstName());
         appUser.setLastName(appUserForm.getLastName());
         appUser.setEnabled(true);
+        appUser.setCreatedOn(new Date());
+        appUser.setLastLogin(new Date());
         String encrytedPassword = EncrytedPasswordUtils.encrytePassword(appUserForm.getPassword());
         appUser.setEncrytedPassword(encrytedPassword);
 

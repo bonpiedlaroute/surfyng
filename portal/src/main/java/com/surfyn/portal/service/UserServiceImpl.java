@@ -43,6 +43,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<User> findOne(Long id) {
+        return userRepository.findById(id);
+    }
+
+    @Override
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    @Override
     public Optional<User> findUserByResetToken(String resetToken) {
         return Optional.empty();
     }
