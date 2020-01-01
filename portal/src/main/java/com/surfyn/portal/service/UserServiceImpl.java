@@ -8,6 +8,7 @@ import com.surfyn.portal.entity.User;
 import com.surfyn.portal.repository.PasswordResetTokenRepository;
 import com.surfyn.portal.repository.UserRepository;
 import com.surfyn.portal.social.SocialUserDetailsImpl;
+import com.surfyn.portal.utils.EncrytedPasswordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -34,8 +35,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordResetTokenRepository passwordTokenRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @Override
     public Optional findUserByEmail(String email) {
@@ -63,7 +62,6 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-
     @Override
     public void createPasswordResetTokenForUser(final User user, final String token) {
         final PasswordResetToken myToken = new PasswordResetToken(token, user);
@@ -72,7 +70,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void changeUserPassword(final User user, final String password) {
-        user.setEncrytedPassword(passwordEncoder.encode(password));
+        user.setEncrytedPassword( EncrytedPasswordUtils.encrytePassword(password));
         userRepository.save(user);
     }
 
