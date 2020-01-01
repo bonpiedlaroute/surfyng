@@ -958,7 +958,9 @@ void DataFormater::ReadFonciaJSON(const std::string& json, classifier::RealEstat
    }
    if (document.HasMember(RealEstatePrice))
    {
-      realEstate.setDescription(RealEstatePrice, document[RealEstatePrice].GetString());
+      std::string price = document[RealEstatePrice].GetString();
+      boost::erase_all(price, " ");
+      realEstate.setDescription(RealEstatePrice,price);
    }
 
    if( document.HasMember(RealEstateSurface))
@@ -1053,7 +1055,9 @@ void DataFormater::ReadCentury21JSON(const std::string& json, classifier::RealEs
    }
    if (document.HasMember(RealEstatePrice))
    {
-      realEstate.setDescription(RealEstatePrice, document[RealEstatePrice].GetString());
+      std::string price = document[RealEstatePrice].GetString();
+      boost::erase_all(price, " ");
+      realEstate.setDescription(RealEstatePrice, price);
    }
 
    if( document.HasMember(RealEstateSurface))
