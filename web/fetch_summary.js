@@ -290,7 +290,8 @@ function generate_summary_page(data)
             laforet:false,
             orpi:false,
             stephaneplazaimo:false,
-            foncia:false
+            foncia:false,
+            century21:false
             }
             var ad_sum_src_provider_cont = createNode("div");
             ad_sum_src_provider_cont.className = "ad_summary_src_provider_cont";
