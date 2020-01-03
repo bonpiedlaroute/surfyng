@@ -175,21 +175,54 @@ var ismobile   = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.use
 
 function generate_summary_page(data)
 {
+  const Params = new URLSearchParams(window.location.search);
+  const searchType = Params.get('search_type');
+  var pagetitle = searchType == 1 ? "Vente ": "Location ";
+  sessionStorage.setItem("search_type", pagetitle);
+  var propertyType_param = Params.get('prop_type');
+  var split_propertyType = propertyType_param.split(",");
+  var first_proptype = true;
+  var propertyType = "";
+  if (split_propertyType.indexOf("1") !== -1)
+  {
+    if(!first_proptype)
+      pagetitle += ", ";
+      else {
+        first_proptype = false;
+      }
+    propertyType = "appartements";
+  }
+  if (split_propertyType.indexOf("2") !== -1)
+  {
+    if(!first_proptype)
+      propertyType += ", ";
+      else {
+        first_proptype = false;
+      }
+    propertyType += "maisons";
+  }
+  pagetitle += propertyType;
+  pagetitle += " à ";
+  var search_city = Params.get('search_city');
+  pagetitle += search_city;
+  document.title = pagetitle;
+  sessionStorage.setItem("search_city", search_city);
+
+  var announces_found = document.getElementById("nb_announces_found");
   if( data.length == 0)
   {
-    var announces_found = document.getElementById("nb_announces_found");
-    announces_found.innerHTML = "(0)";
-
-    var text = createNode("p");
-
-    text.innerHTML = " Aucune annonce ne correspond à vos critères ";
-
-    document.body.appendChild(text);
+    announces_found.innerHTML = "Aucune annonce à ";
+    announces_found.innerHTML += search_city;
+    announces_found.innerHTML += " ne correspond à vos critères";
   }
   else
   {
-        var announces_found = document.getElementById("nb_announces_found");
-        announces_found.innerHTML = "("+ data.length +")";
+        announces_found.innerHTML = data.length
+        announces_found.innerHTML += data.length == 1 ? " Annonce ": " Annonces ";
+        announces_found.innerHTML += split_propertyType.indexOf("1") !== -1? "d'": "de "
+        announces_found.innerHTML += propertyType + " à ";
+        announces_found.innerHTML += searchType == 1 ? "vendre à " : "louer à ";
+        announces_found.innerHTML += search_city;
         for(var i = 0; i < data.length; i++)
         {
              var ad_link = createNode("a");

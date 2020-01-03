@@ -467,16 +467,16 @@ width:100%;
 }
 .header_title_left_box
 {
-  width: 30%;
+  width: 12%;
 }
 .header_title_center_box
 {
-  width: 30%;
+  width: 70%;
 }
 
 .header_title_right_box
 {
-  width: 30%;
+  width: 12%;
 }
 .det_header_title
 {
@@ -761,7 +761,7 @@ margin-left:10%;
 
   .header_title
   {
-    font-size:20px;
+    font-size:18px;
   }
   .icon_arrow_left
   {
@@ -788,16 +788,16 @@ margin-left:10%;
   }
   .header_title_left_box
   {
-    width: 20%;
+    width: 12%;
   }
   .header_title_center_box
   {
-    width: 50%;
+    width: 70%;
   }
 
   .header_title_right_box
   {
-    width: 20%;
+    width: 12%;
   }
 
   .announce_frame

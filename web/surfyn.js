@@ -1,3 +1,6 @@
+var pathname = window.location.pathname;
+var pagename = pathname.split("/").pop();
+var search_criteria_title = document.getElementById("search_criteria_title");
 var inputPriceMin = document.getElementById("price_min");
 var inputPriceMax = document.getElementById("price_max");
 var inputAreaMin = document.getElementById("area_min");
@@ -23,6 +26,8 @@ sessionStorage.setItem("scrollX", "0");
 sessionStorage.setItem("scrollY", "0");
 sessionStorage.setItem("needtosort", "");
 sessionStorage.setItem("summary_json_data", "");
+sessionStorage.setItem("search_type", "");
+sessionStorage.setItem("search_city", "");
 const Params = new URLSearchParams(window.location.search);
 const searchType = Params.get('search_type');
 if( searchType == "1")
@@ -31,12 +36,22 @@ if( searchType == "1")
   values[inputType.priceMax] = 4000000;
   valuePriceMin.innerHTML = "50 K€";
   valuePriceMax.innerHTML = "4000 K€";
+  if( pagename == "criterederecherche.html")
+  {
+    document.title = "Vos critères de recherche d'achat";
+    search_criteria_title.innerHTML += " d'achat";
+  }
 }
 else {
   values[inputType.priceMin] = 100;
   values[inputType.priceMax] = 4000;
   valuePriceMin.innerHTML = "100 €";
   valuePriceMax.innerHTML = "4000 €";
+  if( pagename == "criterederecherche.html")
+  {
+    document.title = "Vos critères de recherche de location";
+    search_criteria_title.innerHTML += " de location";
+  }
 }
 values[inputType.areaMin] = 10;
 values[inputType.areaMax] = 400;

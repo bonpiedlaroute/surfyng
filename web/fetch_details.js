@@ -49,7 +49,6 @@ function loadJSON(path, success, error) {
 
 function generate_details_page(data)
 {
-
   if(data.length == 0)
   {
     var announces_found = document.getElementById("nb_announces_found");
@@ -60,11 +59,11 @@ function generate_details_page(data)
     text.innerHTML = " Aucune annonce ne correspond à vos critères ";
 
     document.body.appendChild(text);
+
   }
   else
   {
-    var nb_similar = document.getElementById("nb_announces_found");
-    nb_similar.innerHTML = "Nous avons trouvé pour vous " + data.length + " annonce(s) correspondant à ce même bien";
+    var nb_room = "";
 
     var ismobile   = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
     var det_container_div;
@@ -346,7 +345,7 @@ function generate_details_page(data)
 
         if(data[i].hasOwnProperty('ROOMS'))
         det_nb_rooms_span.innerHTML = String(data[i].ROOMS);
-
+        nb_room = det_nb_rooms_span.innerHTML;
         det_nb_rooms_span.innerHTML += " pièce(s)";
 
         det_nb_rooms_span_div.appendChild(det_nb_rooms_span);
@@ -626,6 +625,36 @@ function generate_details_page(data)
       det_container_div.appendChild(det_ad_container_div);
       if(i%2 == 0 || i == (data.length - 1) )
       document.body.appendChild(det_container_div);
+    } //end of for loop
+
+    var nb_similar = document.getElementById("nb_announces_found");
+    if( data.length == 1 )
+    {
+      nb_similar.innerHTML = "1 Annonce pour ";
+      if( data[0].hasOwnProperty('PROPERTY_TYPE'))
+      {
+        nb_similar.innerHTML += data[0].PROPERTY_TYPE == "Appartement"? "cet appartement ":"cette maison ";
+      }
+
     }
+    else {
+
+        nb_similar.innerHTML = data.length;
+        nb_similar.innerHTML += " annonces correspondent à";
+        if( data[0].hasOwnProperty('PROPERTY_TYPE'))
+        nb_similar.innerHTML += data[0].PROPERTY_TYPE == "Appartement"? " ce même appartement ":" cette même maison ";
+    }
+    nb_similar.innerHTML += "de ";
+    nb_similar.innerHTML += nb_room;
+    nb_similar.innerHTML += " pièce(s) à ";
+    nb_similar.innerHTML += sessionStorage.getItem("search_city");
+    var pagetitle = sessionStorage.getItem('search_type') + " ";
+    if( data[0].hasOwnProperty('PROPERTY_TYPE'))
+    pagetitle += data[0].PROPERTY_TYPE == "Appartement"? " appartement ":" maison ";
+    pagetitle += nb_room;
+    pagetitle += " pièce(s) à ";
+    pagetitle += sessionStorage.getItem("search_city");
+
+    document.title = pagetitle;
   }
 }
