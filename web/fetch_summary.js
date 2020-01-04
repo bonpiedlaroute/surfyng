@@ -218,7 +218,7 @@ function generate_summary_page(data)
   else
   {
         announces_found.innerHTML = data.length
-        announces_found.innerHTML += data.length == 1 ? " Annonce ": " Annonces ";
+        announces_found.innerHTML += data.length == 1 ? " annonce ": " annonces ";
         announces_found.innerHTML += split_propertyType.indexOf("1") !== -1? "d'": "de "
         announces_found.innerHTML += propertyType + " à ";
         announces_found.innerHTML += searchType == 1 ? "vendre à " : "louer à ";
