@@ -630,7 +630,7 @@ function generate_details_page(data)
     var nb_similar = document.getElementById("nb_announces_found");
     if( data.length == 1 )
     {
-      nb_similar.innerHTML = "1 Annonce pour ";
+      nb_similar.innerHTML = "1 annonce pour ";
       if( data[0].hasOwnProperty('PROPERTY_TYPE'))
       {
         nb_similar.innerHTML += data[0].PROPERTY_TYPE == "Appartement"? "cet appartement ":"cette maison ";
