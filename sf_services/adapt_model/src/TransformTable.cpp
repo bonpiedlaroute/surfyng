@@ -861,7 +861,7 @@ void DataFormater::ReadStephanePlazaImoJSON(const std::string& json, classifier:
       realEstate.setDescription(RealEstateLocation, location);
    }
 
-   if(document.HasMember("properties"))
+   if(document.HasMember("properties") && document["properties"].IsObject())
    {
       const auto& properties = document["properties"];
       if( properties.HasMember("anneeConstruction"))
@@ -1427,6 +1427,6 @@ int main(int argc, char* argv[])
    dataFormater.ReadTableAndFormatEntries(client, input_tablename);
    dataFormater.CheckSimilarAnnounces();
    dataFormater.PutTargetTable(client, output_tablename);
-
+   Log::getInstance()->info("adapt model successfully finished!");
    return 0;
 }
