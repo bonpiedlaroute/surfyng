@@ -325,6 +325,8 @@ function handleEvtDownPropertyType(event, divElt, evtType)
     isSelected[evtType] = true;
     divElt.style.transform = "scale(1)";
     divElt.style.border = "solid 3px #222545";
+    var propTypeErrorMsg = document.getElementById("prop_type_error_msg");
+    propTypeErrorMsg.innerHTML ="";
   }
 }
 function handleEvtDownLoft(event)
@@ -426,26 +428,38 @@ function submit_request(event)
   url_results+= valuePriceMin.innerHTML.substring(0, valuePriceMin.innerHTML.length - formattingLength);
   url_results+="&price_max=";
   url_results+= valuePriceMax.innerHTML.substring(0, valuePriceMax.innerHTML.length - formattingLength);
-
+  var isOnePropertyTypeSelected = false;
   if(isSelected[propertyType.loft])
   {
     updatePropertyTypeUrlParam();
 
     url_results+="4";
+    isOnePropertyTypeSelected = true;
   }
   if(isSelected[propertyType.house])
   {
     updatePropertyTypeResult("2");
+    isOnePropertyTypeSelected = true;
   }
   if(isSelected[propertyType.apart])
   {
     updatePropertyTypeResult("1");
+    isOnePropertyTypeSelected = true;
   }
   if(isSelected[propertyType.office])
   {
     updatePropertyTypeResult("3");
+    isOnePropertyTypeSelected = true;
   }
-
+  if(!isOnePropertyTypeSelected)
+  {
+    var propTypeErrorMsg = document.getElementById("prop_type_error_msg");
+    propTypeErrorMsg.innerHTML = "* Vous devez indiquer au moins un type de bien";
+    propTypeErrorMsg.style.color = "red";
+    propTypeErrorMsg.style.fontSize = "12px";
+    validate.href = "#";
+    return;
+  }
   url_results+="&area_min=";
   url_results+= valueAreaMin.innerHTML.substring(0, valueAreaMin.innerHTML.length - 14);
   url_results+="&area_max=";
