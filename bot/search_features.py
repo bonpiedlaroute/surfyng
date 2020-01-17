@@ -141,3 +141,17 @@ def getCentury21PropertiesId(_id):
 
 def getCentury21SearchTypeId(_id):
    return Century21SearchTypeMapping[_id]
+
+GuyHoquetPropertiesMapping = dict()
+GuyHoquetPropertiesMapping[APART_ID] = '1'
+GuyHoquetPropertiesMapping[HOUSE_ID] = '2'
+
+GuyHoquetSearchTypeMapping = dict()
+GuyHoquetSearchTypeMapping[BUY_ID] = 'Vente'
+GuyHoquetSearchTypeMapping[RENT_ID] = 'Location'
+
+def getGuyHoquetPropertiesId(_id):
+   return GuyHoquetPropertiesMapping[_id]
+
+def getGuyHoquetSearchTypeId(_id):
+   return GuyHoquetSearchTypeMapping[_id]

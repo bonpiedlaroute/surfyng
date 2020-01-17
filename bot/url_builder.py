@@ -130,3 +130,17 @@ def buildCentury21Url(city, ptype, stype):
    url += '/v-'
    url += city
    return url
+
+guyhoquet_url = "https://www.guy-hoquet.com/catalog/result_carto.php?action=update_search&C_28_search=EGAL&C_28_type=UNIQUE&C_65_search=CONTIENT&C_65_type=TEXT&"
+
+def buildGuyHoquetUrl(city, ptype, stype):
+   url = guyhoquet_url + "C_28="
+   url += stype
+   url += "&cfamille_id="
+   url += ptype
+   url += "&C_65="
+   url += postalcodeByCity[city]
+   url += "+"
+   url += city
+   
+   return url

@@ -197,6 +197,7 @@ namespace surfyn
       m_ReaderBySources["stephaneplazaimo"] = [this](const std::string& json, classifier::RealEstateAd& realEstate) { ReadStephanePlazaImoJSON(json, realEstate);};
       m_ReaderBySources["foncia"] = [this](const std::string& json, classifier::RealEstateAd& realEstate) { ReadFonciaJSON(json, realEstate);};
       m_ReaderBySources["century21"] = [this](const std::string& json, classifier::RealEstateAd& realEstate) { ReadCentury21JSON(json, realEstate);};
+      m_ReaderBySources["guyhoquet"] = [this](const std::string& json, classifier::RealEstateAd& realEstate) { ReadGuyHoquetJSON(json, realEstate);};
    }
    void DataFormater::ReadSelogerJSON(const std::string& json, classifier::RealEstateAd& realEstate)
    {
@@ -1033,6 +1034,92 @@ void DataFormater::ReadFonciaJSON(const std::string& json, classifier::RealEstat
 
    realEstate.setDescription(SOURCE_LOGO, "data/foncia.png");
 }
+
+void DataFormater::ReadGuyHoquetJSON(const std::string& json, classifier::RealEstateAd& realEstate)
+{
+   std::locale::global(std::locale(""));
+
+   rapidjson::Document document;
+   document.Parse(json.c_str());
+
+   if(document.HasParseError())
+   {
+      std::stringstream error;
+      error << "failed to parse guy-hoquet json: error code [";
+      error << document.GetParseError();
+      error << "] error offset :[";
+      error << document.GetErrorOffset();
+      error << "]";
+      Log::getInstance()->error(error.str());
+
+      return;
+   }
+   if (document.HasMember(RealEstatePrice))
+   {
+      std::string price = document[RealEstatePrice].GetString();
+      auto pos = price.find_first_of(" ");
+
+      if( pos != std::string::npos)
+      {
+         std::string real_price = price.substr(0,pos);
+         realEstate.setDescription(RealEstatePrice, real_price);
+      }
+
+   }
+
+   if( document.HasMember(RealEstateSurface))
+   {
+     std::string area = document[RealEstateSurface].GetString();
+     auto pos = area.find_first_of(' ');
+     if( pos != std::string::npos)
+     {
+       std::string real_area = area.substr(0, pos);
+       realEstate.setDescription(RealEstateSurface, real_area);
+     }
+
+   }
+   if( document.HasMember(RealEstateRooms))
+   {
+      realEstate.setDescription(RealEstateRooms, document[RealEstateRooms].GetString());
+   }
+   if( document.HasMember(RealEstateConstructionYear))
+   {
+      realEstate.setDescription(RealEstateConstructionYear, document[RealEstateConstructionYear].GetString());
+   }
+   if (document.HasMember(RealEstateCellar))
+   {
+      realEstate.setDescription(RealEstateCellar, document[RealEstateCellar].GetString());
+   }
+   if (document.HasMember(RealEstateParking))
+   {
+      realEstate.setDescription(RealEstateParking, document[RealEstateParking].GetString());
+   }
+   if (document.HasMember(RealEstateFloor))
+   {
+      std::string floor;
+      std::string nb_floor = document[RealEstateFloor].GetString();
+
+      if( nb_floor != "rez-de-chaussée" )
+         floor = nb_floor + "ème";
+
+      realEstate.setDescription(RealEstateFloor, floor);
+   }
+
+
+   if (document.HasMember(RealEstateLift))
+   {
+      realEstate.setDescription(RealEstateLift, document[RealEstateLift].GetString());
+   }
+
+   if (document.HasMember(RealEstateTypeOfHeating))
+   {
+      realEstate.setDescription(RealEstateTypeOfHeating, document[RealEstateTypeOfHeating].GetString());
+   }
+
+
+   realEstate.setDescription(SOURCE_LOGO, "data/guyhoquet.png");
+}
+
 
 void DataFormater::ReadCentury21JSON(const std::string& json, classifier::RealEstateAd& realEstate)
 {

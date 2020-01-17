@@ -103,6 +103,15 @@ function loadJSON(path, success, error) {
     ad_sum_src_provider_text.innerHTML ="Century21";
     ad_sum_src_provider.appendChild(ad_sum_src_provider_text);
   }
+  function GuyHoquetProcessor(ad_sum_src_provider)
+  {
+    ad_sum_src_provider.style.border = "2px solid blue";
+    var ad_sum_src_provider_text = createNode("div");
+    ad_sum_src_provider_text.className = "ad_summary_src_provider_text";
+    ad_sum_src_provider_text.style.color ="blue";
+    ad_sum_src_provider_text.innerHTML ="GuyHoquet";
+    ad_sum_src_provider.appendChild(ad_sum_src_provider_text);
+  }
 
   var ProcessorBySource = new Map();
   ProcessorBySource.set("seloger", SelogerProcessor);
@@ -113,6 +122,7 @@ function loadJSON(path, success, error) {
   ProcessorBySource.set("stephaneplazaimo", SPlazaImProcessor);
   ProcessorBySource.set("foncia", FonciaProcessor);
   ProcessorBySource.set("century21", Century21Processor);
+  ProcessorBySource.set("guyhoquet", GuyHoquetProcessor);
 
 
   const url = 'https://surfyn.fr:7878/search/all'+ window.location.search;
@@ -324,7 +334,8 @@ function generate_summary_page(data)
             orpi:false,
             stephaneplazaimo:false,
             foncia:false,
-            century21:false
+            century21:false,
+            guyhoquet:false
             }
             var ad_sum_src_provider_cont = createNode("div");
             ad_sum_src_provider_cont.className = "ad_summary_src_provider_cont";
