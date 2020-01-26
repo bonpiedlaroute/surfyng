@@ -59,6 +59,8 @@ import numpy as np
 from six.moves import urllib
 import tensorflow as tf
 #import tensorflow.compat.v1 as tf
+import logging
+from datetime import datetime
 
 FLAGS = tf.app.flags.FLAGS
 
@@ -183,13 +185,13 @@ def run_inference_on_images(image_list, output_dir):
     #   encoding of the image.
     # Runs the softmax tensor by feeding the image_data as input to the graph.
     softmax_tensor = sess.graph.get_tensor_by_name('softmax:0')
-
+    logging.info("size of image_list is :" + str(len(image_list)))
     for image_index, image in enumerate(image_list):
       try:
-        print("parsing", image_index, image, "\n")
+        logging.info("parsing " + str(image_index) +' ' + image)
         if not tf.gfile.Exists(image):
           tf.logging.fatal('File does not exist %s', image)
-        
+          logging.infog('File does not exists ' + image) 
         with tf.gfile.FastGFile(image, 'rb') as f:
           image_data =  f.read()
 
@@ -217,9 +219,8 @@ def run_inference_on_images(image_list, output_dir):
           for node_id in top_k:
             human_string = node_lookup.id_to_string(node_id)
             score = predictions[node_id]
-            print("results for", image)
-            print('%s (score = %.5f)' % (human_string, score))
-            print("\n")
+            logging.info("results for "+ image)
+            logging.info(human_string + ' (score = ' + score + ')')
 
             image_to_labels[image].append(
               {
@@ -236,7 +237,7 @@ def run_inference_on_images(image_list, output_dir):
           file_handler = getattr(open_file, "fd")
           os.close(file_handler)
       except:
-        print('could not process image index',image_index,'image', image)
+        logging.info('could not process image index ' + str(image_index) + ' image ' + image)
 
   return image_to_labels
 
@@ -267,7 +268,11 @@ def main(_):
     print("python classify_image_modified.py '../cats/*.jpg'")
     sys.exit()
 
-  else:
+  else:   
+    now = datetime.now()
+    log_filename = "classify_images_" + now.strftime("%Y-%m-%d-%H-%M-%S") + ".log"
+    logging.basicConfig(filename=log_filename,level=logging.INFO, format='%(asctime)s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+ 
     output_dir = "image_vectors"
     if not os.path.exists(output_dir):
       os.makedirs(output_dir)
@@ -276,8 +281,8 @@ def main(_):
     image_to_labels = run_inference_on_images(images, output_dir)
 
     with open("image_to_labels.json", "w") as img_to_labels_out:
-      json.dump(image_to_labels, img_to_labels_out)
+     json.dump(image_to_labels, img_to_labels_out)
 
-    print("all done")
+     logging.info("all done")
 if __name__ == '__main__':
   tf.app.run()
