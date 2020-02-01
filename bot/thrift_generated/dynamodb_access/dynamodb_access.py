@@ -33,12 +33,13 @@ class Iface(object):
         """
         pass
 
-    def scan(self, tablename, attributestoget, filterexpression):
+    def scan(self, tablename, attributestoget, filterexpression, exprValues):
         """
         Parameters:
          - tablename
          - attributestoget
          - filterexpression
+         - exprValues
         """
         pass
 
@@ -151,22 +152,24 @@ class Client(Iface):
             return result.success
         raise TApplicationException(TApplicationException.MISSING_RESULT, "get failed: unknown result")
 
-    def scan(self, tablename, attributestoget, filterexpression):
+    def scan(self, tablename, attributestoget, filterexpression, exprValues):
         """
         Parameters:
          - tablename
          - attributestoget
          - filterexpression
+         - exprValues
         """
-        self.send_scan(tablename, attributestoget, filterexpression)
+        self.send_scan(tablename, attributestoget, filterexpression, exprValues)
         return self.recv_scan()
 
-    def send_scan(self, tablename, attributestoget, filterexpression):
+    def send_scan(self, tablename, attributestoget, filterexpression, exprValues):
         self._oprot.writeMessageBegin('scan', TMessageType.CALL, self._seqid)
         args = scan_args()
         args.tablename = tablename
         args.attributestoget = attributestoget
         args.filterexpression = filterexpression
+        args.exprValues = exprValues
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
@@ -392,7 +395,7 @@ class Processor(Iface, TProcessor):
         iprot.readMessageEnd()
         result = scan_result()
         try:
-            result.success = self._handler.scan(args.tablename, args.attributestoget, args.filterexpression)
+            result.success = self._handler.scan(args.tablename, args.attributestoget, args.filterexpression, args.exprValues)
             msg_type = TMessageType.REPLY
         except (TTransport.TTransportException, KeyboardInterrupt, SystemExit):
             raise
@@ -789,6 +792,7 @@ class scan_args(object):
      - tablename
      - attributestoget
      - filterexpression
+     - exprValues
     """
 
     thrift_spec = (
@@ -796,12 +800,14 @@ class scan_args(object):
         (1, TType.STRING, 'tablename', 'UTF8', None, ),  # 1
         (2, TType.MAP, 'attributestoget', (TType.STRING, 'UTF8', TType.STRUCT, (ValueType, ValueType.thrift_spec), False), None, ),  # 2
         (3, TType.STRING, 'filterexpression', 'UTF8', None, ),  # 3
+        (4, TType.MAP, 'exprValues', (TType.STRING, 'UTF8', TType.STRUCT, (ValueType, ValueType.thrift_spec), False), None, ),  # 4
     )
 
-    def __init__(self, tablename=None, attributestoget=None, filterexpression=None,):
+    def __init__(self, tablename=None, attributestoget=None, filterexpression=None, exprValues=None,):
         self.tablename = tablename
         self.attributestoget = attributestoget
         self.filterexpression = filterexpression
+        self.exprValues = exprValues
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -834,6 +840,18 @@ class scan_args(object):
                     self.filterexpression = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 4:
+                if ftype == TType.MAP:
+                    self.exprValues = {}
+                    (_ktype51, _vtype52, _size50) = iprot.readMapBegin()
+                    for _i54 in range(_size50):
+                        _key55 = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                        _val56 = ValueType()
+                        _val56.read(iprot)
+                        self.exprValues[_key55] = _val56
+                    iprot.readMapEnd()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -851,14 +869,22 @@ class scan_args(object):
         if self.attributestoget is not None:
             oprot.writeFieldBegin('attributestoget', TType.MAP, 2)
             oprot.writeMapBegin(TType.STRING, TType.STRUCT, len(self.attributestoget))
-            for kiter50, viter51 in self.attributestoget.items():
-                oprot.writeString(kiter50.encode('utf-8') if sys.version_info[0] == 2 else kiter50)
-                viter51.write(oprot)
+            for kiter57, viter58 in self.attributestoget.items():
+                oprot.writeString(kiter57.encode('utf-8') if sys.version_info[0] == 2 else kiter57)
+                viter58.write(oprot)
             oprot.writeMapEnd()
             oprot.writeFieldEnd()
         if self.filterexpression is not None:
             oprot.writeFieldBegin('filterexpression', TType.STRING, 3)
             oprot.writeString(self.filterexpression.encode('utf-8') if sys.version_info[0] == 2 else self.filterexpression)
+            oprot.writeFieldEnd()
+        if self.exprValues is not None:
+            oprot.writeFieldBegin('exprValues', TType.MAP, 4)
+            oprot.writeMapBegin(TType.STRING, TType.STRUCT, len(self.exprValues))
+            for kiter59, viter60 in self.exprValues.items():
+                oprot.writeString(kiter59.encode('utf-8') if sys.version_info[0] == 2 else kiter59)
+                viter60.write(oprot)
+            oprot.writeMapEnd()
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -1114,12 +1140,12 @@ class update_args(object):
             elif fid == 3:
                 if ftype == TType.MAP:
                     self.values = {}
-                    (_ktype53, _vtype54, _size52) = iprot.readMapBegin()
-                    for _i56 in range(_size52):
-                        _key57 = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
-                        _val58 = ValueType()
-                        _val58.read(iprot)
-                        self.values[_key57] = _val58
+                    (_ktype62, _vtype63, _size61) = iprot.readMapBegin()
+                    for _i65 in range(_size61):
+                        _key66 = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                        _val67 = ValueType()
+                        _val67.read(iprot)
+                        self.values[_key66] = _val67
                     iprot.readMapEnd()
                 else:
                     iprot.skip(ftype)
@@ -1144,9 +1170,9 @@ class update_args(object):
         if self.values is not None:
             oprot.writeFieldBegin('values', TType.MAP, 3)
             oprot.writeMapBegin(TType.STRING, TType.STRUCT, len(self.values))
-            for kiter59, viter60 in self.values.items():
-                oprot.writeString(kiter59.encode('utf-8') if sys.version_info[0] == 2 else kiter59)
-                viter60.write(oprot)
+            for kiter68, viter69 in self.values.items():
+                oprot.writeString(kiter68.encode('utf-8') if sys.version_info[0] == 2 else kiter68)
+                viter69.write(oprot)
             oprot.writeMapEnd()
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
@@ -1270,11 +1296,11 @@ class createTable_args(object):
             elif fid == 3:
                 if ftype == TType.MAP:
                     self.properties = {}
-                    (_ktype62, _vtype63, _size61) = iprot.readMapBegin()
-                    for _i65 in range(_size61):
-                        _key66 = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
-                        _val67 = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
-                        self.properties[_key66] = _val67
+                    (_ktype71, _vtype72, _size70) = iprot.readMapBegin()
+                    for _i74 in range(_size70):
+                        _key75 = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                        _val76 = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                        self.properties[_key75] = _val76
                     iprot.readMapEnd()
                 else:
                     iprot.skip(ftype)
@@ -1299,9 +1325,9 @@ class createTable_args(object):
         if self.properties is not None:
             oprot.writeFieldBegin('properties', TType.MAP, 3)
             oprot.writeMapBegin(TType.STRING, TType.STRING, len(self.properties))
-            for kiter68, viter69 in self.properties.items():
-                oprot.writeString(kiter68.encode('utf-8') if sys.version_info[0] == 2 else kiter68)
-                oprot.writeString(viter69.encode('utf-8') if sys.version_info[0] == 2 else viter69)
+            for kiter77, viter78 in self.properties.items():
+                oprot.writeString(kiter77.encode('utf-8') if sys.version_info[0] == 2 else kiter77)
+                oprot.writeString(viter78.encode('utf-8') if sys.version_info[0] == 2 else viter78)
             oprot.writeMapEnd()
             oprot.writeFieldEnd()
         oprot.writeFieldStop()

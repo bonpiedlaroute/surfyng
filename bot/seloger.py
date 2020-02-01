@@ -19,9 +19,6 @@ from Serializer import Serializer
 config_seloger = configparser.ConfigParser()
 config_seloger.read('spiders/config.ini')
 
-IMAGES_FOLDER_NAME=config_seloger['COMMON']['images']
-city = config_seloger['COMMON']['city']
-region = config_seloger['COMMON']['region']
 ip = config_seloger['COMMON']['db_access_ip']
 port = int(config_seloger['COMMON']['db_access_port'])
 tablename = config_seloger['COMMON']['tablename']
@@ -32,8 +29,13 @@ class SelogerSpider(scrapy.Spider):
    name = "seloger"
 
    def __init__(self):
-      if not os.path.exists(IMAGES_FOLDER_NAME):
-         os.mkdir(IMAGES_FOLDER_NAME)
+      self.city = city
+      self.images_folder_name=config_seloger[city.upper()]['images']
+      self.region = config_seloger[city.upper()]['region']
+ 
+
+      if not os.path.exists(self.images_folder_name):
+         os.mkdir(self.images_folder_name)
 
       self.mapping_url_ptype = dict()
       self.mapping_url_stype = dict()
@@ -78,7 +80,7 @@ class SelogerSpider(scrapy.Spider):
    def parse_prop_description(self, response, announce_url, id_property, ID, id_search, announce_image, img_cnt):
       self.announces_cnt += 1
 
-      ret = self.serializer.send(ID, id_property, response.text, city, region, announce_url, announce_url[12:19], self.announce_title[ID], id_search, announce_image, img_cnt)
+      ret = self.serializer.send(ID, id_property, response.text, self.city, region, announce_url, announce_url[12:19], self.announce_title[ID], id_search, announce_image, img_cnt)
       print (ret)
             
    def parse_announce_title(self, response, announce_url, id_property, id_search):
@@ -99,7 +101,7 @@ class SelogerSpider(scrapy.Spider):
       image_count = 1
       for image_div in image_divs:
          image_url  = 'http:' + image_div
-         image_name = os.path.join(IMAGES_FOLDER_NAME, str(ID) + '_' + str(image_count) + '.jpg')
+         image_name = os.path.join(self.images_folder_name, str(ID) + '_' + str(image_count) + '.jpg')
          urllib.urlretrieve(image_url, image_name)
          image_count = image_count + 1
 

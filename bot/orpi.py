@@ -20,9 +20,6 @@ from Serializer import Serializer
 config_orpi = configparser.ConfigParser()
 config_orpi.read('spiders/config.ini')
 
-IMAGES_FOLDER_NAME=config_orpi['COMMON']['images']
-city = config_orpi['COMMON']['city']
-region = config_orpi['COMMON']['region']
 ip = config_orpi['COMMON']['db_access_ip']
 port = int(config_orpi['COMMON']['db_access_port'])
 tablename = config_orpi['COMMON']['tablename']
@@ -32,9 +29,14 @@ class OrpiSpider(scrapy.Spider):
    
    name = "orpi"
 
-   def __init__(self):
-      if not os.path.exists(IMAGES_FOLDER_NAME):
-         os.mkdir(IMAGES_FOLDER_NAME)
+   def __init__(self, city='', **kwargs):
+      self.city = city
+      self.images_folder_name=config_orpi[city.upper()]['images']
+      self.region = config_orpi[city.upper()]['region']
+
+
+      if not os.path.exists(self.images_folder_name):
+         os.mkdir(self.images_folder_name)
 
       self.mapping_url_ptype = dict()
       self.mapping_url_stype = dict()
@@ -42,6 +44,7 @@ class OrpiSpider(scrapy.Spider):
       self.announce_title = dict()
 
       self.serializer = Serializer(ip, port, tablename)
+      self.ads = self.serializer.scanidByCityAndAdSource(city,"orpi")
 
    def start_requests(self):
       prop_list = [(APART_ID, BUY_ID), (HOUSE_ID, BUY_ID), (APART_ID, RENT_ID), (HOUSE_ID, RENT_ID)]
@@ -50,7 +53,7 @@ class OrpiSpider(scrapy.Spider):
          announcers_id = getOrpiPropertiesId(ptype)
          search_id = getOrpiSearchTypeId(stype)        
 
-         url = buildOrpiUrl(city, announcers_id, search_id)
+         url = buildOrpiUrl(self.city, announcers_id, search_id)
          self.mapping_url_ptype[url] = ptype
          self.mapping_url_stype[url] = stype
          yield scrapy.Request(url=url, callback= lambda r, ptype = ptype, stype = stype :self.parse(r, ptype, stype))
@@ -69,8 +72,11 @@ class OrpiSpider(scrapy.Spider):
             else:
                announce_url = "https://www.orpi.com/annonce-location-" + part_url
 
-            yield scrapy.Request(url=announce_url, callback = lambda r, url = announce_url, ptype = ptype, stype = stype: self.parse_ad(r, url, ptype, stype))
- 
+            ID = hash_id(announce_url)
+            if str(ID) not in self.ads:
+               yield scrapy.Request(url=announce_url, callback = lambda r, url = announce_url, ptype = ptype, stype = stype: self.parse_ad(r, url, ptype, stype))
+            else:
+               self.updateTimeStamp(ID)
    def parse_ad(self, response, url, ptype, stype):
       ID = hash_id(url)
 
@@ -83,7 +89,7 @@ class OrpiSpider(scrapy.Spider):
          images = json_obj["images"]
          image_count = 1
          for img in images:
-            image_name = os.path.join(IMAGES_FOLDER_NAME, str(ID) + '_' + str(image_count) + '.jpg')
+            image_name = os.path.join(self.images_folder_name, str(ID) + '_' + str(image_count) + '.jpg')
             urllib.urlretrieve(img, image_name)
             image_count = image_count + 1
 
@@ -96,7 +102,7 @@ class OrpiSpider(scrapy.Spider):
          announce_image = images[0]
 
       announce_title = json_obj['slug']
-      ret = self.serializer.send(ID, ptype, json_data, city, region, url, "orpi", announce_title, stype, announce_image, img_cnt)
+      ret = self.serializer.send(ID, ptype, json_data, self.city, self.region, url, "orpi", announce_title, stype, announce_image, img_cnt)
       print (ret)
       self.announces_cnt += 1
             

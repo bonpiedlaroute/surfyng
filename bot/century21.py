@@ -19,9 +19,6 @@ from Serializer import Serializer
 config_century21 = configparser.ConfigParser()
 config_century21.read('spiders/config.ini')
 
-IMAGES_FOLDER_NAME=config_century21['COMMON']['images']
-city = config_century21['COMMON']['city']
-region = config_century21['COMMON']['region']
 ip = config_century21['COMMON']['db_access_ip']
 port = int(config_century21['COMMON']['db_access_port'])
 tablename = config_century21['COMMON']['tablename']
@@ -38,12 +35,19 @@ class Century21Spider(scrapy.Spider):
    
    name = "century21"
 
-   def __init__(self):
-      if not os.path.exists(IMAGES_FOLDER_NAME):
-         os.mkdir(IMAGES_FOLDER_NAME)
+   def __init__(self, city ='', **kwargs):
+      self.city = city
+      self.images_folder_name=config_century21[city.upper()]['images']
+      self.region = config_century21[city.upper()]['region']
+
+
+      if not os.path.exists(self.images_folder_name):
+         os.mkdir(self.images_folder_name)
 
       self.announces_cnt = 0
       self.serializer = Serializer(ip, port, tablename)
+      self.ads = self.serializer.scanidByCityAndAdSource(city,"century21")
+
       self.fieldmapping = dict()
       self.fieldmapping['Annee construction'] = 'CONSTRUCTION_YEAR'
       self.fieldmapping['Surface totale'] = 'SURFACE'
@@ -56,7 +60,7 @@ class Century21Spider(scrapy.Spider):
          announcers_id = getCentury21PropertiesId(ptype)
          search_id = getCentury21SearchTypeId(stype)        
 
-         url = buildCentury21Url(city, announcers_id, search_id)
+         url = buildCentury21Url(self.city, announcers_id, search_id)
          yield scrapy.Request(url=url, callback= lambda r, ptype = ptype, stype = stype :self.parse(r, ptype, stype))
 
    def parse(self, response, ptype, stype):
@@ -65,8 +69,11 @@ class Century21Spider(scrapy.Spider):
 
       for url in links:
          announce_url = 'https://www.century21.fr' + url
-         yield scrapy.Request(url=announce_url, callback = lambda r, url = announce_url, ptype = ptype, stype = stype: self.parse_announce(r, url, ptype, stype))
-
+         ID = hash_id(announce_url)
+         if str(ID) not in self.ads:
+            yield scrapy.Request(url=announce_url, callback = lambda r, url = announce_url, ptype = ptype, stype = stype: self.parse_announce(r, url, ptype, stype))
+         else:
+            self.serializer.updateTimeStamp(ID)
 
    def parse_announce(self, response, url, ptype, stype):
       ID = hash_id(url)
@@ -110,7 +117,7 @@ class Century21Spider(scrapy.Spider):
       image_count = 1
       for img in images:
          if img[1:11] == 'imagesBien': 
-            image_name = os.path.join(IMAGES_FOLDER_NAME, str(ID) + '_' + str(image_count) + '.jpg')
+            image_name = os.path.join(self.images_folder_name, str(ID) + '_' + str(image_count) + '.jpg')
             img_url = 'https://www.century21.fr' + img
             urllib.urlretrieve(img_url, image_name)
             image_count = image_count + 1
@@ -127,7 +134,7 @@ class Century21Spider(scrapy.Spider):
       text_title = response.xpath('//h1[@class="h1_page"]/text()').extract()
       announce_title = text_title[0]
 
-      ret = self.serializer.send(ID, ptype, json_data, city, region, url, "century21", announce_title, stype, announce_image, img_cnt)
+      ret = self.serializer.send(ID, ptype, json_data, self.city, self.region, url, "century21", announce_title, stype, announce_image, img_cnt)
       print (ret)
       self.announces_cnt += 1
             

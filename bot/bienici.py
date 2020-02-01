@@ -17,19 +17,13 @@ from Serializer import Serializer
 
 search_base_url = "https://www.bienici.com/realEstateAds.json?filters="
 
-base_filter = "{\"size\":24,\"from\":0,\"filterType\":\"buy\",\"propertyType\":[\"flat\"],\"newProperty\":false,\"page\":1,\"resultsPerPage\":24,\"maxAuthorizedResults\":2400,\"sortBy\":\"relevance\",\"sortOrder\":\"desc\",\"onTheMarket\":[true],\"mapMode\":\"enabled\",\"showAllModels\":false,\"zoneIdsByTypes\":{\"zoneIds\":[\"-91738\"]}}"
 
-
-ad_flat_base_url = 'https://www.bienici.com/annonce/vente/colombes/appartement/'
-ad_house_base_url = 'https://www.bienici.com/annonce/vente/colombes/maison/'
+ad_base_url = 'https://www.bienici.com/annonce/vente/'
 
 
 config_bienici = configparser.ConfigParser()
 config_bienici.read('spiders/config.ini')
 
-IMAGES_FOLDER_NAME=config_bienici['COMMON']['images']
-city = config_bienici['COMMON']['city']
-region = config_bienici['COMMON']['region']
 ip = config_bienici['COMMON']['db_access_ip']
 port = int(config_bienici['COMMON']['db_access_port'])
 tablename = config_bienici['COMMON']['tablename']
@@ -38,30 +32,28 @@ class BieniciSpider(scrapy.Spider):
    
    name = "bienici"
 
-   def __init__(self): 
-      if not os.path.exists(IMAGES_FOLDER_NAME):
-         os.mkdir(IMAGES_FOLDER_NAME)
+   def __init__(self, city='', **kwargs):
+      self.city = city
+      self.images_folder_name = config_bienici[city.upper()]['images']
+      self.region = config_bienici[city.upper()]['region']
+
+      if not os.path.exists(self.images_folder_name):
+         os.mkdir(self.images_folder_name)
 
       self.mapping_url_ptype = dict()
       self.mapping_url_stype = dict()
       self.announces_cnt = 0
       self.serializer = Serializer(ip, port, tablename)
+      self.ads = self.serializer.scanidByCityAndAdSource(city,"bienici")
 
    def start_requests(self):
       prop_list = [(APART_ID, BUY_ID), (HOUSE_ID, BUY_ID), (APART_ID, RENT_ID), (HOUSE_ID, RENT_ID)]
-      filter_object = json.loads(base_filter)
-      filter_object['zoneIdsByTypes']['zoneIds'][0] = '-91738'
-
+      
       for ptype, stype in prop_list:
          prop_id = getBienIciPropertiesId(ptype)
          search_id = getBienIciSearchTypeId(stype)        
 
-         filter_object['propertyType'][0] = prop_id
-         filter_object['filterType'] = search_id
-
-         filter_str = json.dumps(filter_object)
-         url = search_base_url + filter_str
-
+         url = buildBienIciUrl(self.city, ptype, stype) 
          self.mapping_url_ptype[url] = ptype
          self.mapping_url_stype[url] = stype
          yield scrapy.Request(url=url, callback= lambda r, nextpage = 2: self.parse(r, nextpage))
@@ -76,10 +68,10 @@ class BieniciSpider(scrapy.Spider):
       
       for ad in data['realEstateAds']:
          if ad['propertyType'] == 'flat':
-            ad_url = ad_flat_base_url + ad['id']
+            ad_url = ad_base_url + self.city +'/appartement/'+ ad['id']
             property_type = APART_ID
          else:
-            ad_url = ad_house_base_url + ad['id']
+            ad_url = ad_base_url + self.city + '/maison/' + ad['id']
             property_type = HOUSE_ID
       
 
@@ -90,31 +82,34 @@ class BieniciSpider(scrapy.Spider):
 
          ID = hash_id(ad_url)
 
+         if str(ID) not in self.ads:
+            # store images on disk
+            images = ad['photos']
 
-         # store images on disk
-         images = ad['photos']
+            if images:
+               announce_image = images[0]['url']
 
-         if images:
-            announce_image = images[0]['url']
+            image_cnt = 1
 
-         image_cnt = 1
-
-         for img in images:
-            image_name = os.path.join(IMAGES_FOLDER_NAME, str(ID) + '_' + str(image_cnt) + '.jpg')
-            urllib.urlretrieve(img['url'], image_name)
-            image_cnt += 1
+            for img in images:
+               image_name = os.path.join(self.images_folder_name, str(ID) + '_' + str(image_cnt) + '.jpg')
+               urllib.urlretrieve(img['url'], image_name)
+               image_cnt += 1
 
 
-         self.announces_cnt += 1
-         announce_title = ""
-         if not ad['title']:
-            announce_title = "Appartement" if property_type == APART_ID else "Maison"
+            self.announces_cnt += 1
+            announce_title = ""
+            if not ad['title']:
+               announce_title = "Appartement" if property_type == APART_ID else "Maison"
+            else:
+               announce_title = ad['title']
+
+            # send data to db
+            ret = self.serializer.send(ID, property_type, json.dumps(ad), self.city, self.region, ad_url, 'bienici', announce_title, search_type, announce_image, image_cnt-1)
+            print (ret)
+
          else:
-            announce_title = ad['title']
-
-         # send data to db
-         ret = self.serializer.send(ID, property_type, json.dumps(ad), city, region, ad_url, 'bienici', announce_title, search_type, announce_image, image_cnt-1)
-         print (ret)
+            self.serializer.updateTimeStamp(ID)
       if (data['perPage'] + data['from']) < data['total'] :
          # check for next data   
          original_request = str(response.request)

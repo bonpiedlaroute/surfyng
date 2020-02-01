@@ -4,6 +4,9 @@
 # author(s): Noel Tchidjo
 # All rights reserved
 
+from thrift_generated.dynamodb_access.ttypes import Type
+from thrift_generated.dynamodb_access.ttypes import ValueType
+from thrift_generated.dynamodb_access.ttypes import KeyValue
 from thrift_generated.dynamodb_access import *
 
 from thrift import Thrift
@@ -107,6 +110,50 @@ class Serializer:
 
       return self.client.put(self.tablename, values)
 
+   def scanidByCityAndAdSource(self, city, source):
+      IDs = []
+      filterexpression = "CITY = :ct and ANNOUNCE_SOURCE = :as"
+      while True:
+         attribute_to_get = {}
+         idvalue = ValueType()
+         idvalue.fieldtype = Type.NUMBER
+         attribute_to_get["ID"] = idvalue 
+         expression_value = {}
+         city_value = ValueType()
+         city_value.field =  city
+         city_value.fieldtype = Type.STRING
+         expression_value [":ct"] = city_value
+         source_value = ValueType()
+         source_value.field =  source
+         source_value.fieldtype = Type.STRING
+         expression_value [":as"] = source_value
+         query_result = self.client.scan(self.tablename, attribute_to_get, filterexpression, expression_value)
+
+         if query_result.result.success and query_result.values:
+            for value in query_result.values:
+               if "ID" in value.keys():
+                  IDs.append(value["ID"])   
+         if query_result.scanend:
+            break
+
+      return IDs
+
+   def updateTimeStamp(self, ID):
+      id_value = ValueType()
+      id_value.field = str(ID)
+      id_value.fieldtype = Type.NUMBER
+      item_key = KeyValue('ID', id_value)
+
+      values = {}
+      timestamp = ValueType()
+      timestamp.field = datetime.datetime.utcnow().replace(microsecond=0).isoformat()
+      timestamp.fieldtype = Type.STRING
+      values["TIMESTAMP"] = timestamp 
+ 
+      print ("update timestamp for item {}".format(ID))
+      ret = self.client.update(self.tablename, item_key, values)
+      print (ret)
+ 
    def close(self):
       self.transport.close()
 

@@ -19,9 +19,6 @@ from Serializer import Serializer
 config_guyhoquet = configparser.ConfigParser()
 config_guyhoquet.read('spiders/config.ini')
 
-IMAGES_FOLDER_NAME=config_guyhoquet['COMMON']['images']
-city = config_guyhoquet['COMMON']['city']
-region = config_guyhoquet['COMMON']['region']
 ip = config_guyhoquet['COMMON']['db_access_ip']
 port = int(config_guyhoquet['COMMON']['db_access_port'])
 tablename = config_guyhoquet['COMMON']['tablename']
@@ -38,12 +35,19 @@ class GuyHoquetSpider(scrapy.Spider):
    
    name = "guyhoquet"
 
-   def __init__(self):
-      if not os.path.exists(IMAGES_FOLDER_NAME):
-         os.mkdir(IMAGES_FOLDER_NAME)
+   def __init__(self, city= '', **kwargs):
+      self.city = city
+      self.images_folder_name=config_guyhoquet[city.upper()]['images']
+      self.region = config_guyhoquet[city.upper()]['region']
 
+      if not os.path.exists(self.images_folder_name):
+         os.mkdir(self.images_folder_name)
+
+      
       self.announces_cnt = 0
       self.serializer = Serializer(ip, port, tablename)
+      self.ads = self.serializer.scanidByCityAndAdSource(city, "guyhoquet")
+
       self.fieldmapping = dict()
       self.fieldmapping['Cave(s)'] = 'CELLAR'
       self.fieldmapping['Nombre pieces'] = 'ROOMS'
@@ -64,7 +68,7 @@ class GuyHoquetSpider(scrapy.Spider):
          announcers_id = getGuyHoquetPropertiesId(ptype)
          search_id = getGuyHoquetSearchTypeId(stype)        
 
-         url = buildGuyHoquetUrl(city, announcers_id, search_id)
+         url = buildGuyHoquetUrl(self.city, announcers_id, search_id)
          yield scrapy.Request(url=url, callback= lambda r, ptype = ptype, stype = stype :self.parse(r, ptype, stype))
 
    def parse(self, response, ptype, stype):
@@ -74,8 +78,11 @@ class GuyHoquetSpider(scrapy.Spider):
 
       for url in links:
          announce_url = 'https://www.guy-hoquet.com' + url[2:]
-         yield scrapy.Request(url=announce_url, callback = lambda r, url = announce_url, ptype = ptype, stype = stype: self.parse_announce(r, url, ptype, stype))
-
+         ID = hash_id(announce_url)
+         if str(ID) not in self.ads:
+            yield scrapy.Request(url=announce_url, callback = lambda r, url = announce_url, ptype = ptype, stype = stype: self.parse_announce(r, url, ptype, stype))
+         else:
+            self.serializer.updateTimeStamp(ID)
 
    def parse_announce(self, response, url, ptype, stype):
       ID = hash_id(url)
@@ -109,7 +116,7 @@ class GuyHoquetSpider(scrapy.Spider):
       
       image_count = 1
       for img in images:
-         image_name = os.path.join(IMAGES_FOLDER_NAME, str(ID) + '_' + str(image_count) + '.jpg')
+         image_name = os.path.join(self.images_folder_name, str(ID) + '_' + str(image_count) + '.jpg')
          urllib.urlretrieve(img, image_name)
          image_count = image_count + 1
 
@@ -127,7 +134,7 @@ class GuyHoquetSpider(scrapy.Spider):
       if text_title:
          announce_title = text_title[0]
 
-      ret = self.serializer.send(ID, ptype, json_data, city, region, url, "guyhoquet", announce_title, stype, announce_image, img_cnt)
+      ret = self.serializer.send(ID, ptype, json_data, self.city, self.region, url, "guyhoquet", announce_title, stype, announce_image, img_cnt)
       print (ret)
       self.announces_cnt += 1
             

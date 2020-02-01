@@ -109,7 +109,7 @@ function loadJSON(path, success, error) {
     var ad_sum_src_provider_text = createNode("div");
     ad_sum_src_provider_text.className = "ad_summary_src_provider_text";
     ad_sum_src_provider_text.style.color ="blue";
-    ad_sum_src_provider_text.innerHTML ="GuyHoquet";
+    ad_sum_src_provider_text.innerHTML ="Guyhoquet";
     ad_sum_src_provider.appendChild(ad_sum_src_provider_text);
   }
 

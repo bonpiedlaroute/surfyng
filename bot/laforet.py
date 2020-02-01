@@ -19,9 +19,6 @@ from Serializer import Serializer
 config_laforet = configparser.ConfigParser()
 config_laforet.read('spiders/config.ini')
 
-IMAGES_FOLDER_NAME=config_laforet['COMMON']['images']
-city = config_laforet['COMMON']['city']
-region = config_laforet['COMMON']['region']
 ip = config_laforet['COMMON']['db_access_ip']
 port = int(config_laforet['COMMON']['db_access_port'])
 tablename = config_laforet['COMMON']['tablename']
@@ -30,13 +27,18 @@ class LaforetSpider(scrapy.Spider):
    
    name = "laforet"
 
-   def __init__(self):
-      if not os.path.exists(IMAGES_FOLDER_NAME):
-         os.mkdir(IMAGES_FOLDER_NAME)
+   def __init__(self, city='', **kwargs):
+      self.city = city
+      self.images_folder_name=config_laforet[city.upper()]['images']
+      self.region = config_laforet[city.upper()]['region']
+
+      if not os.path.exists(self.images_folder_name):
+         os.mkdir(self.images_folder_name)
 
       self.announces_cnt = 0
       self.announce_title = dict()
       self.serializer = Serializer(ip, port, tablename)
+      self.ads = self.serializer.scanidByCityAndAdSource(city, "laforet")
 
    def start_requests(self):
       prop_list = [(APART_ID, BUY_ID), (HOUSE_ID, BUY_ID), (APART_ID, RENT_ID), (HOUSE_ID, RENT_ID)]
@@ -45,7 +47,7 @@ class LaforetSpider(scrapy.Spider):
          announcers_id = getLaforetPropertiesId(ptype)
          search_id = getLaforetSearchTypeId(stype)        
 
-         url = buildLaforetUrl(city, announcers_id, search_id)
+         url = buildLaforetUrl(self.city, announcers_id, search_id)
          yield scrapy.Request(url=url, callback= lambda r, ptype = ptype, stype = stype :self.parse(r, ptype, stype))
 
    def parse(self, response, ptype, stype):
@@ -61,25 +63,28 @@ class LaforetSpider(scrapy.Spider):
       url = data['url']
       ID = hash_id(url)
 
-      images = data['photos']
+      if str(ID) not in self.ads: 
+         images = data['photos']
 
-      image_count = 1
-      for img in images:
-         image_name = os.path.join(IMAGES_FOLDER_NAME, str(ID) + '_' + str(image_count) + '.jpg')
-         urllib.urlretrieve(img, image_name)
-         image_count = image_count + 1
+         image_count = 1
+         for img in images:
+            image_name = os.path.join(self.images_folder_name, str(ID) + '_' + str(image_count) + '.jpg')
+            urllib.urlretrieve(img, image_name)
+            image_count = image_count + 1
 
-      img_cnt = len(images)
+         img_cnt = len(images)
 
-      announce_image = ""
-      if images:
-         announce_image = images[0]
+         announce_image = ""
+         if images:
+            announce_image = images[0]
 
-      announce_title = data['slug']
-      ret = self.serializer.send(ID, ptype, response.text, city, region, url, "laforet", announce_title, stype, announce_image, img_cnt)
-      print (ret)
-      self.announces_cnt += 1
-            
+         announce_title = data['slug']
+         ret = self.serializer.send(ID, ptype, response.text, self.city, self.region, url, "laforet", announce_title, stype, announce_image, img_cnt)
+         print (ret)
+         self.announces_cnt += 1
+      else:
+         self.serializer.updateTimeStamp(ID)
+      
    def closed(self, reason):
       print("Announces found: " + str(self.announces_cnt) + "\n")
       self.serializer.close()

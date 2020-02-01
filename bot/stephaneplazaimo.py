@@ -18,9 +18,6 @@ from Serializer import Serializer
 config_spimo = configparser.ConfigParser()
 config_spimo.read('spiders/config.ini')
 
-IMAGES_FOLDER_NAME=config_spimo['COMMON']['images']
-city = config_spimo['COMMON']['city']
-region = config_spimo['COMMON']['region']
 ip = config_spimo['COMMON']['db_access_ip']
 port = int(config_spimo['COMMON']['db_access_port'])
 tablename = config_spimo['COMMON']['tablename']
@@ -29,16 +26,22 @@ class StephanePlazaImoSpider(scrapy.Spider):
    
    name = "stephaneplazaimo"
 
-   def __init__(self):
-      if not os.path.exists(IMAGES_FOLDER_NAME):
-         os.mkdir(IMAGES_FOLDER_NAME)
+   def __init__(self, city='', **kwargs):
+      self.city = city
+      self.images_folder_name = config_spimo[city.upper()]['images']
+      self.region = config_spimo[city.upper()]['region']
 
+      if not os.path.exists(self.images_folder_name):
+         os.mkdir(self.images_folder_name)
+
+      
       self.mapping_url_ptype = dict()
       self.mapping_url_stype = dict()
       self.announces_cnt = 0
       self.announce_title = dict()
 
       self.serializer = Serializer(ip, port, tablename)
+      self.ads = self.serializer.scanidByCityAndAdSource(city, "stephaneplazaimo")
 
    def start_requests(self):
       prop_list = [(APART_ID, BUY_ID), (HOUSE_ID, BUY_ID), (APART_ID, RENT_ID), (HOUSE_ID, RENT_ID)]
@@ -47,7 +50,7 @@ class StephanePlazaImoSpider(scrapy.Spider):
          announcers_id = getStephanePlazaImoPropertiesId(ptype)
          search_id = getStephanePlazaImoSearchTypeId(stype)        
 
-         url = buildStephanePlazaImoUrl(city, announcers_id, search_id)
+         url = buildStephanePlazaImoUrl(self.city, announcers_id, search_id)
          self.mapping_url_ptype[url] = ptype
          self.mapping_url_stype[url] = stype
          yield scrapy.Request(url=url, callback= lambda r, ptype = ptype, stype = stype :self.parse(r, ptype, stype))
@@ -63,23 +66,25 @@ class StephanePlazaImoSpider(scrapy.Spider):
          announce_url = "https://www.stephaneplazaimmobilier.com/immobilier-acheter/" + str(_id) + "/" + slug
          
          ID = hash_id(announce_url)
-         json_data = json.dumps(data)
-         announce_title = data["title"]
-         announce_image = data["thumbnails"][0]
-         img_cnt = len(data["thumbnails"])
+         if str(ID) not in self.ads:
+            json_data = json.dumps(data)
+            announce_title = data["title"]
+            announce_image = data["thumbnails"][0]
+            img_cnt = len(data["thumbnails"])
          
-         image_count = 1
-         for img in data["thumbnails"]:
-            image_name = os.path.join(IMAGES_FOLDER_NAME, str(ID) + '_' + str(image_count) + '.jpg')
-            urllib.urlretrieve(img, image_name)
-            image_count = image_count + 1
+            image_count = 1
+            for img in data["thumbnails"]:
+               image_name = os.path.join(self.images_folder_name, str(ID) + '_' + str(image_count) + '.jpg')
+               urllib.urlretrieve(img, image_name)
+               image_count = image_count + 1
 
  
-         ret = self.serializer.send(ID, ptype, json_data, city, region, announce_url, "stephaneplazaimo", announce_title, stype, announce_image, img_cnt)
+            ret = self.serializer.send(ID, ptype, json_data, self.city, self.region, announce_url, "stephaneplazaimo", announce_title, stype, announce_image, img_cnt)
          
-         print (ret)
-         self.announces_cnt += 1
-
+            print (ret)
+            self.announces_cnt += 1
+         else:
+            self.updateTimeStamp(ID)
 
 
                

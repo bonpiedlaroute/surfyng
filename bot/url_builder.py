@@ -4,10 +4,10 @@
 # All rights reserved
 
 import re
+import json
 from search_features import *
+from inseecode_postalcode import *
 
-inseecodeByCity = dict()
-inseecodeByCity['colombes'] = '92025'
 
 
 seloger_prop_type_pos = 39
@@ -26,11 +26,7 @@ logicimmo_paris_rent_baseurl = 'http://www.logic-immo.com/location-immobilier-pa
 
 
 
-lbc_base_url = 'https://www.leboncoin.fr/recherche/?category=&locations=&real_estate_type='
-
-lbc_searchtype_pos = 45
-lbc_city_pos9 = 57
-lbc_city_pos10 = 58
+lbc_base_url = 'https://www.leboncoin.fr/recherche/?category='
 
 
 def insert_in_url(url, position, value):
@@ -44,15 +40,14 @@ def buildselogerurl(proptype, searchtype):
 
 
 def buildleboncoinurl(proptype, searchtype, city):
-   url = insert_in_url(lbc_base_url, lbc_searchtype_pos,searchtype)
-
-   lbc_city_pos = lbc_city_pos9 if searchtype == '9' else lbc_city_pos10
-
-   url = insert_in_url(url, lbc_city_pos, city)
-
-   lastpos = len(url)
-
-   url = insert_in_url(url, lastpos, proptype)
+   url = lbc_base_url + searchtype
+   url += "&locations="
+   town = city[0].upper() + city[1:]
+   url += town
+   url += "_"
+   url += postalcodeByCity[city]
+   url +="&real_estate_type="
+   url += proptype
 
    return url
 
@@ -73,42 +68,40 @@ def buildLogicImmoUrl(ptype, stype):
    else:
       return logicimmo_paris_rent_baseurl + getLogicImmoPropertiesId(ptype)
 
-laforet_url = 'https://www.laforet.com/api/immo/properties?cities=&types=&transaction='
+laforet_url = 'https://www.laforet.com/api/immo/properties?cities='
 
 def buildLaforetUrl(city, ptype, stype):
-   url = insert_in_url(laforet_url,51 , inseecodeByCity[city])
-   url = insert_in_url(url, 63, ptype)
+   url = laforet_url + inseecodeByCity[city]
+   url += "&types="
+   url += ptype
+   url += "&transaction="
    url += stype
 
    return url
 
-orpi_url = 'https://www.orpi.com/recherche/?realEstateTypes[0]=&locations[0][value]='
+orpi_url = 'https://www.orpi.com/recherche/'
 
 def buildOrpiUrl(city, ptype, stype):
-   url = insert_in_url(orpi_url,31,stype)
-   pos = 54 if stype == 'buy' else 55
-   url = insert_in_url(url, pos,ptype)
- 
-   url += city
+   url = orpi_url + stype
+   url += "?realEstateTypes[0]="
+   url += ptype
+   url += "&locations[0][value]="
+   url += city   
 
    return url
 
-stephaneplazaimo_url = "https://www.stephaneplazaimmobilier.com/search/?target=&type[]=&location[]="
+stephaneplazaimo_url = "https://www.stephaneplazaimmobilier.com/search/"
 
 def buildStephanePlazaImoUrl(city, ptype, stype):
-   url = insert_in_url(stephaneplazaimo_url,47,stype)
-   pos = 58 if stype == 'buy' else 58
-   url = insert_in_url(url, pos, stype)
- 
-   pos = 69 if stype == 'buy' else 71
-   url = insert_in_url(url, pos, ptype)
- 
+   url = stephaneplazaimo_url + stype
+   url += "?target="
+   url += stype
+   url += "&type[]="
+   url += ptype
+   url += "&location[]="
    url += inseecodeByCity[city]
 
    return url
-
-postalcodeByCity = dict()
-postalcodeByCity['colombes'] = '92700'
 
 foncia_url = "https://fr.foncia.com/"
 
@@ -143,4 +136,23 @@ def buildGuyHoquetUrl(city, ptype, stype):
    url += "+"
    url += city
    
+   return url
+
+bienici_base_filter = "{\"size\":24,\"from\":0,\"filterType\":\"buy\",\"propertyType\":[\"flat\"],\"newProperty\":false,\"page\":1,\"resultsPerPage\":24,\"maxAuthorizedResults\":2400,\"sortBy\":\"relevance\",\"sortOrder\":\"desc\",\"onTheMarket\":[true],\"mapMode\":\"enabled\",\"showAllModels\":false,\"zoneIdsByTypes\":{\"zoneIds\":[\"-91738\"]}}"
+
+bienici_base_url = "https://www.bienici.com/realEstateAds.json?filters="
+
+
+def buildBienIciUrl(city, ptype, stype):
+   filter_object = json.loads(bienici_base_filter)
+   inseecode = inseecodeByCity[city]
+   osmid = osmidByInseeCode[inseecode] 
+   filter_object['zoneIdsByTypes']['zoneIds'][0] = '-' + osmid
+   
+   filter_object['propertyType'][0] = prop_id
+   filter_object['filterType'] = search_id
+
+   filter_str = json.dumps(filter_object)
+   url = bienici_base_url + filter_str
+
    return url

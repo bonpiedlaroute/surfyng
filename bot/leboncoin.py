@@ -21,26 +21,30 @@ search_base_url = "https://api.leboncoin.fr/finder/classified/"
 config_leboncoin = configparser.ConfigParser()
 config_leboncoin.read('spiders/config.ini')
 
-IMAGES_FOLDER_NAME=config_leboncoin['COMMON']['images']
-city = config_leboncoin['COMMON']['city']
-region = config_leboncoin['COMMON']['region']
 ip = config_leboncoin['COMMON']['db_access_ip']
 port = int(config_leboncoin['COMMON']['db_access_port'])
-city_url = config_leboncoin['LEBONCOIN']['city_url']
 tablename = config_leboncoin['COMMON']['tablename']
 
 class LeboncoinSpider(scrapy.Spider):
    
    name = "leboncoin"
 
-   def __init__(self): 
-      if not os.path.exists(IMAGES_FOLDER_NAME):
-         os.mkdir(IMAGES_FOLDER_NAME)
+   def __init__(self, city='', **kwargs): 
+      
+      self.city = city
+      self.images_folder_name = config_leboncoin[city.upper()]['images']
+      self.region = config_leboncoin[city.upper()]['region']
+      
+      if not os.path.exists(self.images_folder_name):
+         os.mkdir(self.images_folder_name)
+
 
       self.mapping_url_ptype = dict()
       self.mapping_url_stype = dict()
       self.announces_cnt = 0
       self.serializer = Serializer(ip, port, tablename)
+
+      self.ads = self.serializer.scanidByCityAndAdSource(city, "leboncoin")
 
    def start_requests(self):
       prop_list = [(APART_ID, BUY_ID), (HOUSE_ID, BUY_ID), (APART_ID, RENT_ID), (HOUSE_ID, RENT_ID)]
@@ -49,7 +53,7 @@ class LeboncoinSpider(scrapy.Spider):
          prop_id = getLeboncoinPropertiesId(ptype)
          search_id = getLeboncoinSearchTypeId(stype)        
 
-         url = buildleboncoinurl(prop_id, search_id, city_url)
+         url = buildleboncoinurl(prop_id, search_id, self.city)
          self.mapping_url_ptype[url] = ptype
          self.mapping_url_stype[url] = stype
          yield scrapy.Request(url=url, callback= lambda r, nextpage=2: self.parse(r, nextpage))
@@ -76,8 +80,11 @@ class LeboncoinSpider(scrapy.Spider):
             search_url = search_base_url + ad_id
             ad_url = "https://www.leboncoin.fr" + link[:-1]
 
-            yield scrapy.Request(search_url, callback = lambda r, ad_url = ad_url, search_type = search_type, property_type = property_type:self.parse_data(r, ad_url, search_type, property_type))
-      
+            ID = hash_id(ad_url)
+            if str(ID) not in self.ads:
+               yield scrapy.Request(search_url, callback = lambda r, ad_url = ad_url, search_type = search_type, property_type = property_type:self.parse_data(r, ad_url, search_type, property_type))
+            else:
+               self.serializer.updateTimeStamp(ID)
       n = "page="+str(nextpage)
       # parse next link
       next_link = response.xpath('//div[@class="_1evK6"]').xpath('.//a[@class="_1f-eo" and contains(@href,$nextp)]/@href', nextp=n).extract()
@@ -107,13 +114,13 @@ class LeboncoinSpider(scrapy.Spider):
 
          for img_url in images:
             filename =  str(ID) + '_' + str(image_cnt) + '.jpg'
-            fullfilename = os.path.join(IMAGES_FOLDER_NAME,filename)
+            fullfilename = os.path.join(self.images_folder_name,filename)
             urllib.urlretrieve(img_url, fullfilename)
             image_cnt += 1
 
       
       # send data to db
-      ret = self.serializer.send(ID, property_type, response.text, city, region, ad_url, 'leboncoin', data['subject'], search_type, announce_image, image_cnt-1)
+      ret = self.serializer.send(ID, property_type, response.text, self.city, self.region, ad_url, 'leboncoin', data['subject'], search_type, announce_image, image_cnt-1)
       print (ret)
 
        
