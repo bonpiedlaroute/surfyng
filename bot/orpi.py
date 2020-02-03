@@ -76,7 +76,7 @@ class OrpiSpider(scrapy.Spider):
             if str(ID) not in self.ads:
                yield scrapy.Request(url=announce_url, callback = lambda r, url = announce_url, ptype = ptype, stype = stype: self.parse_ad(r, url, ptype, stype))
             else:
-               self.updateTimeStamp(ID)
+               self.serializer.updateTimeStamp(ID)
    def parse_ad(self, response, url, ptype, stype):
       ID = hash_id(url)
 

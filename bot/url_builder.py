@@ -149,8 +149,8 @@ def buildBienIciUrl(city, ptype, stype):
    osmid = osmidByInseeCode[inseecode] 
    filter_object['zoneIdsByTypes']['zoneIds'][0] = '-' + osmid
    
-   filter_object['propertyType'][0] = prop_id
-   filter_object['filterType'] = search_id
+   filter_object['propertyType'][0] = ptype
+   filter_object['filterType'] = stype
 
    filter_str = json.dumps(filter_object)
    url = bienici_base_url + filter_str

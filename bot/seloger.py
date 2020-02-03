@@ -28,7 +28,7 @@ class SelogerSpider(scrapy.Spider):
    
    name = "seloger"
 
-   def __init__(self):
+   def __init__(self, city='', **kwargs):
       self.city = city
       self.images_folder_name=config_seloger[city.upper()]['images']
       self.region = config_seloger[city.upper()]['region']
@@ -80,7 +80,7 @@ class SelogerSpider(scrapy.Spider):
    def parse_prop_description(self, response, announce_url, id_property, ID, id_search, announce_image, img_cnt):
       self.announces_cnt += 1
 
-      ret = self.serializer.send(ID, id_property, response.text, self.city, region, announce_url, announce_url[12:19], self.announce_title[ID], id_search, announce_image, img_cnt)
+      ret = self.serializer.send(ID, id_property, response.text, self.city, self.region, announce_url, announce_url[12:19], self.announce_title[ID], id_search, announce_image, img_cnt)
       print (ret)
             
    def parse_announce_title(self, response, announce_url, id_property, id_search):

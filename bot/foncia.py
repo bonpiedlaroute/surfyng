@@ -78,7 +78,7 @@ class FonciaSpider(scrapy.Spider):
 
       for url in links:
          announce_url = 'https://fr.foncia.com' + url
-         ID = hash_url(announce_url)
+         ID = hash_id(announce_url)
          if str(ID) not in self.ads:
             yield scrapy.Request(url=announce_url, callback = lambda r, url = announce_url, ptype = ptype, stype = stype: self.parse_announce(r, url, ptype, stype))
          else:

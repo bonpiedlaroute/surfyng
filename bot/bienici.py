@@ -53,7 +53,7 @@ class BieniciSpider(scrapy.Spider):
          prop_id = getBienIciPropertiesId(ptype)
          search_id = getBienIciSearchTypeId(stype)        
 
-         url = buildBienIciUrl(self.city, ptype, stype) 
+         url = buildBienIciUrl(self.city, prop_id, search_id) 
          self.mapping_url_ptype[url] = ptype
          self.mapping_url_stype[url] = stype
          yield scrapy.Request(url=url, callback= lambda r, nextpage = 2: self.parse(r, nextpage))
