@@ -1201,7 +1201,7 @@ void DataFormater::ReadCentury21JSON(const std::string& json, classifier::RealEs
 }
 
 
-void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tableName)
+void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tableName, const std::string& city)
    {
       std::locale::global(std::locale(""));
 
@@ -1227,11 +1227,18 @@ void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_acce
       attributestoget[IMAGE_COUNT] = value;
       attributestoget[ANNOUNCE_IMAGE] = value;
 
+      std::string filterexpression = "CITY = :ct";
+      std::map<std::string, ValueType> filterExprValues;
+      ValueType city_value;
+      city_value.field = city;
+      city_value.fieldtype = Type::type::STRING;
+      filterExprValues[":ct"] = city_value;
+
       bool scanend = false;
       do
       {
          ScanReqResult scanReturn;
-         client->scan(scanReturn, tableName, attributestoget, "", std::map<std::string, ValueType>());
+         client->scan(scanReturn, tableName, attributestoget, filterexpression, filterExprValues);
 
          std::stringstream logstream;
          logstream << "Adapt model: " << scanReturn.values.size() << " elements scan\n";
@@ -1488,7 +1495,8 @@ int main(int argc, char* argv[])
    std::string input_tablename = "", output_tablename = "";
    std::string host = "";
    int port = 0;
-   if(argc == 2)
+   std::string city ="";
+   if(argc == 3)
    {
       surfyn::utils::Config conf(argv[1]);
       conf.loadconfig();
@@ -1496,10 +1504,12 @@ int main(int argc, char* argv[])
       output_tablename = conf.getStringValue("output_tablename");
       host = conf.getStringValue("host");
       port = conf.getIntValue("port");
+      city = argv[2];
    }
    else
    {
       Log::getInstance()->error("No config file set! you need to set the host/port/input_tablename/target_tablename in the config file");
+      Log::getInstance()->error("No city set! please run [./adapt_model confi_file city]");
       return 1;
    }
 
@@ -1511,7 +1521,7 @@ int main(int argc, char* argv[])
    transport->open();
 
    surfyn::DataFormater dataFormater;
-   dataFormater.ReadTableAndFormatEntries(client, input_tablename);
+   dataFormater.ReadTableAndFormatEntries(client, input_tablename, city);
    dataFormater.CheckSimilarAnnounces();
    dataFormater.PutTargetTable(client, output_tablename);
    Log::getInstance()->info("adapt model successfully finished!");

@@ -33,7 +33,7 @@ const int nbSecondsPerDay = 86400;
 
 using Log = surfyn::utils::Logger;
 
-void purgeRealEstateAd(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tablename)
+void purgeRealEstateAd(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tablename, const std::string& city)
 {
    Log::getInstance()->info("Purge old Ad");
 
@@ -50,11 +50,19 @@ void purgeRealEstateAd(const std::shared_ptr<dynamodb_accessClient>& client, con
 
    bool scanend = false;
 
+   std::string filterexpression = "CITY = :ct";
+   std::map<std::string, ValueType> expressionValue;
+   ValueType city_value;
+   city_value.field = city;
+   city_value.fieldtype = Type::type::STRING;
+   expressionValue[":ct"] = city_value;
+
+
    // finding outdate keys
    do
    {
       ScanReqResult scanReturn;
-      std::map<std::string, ValueType> expressionValue;
+
       client->scan(scanReturn, tablename, attributestoget, "", expressionValue);
 
       if (!scanReturn.result.success)

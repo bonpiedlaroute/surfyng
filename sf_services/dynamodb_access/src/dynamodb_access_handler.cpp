@@ -90,6 +90,9 @@ dynamodb_accessHandler::dynamodb_accessHandler(const std::string& config_filenam
 
    m_client = Aws::MakeShared<DynamoDBClient>(allocation_tag.c_str(), config);
 
+   m_reservedKeyWordsMapping["REGION"] = "#reg";
+   m_reservedKeyWordsMapping["TIMESTAMP"] = "#timest";
+
    Log::getInstance()->info(" dynamodb access Started ");
 }
 
@@ -385,6 +388,7 @@ void dynamodb_accessHandler::scan(ScanReqResult& _return, const std::string& tab
 
    if(!filterexpression.empty())
    {
+      Aws::Map<Aws::String, Aws::String> expressionAttributeNames;
       scanRequest.SetFilterExpression(filterexpression.c_str());
       Aws::Map<Aws::String, AttributeValue> awsExprValues;
       for( auto value : exprValues)
@@ -414,10 +418,22 @@ void dynamodb_accessHandler::scan(ScanReqResult& _return, const std::string& tab
          if( iter_att != attributestoget.begin())
          projectionExpression += ',';
 
-         projectionExpression += iter_att->first.c_str();
+         auto iter_keywords = m_reservedKeyWordsMapping.find(iter_att->first);
+         if(iter_keywords != m_reservedKeyWordsMapping.end())
+         {
+            projectionExpression += iter_keywords->second;
+            expressionAttributeNames[iter_keywords->second.c_str()] = iter_att->first;
+         }
+         else
+            projectionExpression += iter_att->first.c_str();
       }
 
       scanRequest.SetProjectionExpression(projectionExpression);
+
+      if(!expressionAttributeNames.empty())
+      {
+         scanRequest.SetExpressionAttributeNames(expressionAttributeNames);
+      }
    }
    else
    {

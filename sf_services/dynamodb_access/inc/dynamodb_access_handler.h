@@ -60,6 +60,7 @@ private:
 private:
    std::shared_ptr<Aws::DynamoDB::DynamoDBClient> m_client;
    Aws::Map<Aws::String, Aws::DynamoDB::Model::AttributeValue> m_lastEvaluatedKey;
+   std::map<std::string, std::string> m_reservedKeyWordsMapping;
 };
 
 }

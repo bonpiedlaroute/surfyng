@@ -35,15 +35,18 @@ int main(int argc, char* argv[])
    Log::Init("sf_classifier");
    Log::getInstance()->info("Starting Classifier ...");
    std::string tablename = "";
-   if(argc == 2)
+   std::string city ="";
+   if(argc == 3)
    {
       surfyn::utils::Config conf(argv[1]);
       conf.loadconfig();
       tablename = conf.getStringValue("tablename");
+      city = argv[2];
    }
    else
    {
       Log::getInstance()->error("No config file set! you need to set the tablename in the config file");
+      Log::getInstance()->error("No city set! [./sf_classifier config_file city]");
       return 1;
    }
 
@@ -57,7 +60,7 @@ int main(int argc, char* argv[])
 
    transport->open();
 
-   surfyn::classifier::purgeRealEstateAd(client, tablename);
+   surfyn::classifier::purgeRealEstateAd(client, tablename, city);
 
    //surfyn::classifier::detectSimilarRealEstateAd(client, "FR_PROPERTIES");
 

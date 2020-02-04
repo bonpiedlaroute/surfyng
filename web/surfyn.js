@@ -479,6 +479,8 @@ function submit_request(event)
 if( validate)
 validate.onclick=submit_request;
 
+var available_cities= ["COLOMBES", "NANTERRE", "PUTEAUX", "HOUILLES"];
+
 
 function checkCity()
 {
@@ -486,12 +488,15 @@ function checkCity()
   var feedback_msg = document.getElementById("feedback_msg");
   var msg_type = document.getElementById("msg_type");
   var city_check_msg = document.getElementById("city_check_msg");
-  if( new_city.value.trim().toUpperCase() == "COLOMBES" )
+  var real_city = new_city.value.trim().toUpperCase();
+  const found = available_cities.find(element => element == real_city);
+
+  if( found != undefined )
   {
     new_city.className = "form-control";
     city_check_msg.className = "feedback_box good_feedback";
     msg_type.innerHTML = "Info"
-    feedback_msg.innerHTML = " : Uniquement la ville de Colombes pour l'instant &#128515;";
+    feedback_msg.innerHTML = " : Uniquement Colombes, Nanterre, Puteaux et Houilles pour l'instant &#128515;";
     feedback_msg.style.color ="black";
     return true;
   }
@@ -500,7 +505,7 @@ function checkCity()
     new_city.className = "form-control is-invalid";
     city_check_msg.className = "feedback_box bad_feedback";
     msg_type.innerHTML = ""
-    feedback_msg.innerHTML = " Désolé, nous supportons uniquement la ville de Colombes";
+    feedback_msg.innerHTML = " Désolé, nous supportons uniquement Colombes, Nanterre, Puteaux et Houilles";
     feedback_msg.style.color ="red";
     return false;
   }

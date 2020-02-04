@@ -25,7 +25,7 @@ namespace surfyn
       DataFormater();
       ~DataFormater() = default;
 
-      void ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tableName);
+      void ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tableName, const std::string& city);
       void CheckSimilarAnnounces();
       void PutTargetTable(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tableName);
 
