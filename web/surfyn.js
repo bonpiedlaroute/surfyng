@@ -479,7 +479,6 @@ function submit_request(event)
 if( validate)
 validate.onclick=submit_request;
 
-var available_cities= ["COLOMBES", "NANTERRE", "PUTEAUX", "HOUILLES"];
 
 
 function checkCity()
@@ -489,7 +488,7 @@ function checkCity()
   var msg_type = document.getElementById("msg_type");
   var city_check_msg = document.getElementById("city_check_msg");
   var real_city = new_city.value.trim().toUpperCase();
-  const found = available_cities.find(element => element == real_city);
+  const found = available_cities.find(element => element.toUpperCase() == real_city);
 
   if( found != undefined )
   {

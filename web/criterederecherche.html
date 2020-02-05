@@ -13,6 +13,7 @@
    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
     <!--  Surfyn styles -->
     <link href="surfyn.css" rel="stylesheet">
+    <link href="autocomplete.css" rel="stylesheet">
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-140583317-1"></script>
     <script>
@@ -48,11 +49,12 @@
      <div style="height:140px;" class="row mx-auto">
         <div class="sf_search_block mx-auto d-block">
          <div class="sf_input_block">
+           <div class="autocomplete" style="width:100%;">
            <i class="fa fa-search sf_search_icon"></i>
            <input class="form-control" type="search" placeholder="Ville"
            name="city" style ="padding-left:30px; width:250px;" id ="search_city" onblur="checkCity()">
            </input>
-
+         </div>
            <div class="feedback_box good_feedback" id="city_check_msg">
              <a style="color:#61AEB5;font-weight:bold" id="msg_type">Info</a><a id="feedback_msg"> : Uniquement Colombes, Nanterre, Puteaux et Houilles pour l'instant &#128515;</a></div>
          </div>
@@ -191,10 +193,8 @@
         <a style="position:fixed; bottom:10px; right: 20px; z-index:20;" id="validate" href="#">
         <i class="fas fa-arrow-circle-right" style="font-size: 50px !important; color:green; " ></i>
         </a>
-    <script>
-
-    </script>
     <script src="surfyn.js"></script>
+    <script src="autocomplete.js"></script>
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->

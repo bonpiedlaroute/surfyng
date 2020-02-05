@@ -101,4 +101,14 @@ document.addEventListener("click", function (e) {
 });
 }
 
-autocomplete(document.getElementById("estimate_city"), cities);
+var available_cities= ["Colombes", "Nanterre", "Puteaux", "Houilles"];
+
+var input_estimate_city = document.getElementById("estimate_city");
+
+var input_search_city = document.getElementById("search_city");
+
+if(input_estimate_city)
+  autocomplete(input_estimate_city, cities);
+
+if(input_search_city)
+  autocomplete(input_search_city, available_cities);
