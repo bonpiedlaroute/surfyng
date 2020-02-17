@@ -63,7 +63,7 @@ void purgeRealEstateAd(const std::shared_ptr<dynamodb_accessClient>& client, con
    {
       ScanReqResult scanReturn;
 
-      client->scan(scanReturn, tablename, attributestoget, "", expressionValue);
+      client->scan(scanReturn, tablename, attributestoget, filterexpression, expressionValue);
 
       if (!scanReturn.result.success)
       {
