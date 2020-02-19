@@ -1438,6 +1438,10 @@ void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_acce
                      });
                realEstate.setDescription(SOURCES, annouceSources);
             }
+            else
+            {
+               realEstate.setDescription(SOURCES, realEstate.getDescription(ANNOUNCE_SOURCE));
+            }
          }
          else
          {
