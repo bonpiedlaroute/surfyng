@@ -188,7 +188,6 @@ function generate_summary_page(data)
   const Params = new URLSearchParams(window.location.search);
   const searchType = Params.get('search_type');
   var pagetitle = searchType == 1 ? "Vente ": "Location ";
-  sessionStorage.setItem("search_type", pagetitle);
   var propertyType_param = Params.get('prop_type');
   var split_propertyType = propertyType_param.split(",");
   var first_proptype = true;
@@ -216,7 +215,7 @@ function generate_summary_page(data)
   var search_city = Params.get('search_city');
   pagetitle += search_city;
   document.title = pagetitle;
-  sessionStorage.setItem("search_city", search_city);
+
 
   var announces_found = document.getElementById("nb_announces_found");
   if( data.length == 0)

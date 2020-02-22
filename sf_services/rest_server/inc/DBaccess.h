@@ -31,6 +31,8 @@ private:
                                       const std::string& Operator);
    static bool isAlreadyProvided(const std::map<std::string, std::string>& table_entry, const std::set<int64_t>& adprovided);
    static void updateProvidedAd(const std::map<std::string, std::string>& table_entry,  std::set<int64_t>& adprovided);
+   static void buildJsonString(utility::stringstream_t& sstream, std::vector<std::pair<int, bool>>& announcesIds,
+                                            std::unordered_map<int64_t, std::map<std::string, std::string> >& results);
 };
 
 }

@@ -90,7 +90,7 @@ std::string searchTypeValue = "";
    }
    bool DBaccess::isAlreadyProvided(const std::map<std::string, std::string>& table_entry, const std::set<int64_t>& adprovided)
    {
-      const auto iter = table_entry.find("ID");
+      const auto iter = table_entry.find(id_field);
       if(iter!= table_entry.end())
       {
          return adprovided.find(atol((iter->second).c_str())) != adprovided.end();
@@ -100,7 +100,7 @@ std::string searchTypeValue = "";
    void DBaccess::updateProvidedAd(const std::map<std::string, std::string>& table_entry,  std::set<int64_t>& adprovided)
    {
       /* insert the ID of the ad */
-      const auto iter = table_entry.find("ID");
+      const auto iter = table_entry.find(id_field);
       if(iter!= table_entry.end())
       {
          adprovided.insert(atol((iter->second).c_str()));
@@ -121,6 +121,7 @@ std::string searchTypeValue = "";
 
 
    }
+
    void DBaccess::fetchSummary(utility::stringstream_t& sstream, const std::map<utility::string_t,  utility::string_t>& query )
    {
       // for quick testing ...
@@ -194,7 +195,6 @@ std::string searchTypeValue = "";
       return;*/
 
       std::map<std::string, ValueType> attributestoget;
-      std::set<int64_t> adProvided;
 
       ValueType value;
       value.field = "";
@@ -230,10 +230,12 @@ std::string searchTypeValue = "";
 
       bool scanend = false;
 
-      sstream << U("[\n");
+
       // search anounces on summary table
       // and construct a json string
-      bool firsttime = true;
+
+      std::unordered_map<int64_t, std::map<std::string, std::string> >  results;
+      std::vector<std::pair<int, bool>> announcesIds;
       do
       {
          ScanReqResult scanReturn;
@@ -349,10 +351,53 @@ std::string searchTypeValue = "";
 
          Log::getInstance()->info(logstream.str());
 
-
          for(auto table_entry_iter = scanReturn.values.begin(); table_entry_iter != scanReturn.values.end();++table_entry_iter)
          {
-            if(isAlreadyProvided(*table_entry_iter, adProvided))
+            int64_t id;
+            /* find the ID of the ad */
+            const auto iter = (*table_entry_iter).find(id_field);
+            if(iter!= (*table_entry_iter).end())
+            {
+               id = atol((iter->second).c_str());
+            }
+
+            bool duplicate = false;
+            /* find if there is duplicate ad for this one */
+            const auto iter_dup = (*table_entry_iter).find(id_duplicates);
+            if(iter_dup != (*table_entry_iter).end())
+            {
+               duplicate = !iter_dup->second.empty();
+            }
+
+            announcesIds.emplace_back(std::make_pair(id, duplicate));
+            results[id] = *table_entry_iter;
+         }
+
+         scanend = scanReturn.scanend;
+      }while(!scanend);
+
+      buildJsonString(sstream, announcesIds, results);
+   }
+
+   void DBaccess::buildJsonString(utility::stringstream_t& sstream, std::vector<std::pair<int, bool>>& announcesIds,
+                                  std::unordered_map<int64_t, std::map<std::string, std::string> >& results)
+   {
+      sstream << U("[\n");
+      std::stable_partition(announcesIds.begin(), announcesIds.end(), [](std::pair<int, bool>& value)
+                            {
+                              return value.second;
+                            });
+      std::set<int64_t> adProvided;
+      bool firsttime = true;
+
+      for(auto iter_announcesId = announcesIds.begin(); iter_announcesId != announcesIds.end();++iter_announcesId)
+      {
+         auto iter_results = results.find(iter_announcesId->first);
+         if( iter_results != results.end())
+         {
+            const auto& table_entry = iter_results->second;
+
+            if(isAlreadyProvided(table_entry, adProvided))
                   continue;
             if(firsttime)
             {
@@ -363,10 +408,10 @@ std::string searchTypeValue = "";
                sstream << U(",\n");
             }
             sstream << U("{\n");
-            for(auto attribute_iter = table_entry_iter->begin(); attribute_iter != table_entry_iter->end(); ++attribute_iter)
+            for(auto attribute_iter = table_entry.begin(); attribute_iter != table_entry.end(); ++attribute_iter)
             {
 
-               if(attribute_iter != table_entry_iter->begin() )
+               if(attribute_iter != table_entry.begin() )
                {
                   sstream << ",\n";
                }
@@ -399,12 +444,10 @@ std::string searchTypeValue = "";
 
             }
             sstream << U("\n}");
-            updateProvidedAd(*table_entry_iter, adProvided);
+            updateProvidedAd(table_entry, adProvided);
          }
-         scanend = scanReturn.scanend;
-      }while(!scanend);
+      }
       sstream << U("\n]\n");
-
    }
    void DBaccess::fetchDetails(utility::stringstream_t& sstream, const std::map<utility::string_t,  utility::string_t>& query )
    {
@@ -468,6 +511,9 @@ std::string searchTypeValue = "";
 
       value.fieldtype = Type::type::STRING;
       attributestoget[id_searchtype] = value;
+
+      value.fieldtype = Type::type::STRING;
+      attributestoget[id_city] = value;
 
       GetResult _return;
       KeyValue key;

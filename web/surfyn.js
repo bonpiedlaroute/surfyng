@@ -26,8 +26,7 @@ sessionStorage.setItem("scrollX", "0");
 sessionStorage.setItem("scrollY", "0");
 sessionStorage.setItem("needtosort", "");
 sessionStorage.setItem("summary_json_data", "");
-sessionStorage.setItem("search_type", "");
-sessionStorage.setItem("search_city", "");
+
 const Params = new URLSearchParams(window.location.search);
 const searchType = Params.get('search_type');
 if( searchType == "1")

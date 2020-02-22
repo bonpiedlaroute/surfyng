@@ -29,6 +29,7 @@ function loadJSON(path, success, error) {
 
 
   const url = 'https://surfyn.fr:7878/search/ad?id='+ window.location.search.substr(1);
+  //const url = 'http://127.0.0.1:7878/search/ad?id='+ window.location.search.substr(1);
 
 
   fetch(url)
@@ -647,13 +648,24 @@ function generate_details_page(data)
     nb_similar.innerHTML += "de ";
     nb_similar.innerHTML += nb_room;
     nb_similar.innerHTML += " pièce(s) à ";
-    nb_similar.innerHTML += sessionStorage.getItem("search_city");
-    var pagetitle = sessionStorage.getItem('search_type') + " ";
+
+    var pagetitle = "";
+    if(data[0].hasOwnProperty('SEARCH_TYPE'))
+    {
+      pagetitle += data[0].SEARCH_TYPE == "For sale"? "Vente ":"Location ";
+    }
+
     if( data[0].hasOwnProperty('PROPERTY_TYPE'))
     pagetitle += data[0].PROPERTY_TYPE == "Appartement"? " appartement ":" maison ";
     pagetitle += nb_room;
     pagetitle += " pièce(s) à ";
-    pagetitle += sessionStorage.getItem("search_city");
+
+    if( data[0].hasOwnProperty('CITY'))
+    {
+      var cityname = data[0].CITY[0].toUpperCase() + data[0].CITY.slice(1);
+      nb_similar.innerHTML += cityname;
+      pagetitle += cityname;
+    }
 
     document.title = pagetitle;
   }
