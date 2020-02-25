@@ -85,7 +85,7 @@ class BieniciSpider(scrapy.Spider):
          if str(ID) not in self.ads:
             # store images on disk
             images = ad['photos']
-
+            announce_image = ""
             if images:
                announce_image = images[0]['url']
 
