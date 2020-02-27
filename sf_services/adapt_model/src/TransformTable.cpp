@@ -198,6 +198,7 @@ namespace surfyn
       m_ReaderBySources["foncia"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadFonciaJSON(json, realEstate);};
       m_ReaderBySources["century21"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadCentury21JSON(json, realEstate);};
       m_ReaderBySources["guyhoquet"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadGuyHoquetJSON(json, realEstate);};
+      m_ReaderBySources["arthurimmo"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadArthurImmoJSON(json, realEstate);};
    }
    DataFormater::~DataFormater()
    {
@@ -1210,6 +1211,113 @@ void DataFormater::ReadCentury21JSON(const std::string& json, classifier::RealEs
    realEstate->setDescription(SOURCE_LOGO, "data/century21.png");
 }
 
+
+void DataFormater::ReadArthurImmoJSON(const std::string& json, classifier::RealEstateAd* realEstate)
+{
+   std::locale::global(std::locale(""));
+
+   rapidjson::Document document;
+   document.Parse(json.c_str());
+
+   if(document.HasParseError())
+   {
+      std::stringstream error;
+      error << "failed to parse ArthurImmo json: error code [";
+      error << document.GetParseError();
+      error << "] error offset :[";
+      error << document.GetErrorOffset();
+      error << "]";
+      Log::getInstance()->error(error.str());
+
+      return;
+   }
+   if (document.HasMember(RealEstatePrice))
+   {
+      std::string price = document[RealEstatePrice].GetString();
+      boost::erase_all(price, " ");
+      boost::erase_all(price, "\r");
+      boost::erase_all(price, "\n");
+      boost::erase_all(price, "\u00a0");
+
+      realEstate->setDescription(RealEstatePrice, price);
+   }
+   if( document.HasMember(RealEstateSurface))
+   {
+     std::string area = document[RealEstateSurface].GetString();
+     boost::erase_all(area, " ");
+     boost::erase_all(area, "\u00a0");
+     auto pos = area.find('m');
+     area = area.substr(0, pos);
+     std::replace(area.begin(), area.end(), ',', '.');
+     realEstate->setDescription(RealEstateSurface, area);
+   }
+   if( document.HasMember(RealEstateRooms))
+   {
+      std::string rooms = document[RealEstateRooms].GetString();
+      boost::erase_all(rooms, " ");
+      Log::getInstance()->info("ROOMS :" + rooms);
+      realEstate->setDescription(RealEstateRooms, rooms);
+   }
+   if( document.HasMember(RealEstateConstructionYear))
+   {
+      std::string contructionyear = document[RealEstateConstructionYear].GetString();
+      Log::getInstance()->info("YEAR :" + contructionyear);
+      boost::erase_all(contructionyear, " ");
+      realEstate->setDescription(RealEstateConstructionYear, contructionyear);
+   }
+   if (document.HasMember(RealEstateCellar))
+   {
+      std::string cellar = document[RealEstateCellar].GetString();
+      boost::erase_all( cellar, " ");
+
+      if( cellar == "oui")
+      {
+         realEstate->setDescription(RealEstateCellar, "1");
+      }
+      else
+         realEstate->setDescription(RealEstateCellar, "0");
+
+   }
+   if (document.HasMember(RealEstateTypeOfHeating))
+   {
+      std::string heating =  document[RealEstateTypeOfHeating].GetString();
+      auto begin = heating.find_first_not_of(" ");
+      auto end = heating.find_last_not_of(" ");
+      heating = heating.substr(begin,end);
+      realEstate->setDescription(RealEstateTypeOfHeating, heating);
+   }
+   if (document.HasMember(RealEstateFloor))
+   {
+      std::string floor;
+      std::string nb_floor = document[RealEstateFloor].GetString();
+      boost::erase_all(nb_floor, " ");
+      if( atoi(nb_floor.c_str()) == 1)
+      {
+         floor = "1er";
+      }
+      else
+      {
+         floor = nb_floor + "ème";
+      }
+      realEstate->setDescription(RealEstateFloor, floor);
+   }
+   if (document.HasMember("PARKING"))
+   {
+      std::string parking = document[RealEstateParking].GetString();
+
+      boost::erase_all(parking," ");
+      realEstate->setDescription(RealEstateParking, parking);
+   }
+   if (document.HasMember(RealEstateBalcony))
+   {
+      std::string balcony = document[RealEstateBalcony].GetString();
+      boost::erase_all(balcony, " ");
+
+      realEstate->setDescription(RealEstateBalcony, balcony);
+   }
+
+   realEstate->setDescription(SOURCE_LOGO, "data/arthurimmo.jpeg");
+}
 
 void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tableName, const std::string& city)
    {

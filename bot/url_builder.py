@@ -156,3 +156,18 @@ def buildBienIciUrl(city, ptype, stype):
    url = bienici_base_url + filter_str
 
    return url
+
+arthurimmo_url = "https://www.arthurimmo.com/recherche,basic.htm?ci="
+def buildArthurImmoUrl(city, ptype, stype):
+   url = arthurimmo_url + inseecodeByCity[city][:2] + "0" + inseecodeByCity[city][2:]
+   url += "&idtt="
+   url += stype
+   url += "&idtypebien="
+   url += ptype
+   url += "&saisie="
+   url += city
+   url += "&tri=d_dt_crea"
+   
+   return url
+
+
