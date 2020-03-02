@@ -29,11 +29,11 @@ namespace classifier
 
 const std::string id_field = "ID";
 const std::string timestamp_field = "TIMESTAMP";
-const int nbSecondsPerDay = 86400;
+
 
 using Log = surfyn::utils::Logger;
 
-void purgeRealEstateAd(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tablename, const std::string& city)
+void purgeRealEstateAd(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tablename, const std::string& city, int maxDelayBeforePurgeSec)
 {
    Log::getInstance()->info("Purge old Ad");
 
@@ -86,7 +86,7 @@ void purgeRealEstateAd(const std::shared_ptr<dynamodb_accessClient>& client, con
             strptime(it_timestamp->second.c_str(), "%Y-%m-%dT%H:%M:%S", &last);
             time_t last_modification_time = timegm(&last);
 
-            if((current_time - last_modification_time) >= nbSecondsPerDay)
+            if((current_time - last_modification_time) >= maxDelayBeforePurgeSec)
             {
                const auto it_id = iter->find(id_field);
 

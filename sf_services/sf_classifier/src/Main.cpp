@@ -36,12 +36,14 @@ int main(int argc, char* argv[])
    Log::getInstance()->info("Starting Classifier ...");
    std::string tablename = "";
    std::string city ="";
+   int maxDelayBeforePurgeSec = 86400;
    if(argc == 3)
    {
       surfyn::utils::Config conf(argv[1]);
       conf.loadconfig();
       tablename = conf.getStringValue("tablename");
       city = argv[2];
+      maxDelayBeforePurgeSec = conf.getIntValue("max_delay_before_purge");
    }
    else
    {
@@ -60,7 +62,7 @@ int main(int argc, char* argv[])
 
    transport->open();
 
-   surfyn::classifier::purgeRealEstateAd(client, tablename, city);
+   surfyn::classifier::purgeRealEstateAd(client, tablename, city, maxDelayBeforePurgeSec);
 
    //surfyn::classifier::detectSimilarRealEstateAd(client, "FR_PROPERTIES");
 

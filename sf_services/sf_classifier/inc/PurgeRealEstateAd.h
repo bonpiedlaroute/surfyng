@@ -14,7 +14,7 @@ namespace surfyn
 {
 namespace classifier
 {
-extern void purgeRealEstateAd(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tablename, const std::string& city);
+extern void purgeRealEstateAd(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tablename, const std::string& city, int maxDelayBeforePurgeSec);
 }
 }
 
