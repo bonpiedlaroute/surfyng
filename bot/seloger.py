@@ -27,6 +27,7 @@ tablename = config_seloger['COMMON']['tablename']
 class SelogerSpider(scrapy.Spider):
    
    name = "seloger"
+   download_delay = 30
 
    def __init__(self, city='', **kwargs):
       self.city = city
@@ -43,6 +44,7 @@ class SelogerSpider(scrapy.Spider):
       self.announce_title = dict()
 
       self.serializer = Serializer(ip, port, tablename)
+      self.ads = self.serializer.scanidByCityAndAdSource(city,"seloger")
 
    def start_requests(self):
       prop_list = [(APART_ID, BUY_ID), (HOUSE_ID, BUY_ID), (APART_ID, RENT_ID), (HOUSE_ID, RENT_ID)]
@@ -66,7 +68,11 @@ class SelogerSpider(scrapy.Spider):
          id_prop = self.mapping_url_ptype[urllib.unquote(original_request[5:-1])]
          id_search = self.mapping_url_stype[urllib.unquote(original_request[5:-1])] 
 
-         yield scrapy.Request(url, callback= lambda r, url = url, id_prop = id_prop, id_search = id_search :self.parse_announce_title(r, url, id_prop, id_search)) 
+         ID = hash_id(url)
+         if str(ID) not in self.ads:
+            yield scrapy.Request(url, callback= lambda r, url = url, id_prop = id_prop, id_search = id_search :self.parse_announce_title(r, url, id_prop, id_search)) 
+         else:
+            self.serializer.updateTimeStamp(ID)
 
       following_link = response.xpath('//a[@title="Page suivante"]/@href').extract()
 

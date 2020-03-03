@@ -28,6 +28,7 @@ tablename = config_leboncoin['COMMON']['tablename']
 class LeboncoinSpider(scrapy.Spider):
    
    name = "leboncoin"
+   download_delay = 30
 
    def __init__(self, city='', **kwargs): 
       
