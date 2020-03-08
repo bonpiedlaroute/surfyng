@@ -70,6 +70,7 @@ namespace surfyn
    const std::string REGION = "REGION";
    const std::string SEARCH_TYPE = "SEARCH_TYPE";
    const std::string TIMESTAMP = "TIMESTAMP";
+   const std::string FIRST_TIMESTAMP = "FIRST_TIMESTAMP";
    const std::string SIMILAR_ANNOUNCE = "TF_SIMILAR_ANNOUNCE";
    const std::string ANNOUNCE_IMAGE = "ANNOUNCE_IMAGE";
 
@@ -1341,6 +1342,7 @@ void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_acce
       attributestoget[REGION] = value;
       attributestoget[SEARCH_TYPE] = value;
       attributestoget[TIMESTAMP] = value;
+      attributestoget[FIRST_TIMESTAMP] = value;
       attributestoget[SIMILAR_ANNOUNCE] = value;
       attributestoget[IMAGE_COUNT] = value;
       attributestoget[ANNOUNCE_IMAGE] = value;
@@ -1451,6 +1453,10 @@ void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_acce
             if ((it_field = iter->find(TIMESTAMP)) != iter->end())
             {
                realEstate->setDescription(TIMESTAMP, it_field->second);
+            }
+            if ((it_field = iter->find(FIRST_TIMESTAMP)) != iter->end())
+            {
+               realEstate->setDescription(FIRST_TIMESTAMP, it_field->second);
             }
             if ((it_field = iter->find(SIMILAR_ANNOUNCE)) != iter->end())
             {

@@ -93,10 +93,17 @@ class Serializer:
       announce_title_value.fieldtype = ttypes.Type.STRING
       values["ANNOUNCE_TITLE"] = announce_title_value
 
+      now = datetime.datetime.utcnow().replace(microsecond=0).isoformat()
+
       timestamp = ttypes.ValueType()
-      timestamp.field = datetime.datetime.utcnow().replace(microsecond=0).isoformat()
+      timestamp.field = now
       timestamp.fieldtype = ttypes.Type.STRING
       values["TIMESTAMP"] = timestamp 
+
+      first_timestamp = ttypes.ValueType()
+      first_timestamp.field = now
+      first_timestamp.fieldtype = ttypes.Type.STRING
+      values["FIRST_TIMESTAMP"] = first_timestamp      
 
       search_type = ttypes.ValueType()
       if id_search == BUY_ID:

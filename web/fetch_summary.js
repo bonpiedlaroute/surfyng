@@ -123,6 +123,21 @@ function loadJSON(path, success, error) {
     ad_sum_src_provider.appendChild(ad_sum_src_provider_text);
   }
 
+  function ByTimeStamp(lhs, rhs)
+  {
+    if( lhs.hasOwnProperty("FIRST_TIMESTAMP") && rhs.hasOwnProperty("FIRST_TIMESTAMP"))
+    {
+      var d1 = new Date(lhs.FIRST_TIMESTAMP);
+      var d2 = new Date(rhs.FIRST_TIMESTAMP);
+      return d2 - d1; //descending order
+    }
+    else {
+      var d1 = new Date(lhs.TIMESTAMP);
+      var d2 = new Date(rhs.TIMESTAMP);
+      return d2 - d1; //descending order
+    }
+  }
+
   var ProcessorBySource = new Map();
   ProcessorBySource.set("seloger", SelogerProcessor);
   ProcessorBySource.set("leboncoin", LeboncoinProcessor);
@@ -160,6 +175,12 @@ function loadJSON(path, success, error) {
               return lhs.SURFACE - rhs.SURFACE;
             });
       }
+      else{
+        if( needtosort == "bydate")
+        {
+          newdata.sort(ByTimeStamp);
+        }
+      }
     }
 
     generate_summary_page(newdata);
@@ -168,6 +189,7 @@ function loadJSON(path, success, error) {
     fetch(url)
     .then(function(resp) { return resp.json(); } )
     .then(function(data) {
+      data.sort(ByTimeStamp);
       generate_summary_page(data);
       sessionStorage.setItem("summary_json_data", JSON.stringify(data));
     })

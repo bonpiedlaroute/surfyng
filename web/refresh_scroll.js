@@ -62,3 +62,9 @@ function sortbysurface()
   sessionStorage.setItem("needtosort", "bysurface");
   location.reload();
 }
+
+function sortbydate()
+{
+  sessionStorage.setItem("needtosort", "bydate");
+  location.reload();
+}

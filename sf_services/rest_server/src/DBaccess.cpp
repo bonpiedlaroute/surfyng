@@ -54,6 +54,8 @@ const std::string id_typeofheating = "TYPE_OF_HEATING";
 const std::string id_constructionyear = "CONSTRUCTION_YEAR";
 const std::string id_parking = "PARKING";
 const std::string id_searchtype = "SEARCH_TYPE";
+const std::string id_timestamp = "TIMESTAMP";
+const std::string id_first_timestamp = "FIRST_TIMESTAMP";
 
 const std::string details_table = "FR_SUMMARY";
 const std::string exprval_city = ":ct";
@@ -228,6 +230,12 @@ std::string searchTypeValue = "";
       value.fieldtype = Type::type::STRING;
       attributestoget[id_duplicates] = value;
 
+      value.fieldtype = Type::type::STRING;
+      attributestoget[id_timestamp] = value;
+
+      value.fieldtype = Type::type::STRING;
+      attributestoget[id_first_timestamp] = value;
+
       bool scanend = false;
 
 
@@ -343,7 +351,7 @@ std::string searchTypeValue = "";
          }
 
 
-         m_client->scan(scanReturn, "FR_SUMMARY", attributestoget, filterExpression.str(), expressionValue);
+         m_client->scan(scanReturn, details_table, attributestoget, filterExpression.str(), expressionValue);
 
 
          std::stringstream logstream;
