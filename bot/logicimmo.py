@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*- 
+# -*- coding: utf-8 -*-
 # (c) Copyright 2017-2018 
 # author(s): Noel Tchidjo
 # All rights reserved
@@ -8,43 +8,67 @@ import scrapy
 import json
 import os
 import urllib
+import configparser
+
 
 from hash_id import *
 from search_features import *
 from url_builder import *
 from Serializer import *
 
-IMAGES_FOLDER_NAME='images'
+
+
+config_logicimmo = configparser.ConfigParser()
+config_logicimmo.read('spiders/config.ini')
+
+ip = config_logicimmo['COMMON']['db_access_ip']
+port = int(config_logicimmo['COMMON']['db_access_port'])
+tablename = config_logicimmo['COMMON']['tablename']
+
+
+
 
 class LogicImmoSpider(scrapy.Spider):
       
    name = "logicimmo"
 
-   def __init__(self): 
-      if not os.path.exists(IMAGES_FOLDER_NAME):
-         os.mkdir(IMAGES_FOLDER_NAME)
+   def __init__(self, city='', **kwargs):
+      self.city = city
+      self.images_folder_name = config_logicimmo[city.upper()]['images']
+      self.region = config_logicimmo[city.upper()]['region']
+
+ 
+      if not os.path.exists(self.images_folder_name):
+         os.mkdir(self.images_folder_name)
  
       self.prop_record = []
       self.announce_cnt = 0
-      self.serializer = Serializer('localhost', 5050)
+      self.serializer = Serializer(ip, port, tablename)
+      self.ads = self.serializer.scanidByCityAndAdSource(city,"logicimmo")
+     
 
    def start_requests(self):
       prop_list = [(APART_ID, BUY_ID), (HOUSE_ID, BUY_ID), (APART_ID, RENT_ID), (HOUSE_ID, RENT_ID)]
 
             
       for ptype, stype in prop_list:
-         url = buildLogicImmoUrl(ptype, stype)
+         prop_type = getLogicImmoPropertiesId(ptype)
+         search_type = getLogicImmoSearchTypeId(stype)
+
+         url = buildLogicImmoUrl(self.city, prop_type, search_type)
          yield scrapy.Request(url=url, callback= lambda response, id_prop = ptype, search_type = stype, nextpage=2: self.parse(response,id_prop, search_type, nextpage))
 
    def parse(self, response, id_property, search_type, nextpage):
 
       if search_type == BUY_ID:
-         links =  response.xpath('//div[contains(@class, "offer-list-item")]').xpath('.//a[contains(@href, "detail-vente")]/@href').extract()
+         links =  response.xpath('//div[contains(@class, "offer-list-item")]').xpath('.//a[contains(@href, "detail-vente") and contains(@href, "https")]/@href').extract()
       else:
-         links = response.xpath('//div[contains(@class, "offer-list-item")]').xpath('.//a[contains(@href, "detail-location")]/@href').extract()
+         links = response.xpath('//div[contains(@class, "offer-list-item")]').xpath('.//a[contains(@href, "detail-location") and contains(@href, "https")]/@href').extract()
 
       for url in links:
-         yield scrapy.Request(url, callback= lambda r, id_prop=id_property, announce_url = url, search_type = search_type: self.parse_announce(r, id_prop, announce_url, search_type))
+         ID = hash_id(url)
+         if str(ID) not in self.ads:
+            yield scrapy.Request(url, callback= lambda r, id_prop=id_property, announce_url = url, search_type = search_type: self.parse_announce(r, id_prop, announce_url, search_type))
 
 
       n ='page='+str(nextpage)
@@ -92,11 +116,11 @@ class LogicImmoSpider(scrapy.Spider):
       image_count = 1
       ID = hash_id(announce_url)
       for image in imgs:
-         image_name = os.path.join(IMAGES_FOLDER_NAME, str(ID) + '_' + str(image_count) + '.jpg')
+         image_name = os.path.join(self.images_folder_name, str(ID) + '_' + str(image_count) + '.jpg')
          urllib.urlretrieve(image, image_name)
          image_count = image_count + 1
 
-      self.serializer.send(ID, id_prop, json_desc, "Paris","ile de france",announce_url,"logicimmo", announce_title[0], search_type, announce_image, img_ct)
+      self.serializer.send(ID, id_prop, json_desc, self.city, self.region,announce_url,"logicimmo", announce_title[0], search_type, announce_image, img_ct)
 
       self.announce_cnt+=1
 

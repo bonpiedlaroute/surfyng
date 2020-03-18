@@ -5,16 +5,24 @@
 
 APART_ID = 1
 HOUSE_ID = 2
+BUY_ID = 1
+RENT_ID = 2
+
 
 SeLogerPropertiesMapping = dict()
 
 SeLogerPropertiesMapping[HOUSE_ID] = '2'
 SeLogerPropertiesMapping[APART_ID] = '1'
 
-logicimmo_mappingids = dict()
+logicimmo_propertiesMapping = dict()
 
-logicimmo_mappingids[APART_ID] = '1'
-logicimmo_mappingids[HOUSE_ID] = '2'
+logicimmo_propertiesMapping[APART_ID] = 'appartement'
+logicimmo_propertiesMapping[HOUSE_ID] = 'maison'
+
+logicimmo_searchTypeMapping = dict()
+
+logicimmo_searchTypeMapping[BUY_ID] = 'vente'
+logicimmo_searchTypeMapping[RENT_ID] = 'location'
 
 
 LeboncoinPropertiesMapping = dict()
@@ -29,14 +37,15 @@ def getSeLogerPropertiesId(surfyng_properties_id):
 
 
 def getLogicImmoPropertiesId(surfyng_properties_id):
-   return logicimmo_mappingids[surfyng_properties_id]
+   return logicimmo_propertiesMapping[surfyng_properties_id]
+
+def getLogicImmoSearchTypeId(surfyng_properties_id):
+   return logicimmo_searchTypeMapping[surfyng_properties_id]
 
 
 def getLeboncoinPropertiesId(surfyn_properties_id):
    return LeboncoinPropertiesMapping[surfyn_properties_id]
 
-BUY_ID = 1
-RENT_ID = 2
 SeLogerSearchTypeMapping = dict()
 SeLogerSearchTypeMapping[BUY_ID] = '2'
 SeLogerSearchTypeMapping[RENT_ID] = '1'

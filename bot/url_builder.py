@@ -24,10 +24,7 @@ seloger_paris_url    = 'https://www.seloger.com/list.htm?idtt=&naturebien=1,2,4&
 logicimmo_paris_sale_baseurl = 'http://www.logic-immo.com/vente-immobilier-paris-75,100_1/options/groupprptypesids='
 logicimmo_paris_rent_baseurl = 'http://www.logic-immo.com/location-immobilier-paris-75,100_1/options/groupprptypesids='
 
-
-
 lbc_base_url = 'https://www.leboncoin.fr/recherche/?category='
-
 
 def insert_in_url(url, position, value):
    return url[:position] + value + url[position:]
@@ -61,12 +58,23 @@ def buildselogerdescriptionurl(url):
    else:
       return description_url
 
+logicimmo_base_url = "https://www.logic-immo.com/"
 
-def buildLogicImmoUrl(ptype, stype):
-   if stype == BUY_ID:
-      return logicimmo_paris_sale_baseurl + getLogicImmoPropertiesId(ptype)
-   else:
-      return logicimmo_paris_rent_baseurl + getLogicImmoPropertiesId(ptype)
+def buildLogicImmoUrl(city, ptype, stype):
+   url = logicimmo_base_url + ptype + '-'
+   url += city
+   url += '/'
+   url += stype
+   url += '-'
+   url += ptype
+   url += '-'
+   url += city
+   url += '-'
+   url += postalcodeByCity[city]
+   url += '-'
+   url += logicimmocodeByCity[city]
+   url += ".html"
+   return url 
 
 laforet_url = 'https://www.laforet.com/api/immo/properties?cities='
 

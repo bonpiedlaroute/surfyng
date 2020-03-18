@@ -19,3 +19,10 @@ with open('spiders/data/osm_id_insee.csv') as csv_file:
     csv_reader = csv.DictReader(csv_file, delimiter=';')
     for row in csv_reader:
             osmidByInseeCode[row["Code INSEE"]] = row["OSM_ID"]
+
+logicimmocodeByCity = dict()
+with open('spiders/data/logicimmo_code.csv') as csv_file:
+    csv_reader = csv.DictReader(csv_file, delimiter=';')
+    for row in csv_reader:
+            logicimmocodeByCity[row["city"]] = row["code"]
+
