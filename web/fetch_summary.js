@@ -27,99 +27,16 @@ function loadJSON(path, success, error) {
     return parent.appendChild(el);
   }
 
-  function SelogerProcessor(ad_sum_src_provider)
-  {
-    ad_sum_src_provider.style.border = "2px solid red";
-    var ad_sum_src_provider_text = createNode("p");
-    ad_sum_src_provider_text.className = "ad_summary_src_provider_text";
-    ad_sum_src_provider_text.style.color ="red";
-    ad_sum_src_provider_text.innerHTML ="SeLoger";
-    ad_sum_src_provider.appendChild(ad_sum_src_provider_text);
-  }
-  function LeboncoinProcessor(ad_sum_src_provider)
-  {
-    ad_sum_src_provider.style.border = "2px solid orange";
-    var ad_sum_src_provider_text = createNode("div");
-    ad_sum_src_provider_text.className = "ad_summary_src_provider_text";
-    ad_sum_src_provider_text.style.color ="orange";
-    ad_sum_src_provider_text.innerHTML ="Leboncoin";
-    ad_sum_src_provider.appendChild(ad_sum_src_provider_text);
-  }
 
-  function BieniciProcessor(ad_sum_src_provider)
+  function SrcProcessor(ad_sum_src_provider, color, text)
   {
-    ad_sum_src_provider.style.border = "2px solid #FFC331";
+    var border = "2px solid ";
+    border += color;
+    ad_sum_src_provider.style.border = border;
     var ad_sum_src_provider_text = createNode("div");
     ad_sum_src_provider_text.className = "ad_summary_src_provider_text";
-    ad_sum_src_provider_text.style.color ="#FFC331";
-    ad_sum_src_provider_text.innerHTML ="Bien'ici";
-    ad_sum_src_provider.appendChild(ad_sum_src_provider_text);
-  }
-
-  function LaforetProcessor(ad_sum_src_provider)
-  {
-    ad_sum_src_provider.style.border = "2px solid blue";
-    var ad_sum_src_provider_text = createNode("div");
-    ad_sum_src_provider_text.className = "ad_summary_src_provider_text";
-    ad_sum_src_provider_text.style.color ="blue";
-    ad_sum_src_provider_text.innerHTML ="Laforêt";
-    ad_sum_src_provider.appendChild(ad_sum_src_provider_text);
-  }
-  function OrpiProcessor(ad_sum_src_provider)
-  {
-    ad_sum_src_provider.style.border = "2px solid red";
-    var ad_sum_src_provider_text = createNode("div");
-    ad_sum_src_provider_text.className = "ad_summary_src_provider_text";
-    ad_sum_src_provider_text.style.color ="red";
-    ad_sum_src_provider_text.innerHTML ="Orpi";
-    ad_sum_src_provider.appendChild(ad_sum_src_provider_text);
-  }
-
-  function SPlazaImProcessor(ad_sum_src_provider)
-  {
-    ad_sum_src_provider.style.border = "2px solid red";
-    var ad_sum_src_provider_text = createNode("div");
-    ad_sum_src_provider_text.className = "ad_summary_src_provider_text";
-    ad_sum_src_provider_text.style.color ="red";
-    ad_sum_src_provider_text.innerHTML ="SPlazaIm";
-    ad_sum_src_provider.appendChild(ad_sum_src_provider_text);
-  }
-
-  function FonciaProcessor(ad_sum_src_provider)
-  {
-    ad_sum_src_provider.style.border = "2px solid blue";
-    var ad_sum_src_provider_text = createNode("div");
-    ad_sum_src_provider_text.className = "ad_summary_src_provider_text";
-    ad_sum_src_provider_text.style.color ="blue";
-    ad_sum_src_provider_text.innerHTML ="Foncia";
-    ad_sum_src_provider.appendChild(ad_sum_src_provider_text);
-  }
-  function Century21Processor(ad_sum_src_provider)
-  {
-    ad_sum_src_provider.style.border = "2px solid black";
-    var ad_sum_src_provider_text = createNode("div");
-    ad_sum_src_provider_text.className = "ad_summary_src_provider_text";
-    ad_sum_src_provider_text.style.color ="black";
-    ad_sum_src_provider_text.innerHTML ="Century21";
-    ad_sum_src_provider.appendChild(ad_sum_src_provider_text);
-  }
-  function GuyHoquetProcessor(ad_sum_src_provider)
-  {
-    ad_sum_src_provider.style.border = "2px solid blue";
-    var ad_sum_src_provider_text = createNode("div");
-    ad_sum_src_provider_text.className = "ad_summary_src_provider_text";
-    ad_sum_src_provider_text.style.color ="blue";
-    ad_sum_src_provider_text.innerHTML ="Guyhoquet";
-    ad_sum_src_provider.appendChild(ad_sum_src_provider_text);
-  }
-
-  function ArthurImmoProcessor(ad_sum_src_provider)
-  {
-    ad_sum_src_provider.style.border = "2px solid #FFC331";
-    var ad_sum_src_provider_text = createNode("div");
-    ad_sum_src_provider_text.className = "ad_summary_src_provider_text";
-    ad_sum_src_provider_text.style.color ="#FFC331";
-    ad_sum_src_provider_text.innerHTML ="Arthurimm";
+    ad_sum_src_provider_text.style.color = color;
+    ad_sum_src_provider_text.innerHTML = text;
     ad_sum_src_provider.appendChild(ad_sum_src_provider_text);
   }
 
@@ -139,16 +56,17 @@ function loadJSON(path, success, error) {
   }
 
   var ProcessorBySource = new Map();
-  ProcessorBySource.set("seloger", SelogerProcessor);
-  ProcessorBySource.set("leboncoin", LeboncoinProcessor);
-  ProcessorBySource.set("bienici", BieniciProcessor);
-  ProcessorBySource.set("laforet", LaforetProcessor);
-  ProcessorBySource.set("orpi", OrpiProcessor);
-  ProcessorBySource.set("stephaneplazaimo", SPlazaImProcessor);
-  ProcessorBySource.set("foncia", FonciaProcessor);
-  ProcessorBySource.set("century21", Century21Processor);
-  ProcessorBySource.set("guyhoquet", GuyHoquetProcessor);
-  ProcessorBySource.set("arthurimmo", ArthurImmoProcessor);
+  ProcessorBySource.set("seloger", function(param) { SrcProcessor(param, "red", "SeLoger"); });
+  ProcessorBySource.set("leboncoin", function(param) { SrcProcessor(param, "orange", "Leboncoin"); });
+  ProcessorBySource.set("bienici", function(param) { SrcProcessor(param, "#FFC331", "Bien'ici"); });
+  ProcessorBySource.set("laforet", function(param) { SrcProcessor(param, "blue", "Laforêt"); });
+  ProcessorBySource.set("orpi", function(param) { SrcProcessor(param, "red", "Orpi"); });
+  ProcessorBySource.set("stephaneplazaimo", function(param) { SrcProcessor(param, "red", "SPlazaIm"); });
+  ProcessorBySource.set("foncia", function(param) { SrcProcessor(param, "red", "Foncia"); });
+  ProcessorBySource.set("century21", function(param) { SrcProcessor(param, "black", "Century21"); });
+  ProcessorBySource.set("guyhoquet", function(param) { SrcProcessor(param, "blue", "Guyhoquet"); });
+  ProcessorBySource.set("arthurimmo", function(param) { SrcProcessor(param, "#FFC331", "Arthurimm"); });
+  ProcessorBySource.set("logicimmo", function(param) { SrcProcessor(param, "black", "Logicimmo"); });
 
 
   const url = 'https://surfyn.fr:7878/search/all'+ window.location.search;

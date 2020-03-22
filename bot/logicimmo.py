@@ -88,21 +88,18 @@ class LogicImmoSpider(scrapy.Spider):
       announce_title = response.xpath('//title/text()').extract()
       announce_description = response.xpath('//div[@class="offer-description-text"]').xpath('.//meta/@content').extract()
       desc_data = {}
-      desc_data['offer-desc'] = announce_description[0]
-      ad_detail = response.xpath('//div[contains(@class, "offer-view-content-wrapper")]').xpath('.//div[contains(@class, "toaster-content")]')
-      area_number = ad_detail.xpath('//div[@class="cell area"]').xpath('//span[@class="offer-area-number"]/text()').extract()
-      if area_number:
-         desc_data['surface'] = area_number[0]
 
-      rooms_number = ad_detail.xpath('//div[@class="cell rooms"]').xpath('//span[@class="offer-rooms-number"]/text()').extract()
-      if rooms_number:
-         desc_data['nb_room'] = rooms_number[0]
+      details = response.xpath('//section[@class="mainPropertySection"]').xpath('.//div/div/div/div/div/div/div/div[@class="leftZone clearfix"]')
+      area = details.xpath('.//div[@class="cell area"]/span/text()').extract()
+      desc_data['SURFACE'] = area[0]
 
-      price = ad_detail.xpath('//div[@class="cell price"]').xpath('//h2[@class="main-price"]/text()').extract()
+      nb_room = details.xpath('.//div[@class="cell rooms"]/span/span[@class="offer-rooms-number"]/text()').extract()
+      desc_data['ROOMS'] = nb_room[0]
 
-      if price:
-         desc_data['price'] = price[0]
-   
+      price =details.xpath('.//div[@class="cell price"]/h2[@class="main-price"]/text()').extract()
+      desc_data['PRICE'] = price[0]
+
+         
       json_desc = json.dumps(desc_data)
 
       imgs = response.xpath('//div[@class="carousel-wrapper"]').xpath('.//li/a/img/@src').extract()

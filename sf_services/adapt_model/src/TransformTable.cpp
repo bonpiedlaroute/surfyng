@@ -499,23 +499,25 @@ namespace surfyn
          return;
       }
 
-      if (document.HasMember("price"))
+      if (document.HasMember(RealEstatePrice))
       {
-         std::string price = document["price"].GetString();
+         std::string price = document[RealEstatePrice].GetString();
          auto pos = price.find_last_of(' ');
          price = price.substr(0, pos);
          realEstate->setDescription(RealEstatePrice, price);
       }
-      if (document.HasMember("surface"))
+      if (document.HasMember(RealEstateSurface))
       {
-         std::string surface = document["surface"].GetString();
+         std::string surface = document[RealEstateSurface].GetString();
          realEstate->setDescription(RealEstateSurface, surface);
       }
-      if (document.HasMember("nb_room"))
+      if (document.HasMember(RealEstateRooms))
       {
-         std::string nb_room = document["nb_room"].GetString();
+         std::string nb_room = document[RealEstateRooms].GetString();
          realEstate->setDescription(RealEstateRooms, nb_room);
       }
+
+      realEstate->setDescription(SOURCE_LOGO, "data/logicimmo.png");
    }
 
    void DataFormater::ReadBienIciJSON(const std::string& json, classifier::RealEstateAd* realEstate)
