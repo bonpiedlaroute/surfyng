@@ -165,6 +165,23 @@ def getGuyHoquetPropertiesId(_id):
 def getGuyHoquetSearchTypeId(_id):
    return GuyHoquetSearchTypeMapping[_id]
 
+
+EraImmoPropertiesMapping = dict()
+EraImmoPropertiesMapping[APART_ID] = '1'
+EraImmoPropertiesMapping[HOUSE_ID] = '2'
+
+EraImmoSearchTypeMapping = dict()
+EraImmoSearchTypeMapping[BUY_ID] = 'Vente'
+EraImmoSearchTypeMapping[RENT_ID] = 'Location'
+
+def getEraImmoPropertiesId(_id):
+   return EraImmoPropertiesMapping[_id]
+
+def getEraImmoSearchTypeId(_id):
+   return EraImmoSearchTypeMapping[_id]
+
+
+
 ArthurImmoPropertiesMapping = dict()
 ArthurImmoPropertiesMapping[APART_ID] = '1'
 ArthurImmoPropertiesMapping[HOUSE_ID] = '2'

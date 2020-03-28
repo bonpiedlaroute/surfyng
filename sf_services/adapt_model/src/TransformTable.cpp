@@ -200,6 +200,8 @@ namespace surfyn
       m_ReaderBySources["century21"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadCentury21JSON(json, realEstate);};
       m_ReaderBySources["guyhoquet"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadGuyHoquetJSON(json, realEstate);};
       m_ReaderBySources["arthurimmo"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadArthurImmoJSON(json, realEstate);};
+      m_ReaderBySources["logicimmo"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadLogicImmoJSON(json, realEstate);};
+      m_ReaderBySources["eraimmo"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadEraImmoJSON(json, realEstate);};
    }
    DataFormater::~DataFormater()
    {
@@ -1321,7 +1323,65 @@ void DataFormater::ReadArthurImmoJSON(const std::string& json, classifier::RealE
 
    realEstate->setDescription(SOURCE_LOGO, "data/arthurimmo.jpeg");
 }
+void DataFormater::ReadEraImmoJSON(const std::string& json, classifier::RealEstateAd* realEstate)
+{
+   std::locale::global(std::locale(""));
 
+   rapidjson::Document document;
+   document.Parse(json.c_str());
+
+   if(document.HasParseError())
+   {
+      std::stringstream error;
+      error << "failed to parse eraimmo json: error code [";
+      error << document.GetParseError();
+      error << "] error offset :[";
+      error << document.GetErrorOffset();
+      error << "]";
+      Log::getInstance()->error(error.str());
+
+      return;
+   }
+   if (document.HasMember(RealEstatePrice))
+   {
+      std::string price = document[RealEstatePrice].GetString();
+      boost::erase_all(price, " ");
+
+      realEstate->setDescription(RealEstatePrice, price);
+
+   }
+
+   if( document.HasMember(RealEstateSurface))
+   {
+     std::string area = document[RealEstateSurface].GetString();
+     auto pos = area.find_first_of('m');
+     if( pos != std::string::npos)
+     {
+       std::string real_area = area.substr(0, pos);
+       realEstate->setDescription(RealEstateSurface, real_area);
+     }
+
+   }
+   if( document.HasMember(RealEstateRooms))
+   {
+      realEstate->setDescription(RealEstateRooms, document[RealEstateRooms].GetString());
+   }
+
+   if (document.HasMember(RealEstateCellar))
+   {
+      realEstate->setDescription(RealEstateCellar, document[RealEstateCellar].GetString());
+   }
+   if (document.HasMember(RealEstateParking))
+   {
+      realEstate->setDescription(RealEstateParking, document[RealEstateParking].GetString());
+   }
+   if (document.HasMember(RealEstateLift))
+   {
+      realEstate->setDescription(RealEstateLift, document[RealEstateLift].GetString());
+   }
+
+   realEstate->setDescription(SOURCE_LOGO, "data/eraimmo.png");
+}
 void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tableName, const std::string& city)
    {
       std::locale::global(std::locale(""));
@@ -1519,8 +1579,7 @@ void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_acce
       for (auto it = m_AnnouncesByID.begin(); it != m_AnnouncesByID.end(); ++it)
       {
          classifier::RealEstateAd* realEstate = it->second;
-         if(realEstate)
-            Log::getInstance()->info("realEstate not null id [" + std::to_string(it->first) + "]");
+
          auto announce_source = realEstate->getDescription(ANNOUNCE_SOURCE);
          realEstate->setDescription(SOURCES, announce_source);
 

@@ -146,6 +146,23 @@ def buildGuyHoquetUrl(city, ptype, stype):
    
    return url
 
+eraimmo_url = "https://www.erafrance.com/catalog/advanced_search_result_carto.php?action=update_search&C_28_search=EGAL&C_28_type=UNIQUE&C_65_search=CONTIENT&C_65_type=TEXT&nb_rows_per_page=96"
+
+def buildEraImmoUrl(city, ptype, stype):
+   url = eraimmo_url + "C_28="
+   url += stype
+   url += "&cfamille_id="
+   url += ptype
+   url += "&C_65="
+   url += postalcodeByCity[city]
+   url += "+"
+   url += city
+   
+   return url
+
+
+
+
 bienici_base_filter = "{\"size\":24,\"from\":0,\"filterType\":\"buy\",\"propertyType\":[\"flat\"],\"newProperty\":false,\"page\":1,\"resultsPerPage\":24,\"maxAuthorizedResults\":2400,\"sortBy\":\"relevance\",\"sortOrder\":\"desc\",\"onTheMarket\":[true],\"mapMode\":\"enabled\",\"showAllModels\":false,\"zoneIdsByTypes\":{\"zoneIds\":[\"-91738\"]}}"
 
 bienici_base_url = "https://www.bienici.com/realEstateAds.json?filters="

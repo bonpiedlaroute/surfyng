@@ -62,11 +62,12 @@ function loadJSON(path, success, error) {
   ProcessorBySource.set("laforet", function(param) { SrcProcessor(param, "blue", "Laforêt"); });
   ProcessorBySource.set("orpi", function(param) { SrcProcessor(param, "red", "Orpi"); });
   ProcessorBySource.set("stephaneplazaimo", function(param) { SrcProcessor(param, "red", "SPlazaIm"); });
-  ProcessorBySource.set("foncia", function(param) { SrcProcessor(param, "red", "Foncia"); });
+  ProcessorBySource.set("foncia", function(param) { SrcProcessor(param, "blue", "Foncia"); });
   ProcessorBySource.set("century21", function(param) { SrcProcessor(param, "black", "Century21"); });
   ProcessorBySource.set("guyhoquet", function(param) { SrcProcessor(param, "blue", "Guyhoquet"); });
   ProcessorBySource.set("arthurimmo", function(param) { SrcProcessor(param, "#FFC331", "Arthurimm"); });
   ProcessorBySource.set("logicimmo", function(param) { SrcProcessor(param, "black", "Logicimmo"); });
+  ProcessorBySource.set("eraimmo", function(param) { SrcProcessor(param, "red", "Eraimmo"); });
 
 
   const url = 'https://surfyn.fr:7878/search/all'+ window.location.search;
@@ -286,7 +287,8 @@ function generate_summary_page(data)
             foncia:false,
             century21:false,
             guyhoquet:false,
-            arthurimmo:false
+            arthurimmo:false,
+            eraimmo:false
             }
             var ad_sum_src_provider_cont = createNode("div");
             ad_sum_src_provider_cont.className = "ad_summary_src_provider_cont";
