@@ -24,6 +24,7 @@ config_logicimmo.read('spiders/config.ini')
 ip = config_logicimmo['COMMON']['db_access_ip']
 port = int(config_logicimmo['COMMON']['db_access_port'])
 tablename = config_logicimmo['COMMON']['tablename']
+max_pages = int(config_logicimmo['COMMON']['max_pages'])
 
 
 
@@ -31,6 +32,7 @@ tablename = config_logicimmo['COMMON']['tablename']
 class LogicImmoSpider(scrapy.Spider):
       
    name = "logicimmo"
+   download_delay = 30
 
    def __init__(self, city='', **kwargs):
       self.city = city
@@ -43,6 +45,7 @@ class LogicImmoSpider(scrapy.Spider):
  
       self.prop_record = []
       self.announce_cnt = 0
+      self.nb_pages = 0
       self.serializer = Serializer(ip, port, tablename)
       self.ads = self.serializer.scanidByCityAndAdSource(city,"logicimmo")
      
@@ -70,6 +73,9 @@ class LogicImmoSpider(scrapy.Spider):
          if str(ID) not in self.ads:
             yield scrapy.Request(url, callback= lambda r, id_prop=id_property, announce_url = url, search_type = search_type: self.parse_announce(r, id_prop, announce_url, search_type))
 
+      # if we reach max_pages, stop crawling
+      if self.nb_pages == max_pages:
+         return
 
       n ='page='+str(nextpage)
 
@@ -78,10 +84,12 @@ class LogicImmoSpider(scrapy.Spider):
       nextindex = nextpage + 1
 
       if following_link:
+         self.nb_pages += 1
          yield scrapy.Request(following_link[0], callback= lambda response, id_prop=id_property, search_type = search_type, nextindex = nextindex : self.parse(response, id_prop, search_type, nextindex))
       else:
          following_link = response.xpath('//link[contains(@href,$nextp)]/@href', nextp=n).extract()
          if following_link:
+            self.nb_pages += 1
             yield scrapy.Request(following_link[0], callback= lambda response, id_prop=id_property, search_type = search_type, nextindex = nextindex : self.parse(response, id_prop, search_type, nextindex))
 
    def parse_announce(self, response, id_prop, announce_url, search_type):
