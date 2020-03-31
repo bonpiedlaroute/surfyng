@@ -24,6 +24,7 @@ config_leboncoin.read('spiders/config.ini')
 ip = config_leboncoin['COMMON']['db_access_ip']
 port = int(config_leboncoin['COMMON']['db_access_port'])
 tablename = config_leboncoin['COMMON']['tablename']
+max_pages = int(config_leboncoin['COMMON']['max_pages'])
 
 class LeboncoinSpider(scrapy.Spider):
    
@@ -43,6 +44,7 @@ class LeboncoinSpider(scrapy.Spider):
       self.mapping_url_ptype = dict()
       self.mapping_url_stype = dict()
       self.announces_cnt = 0
+      self.nb_pages = 0
       self.serializer = Serializer(ip, port, tablename)
 
       self.ads = self.serializer.scanidByCityAndAdSource(city, "leboncoin")
@@ -86,6 +88,11 @@ class LeboncoinSpider(scrapy.Spider):
                yield scrapy.Request(search_url, callback = lambda r, ad_url = ad_url, search_type = search_type, property_type = property_type:self.parse_data(r, ad_url, search_type, property_type))
             else:
                self.serializer.updateTimeStamp(ID)
+
+      # if we reach max_pages, stop crawling
+      if self.nb_pages == max_pages:
+         return
+
       n = "page="+str(nextpage)
       # parse next link
       next_link = response.xpath('//div[@class="_1evK6"]').xpath('.//a[@class="_1f-eo" and contains(@href,$nextp)]/@href', nextp=n).extract()
@@ -95,6 +102,7 @@ class LeboncoinSpider(scrapy.Spider):
          self.mapping_url_ptype[new_link] = property_type
          self.mapping_url_stype[new_link] = search_type
          nextp = nextpage + 1
+         self.nb_pages += 1
          yield response.follow(new_link, callback= lambda r, nextp = nextp : self.parse(r, nextp))
 
   

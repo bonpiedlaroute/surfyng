@@ -16,7 +16,7 @@ seloger_search_type_pos = 49
 seloger_houilles_url = 'https://www.seloger.com/list.htm?idtt=&naturebien=1,2,4&idtypebien=&ci=780311'
 seloger_colombes_url = 'https://www.seloger.com/list.htm?types=&projects=&enterprise=0&natures=1&places=[{ci:920025}]&qsVersion=1.0'
 seloger_paris_url    = 'https://www.seloger.com/list.htm?idtt=&naturebien=1,2,4&idtypebien=&ci=750056'
-
+seloger_base_url = 'https://www.seloger.com/list.htm?enterprise=0&natures=1&qsVersion=1.0&sort=d_dt_crea&places=[{ci:'
 
 #logicimmo_houilles_sale_baseurl = 'http://www.logic-immo.com/vente-immobilier-houilles-78800,13772_2/options/groupprptypesids='
 #logicimmo_houilles_rent_baseurl = 'http://www.logic-immo.com/location-immobilier-houilles-78800,13772_2/options/groupprptypesids='
@@ -29,9 +29,12 @@ lbc_base_url = 'https://www.leboncoin.fr/recherche/?category='
 def insert_in_url(url, position, value):
    return url[:position] + value + url[position:]
 
-def buildselogerurl(proptype, searchtype):  
-   url = insert_in_url(seloger_colombes_url,seloger_search_type_pos, searchtype)
-   url = insert_in_url(url,seloger_prop_type_pos, proptype)
+def buildselogerurl(city, proptype, searchtype):
+   url = seloger_base_url + inseecodeByCity[city]
+   url += '}]&types='
+   url += proptype
+   url += '&projects='
+   url += searchtype 
 
    return url
 

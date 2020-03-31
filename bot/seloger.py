@@ -22,7 +22,7 @@ config_seloger.read('spiders/config.ini')
 ip = config_seloger['COMMON']['db_access_ip']
 port = int(config_seloger['COMMON']['db_access_port'])
 tablename = config_seloger['COMMON']['tablename']
-
+max_pages = int(config_seloger['COMMON']['max_pages'])
 
 class SelogerSpider(scrapy.Spider):
    
@@ -41,6 +41,7 @@ class SelogerSpider(scrapy.Spider):
       self.mapping_url_ptype = dict()
       self.mapping_url_stype = dict()
       self.announces_cnt = 0
+      self.nb_pages = 0
       self.announce_title = dict()
 
       self.serializer = Serializer(ip, port, tablename)
@@ -53,7 +54,7 @@ class SelogerSpider(scrapy.Spider):
          announcers_id = getSeLogerPropertiesId(ptype)
          search_id = getSeLogerSearchTypeId(stype)        
 
-         url = buildselogerurl(announcers_id, search_id)
+         url = buildselogerurl(self.city, announcers_id, search_id)
          self.mapping_url_ptype[url] = ptype
          self.mapping_url_stype[url] = stype
          yield scrapy.Request(url=url, callback=self.parse)
@@ -73,6 +74,9 @@ class SelogerSpider(scrapy.Spider):
             yield scrapy.Request(url, callback= lambda r, url = url, id_prop = id_prop, id_search = id_search :self.parse_announce_title(r, url, id_prop, id_search)) 
          else:
             self.serializer.updateTimeStamp(ID)
+      # if we reach max_pages, stop crawling
+      if self.nb_pages == max_pages:
+         return
 
       following_link = response.xpath('//a[@title="Page suivante"]/@href').extract()
 
@@ -80,7 +84,7 @@ class SelogerSpider(scrapy.Spider):
          new_link = following_link[0]
          self.mapping_url_ptype['https:'+new_link] = self.mapping_url_ptype[urllib.unquote(original_request[5:-1])]
          self.mapping_url_stype['https:'+new_link] = self.mapping_url_stype[urllib.unquote(original_request[5:-1])]
-
+         self.nb_pages += 1
          yield response.follow(new_link, self.parse)
 
    def parse_prop_description(self, response, announce_url, id_property, ID, id_search, announce_image, img_cnt):
