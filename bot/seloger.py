@@ -57,9 +57,9 @@ class SelogerSpider(scrapy.Spider):
          url = buildselogerurl(self.city, announcers_id, search_id)
          self.mapping_url_ptype[url] = ptype
          self.mapping_url_stype[url] = stype
-         yield scrapy.Request(url=url, callback=self.parse)
+         yield scrapy.Request(url=url, callback= lambda r, currentpage=1 : self.parse(r, currentpage))
 
-   def parse(self, response):
+   def parse(self, response, currentpage):
       original_request = str(response.request)
       all_links = response.xpath('//div[@class="c-wrap-main"]').xpath('.//a[@name="classified-link"]/@href').extract()
       links = set(all_links)
@@ -75,7 +75,7 @@ class SelogerSpider(scrapy.Spider):
          else:
             self.serializer.updateTimeStamp(ID)
       # if we reach max_pages, stop crawling
-      if self.nb_pages == max_pages:
+      if currentpage == max_pages:
          return
 
       following_link = response.xpath('//a[@title="Page suivante"]/@href').extract()
@@ -84,8 +84,8 @@ class SelogerSpider(scrapy.Spider):
          new_link = following_link[0]
          self.mapping_url_ptype['https:'+new_link] = self.mapping_url_ptype[urllib.unquote(original_request[5:-1])]
          self.mapping_url_stype['https:'+new_link] = self.mapping_url_stype[urllib.unquote(original_request[5:-1])]
-         self.nb_pages += 1
-         yield response.follow(new_link, self.parse)
+         currentpage += 1
+         yield response.follow(new_link, callback= lambda r, currentpage=currentpage : self.parse(r, currentpage))
 
    def parse_prop_description(self, response, announce_url, id_property, ID, id_search, announce_image, img_cnt):
       self.announces_cnt += 1

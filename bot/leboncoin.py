@@ -44,7 +44,6 @@ class LeboncoinSpider(scrapy.Spider):
       self.mapping_url_ptype = dict()
       self.mapping_url_stype = dict()
       self.announces_cnt = 0
-      self.nb_pages = 0
       self.serializer = Serializer(ip, port, tablename)
 
       self.ads = self.serializer.scanidByCityAndAdSource(city, "leboncoin")
@@ -90,7 +89,8 @@ class LeboncoinSpider(scrapy.Spider):
                self.serializer.updateTimeStamp(ID)
 
       # if we reach max_pages, stop crawling
-      if self.nb_pages == max_pages:
+      nb_pages = nextpage - 1
+      if nb_pages == max_pages:
          return
 
       n = "page="+str(nextpage)
@@ -102,7 +102,6 @@ class LeboncoinSpider(scrapy.Spider):
          self.mapping_url_ptype[new_link] = property_type
          self.mapping_url_stype[new_link] = search_type
          nextp = nextpage + 1
-         self.nb_pages += 1
          yield response.follow(new_link, callback= lambda r, nextp = nextp : self.parse(r, nextp))
 
   
