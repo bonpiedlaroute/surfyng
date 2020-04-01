@@ -30,7 +30,7 @@ def insert_in_url(url, position, value):
    return url[:position] + value + url[position:]
 
 def buildselogerurl(city, proptype, searchtype):
-   url = seloger_base_url + inseecodeByCity[city]
+   url = seloger_base_url + inseecodeByCity[city][:2] + "0" + inseecodeByCity[city][2:]
    url += '}]&types='
    url += proptype
    url += '&projects='
