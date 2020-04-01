@@ -29,7 +29,7 @@ max_pages = int(config_leboncoin['COMMON']['max_pages'])
 class LeboncoinSpider(scrapy.Spider):
    
    name = "leboncoin"
-   download_delay = 30
+   download_delay = 40
 
    def __init__(self, city='', **kwargs): 
       

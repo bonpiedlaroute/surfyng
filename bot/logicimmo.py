@@ -32,7 +32,7 @@ max_pages = int(config_logicimmo['COMMON']['max_pages'])
 class LogicImmoSpider(scrapy.Spider):
       
    name = "logicimmo"
-   download_delay = 30
+   download_delay = 40
 
    def __init__(self, city='', **kwargs):
       self.city = city

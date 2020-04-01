@@ -27,7 +27,7 @@ max_pages = int(config_seloger['COMMON']['max_pages'])
 class SelogerSpider(scrapy.Spider):
    
    name = "seloger"
-   download_delay = 30
+   download_delay = 40
 
    def __init__(self, city='', **kwargs):
       self.city = city
