@@ -195,3 +195,20 @@ def getArthurImmoPropertiesId(_id):
 
 def getArthurImmoSearchTypeId(_id):
    return ArthurImmoSearchTypeMapping[_id]
+
+
+PapPropertiesMapping = dict()
+PapPropertiesMapping[APART_ID] = 'appartements'
+PapPropertiesMapping[HOUSE_ID] = 'maisons'
+
+PapSearchTypeMapping = dict()
+PapSearchTypeMapping[BUY_ID] = 'vente'
+PapSearchTypeMapping[RENT_ID] = 'locations'
+
+def getPapPropertiesId(_id):
+   return PapPropertiesMapping[_id]
+
+def getPapSearchTypeId(_id):
+   return PapSearchTypeMapping[_id]
+
+

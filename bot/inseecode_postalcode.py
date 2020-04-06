@@ -26,3 +26,9 @@ with open('spiders/data/logicimmo_code.csv') as csv_file:
     for row in csv_reader:
             logicimmocodeByCity[row["city"]] = row["code"]
 
+papcodeByCity = dict()
+with open('spiders/data/pap_code.csv') as csv_file:
+    csv_reader = csv.DictReader(csv_file, delimiter=';')
+    for row in csv_reader:
+            papcodeByCity[row["city"]] = row["code"]
+

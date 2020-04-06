@@ -198,4 +198,16 @@ def buildArthurImmoUrl(city, ptype, stype):
    
    return url
 
+pap_base_url = 'https://www.pap.fr/annonce/'
 
+def buildPapUrl(city, ptype, stype):
+   url = pap_base_url + stype + '-'
+   url += ptype
+   url += '-'
+   url += city
+   url += '-'
+   url += postalcodeByCity[city]
+   url += '-'
+   url += papcodeByCity[city] 
+
+   return url

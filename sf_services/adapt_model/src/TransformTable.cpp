@@ -202,6 +202,7 @@ namespace surfyn
       m_ReaderBySources["arthurimmo"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadArthurImmoJSON(json, realEstate);};
       m_ReaderBySources["logicimmo"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadLogicImmoJSON(json, realEstate);};
       m_ReaderBySources["eraimmo"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadEraImmoJSON(json, realEstate);};
+      m_ReaderBySources["pap"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadPapJSON(json, realEstate);};
    }
    DataFormater::~DataFormater()
    {
@@ -1382,6 +1383,47 @@ void DataFormater::ReadEraImmoJSON(const std::string& json, classifier::RealEsta
 
    realEstate->setDescription(SOURCE_LOGO, "data/eraimmo.png");
 }
+void DataFormater::ReadPapJSON(const std::string& json, classifier::RealEstateAd* realEstate)
+{
+   std::locale::global(std::locale(""));
+
+   rapidjson::Document document;
+   document.Parse(json.c_str());
+
+   if(document.HasParseError())
+   {
+      std::stringstream error;
+      error << "failed to parse pap json: error code [";
+      error << document.GetParseError();
+      error << "] error offset :[";
+      error << document.GetErrorOffset();
+      error << "]";
+      Log::getInstance()->error(error.str());
+
+      return;
+   }
+   if (document.HasMember(RealEstatePrice))
+   {
+      std::string price = document[RealEstatePrice].GetString();
+
+      realEstate->setDescription(RealEstatePrice, price);
+   }
+
+   if( document.HasMember(RealEstateSurface))
+   {
+     std::string area = document[RealEstateSurface].GetString();
+
+     realEstate->setDescription(RealEstateSurface, area);
+
+   }
+   if( document.HasMember(RealEstateRooms))
+   {
+      realEstate->setDescription(RealEstateRooms, document[RealEstateRooms].GetString());
+   }
+
+   realEstate->setDescription(SOURCE_LOGO, "data/pap.png");
+}
+
 void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tableName, const std::string& city)
    {
       std::locale::global(std::locale(""));
