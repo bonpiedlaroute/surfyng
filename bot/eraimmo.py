@@ -70,7 +70,9 @@ class EraimmoSpider(scrapy.Spider):
       links = response.xpath('//div[@id="listing_bien"]/div/div/div/div[@class="filigrane_apercu"]/a/@href').extract()
 
       for url in links:
-         announce_url = "https://www.erafrance.com" + url[2:]
+         pos = url.find('?')
+         part_url = url[:pos]
+         announce_url = "https://www.erafrance.com" + part_url[2:]
          ID = hash_id(announce_url)
          if str(ID) not in self.ads:
             yield scrapy.Request(url=announce_url, callback = lambda r, url = announce_url, ptype = ptype, stype = stype: self.parse_announce(r, url, ptype, stype))
