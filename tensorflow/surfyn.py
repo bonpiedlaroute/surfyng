@@ -22,7 +22,7 @@ dims = 2048
 n_nearest_neighbors = 5
 similarity_threshold=0.9
 #trees = 10000
-trees = 1000
+trees = 4000
 infiles = glob.glob('image_vectors/*.npz')
 
 # build ann index
