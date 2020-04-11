@@ -211,4 +211,18 @@ def getPapPropertiesId(_id):
 def getPapSearchTypeId(_id):
    return PapSearchTypeMapping[_id]
 
+IadfrancePropertiesMapping = dict()
+IadfrancePropertiesMapping[APART_ID] = 'AP'
+IadfrancePropertiesMapping[HOUSE_ID] = 'MV'
+
+IadfranceSearchTypeMapping = dict()
+IadfranceSearchTypeMapping[BUY_ID] = 'Vente'
+IadfranceSearchTypeMapping[RENT_ID] = 'Location'
+
+def getIadfrancePropertiesId(_id):
+   return IadfrancePropertiesMapping[_id]
+
+def getIadfranceSearchTypeId(_id):
+   return IadfranceSearchTypeMapping[_id]
+
 

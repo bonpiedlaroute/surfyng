@@ -69,6 +69,7 @@ function loadJSON(path, success, error) {
   ProcessorBySource.set("logicimmo", function(param) { SrcProcessor(param, "black", "Logicimmo"); });
   ProcessorBySource.set("eraimmo", function(param) { SrcProcessor(param, "red", "Eraimmo"); });
   ProcessorBySource.set("pap", function(param) { SrcProcessor(param, "blue", "PAP"); });
+  ProcessorBySource.set("iadfrance", function(param) { SrcProcessor(param, "blue", "i@d"); });
 
 
   const url = 'https://surfyn.fr:7878/search/all'+ window.location.search;
@@ -290,7 +291,8 @@ function generate_summary_page(data)
             guyhoquet:false,
             arthurimmo:false,
             eraimmo:false,
-            pap:false
+            pap:false,
+            iadfrance:false
             }
             var ad_sum_src_provider_cont = createNode("div");
             ad_sum_src_provider_cont.className = "ad_summary_src_provider_cont";

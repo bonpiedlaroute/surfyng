@@ -203,6 +203,7 @@ namespace surfyn
       m_ReaderBySources["logicimmo"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadLogicImmoJSON(json, realEstate);};
       m_ReaderBySources["eraimmo"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadEraImmoJSON(json, realEstate);};
       m_ReaderBySources["pap"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadPapJSON(json, realEstate);};
+      m_ReaderBySources["iadfrance"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadIadFranceJSON(json, realEstate);};
    }
    DataFormater::~DataFormater()
    {
@@ -1422,6 +1423,66 @@ void DataFormater::ReadPapJSON(const std::string& json, classifier::RealEstateAd
    }
 
    realEstate->setDescription(SOURCE_LOGO, "data/pap.png");
+}
+
+void DataFormater::ReadIadFranceJSON(const std::string& json, classifier::RealEstateAd* realEstate)
+{
+   std::locale::global(std::locale(""));
+
+   rapidjson::Document document;
+   document.Parse(json.c_str());
+
+   if(document.HasParseError())
+   {
+      std::stringstream error;
+      error << "failed to parse iadfrance json: error code [";
+      error << document.GetParseError();
+      error << "] error offset :[";
+      error << document.GetErrorOffset();
+      error << "]";
+      Log::getInstance()->error(error.str());
+
+      return;
+   }
+   if (document.HasMember(RealEstatePrice))
+   {
+      std::string price = document[RealEstatePrice].GetString();
+      boost::erase_all(price, " ");
+
+      realEstate->setDescription(RealEstatePrice, price);
+   }
+
+   if( document.HasMember(RealEstateSurface))
+   {
+     std::string raw_area = document[RealEstateSurface].GetString();
+
+     auto pos = raw_area.find('m');
+     std::string area = "";
+     if(pos != std::string::npos)
+     {
+        area = raw_area.substr(0, pos);
+     }
+     boost::erase_all(area, " ");
+     boost::erase_all(area, "\n");
+     realEstate->setDescription(RealEstateSurface, area);
+
+   }
+   if( document.HasMember(RealEstateRooms))
+   {
+      std::string rooms = document[RealEstateRooms].GetString();
+      boost::erase_all(rooms, " ");
+      boost::erase_all(rooms, "\n");
+      realEstate->setDescription(RealEstateRooms, rooms);
+   }
+   if( document.HasMember(RealEstateConstructionYear))
+   {
+      std::string year = document[RealEstateConstructionYear].GetString();
+      boost::erase_all(year, " ");
+      boost::erase_all(year, "\n");
+      realEstate->setDescription(RealEstateConstructionYear, year);
+   }
+
+   realEstate->setDescription(SOURCE_LOGO, "data/iadfrance.jpeg");
 }
 
 void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tableName, const std::string& city)

@@ -211,3 +211,13 @@ def buildPapUrl(city, ptype, stype):
    url += papcodeByCity[city] 
 
    return url
+
+iadfrance_url = 'https://www.iadfrance.fr/rechercher/annonces?generic_type[]='
+
+def buildIadfranceUrl(city, ptype, stype):
+   url = iadfrance_url + ptype + '&transaction_type='
+   url += stype
+   url += '&gp_id='
+   url += iadfrancecodeByCity[city]
+
+   return url
