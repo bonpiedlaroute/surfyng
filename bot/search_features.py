@@ -226,3 +226,18 @@ def getIadfranceSearchTypeId(_id):
    return IadfranceSearchTypeMapping[_id]
 
 
+ParuVenduPropertiesMapping = dict()
+ParuVenduPropertiesMapping[APART_ID] = 'tbApp=1'
+ParuVenduPropertiesMapping[HOUSE_ID] = 'tbMai=1'
+
+ParuVenduSearchTypeMapping = dict()
+ParuVenduSearchTypeMapping[BUY_ID] = '1'
+ParuVenduSearchTypeMapping[RENT_ID] = '5'
+
+def getParuVenduPropertiesId(_id):
+   return ParuVenduPropertiesMapping[_id]
+
+def getParuVenduSearchTypeId(_id):
+   return ParuVenduSearchTypeMapping[_id]
+
+

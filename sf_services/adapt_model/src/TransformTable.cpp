@@ -204,6 +204,7 @@ namespace surfyn
       m_ReaderBySources["eraimmo"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadEraImmoJSON(json, realEstate);};
       m_ReaderBySources["pap"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadPapJSON(json, realEstate);};
       m_ReaderBySources["iadfrance"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadIadFranceJSON(json, realEstate);};
+      m_ReaderBySources["paruvendu"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadParuVenduJSON(json, realEstate);};
    }
    DataFormater::~DataFormater()
    {
@@ -1483,6 +1484,47 @@ void DataFormater::ReadIadFranceJSON(const std::string& json, classifier::RealEs
    }
 
    realEstate->setDescription(SOURCE_LOGO, "data/iadfrance.jpeg");
+}
+
+void DataFormater::ReadParuVenduJSON(const std::string& json, classifier::RealEstateAd* realEstate)
+{
+   std::locale::global(std::locale(""));
+
+   rapidjson::Document document;
+   document.Parse(json.c_str());
+
+   if(document.HasParseError())
+   {
+      std::stringstream error;
+      error << "failed to parse paruvendu json: error code [";
+      error << document.GetParseError();
+      error << "] error offset :[";
+      error << document.GetErrorOffset();
+      error << "]";
+      Log::getInstance()->error(error.str());
+
+      return;
+   }
+   if (document.HasMember(RealEstatePrice))
+   {
+      std::string price = document[RealEstatePrice].GetString();
+
+      realEstate->setDescription(RealEstatePrice, price);
+   }
+
+   if( document.HasMember(RealEstateSurface))
+   {
+     std::string area = document[RealEstateSurface].GetString();
+
+     realEstate->setDescription(RealEstateSurface, area);
+
+   }
+   if( document.HasMember(RealEstateRooms))
+   {
+      realEstate->setDescription(RealEstateRooms, document[RealEstateRooms].GetString());
+   }
+
+   realEstate->setDescription(SOURCE_LOGO, "data/paruvendu.jpg");
 }
 
 void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tableName, const std::string& city)

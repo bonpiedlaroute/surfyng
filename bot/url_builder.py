@@ -221,3 +221,14 @@ def buildIadfranceUrl(city, ptype, stype):
    url += iadfrancecodeByCity[city]
 
    return url
+
+
+paruvendu_url = 'https://www.paruvendu.fr/immobilier/annonceimmofo/liste/listeAnnonces?tt='
+
+def buildParuVenduUrl(city,  ptype, stype):
+   url = paruvendu_url + stype + '&'
+   url += ptype
+   url += '&codeINSEE='
+   url += inseecodeByCity[city]
+
+   return url
