@@ -184,7 +184,7 @@ function generate_summary_page(data)
         title += rooms;
         title += " pieces"
         rooms_text = " " + rooms;
-        rooms_text += " pieces";
+        rooms_text += " pièces";
     }
 
   }
