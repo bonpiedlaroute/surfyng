@@ -317,7 +317,7 @@ std::string searchTypeValue = "";
             {
                if( iter_value != output.begin() )
                filterExpression << ",";
-               std::string propertyType = *iter_value == "1" ? "Appartement" : "Maison";
+               std::string propertyType = *iter_value == "1" || *iter_value == "3" ? "Appartement" : "Maison";
 
                std::string expr = exprval_propType + *iter_value;
                filterExpression << expr;

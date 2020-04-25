@@ -668,5 +668,6 @@ function generate_details_page(data)
     }
 
     document.title = pagetitle;
+    document.getElementsByTagName('meta')["description"].content = pagetitle;
   }
 }

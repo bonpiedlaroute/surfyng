@@ -147,16 +147,23 @@ function generate_summary_page(data)
   var split_propertyType = propertyType_param.split(",");
   var first_proptype = true;
   var propertyType = "";
-  if (split_propertyType.indexOf("1") !== -1)
+  var title = "";
+  var meta_description = "Toutes les annonces"
+
+  if (split_propertyType.indexOf("1") !== -1 || split_propertyType.indexOf("3") !== -1)
   {
     if(!first_proptype)
-      pagetitle += ", ";
+      title += ", ";
       else {
         first_proptype = false;
       }
     propertyType = "appartements";
+    meta_description += " d' "
   }
-  if (split_propertyType.indexOf("2") !== -1)
+  else {
+    meta_description += " de "
+  }
+  if (split_propertyType.indexOf("2") !== -1 || split_propertyType.indexOf("4") !== -1)
   {
     if(!first_proptype)
       propertyType += ", ";
@@ -165,11 +172,29 @@ function generate_summary_page(data)
       }
     propertyType += "maisons";
   }
-  pagetitle += propertyType;
-  pagetitle += " à ";
+  title += propertyType;
+  var rooms_text = "";
+  var rooms = Params.get('rooms');
+  if(rooms) {
+    title += " ";
+    if( rooms == "1") {
+      title += "studios";
+      rooms_text = " studios";
+    }else {
+        title += rooms;
+        title += " pieces"
+        rooms_text = " " + rooms;
+        rooms_text += " pieces";
+    }
+
+  }
+  title += " à ";
   var search_city = Params.get('search_city');
-  pagetitle += search_city;
+  title += search_city;
+  pagetitle += title;
   document.title = pagetitle;
+  meta_description += title;
+  document.getElementsByTagName('meta')["description"].content = meta_description;
 
 
   var announces_found = document.getElementById("nb_announces_found");
@@ -183,15 +208,16 @@ function generate_summary_page(data)
   {
         announces_found.innerHTML = data.length
         announces_found.innerHTML += data.length == 1 ? " annonce ": " annonces ";
-        announces_found.innerHTML += split_propertyType.indexOf("1") !== -1? "d'": "de "
-        announces_found.innerHTML += propertyType + " à ";
+        announces_found.innerHTML += (split_propertyType.indexOf("1") !== -1 || split_propertyType.indexOf("3") !== -1) ? "d'": "de "
+        announces_found.innerHTML += propertyType + rooms_text + " à ";
         announces_found.innerHTML += searchType == 1 ? "vendre à " : "louer à ";
         announces_found.innerHTML += search_city;
         for(var i = 0; i < data.length; i++)
         {
              var ad_link = createNode("a");
              ad_link.style.display = "block";
-             ad_link.href = "annonce_detaille.html?"+data[i].ID;
+             url_path = "/annonce/";
+             url_path += searchType == 1 ? "achat/" : "location/";
 
              var ad_div = createNode("div");
              ad_div.className = "row mx-auto announce_frame";
@@ -220,6 +246,7 @@ function generate_summary_page(data)
              ad_summary_details_p.innerHTML = data[i].PROPERTY_TYPE;
              ad_summary_details_p.innerHTML += "<br/>";
 
+             url_path += data[i].PROPERTY_TYPE.toLowerCase();
              if(data[i].hasOwnProperty('SURFACE'))
              {
                ad_summary_details_p.innerHTML += data[i].SURFACE;
@@ -231,6 +258,12 @@ function generate_summary_page(data)
                ad_summary_details_p.innerHTML += " - ";
                ad_summary_details_p.innerHTML += data[i].ROOMS;
                ad_summary_details_p.innerHTML += " pièce(s)";
+
+               if(data[i].ROOMS == "1")
+               url_path += "-studios/";
+               else {
+                 url_path += "-" + data[i].ROOMS + "-pieces/";
+               }
              }
 
              ad_summary_desc_div1.appendChild(ad_summary_details_p);
@@ -255,6 +288,7 @@ function generate_summary_page(data)
             ad_summary_city_p.className = "announce_summary_city";
             ad_summary_city_p.innerHTML = data[i].CITY;
             ad_summary_desc_div2.appendChild(ad_summary_city_p);
+            url_path += data[i].CITY;
 
             var ad_price_p = createNode("p");
             ad_price_p.style.float = "right";
@@ -345,6 +379,8 @@ function generate_summary_page(data)
             ad_container_div.appendChild(ad_summary_container_div);
 
             ad_div.appendChild(ad_container_div);
+
+            ad_link.href = url_path + "?" + data[i].ID;
 
             ad_link.appendChild(ad_div);
 

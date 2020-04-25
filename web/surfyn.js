@@ -1,5 +1,4 @@
-var pathname = window.location.pathname;
-var pagename = pathname.split("/").pop();
+var pathname = window.location.pathname.split("/");
 var search_criteria_title = document.getElementById("search_criteria_title");
 var inputPriceMin = document.getElementById("price_min");
 var inputPriceMax = document.getElementById("price_max");
@@ -29,16 +28,18 @@ sessionStorage.setItem("summary_json_data", "");
 
 const Params = new URLSearchParams(window.location.search);
 const searchType = Params.get('search_type');
+
 if( searchType == "1")
 {
   values[inputType.priceMin] = 50000;
   values[inputType.priceMax] = 4000000;
   valuePriceMin.innerHTML = "50 K€";
   valuePriceMax.innerHTML = "4000 K€";
-  if( pagename == "criterederecherche.html")
+  if( pathname.length > 1 && pathname[1] == "recherche")
   {
-    document.title = "Vos critères de recherche d'achat";
-    search_criteria_title.innerHTML += " d'achat";
+    document.title = "Votre projet d'achat immobilier";
+    search_criteria_title.innerHTML += " d'achat immobilier";
+    document.getElementsByTagName('meta')["description"].content = "Décrivez nous votre projet d'achat immobilier";
   }
 }
 else {
@@ -46,10 +47,11 @@ else {
   values[inputType.priceMax] = 4000;
   valuePriceMin.innerHTML = "100 €";
   valuePriceMax.innerHTML = "4000 €";
-  if( pagename == "criterederecherche.html")
+  if( pathname.length > 1 && pathname[1] == "recherche")
   {
-    document.title = "Vos critères de recherche de location";
-    search_criteria_title.innerHTML += " de location";
+    document.title = "Votre projet de location immobilière";
+    search_criteria_title.innerHTML += " de location immobilière";
+    document.getElementsByTagName('meta')["description"].content = "Décrivez nous votre projet de location immobilière";
   }
 }
 values[inputType.areaMin] = 10;
@@ -137,7 +139,7 @@ function handleEvtUp()
 function handleEvtMove(event) {
     if(mobile === false)
     event.preventDefault();
-    console.log("Move :");
+    //console.log("Move :");
     //console.log(event);
     //console.log(event.changedTouches[0].clientX);
     if (isDown[inputType.priceMin]) {
@@ -357,11 +359,12 @@ if( divLoft && divHouse && divApart && divOffice)
 var validate = document.getElementById("validate");
 var isFirstTimePropType = true;
 var url_results = "";
+var url_params = "";
 
 
 function updatePropertyTypeUrlParam()
 {
-  url_results+="&prop_type=";
+  url_params +="&prop_type=";
   isFirstTimePropType = false;
 }
 function updatePropertyTypeResult( value)
@@ -371,10 +374,10 @@ function updatePropertyTypeResult( value)
     updatePropertyTypeUrlParam();
   }
   else {
-    url_results+=","
+    url_params += ","
 
   }
-  url_results+=value;
+  url_params += value;
 }
 
 var rooms = document.querySelectorAll('.sf_rooms');
@@ -403,19 +406,37 @@ function isOneRoomsSelected()
 function submit_request(event)
 {
   var city = document.getElementById("search_city");
-  url_results = "liste_annonces.html";
+
 
   if( checkCity() == false )
   {
     validate.href = "#"
     return ;
   }
+  // construct base url
+  var url_base = "/liste_annonces/";
+  var alreadyAddedAProperty = false;
+  if( searchType == "1") {
+      url_base += "achat/";
+  }
+  else {
+     url_base += "location/";
+  }
+  if( isSelected[propertyType.apart] ||  isSelected[propertyType.office] ) {
+    url_base += "appartements";
+    alreadyAddedAProperty = true;
+  }
+  if( isSelected[propertyType.loft] || isSelected[propertyType.house] ) {
+    if( alreadyAddedAProperty )
+        url_base += "-";
+    url_base += "maisons";
+  }
 
-  url_results += "?search_city=";
-  url_results += city.value;
+  url_params += "?search_city=";
+  url_params += city.value;
 
-  url_results+="&search_type=";
-  url_results+=searchType;
+  url_params+="&search_type=";
+  url_params+=searchType;
 
   var formattingLength= 0;
   if( searchType == "1")
@@ -423,16 +444,16 @@ function submit_request(event)
   else
     formattingLength = 2;
 
-  url_results+="&price_min=";
-  url_results+= valuePriceMin.innerHTML.substring(0, valuePriceMin.innerHTML.length - formattingLength);
-  url_results+="&price_max=";
-  url_results+= valuePriceMax.innerHTML.substring(0, valuePriceMax.innerHTML.length - formattingLength);
+  url_params+="&price_min=";
+  url_params+= valuePriceMin.innerHTML.substring(0, valuePriceMin.innerHTML.length - formattingLength);
+  url_params+="&price_max=";
+  url_params+= valuePriceMax.innerHTML.substring(0, valuePriceMax.innerHTML.length - formattingLength);
   var isOnePropertyTypeSelected = false;
   if(isSelected[propertyType.loft])
   {
     updatePropertyTypeUrlParam();
 
-    url_results+="4";
+    url_params+="4";
     isOnePropertyTypeSelected = true;
   }
   if(isSelected[propertyType.house])
@@ -459,20 +480,32 @@ function submit_request(event)
     validate.href = "#";
     return;
   }
-  url_results+="&area_min=";
-  url_results+= valueAreaMin.innerHTML.substring(0, valueAreaMin.innerHTML.length - 14);
-  url_results+="&area_max=";
-  url_results+= valueAreaMax.innerHTML.substring(0, valueAreaMax.innerHTML.length - 14);;
+  url_params+="&area_min=";
+  url_params+= valueAreaMin.innerHTML.substring(0, valueAreaMin.innerHTML.length - 14);
+  url_params+="&area_max=";
+  url_params+= valueAreaMax.innerHTML.substring(0, valueAreaMax.innerHTML.length - 14);;
   isFirstTimePropType = true;
 
   var selectedRooms = isOneRoomsSelected();
-  if( selectedRooms[0] )
-  {
-    url_results += "&rooms="
-    url_results += selectedRooms[1];
-  }
+  if( selectedRooms[0] ) {
+    url_params += "&rooms="
+    url_params += selectedRooms[1];
 
-  validate.href = url_results;
+    if(selectedRooms[1] == "1")
+      url_base += "-studios/"
+    else {
+      url_base += "-";
+      url_base += selectedRooms[1];
+      url_base += "-pieces/"
+    }
+  }
+  else {
+      url_base += "/";
+  }
+  url_base += city.value.toLowerCase();
+  var url = url_base + url_params;
+  console.log(url);
+  validate.href = url;
 }
 
 if( validate)
