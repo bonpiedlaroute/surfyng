@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+   <url>
+
+      <loc>https://www.surfyn.fr</loc>
+
+
+      <changefreq>weekly</changefreq>
+
+   </url>
+
+   <url>
+
+      <loc>https://www.surfyn.fr/recherche/achat/immobilier?search_type=1</loc>
+
+      <changefreq>weekly</changefreq>
+
+   </url>
+
+   <url>
+
+      <loc>https://www.surfyn.fr/recherche/location/immobilier?search_type=2</loc>
+
+      <changefreq>weekly</changefreq>
+
+   </url>
+
+   <url>
+
+      <loc>https://surfyn.fr/liste_annonces/achat/appartements-4-pieces/houilles?search_city=Houilles&search_type=1&price_min=50&price_max=4000&prop_type=1&area_min=10&area_max=400&rooms=4</loc>
+
+      <changefreq>weekly</changefreq>
+
+
+   </url>
+
+   <url>
+
+      <loc>https://surfyn.fr/liste_annonces/achat/appartements-3-pieces/houilles?search_city=Houilles&search_type=1&price_min=50&price_max=4000&prop_type=1&area_min=10&area_max=400&rooms=3</loc>
+
+      <changefreq>weekly</changefreq>
+
+   </url>
+
+   <url>
+
+      <loc>https://surfyn.fr/liste_annonces/achat/appartements-2-pieces/houilles?search_city=Houilles&search_type=1&price_min=50&price_max=4000&prop_type=1&area_min=10&area_max=400&rooms=2</loc>
+
+      <changefreq>weekly</changefreq>
+
+   </url>
+
+   <url>
+
+      <loc>https://surfyn.fr/liste_annonces/achat/appartements/houilles?search_city=Houilles&search_type=1&price_min=50&price_max=4000&prop_type=1&area_min=10&area_max=400</loc>
+
+      <changefreq>weekly</changefreq>
+
+   </url>
+
+   <url>
+
+      <loc>https://surfyn.fr/liste_annonces/achat/maisons/houilles?search_city=Houilles&search_type=1&price_min=50&price_max=4000&prop_type=2&area_min=10&area_max=400</loc>
+
+      <changefreq>weekly</changefreq>
+
+   </url>
+
+   <url>
+
+      <loc>https://surfyn.fr/liste_annonces/achat/appartements/nanterre?search_city=Nanterre&search_type=1&price_min=50&price_max=4000&prop_type=1&area_min=10&area_max=400</loc>
+
+      <changefreq>weekly</changefreq>
+
+   </url>
+
+   <url>
+
+      <loc>https://surfyn.fr/liste_annonces/achat/maisons/nanterre?search_city=Nanterre&search_type=1&price_min=50&price_max=4000&prop_type=2&area_min=10&area_max=400</loc>
+
+      <changefreq>weekly</changefreq>
+
+   </url>
+
+   <url>
+
+      <loc>https://surfyn.fr/liste_annonces/achat/appartements/puteaux?search_city=Puteaux&search_type=1&price_min=50&price_max=4000&prop_type=1&area_min=10&area_max=400</loc>
+
+      <changefreq>weekly</changefreq>
+
+   </url>
+<url>
+
+      <loc>https://surfyn.fr/liste_annonces/achat/maisons/puteaux?search_city=Puteaux&search_type=1&price_min=50&price_max=4000&prop_type=2&area_min=10&area_max=400</loc>
+
+      <changefreq>weekly</changefreq>
+
+   </url>
+
+   <url>
+
+      <loc>https://surfyn.fr/liste_annonces/achat/appartements/colombes?search_city=Colombes&search_type=1&price_min=50&price_max=4000&prop_type=1&area_min=10&area_max=400</loc>
+
+      <changefreq>weekly</changefreq>
+
+   </url>
+
+   <url>
+
+      <loc>https://surfyn.fr/liste_annonces/achat/maisons/colombes?search_city=Colombes&search_type=1&price_min=50&price_max=4000&prop_type=2&area_min=10&area_max=400</loc>
+
+      <changefreq>weekly</changefreq>
+
+   </url>
+
+   <url>
+
+      <loc>https://surfyn.fr/liste_annonces/location/appartements/houilles?search_city=Houilles&search_type=2&price_min=100&price_max=4000&prop_type=1&area_min=10&area_max=400</loc>
+      <changefreq>weekly</changefreq>
+
+   </url>
+
+   <url>
+
+      <loc>https://surfyn.fr/liste_annonces/location/maisons/houilles?search_city=Houilles&search_type=2&price_min=100&price_max=4000&prop_type=2&area_min=10&area_max=400</loc>
+
+      <changefreq>weekly</changefreq>
+
+   </url>
+
+   <url>
+
+      <loc>https://surfyn.fr/liste_annonces/location/appartements/nanterre?search_city=Nanterre&search_type=2&price_min=100&price_max=4000&prop_type=1&area_min=10&area_max=400</loc>
+
+      <changefreq>weekly</changefreq>
+
+   </url>
+
+   <url>
+
+      <loc>https://surfyn.fr/liste_annonces/location/maisons/nanterre?search_city=Nanterre&search_type=2&price_min=100&price_max=4000&prop_type=2&area_min=10&area_max=400</loc>
+
+      <changefreq>weekly</changefreq>
+
+   </url>
+
+   <url>
+
+      <loc>https://surfyn.fr/liste_annonces/location/appartements/puteaux?search_city=Puteaux&search_type=2&price_min=100&price_max=4000&prop_type=1&area_min=10&area_max=400</loc>
+
+      <changefreq>weekly</changefreq>
+
+   </url>
+   <url>
+
+      <loc>https://surfyn.fr/liste_annonces/location/maisons/puteaux?search_city=Puteaux&search_type=2&price_min=100&price_max=4000&prop_type=2&area_min=10&area_max=400</loc>
+
+      <changefreq>weekly</changefreq>
+
+   </url>
+
+   <url>
+
+      <loc>https://surfyn.fr/liste_annonces/location/appartements/colombes?search_city=Colombes&search_type=2&price_min=100&price_max=4000&prop_type=1&area_min=10&area_max=400</loc>
+
+      <changefreq>weekly</changefreq>
+
+   </url>
+
+   <url>
+
+      <loc>https://surfyn.fr/liste_annonces/location/maisons/colombes?search_city=Colombes&search_type=2&price_min=100&price_max=4000&prop_type=2&area_min=10&area_max=400</loc>
+
+      <changefreq>weekly</changefreq>
+
+   </url>
+
+</urlset>
+
