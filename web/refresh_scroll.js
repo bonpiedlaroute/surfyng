@@ -1,15 +1,5 @@
-previous_link = document.getElementById("previous_link");
-previous_link.onclick = gotopreviouspage;
 var ismobile   = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
 
-function gotopreviouspage()
-{
-  sessionStorage.setItem("scrollX", "0");
-  sessionStorage.setItem("scrollY", "0");
-  sessionStorage.setItem("needtosort", "");
-  sessionStorage.setItem("summary_json_data", "");
-  window.history.back();
-}
 
 window.onscroll=function () {
     //set scroll position in session storage
