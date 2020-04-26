@@ -203,6 +203,17 @@ a:hover{ text-decoration: none; }
   font-size:30px;
 }
 
+.header_title_estimation
+{
+  font-size:26px;
+  color:white;
+}
+
+.header_subtitle_estimation
+{
+  font-size:14px;
+  color:white;
+}
 .sf_slider_annotation
 {
   width:100%;
@@ -763,6 +774,16 @@ margin-left:10%;
   {
     font-size:18px;
   }
+  .header_title_estimation
+  {
+    font-size:18px;
+    color:white;
+  }
+  .header_subtitle_estimation
+  {
+    font-size:12px;
+    color:white;
+  }
   .icon_arrow_left
   {
     font-size: 25px;
@@ -1015,3 +1036,12 @@ margin-left:10%;
     bottom: unset;
   }
 } /* end of @media (max-height:700px)  */
+
+@media (max-width:360px)
+{
+  .header_title_estimation
+  {
+    font-size:16px;
+    color:white;
+  }
+}
