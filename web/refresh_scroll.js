@@ -44,17 +44,14 @@ window.onclick = function(event) {
 function sortbyprice()
 {
   sessionStorage.setItem("needtosort", "byprice");
-  location.reload();
 }
 
 function sortbysurface()
 {
   sessionStorage.setItem("needtosort", "bysurface");
-  location.reload();
 }
 
 function sortbydate()
 {
   sessionStorage.setItem("needtosort", "bydate");
-  location.reload();
 }

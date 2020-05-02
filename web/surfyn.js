@@ -358,7 +358,7 @@ if( divLoft && divHouse && divApart && divOffice)
 
 var validate = document.getElementById("validate");
 var isFirstTimePropType = true;
-var url_results = "";
+
 var url_params = "";
 
 
@@ -415,6 +415,7 @@ function submit_request(event)
   }
   // construct base url
   var url_base = "/liste_annonces/";
+  url_params = "";
   var alreadyAddedAProperty = false;
   if( searchType == "1") {
       url_base += "achat/";
