@@ -38,3 +38,9 @@ with open('spiders/data/iadfrance_code.csv') as csv_file:
     for row in csv_reader:
             iadfrancecodeByCity[row["city"]] = row["code"]
 
+avendrealouercodeByCity = dict()
+with open('spiders/data/avendrealouer_code.csv') as csv_file:
+    csv_reader = csv.DictReader(csv_file, delimiter=';')
+    for row in csv_reader:
+            avendrealouercodeByCity[row["city"]] = row["code"]
+

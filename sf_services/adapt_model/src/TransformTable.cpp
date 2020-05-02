@@ -205,6 +205,7 @@ namespace surfyn
       m_ReaderBySources["pap"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadPapJSON(json, realEstate);};
       m_ReaderBySources["iadfrance"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadIadFranceJSON(json, realEstate);};
       m_ReaderBySources["paruvendu"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadParuVenduJSON(json, realEstate);};
+      m_ReaderBySources["avendrealouer"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadAvendreAlouerJSON(json, realEstate);};
    }
    DataFormater::~DataFormater()
    {
@@ -1525,6 +1526,82 @@ void DataFormater::ReadParuVenduJSON(const std::string& json, classifier::RealEs
    }
 
    realEstate->setDescription(SOURCE_LOGO, "data/paruvendu.jpg");
+}
+
+void DataFormater::ReadAvendreAlouerJSON(const std::string& json, classifier::RealEstateAd* realEstate)
+{
+   std::locale::global(std::locale(""));
+
+   rapidjson::Document document;
+   document.Parse(json.c_str());
+
+   if(document.HasParseError())
+   {
+      std::stringstream error;
+      error << "failed to parse eraimmo json: error code [";
+      error << document.GetParseError();
+      error << "] error offset :[";
+      error << document.GetErrorOffset();
+      error << "]";
+      Log::getInstance()->error(error.str());
+
+      return;
+   }
+   if (document.HasMember(RealEstatePrice))
+   {
+      std::string price = document[RealEstatePrice].GetString();
+      boost::erase_all(price, " ");
+
+      realEstate->setDescription(RealEstatePrice, price);
+
+   }
+
+   if( document.HasMember(RealEstateSurface))
+   {
+     realEstate->setDescription(RealEstateSurface, document[RealEstateSurface].GetString());
+   }
+   if( document.HasMember(RealEstateRooms))
+   {
+      realEstate->setDescription(RealEstateRooms, document[RealEstateRooms].GetString());
+   }
+
+   if (document.HasMember(RealEstateCellar))
+   {
+      realEstate->setDescription(RealEstateCellar, document[RealEstateCellar].GetString());
+   }
+   if (document.HasMember(RealEstateParking))
+   {
+      realEstate->setDescription(RealEstateParking, document[RealEstateParking].GetString());
+   }
+   if (document.HasMember(RealEstateLift))
+   {
+      realEstate->setDescription(RealEstateLift, document[RealEstateLift].GetString());
+   }
+   if (document.HasMember(RealEstateFloor))
+   {
+      std::string floor;
+      std::string nb_floor = document[RealEstateFloor].GetString();
+      boost::erase_all(nb_floor, " ");
+      if( atoi(nb_floor.c_str()) == 1)
+      {
+         floor = "1er";
+      }
+      else
+      {
+         floor = nb_floor + "ème";
+      }
+      realEstate->setDescription(RealEstateFloor, floor);
+   }
+   if( document.HasMember(RealEstateConstructionYear))
+   {
+      realEstate->setDescription(RealEstateConstructionYear, document[RealEstateConstructionYear].GetString());
+   }
+   if (document.HasMember(RealEstateTypeOfHeating))
+   {
+      realEstate->setDescription(RealEstateTypeOfHeating, document[RealEstateTypeOfHeating].GetString());
+   }
+
+   realEstate->setDescription(SOURCE_LOGO, "data/avendrealouer.png");
 }
 
 void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tableName, const std::string& city)

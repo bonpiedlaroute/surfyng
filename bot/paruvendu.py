@@ -75,7 +75,7 @@ class ParuVenduSpider(scrapy.Spider):
          next_links = response.xpath('//div[@id="bloc_liste"]/div[@class="v2-pagin"]/div/div/a[@class="page" and contains(@href, $nextpage)]/@href', nextpage=n).extract()
          if next_links:
             next_link = 'https://www.paruvendu.fr/immobilier/annonceimmofo/liste/' + next_links[0]
-            yield scrapy.follow(next_link, callback= lambda r, ptype = ptype, stype = stype :self.parse(r, ptype, stype, page))
+            yield response.follow(next_link, callback= lambda r, ptype = ptype, stype = stype :self.parse(r, ptype, stype, page))
 
 
    def parse_announce(self, response, url, ptype, stype):

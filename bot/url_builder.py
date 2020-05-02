@@ -232,3 +232,18 @@ def buildParuVenduUrl(city,  ptype, stype):
    url += inseecodeByCity[city]
 
    return url
+
+avendrealouer_url = 'https://www.avendrealouer.fr/'
+
+def buildAvendreAlouerUrl(city, ptype, stype):
+   url = avendrealouer_url + stype + '/'
+   url += city
+   url += '-'
+   url += postalcodeByCity[city][:2]
+   url += '/'
+   url += ptype
+   url += '/'
+   url += avendrealouercodeByCity[city]
+   url += '.html'
+
+   return url

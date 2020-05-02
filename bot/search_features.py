@@ -240,4 +240,18 @@ def getParuVenduPropertiesId(_id):
 def getParuVenduSearchTypeId(_id):
    return ParuVenduSearchTypeMapping[_id]
 
+AvendreAlouerPropertiesMapping = dict()
+AvendreAlouerPropertiesMapping[APART_ID] = 'b-appartement'
+AvendreAlouerPropertiesMapping[HOUSE_ID] = 'b-maison'
+
+AvendreAlouerSearchTypeMapping = dict()
+AvendreAlouerSearchTypeMapping[BUY_ID] = 'vente'
+AvendreAlouerSearchTypeMapping[RENT_ID] = 'location'
+
+def getAvendreAlouerPropertiesId(_id):
+   return AvendreAlouerPropertiesMapping[_id]
+
+def getAvendreAlouerSearchTypeId(_id):
+   return AvendreAlouerSearchTypeMapping[_id]
+
 
