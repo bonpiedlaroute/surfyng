@@ -136,7 +136,7 @@ class AvendreAlouerSpider(scrapy.Spider):
 
       if heating:
          real_heating = "Chauffage " + heating[:-1]
-         data["HEATING"] = real_heating
+         data["TYPE_OF_HEATING"] = real_heating
  
       # get images
       images = response.xpath('//div[@class="page-wrapper"]/div[@class="main-pane"]/div[@class="tabPanel"]/div[@id="property-tab-content"]/div/div[@id="bxSliderContainer"]/ul/li/img/@src').extract()
