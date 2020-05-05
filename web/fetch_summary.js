@@ -71,7 +71,7 @@ function loadJSON(path, success, error) {
   ProcessorBySource.set("pap", function(param) { SrcProcessor(param, "blue", "PAP"); });
   ProcessorBySource.set("iadfrance", function(param) { SrcProcessor(param, "blue", "i@d"); });
   ProcessorBySource.set("paruvendu", function(param) { SrcProcessor(param, "black", "Paruvendu"); });
-  ProcessorBySource.set("avendrealouer", function(param) { SrcProcessor(param, "#27CCC3", "Avendrealouer"); });
+  ProcessorBySource.set("avendrealouer", function(param) { SrcProcessor(param, "#27CCC3", "AvdreAlou"); });
 
 
   const url = 'https://surfyn.fr:7878/search/all'+ window.location.search;
