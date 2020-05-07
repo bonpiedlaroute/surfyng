@@ -141,13 +141,15 @@ class AvendreAlouerSpider(scrapy.Spider):
       # get images
       images = response.xpath('//div[@class="page-wrapper"]/div[@class="main-pane"]/div[@class="tabPanel"]/div[@id="property-tab-content"]/div/div[@id="bxSliderContainer"]/ul/li/img/@src').extract()
       image_count = 1
+      img_cnt = 0
       for img in images:
-         image_name = os.path.join(self.images_folder_name, str(ID) + '_' + str(image_count) + '.jpg')
-         urllib.urlretrieve(img, image_name)
-         image_count = image_count + 1
+         if 'avendrealouer' in img:
+            image_name = os.path.join(self.images_folder_name, str(ID) + '_' + str(image_count) + '.jpg')
+            urllib.urlretrieve(img, image_name)
+            image_count = image_count + 1
+            img_cnt += 1
 
       # prepare data and send it!
-      img_cnt = len(images)
 
       json_data = json.dumps(data)
       
