@@ -75,9 +75,10 @@ class AvendreAlouerSpider(scrapy.Spider):
       for link in links:
 
          if "programme-neuf" not in link:
-            ID = hash_id(link)
+            announce_url = 'https://www.avendrealouer.fr' + link
+            ID = hash_id(announce_url)
+
             if str(ID) not in self.ads:
-               announce_url = 'https://www.avendrealouer.fr' + link
                yield scrapy.Request(url=announce_url, callback = lambda r, url = announce_url, ptype = ptype, stype = stype: self.parse_announce(r, url, ptype, stype))
             else:
                self.serializer.updateTimeStamp(ID)
