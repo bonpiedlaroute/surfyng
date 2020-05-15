@@ -247,3 +247,18 @@ def buildAvendreAlouerUrl(city, ptype, stype):
    url += '.html'
 
    return url
+
+nestenn_url = 'https://nestenn.com/?action=listing&transaction='
+
+def buildNestennUrl(city, ptype, stype):
+   url = nestenn_url + stype
+   url += '&list_ville='
+   url += postalcodeByCity[city]
+   url += '+'
+   url += city
+   url += '&list_type='
+   url += ptype
+   url += '&type='
+   url += ptype
+
+   return url

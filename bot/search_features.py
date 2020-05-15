@@ -254,4 +254,18 @@ def getAvendreAlouerPropertiesId(_id):
 def getAvendreAlouerSearchTypeId(_id):
    return AvendreAlouerSearchTypeMapping[_id]
 
+NestennPropertiesMapping = dict()
+NestennPropertiesMapping[APART_ID] = 'Appartement'
+NestennPropertiesMapping[HOUSE_ID] = 'Maison'
+
+NestennSearchTypeMapping = dict()
+NestennSearchTypeMapping[BUY_ID] = 'Vente'
+NestennSearchTypeMapping[RENT_ID] = 'Location'
+
+def getNestennPropertiesId(_id):
+   return NestennPropertiesMapping[_id]
+
+def getNestennSearchTypeId(_id):
+   return NestennSearchTypeMapping[_id]
+
 

@@ -206,6 +206,7 @@ namespace surfyn
       m_ReaderBySources["iadfrance"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadIadFranceJSON(json, realEstate);};
       m_ReaderBySources["paruvendu"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadParuVenduJSON(json, realEstate);};
       m_ReaderBySources["avendrealouer"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadAvendreAlouerJSON(json, realEstate);};
+      m_ReaderBySources["nestenn"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadNestennJSON(json, realEstate);};
    }
    DataFormater::~DataFormater()
    {
@@ -1538,7 +1539,7 @@ void DataFormater::ReadAvendreAlouerJSON(const std::string& json, classifier::Re
    if(document.HasParseError())
    {
       std::stringstream error;
-      error << "failed to parse eraimmo json: error code [";
+      error << "failed to parse avendrealouer json: error code [";
       error << document.GetParseError();
       error << "] error offset :[";
       error << document.GetErrorOffset();
@@ -1603,6 +1604,72 @@ void DataFormater::ReadAvendreAlouerJSON(const std::string& json, classifier::Re
 
    realEstate->setDescription(SOURCE_LOGO, "data/avendrealouer.png");
 }
+
+void DataFormater::ReadNestennJSON(const std::string& json, classifier::RealEstateAd* realEstate)
+{
+   std::locale::global(std::locale(""));
+
+   rapidjson::Document document;
+   document.Parse(json.c_str());
+
+   if(document.HasParseError())
+   {
+      std::stringstream error;
+      error << "failed to parse nestenn json: error code [";
+      error << document.GetParseError();
+      error << "] error offset :[";
+      error << document.GetErrorOffset();
+      error << "]";
+      Log::getInstance()->error(error.str());
+
+      return;
+   }
+   if (document.HasMember(RealEstatePrice))
+   {
+      realEstate->setDescription(RealEstatePrice, document[RealEstatePrice].GetString());
+   }
+
+   if( document.HasMember(RealEstateSurface))
+   {
+     realEstate->setDescription(RealEstateSurface, document[RealEstateSurface].GetString());
+   }
+   if( document.HasMember(RealEstateRooms))
+   {
+      realEstate->setDescription(RealEstateRooms, document[RealEstateRooms].GetString());
+   }
+
+   if (document.HasMember(RealEstateCellar))
+   {
+      realEstate->setDescription(RealEstateCellar, document[RealEstateCellar].GetString());
+   }
+   if (document.HasMember(RealEstateParking))
+   {
+      realEstate->setDescription(RealEstateParking, document[RealEstateParking].GetString());
+   }
+   if (document.HasMember(RealEstateLift))
+   {
+      realEstate->setDescription(RealEstateLift, document[RealEstateLift].GetString());
+   }
+   if (document.HasMember(RealEstateFloor))
+   {
+      std::string floor;
+      std::string nb_floor = document[RealEstateFloor].GetString();
+      boost::erase_all(nb_floor, " ");
+      if( atoi(nb_floor.c_str()) == 1)
+      {
+         floor = "1er";
+      }
+      else
+      {
+         floor = nb_floor + "ème";
+      }
+      realEstate->setDescription(RealEstateFloor, floor);
+   }
+
+
+   realEstate->setDescription(SOURCE_LOGO, "data/nestenn.jpeg");
+}
+
 
 void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tableName, const std::string& city)
    {
