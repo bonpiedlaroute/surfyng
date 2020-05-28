@@ -24,7 +24,14 @@
 
       gtag('config', 'UA-140583317-1');
     </script>
-
+    <script>
+      window.onload = window.onpageshow = function(){
+        sessionStorage.setItem("scrollX", "0");
+        sessionStorage.setItem("scrollY", "0");
+        sessionStorage.setItem("needtosort", "");
+        sessionStorage.setItem("summary_json_data", "");
+      }
+    </script>
   </head>
     <body >
 
