@@ -126,6 +126,7 @@ void dynamodb_accessHandler::put(OperationResult& _return, const std::string& ta
       putItemRequest.AddItem(iter->first.c_str(), keyAttribute);
 
    }
+   putItemRequest.WithConditionExpression("attribute_not_exists(ID)");
 
    PutItemOutcome putOutcome = m_client->PutItem(putItemRequest);
 
