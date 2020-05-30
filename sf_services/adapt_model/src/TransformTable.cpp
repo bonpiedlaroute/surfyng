@@ -1874,7 +1874,7 @@ void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_acce
 
          Log::getInstance()->info("CheckSimilarAnnounces [" + std::to_string(it->first) + "] SOURCES [" + realEstate->getDescription(ANNOUNCE_SOURCE) + "]");
          const std::string& similarAnnouces = realEstate->getDescription(SIMILAR_ANNOUNCE);
-         if (!similarAnnouces.empty())
+         if (!similarAnnouces.empty() && realEstate->getDescription(TIMESTAMP) == realEstate->getDescription(FIRST_TIMESTAMP))
          {
             std::vector<std::string> annoucesIDs;
             boost::split(annoucesIDs, similarAnnouces, [](char c) { return c == ','; });
@@ -1937,36 +1937,73 @@ void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_acce
    {
       for (auto it = m_AnnouncesByID.begin(); it != m_AnnouncesByID.end(); ++it)
       {
-
-         std::map<std::string, ValueType> valuesToPut;
-         int64_t id = it->first;
-         ValueType IDValue;
-         IDValue.field = std::to_string(id);
-         IDValue.fieldtype = Type::type::NUMBER;
-         valuesToPut[ID] = IDValue;
-
-         const auto& descriptions = it->second->GetAllDescriptions();
-         for (auto iter = descriptions.begin(); iter != descriptions.end(); ++iter)
+         if(it->second->getDescription(TIMESTAMP) == it->second->getDescription(FIRST_TIMESTAMP))
          {
-            const std::string& fieldName = iter->first;
-            const std::string& fieldValue = iter->second;
-            if (!fieldValue.empty())
+            std::map<std::string, ValueType> valuesToPut;
+            int64_t id = it->first;
+            ValueType IDValue;
+            IDValue.field = std::to_string(id);
+            IDValue.fieldtype = Type::type::NUMBER;
+            valuesToPut[ID] = IDValue;
+
+            const auto& descriptions = it->second->GetAllDescriptions();
+            for (auto iter = descriptions.begin(); iter != descriptions.end(); ++iter)
             {
-               ValueType value = BuildValueType(fieldName, iter->second);
-               valuesToPut[fieldName] = value;
+               const std::string& fieldName = iter->first;
+               const std::string& fieldValue = iter->second;
+               if (!fieldValue.empty())
+               {
+                  ValueType value = BuildValueType(fieldName, iter->second);
+                  valuesToPut[fieldName] = value;
+               }
+            }
+            if (valuesToPut.empty())
+            {
+               Log::getInstance()->error("ValuesToPut is empty for item " + std::to_string(id));
+            }
+
+            OperationResult result;
+            client->put(result, tableName, valuesToPut);
+            if (!result.success)
+            {
+               Log::getInstance()->warn("Failed to put " + std::to_string(id) + " into table " + tableName + " error : " + result.error);
+            }
+            else
+            {
+               Log::getInstance()->info("Successfully  put [" + std::to_string(id) + "] into table " + tableName);
             }
          }
-         if (valuesToPut.empty())
+         else
          {
-            Log::getInstance()->error("ValuesToPut is empty for item " + std::to_string(id));
+            std::map<std::string, ValueType> valuesToUpdate;
+
+            int64_t id = it->first;
+
+
+            const std::string fieldValue = it->second->getDescription(TIMESTAMP);
+            ValueType value = BuildValueType(TIMESTAMP, fieldValue);
+            valuesToUpdate[TIMESTAMP] = value;
+
+
+
+            OperationResult result;
+            KeyValue Key;
+            Key.key = ID;
+            ValueType IDValue;
+            IDValue.field = std::to_string(id);
+            IDValue.fieldtype = Type::type::NUMBER;
+            Key.value = IDValue;
+            client->update(result, tableName, Key, valuesToUpdate);
+            if (!result.success)
+            {
+               Log::getInstance()->error("Failed to update " + std::to_string(id) + " into table " + tableName + " error : " + result.error);
+            }
+            else
+            {
+               Log::getInstance()->info(" Succesfully update [" + std::to_string(id) + "] into table " + tableName );
+            }
          }
 
-         OperationResult result;
-         client->put(result, tableName, valuesToPut);
-         if (!result.success)
-         {
-            Log::getInstance()->warn("Failed to put " + std::to_string(id) + " into table " + tableName + " error : " + result.error);
-         }
          // TODO manage bandwith limit
          // work-around
          std::this_thread::sleep_for(std::chrono::milliseconds(50));
