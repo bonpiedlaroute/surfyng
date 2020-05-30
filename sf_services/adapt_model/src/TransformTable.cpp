@@ -641,14 +641,14 @@ void DataFormater::ReadLaForetJSON(const std::string& json, classifier::RealEsta
       return;
    }
 
-   if( document.HasMember("rooms"))
+   if( document.HasMember("rooms") && !document["rooms"].IsNull())
    {
       std::string nb_room = std::to_string(document["rooms"].GetUint());
 
       realEstate->setDescription(RealEstateRooms, nb_room);
    }
 
-   if( document.HasMember("surface"))
+   if( document.HasMember("surface") && !document["surface"].IsNull())
    {
       std::string area = std::to_string(document["surface"].GetDouble());
       std::replace(area.begin(), area.end(), ',', '.');
@@ -677,14 +677,14 @@ void DataFormater::ReadLaForetJSON(const std::string& json, classifier::RealEsta
       realEstate->setDescription(RealEstateFloor, floor);
    }
 
-   if (document.HasMember("price"))
+   if (document.HasMember("price") && !document["price"].IsNull())
    {
       std::string price = std::to_string(document["price"].GetDouble());
       std::replace(price.begin(), price.end(), ',', '.');
       realEstate->setDescription(RealEstatePrice, price);
    }
 
-   if (document.HasMember("has_lift"))
+   if (document.HasMember("has_lift") && !document["has_lift"].IsNull())
    {
 
       if( document["has_lift"].GetBool())
@@ -693,7 +693,7 @@ void DataFormater::ReadLaForetJSON(const std::string& json, classifier::RealEsta
          realEstate->setDescription(RealEstateLift, "0");
    }
 
-   if(document.HasMember("lat") && document.HasMember("lng"))
+   if(document.HasMember("lat") && document.HasMember("lng") && !document["lat"].IsNull() && !document["lng"].IsNull())
    {
       std::string location = "lat=";
       location += std::to_string(document["lat"].GetDouble());
@@ -704,7 +704,7 @@ void DataFormater::ReadLaForetJSON(const std::string& json, classifier::RealEsta
 
    }
 
-   if (document.HasMember("heating_nature") && document["heating_nature"].IsString())
+   if (document.HasMember("heating_nature") && !document["heating_nature"].IsNull() && document["heating_nature"].IsString())
    {
       std::string heating = "Chauffage ";
       std::string laforetheating = document["heating_nature"].GetString();
