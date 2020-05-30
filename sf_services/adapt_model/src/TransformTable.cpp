@@ -1965,7 +1965,7 @@ void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_acce
          client->put(result, tableName, valuesToPut);
          if (!result.success)
          {
-            Log::getInstance()->error("Failed to put " + std::to_string(id) + " into table " + tableName + " error : " + result.error);
+            Log::getInstance()->warn("Failed to put " + std::to_string(id) + " into table " + tableName + " error : " + result.error);
          }
          // TODO manage bandwith limit
          // work-around
