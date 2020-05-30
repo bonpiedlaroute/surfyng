@@ -71,7 +71,25 @@ namespace surfyn
    const char* RealEstateKey = "ID";
    const char* RealEstateSimilarAd = "SIMILAR_AD";
    const char* RealEstateLocation = "LOCATION";
+   const char* RealEstateDuplicates = "DUPLICATES";
+   const char* RealEstateAnnounceSource = "ANNOUNCE_SOURCE";
+   const char* RealEstateSources = "SOURCES";
 
+   const std::string exprval_city = ":ct";
+   const std::string exprval_searchType = ":st";
+
+   void fillFilterExprAndExprValue(std::stringstream &filterexpression, std::map<std::string, ValueType> &expressionValue,
+                                   const std::string &param, const std::string& paramvalue, const std::string & value,
+                                   const std::string &Operator)
+   {
+      filterexpression << param;
+      filterexpression << " " << Operator << " ";
+      filterexpression << paramvalue;
+      ValueType exprValue;
+      exprValue.field = value.c_str();
+      exprValue.fieldtype = (param == "PRICE" || param == "SURFACE" || param == "ROOMS") ? Type::type::NUMBER : Type::type::STRING;
+      expressionValue[paramvalue] = exprValue;
+   }
    ValueType BuildValueType(const std::string& fieldName, const std::string& fieldValue)
    {
       ValueType fieldNameValue;
@@ -91,7 +109,7 @@ namespace surfyn
       return fieldNameValue;
    }
 
-   void readTable(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tableName, std::unordered_map<int64_t, classifier::RealEstateAd>& announcesByID)
+   void readTable(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tableName, std::unordered_map<int64_t, classifier::RealEstateAd*>& announcesByID)
    {
       std::map<std::string, ValueType> attributestoget;
 
@@ -99,27 +117,48 @@ namespace surfyn
       value.field = "";
       value.fieldtype = Type::type::NUMBER;
       attributestoget[ID] = value;
+      attributestoget[RealEstatePrice] = value;
+      attributestoget[RealEstateSurface] = value;
+      attributestoget[RealEstateRooms] = value;
+
+
 
       value.fieldtype = Type::type::STRING;
 
-      attributestoget[ANNOUNCE_LINK] = value;
-      attributestoget[ANNOUNCE_SOURCE] = value;
-      attributestoget[ANNOUNCE_TITLE] = value;
+      ///attributestoget[ANNOUNCE_LINK] = value;
+      //attributestoget[ANNOUNCE_SOURCE] = value;
+      //attributestoget[ANNOUNCE_TITLE] = value;
       attributestoget[CITY] = value;
-      attributestoget[PROPERTY_DESCRIPTION] = value;
+      //attributestoget[PROPERTY_DESCRIPTION] = value;
       attributestoget[PROPERTY_TYPE] = value;
-      attributestoget[REGION] = value;
-      attributestoget[SEARCH_TYPE] = value;
-      attributestoget[TIMESTAMP] = value;
-      attributestoget[SIMILAR_ANNOUNCE] = value;
-      attributestoget[ANNOUNCE_IMAGE] = value;
-      attributestoget[IMAGE_COUNT] = value;
+      //attributestoget[REGION] = value;
+      //attributestoget[SEARCH_TYPE] = value;
+      //attributestoget[TIMESTAMP] = value;
+
+      attributestoget[RealEstateDuplicates] = value;
+      attributestoget[RealEstateAnnounceSource] = value;
+      attributestoget[RealEstateSources] = value;
+
 
       bool scanend = false;
       do
       {
          ScanReqResult scanReturn;
-         client->scan(scanReturn, tableName, attributestoget, "", std::map<std::string, ValueType>());
+         std::stringstream filterExpression;
+         std::map<std::string, ValueType> expressionValue;
+         fillFilterExprAndExprValue(filterExpression, expressionValue, "CITY", exprval_city, "nanterre", "=");
+         filterExpression << " and ";
+         filterExpression << "PROPERTY_TYPE";
+         filterExpression << " in (";
+         std::string expr = ":pyAppartement";
+         filterExpression << expr;
+         filterExpression << ")";
+
+         ValueType exprValue;
+         exprValue.field = "Appartement";
+         exprValue.fieldtype = Type::type::STRING;
+         expressionValue[expr] = exprValue;
+         client->scan(scanReturn, tableName, attributestoget, filterExpression.str(), expressionValue);
 
          std::stringstream logstream;
          logstream << "dyndb_copy: " << scanReturn.values.size() << " elements scan\n";
@@ -131,23 +170,44 @@ namespace surfyn
          {
             int64_t id = atol((*iter)[RealEstateKey].c_str());
 
-            classifier::RealEstateAd realEstate(id);
+            classifier::RealEstateAd* realEstate = new classifier::RealEstateAd(id);
 
 
             std::map<std::string, std::string>::const_iterator it_field;
-            if ((it_field = iter->find(ANNOUNCE_LINK)) != iter->end())
-            {
-               realEstate.setDescription(ANNOUNCE_LINK, it_field->second);
-            }
+
             if ((it_field = iter->find(RealEstateCity)) != iter->end())
             {
-               realEstate.setDescription(RealEstateCity, it_field->second);
+               realEstate->setDescription(RealEstateCity, it_field->second);
             }
             if ((it_field = iter->find(RealEstateType)) != iter->end())
             {
-               realEstate.setDescription(RealEstateType, it_field->second);
+               realEstate->setDescription(RealEstateType, it_field->second);
             }
-            if ((it_field = iter->find(RealEstateSearchType)) != iter->end())
+            if ((it_field = iter->find(RealEstatePrice)) != iter->end())
+            {
+               realEstate->setDescription(RealEstatePrice, it_field->second);
+            }
+            if ((it_field = iter->find(RealEstateRooms)) != iter->end())
+            {
+               realEstate->setDescription(RealEstateRooms, it_field->second);
+            }
+            if ((it_field = iter->find(RealEstateSurface)) != iter->end())
+            {
+               realEstate->setDescription(RealEstateSurface, it_field->second);
+            }
+            if ((it_field = iter->find(RealEstateDuplicates)) != iter->end())
+            {
+               realEstate->setDescription(RealEstateDuplicates, it_field->second);
+            }
+            if ((it_field = iter->find(RealEstateAnnounceSource)) != iter->end())
+            {
+               realEstate->setDescription(RealEstateAnnounceSource, it_field->second);
+            }
+            if ((it_field = iter->find(RealEstateSources)) != iter->end())
+            {
+               realEstate->setDescription(RealEstateSources, it_field->second);
+            }
+            /*if ((it_field = iter->find(RealEstateSearchType)) != iter->end())
             {
                realEstate.setDescription(RealEstateSearchType, it_field->second);
             }
@@ -190,7 +250,7 @@ namespace surfyn
 
                realEstate.setDescription(IMAGE_COUNT, it_field->second);
 
-            }
+            }*/
 
             announcesByID[id] = realEstate;
          }
@@ -199,7 +259,7 @@ namespace surfyn
 
    }
 
-   void putTable(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tableName, const std::unordered_map<int64_t, classifier::RealEstateAd>& announcesByID)
+   void putTable(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tableName, const std::unordered_map<int64_t, classifier::RealEstateAd*>& announcesByID)
    {
       for (auto it = announcesByID.begin(); it != announcesByID.end(); ++it)
       {
@@ -210,7 +270,7 @@ namespace surfyn
          IDValue.fieldtype = Type::type::NUMBER;
          valuesToPut[ID] = IDValue;
 
-         const auto& descriptions = it->second.GetAllDescriptions();
+         const auto& descriptions = it->second->GetAllDescriptions();
          for (auto iter = descriptions.begin(); iter != descriptions.end(); ++iter)
          {
             const std::string& fieldName = iter->first;
@@ -240,7 +300,7 @@ namespace surfyn
 
 int main(int argc, char* argv[])
 {
-   std::unordered_map<int64_t, surfyn::classifier::RealEstateAd> announces;
+   std::unordered_map<int64_t, surfyn::classifier::RealEstateAd*> announces;
 
    Log::Init("dyndb_copy");
    Log::getInstance()->info("Starting dyndb_copy ...");
@@ -250,7 +310,7 @@ int main(int argc, char* argv[])
    auto client = std::make_shared<dynamodb_accessClient>(protocol);
 
    transport->open();
-   std::string table_to_copy = "FR_PROPERTIES";
+   std::string table_to_copy = "FR_SUMMARY";
 
    if(argc == 2)
    {
@@ -276,5 +336,11 @@ int main(int argc, char* argv[])
    }
    surfyn::putTable(client, new_table, announces);
    Log::getInstance()->info("Table " + table_to_copy + " successfully copy to " + new_table);
+   for(auto iter = announces.begin(); iter != announces.end(); ++iter)
+   {
+      delete iter->second;
+      iter->second = nullptr;
+   }
+   announces.clear();
    return 0;
 }
