@@ -410,7 +410,7 @@ function submit_request(event)
 
   if( checkCity() == false )
   {
-    validate.href = "#"
+    validate.href = "javascript:void(0)";
     return ;
   }
   // construct base url
@@ -478,7 +478,7 @@ function submit_request(event)
     propTypeErrorMsg.innerHTML = "* Vous devez indiquer au moins un type de bien";
     propTypeErrorMsg.style.color = "red";
     propTypeErrorMsg.style.fontSize = "12px";
-    validate.href = "#";
+    validate.href = "javascript:void(0)";
     return;
   }
   url_params+="&area_min=";

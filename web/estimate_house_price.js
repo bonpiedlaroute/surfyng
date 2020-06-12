@@ -275,7 +275,7 @@ function checkArea()
     areaErrorMsg.innerHTML = "* Vous devez renseigner au moins une surface";
     areaErrorMsg.style.color = "red";
     areaErrorMsg.style.fontSize = "12px";
-    validate.href = "#";
+    validate.href = "javascript:void(0)";
     return false;
   }
   else {
@@ -319,7 +319,7 @@ function completenexturl()
       propTypeErrorMsg.innerHTML = "* Vous devez indiquer au moins un type de bien";
       propTypeErrorMsg.style.color = "red";
       propTypeErrorMsg.style.fontSize = "12px";
-      validate.href = "#";
+      validate.href = "javascript:void(0)";
       return;
     }
   }
@@ -347,7 +347,7 @@ function completenexturl()
       roomsErrorMsg.innerHTML = "* Vous devez indiquer le nombre de pièces de votre bien";
       roomsErrorMsg.style.color = "red";
       roomsErrorMsg.style.fontSize = "12px";
-      validate.href = "#";
+      validate.href = "javascript:void(0)";
       return;
   }
 
@@ -425,7 +425,7 @@ function gotonextpage(event)
       msg_type.innerHTML = ""
       feedback_msg.innerHTML = " Désolé, nous ne retrouvons pas votre adresse";
       feedback_msg.style.color ="red";
-      validate.href = "#";
+      validate.href = "javascript:void(0)";
       return ;
     }
 
@@ -433,7 +433,7 @@ function gotonextpage(event)
   .catch(function(error) {
     error_msg.innerHTML = "Désolé, certains services ne sont pas démarrés";
     console.log(error);
-    validate.href = "#";
+    validate.href = "javascript:void(0)";
     return ;
   });
 }
