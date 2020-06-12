@@ -37,7 +37,7 @@ if( searchType == "1")
   valuePriceMax.innerHTML = "4000 K€";
   if( pathname.length > 1 && pathname[1] == "recherche")
   {
-    document.title = "Votre projet d'achat immobilier";
+    document.title = "Votre projet d'achat immobilier - Surfyn";
     search_criteria_title.innerHTML += " d'achat immobilier";
     document.getElementsByTagName('meta')["description"].content = "Décrivez nous votre projet d'achat immobilier";
   }
@@ -49,7 +49,7 @@ else {
   valuePriceMax.innerHTML = "4000 €";
   if( pathname.length > 1 && pathname[1] == "recherche")
   {
-    document.title = "Votre projet de location immobilière";
+    document.title = "Votre projet de location immobilière - Surfyn";
     search_criteria_title.innerHTML += " de location immobilière";
     document.getElementsByTagName('meta')["description"].content = "Décrivez nous votre projet de location immobilière";
   }
@@ -414,7 +414,7 @@ function submit_request(event)
     return ;
   }
   // construct base url
-  var url_base = "/liste_annonces/";
+  var url_base = "/liste-annonces/";
   url_params = "";
   var alreadyAddedAProperty = false;
   if( searchType == "1") {

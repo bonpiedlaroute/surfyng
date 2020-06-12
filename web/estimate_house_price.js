@@ -358,7 +358,7 @@ function completenexturl()
 function gotonextpage(event)
 {
 
-  next_url = "estimation_immobiliere_detaille.html";
+  next_url = "estimation-bien-immobilier-details.html";
 
   /* check if it is a valid address and populate gps coordinates */
   // we first check that we handle this city

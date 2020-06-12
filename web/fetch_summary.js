@@ -144,7 +144,7 @@ function generate_summary_page(data)
 {
   const Params = new URLSearchParams(window.location.search);
   const searchType = Params.get('search_type');
-  var pagetitle = searchType == 1 ? "Vente ": "Location ";
+  var pagetitle = "";
   var propertyType_param = Params.get('prop_type');
   var split_propertyType = propertyType_param.split(",");
   var first_proptype = true;
@@ -155,16 +155,18 @@ function generate_summary_page(data)
   if (split_propertyType.indexOf("1") !== -1 || split_propertyType.indexOf("3") !== -1)
   {
     if(!first_proptype)
-      title += ", ";
+      pagetitle += ", ";
       else {
         first_proptype = false;
       }
     propertyType = "appartements";
-    meta_description += " d' "
+    meta_description += " d'";
+    pagetitle += "Appartement"
   }
   else {
     meta_description += " de "
   }
+
   if (split_propertyType.indexOf("2") !== -1 || split_propertyType.indexOf("4") !== -1)
   {
     if(!first_proptype)
@@ -173,29 +175,39 @@ function generate_summary_page(data)
         first_proptype = false;
       }
     propertyType += "maisons";
+    pagetitle += "Maison"
   }
-  title += propertyType;
+  meta_description+= propertyType;
   var rooms_text = "";
   var rooms = Params.get('rooms');
   if(rooms) {
-    title += " ";
+    pagetitle += " ";
     if( rooms == "1") {
-      title += "studios";
+      pagetitle += "studio";
       rooms_text = " studios";
     }else {
-        title += rooms;
-        title += " pieces"
+        pagetitle += rooms;
+        pagetitle += " pièces"
         rooms_text = " " + rooms;
         rooms_text += " pièces";
     }
+    meta_description+= rooms_text;
 
   }
-  title += " à ";
+  pagetitle += " à ";
+  meta_description += " à ";
+  pagetitle += searchType == 1 ? "vendre ": "louer ";
+  meta_description += searchType == 1 ? "vendre ": "louer ";
+  meta_description += " à ";
+
   var search_city = Params.get('search_city');
-  title += search_city;
-  pagetitle += title;
+  pagetitle += search_city;
+  meta_description += search_city;
+  pagetitle += " - Surfyn";
+  meta_description += ". Les annonces immobilières correspondant au même bien sont regroupées - Surfyn"
+
   document.title = pagetitle;
-  meta_description += title;
+
   document.getElementsByTagName('meta')["description"].content = meta_description;
 
 
@@ -233,6 +245,25 @@ function generate_summary_page(data)
 
              var ad_image = createNode("img");
              ad_image.src = data[i].hasOwnProperty('IMAGE')? data[i].IMAGE: "logo.svg";
+             /* filling alt attribute */
+             var alt = "";
+             alt += data[i].PROPERTY_TYPE + " a ";
+             alt += searchType == 1 ? "vendre " : "louer ";
+             alt += data[i].CITY ;
+             if(data[i].hasOwnProperty('ROOMS'))
+             {
+               alt += " - " + data[i].ROOMS;
+               alt += " pièce(s)";
+             }
+
+             if(data[i].hasOwnProperty('SURFACE'))
+             {
+               alt += " - " + data[i].SURFACE;
+               alt += " m2";
+             }
+             alt += " - Surfyn";
+             ad_image.alt = alt;
+             /*end filling alt attribute */
              ad_image.className = "announce_image";
 
              ad_image_container_div.appendChild(ad_image);
@@ -243,23 +274,23 @@ function generate_summary_page(data)
              var ad_summary_desc_div1 = createNode("div");
              ad_summary_desc_div1.className = "announce_summary_desc";
 
-             var ad_summary_details_p = createNode("p");
-             ad_summary_details_p.className = "announce_summary_details";
-             ad_summary_details_p.innerHTML = data[i].PROPERTY_TYPE;
-             ad_summary_details_p.innerHTML += "<br/>";
+             var ad_summary_details_h2 = createNode("h2");
+             ad_summary_details_h2.className = "announce_summary_details";
+             ad_summary_details_h2.innerHTML = data[i].PROPERTY_TYPE;
+             ad_summary_details_h2.innerHTML += "<br/>";
 
              url_path += data[i].PROPERTY_TYPE.toLowerCase();
              if(data[i].hasOwnProperty('SURFACE'))
              {
-               ad_summary_details_p.innerHTML += data[i].SURFACE;
-               ad_summary_details_p.innerHTML += " m<sup>2";
+               ad_summary_details_h2.innerHTML += data[i].SURFACE;
+               ad_summary_details_h2.innerHTML += " m<sup>2";
              }
 
              if(data[i].hasOwnProperty('ROOMS'))
              {
-               ad_summary_details_p.innerHTML += " - ";
-               ad_summary_details_p.innerHTML += data[i].ROOMS;
-               ad_summary_details_p.innerHTML += " pièce(s)";
+               ad_summary_details_h2.innerHTML += " - ";
+               ad_summary_details_h2.innerHTML += data[i].ROOMS;
+               ad_summary_details_h2.innerHTML += " pièce(s)";
 
                if(data[i].ROOMS == "1")
                url_path += "-studios/";
@@ -268,7 +299,7 @@ function generate_summary_page(data)
                }
              }
 
-             ad_summary_desc_div1.appendChild(ad_summary_details_p);
+             ad_summary_desc_div1.appendChild(ad_summary_details_h2);
 
              //var ad_summary_refresh_time_p = createNode("p");
              //ad_summary_refresh_time_p.className = "announce_summary_refresh_time";
@@ -288,15 +319,14 @@ function generate_summary_page(data)
 
             var ad_summary_city_p = createNode("p");
             ad_summary_city_p.className = "announce_summary_city";
-            ad_summary_city_p.innerHTML = data[i].CITY;
+            ad_summary_city_p.innerHTML = "<strong>" + data[i].CITY[0].toUpperCase() + data[i].CITY.slice(1) + "</strong>";
             ad_summary_desc_div2.appendChild(ad_summary_city_p);
             url_path += data[i].CITY;
 
             var ad_price_p = createNode("p");
             ad_price_p.style.float = "right";
             ad_price_p.style.color = "#4c94bc";
-            ad_price_p.innerHTML = formatPrice(String(data[i].PRICE));
-            ad_price_p.innerHTML += " €";
+            ad_price_p.innerHTML = "<strong>" + formatPrice(String(data[i].PRICE)) + " €" + "</strong>";
             ad_summary_desc_div2.appendChild(ad_price_p);
 
             ad_summary_container_div.appendChild(ad_summary_desc_div2);

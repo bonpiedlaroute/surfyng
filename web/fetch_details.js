@@ -95,6 +95,24 @@ function generate_details_page(data)
       var det_ad_img = createNode("img");
       det_ad_img.className = "det_ad_image";
       det_ad_img.src = data[i].hasOwnProperty('IMAGE')? data[i].IMAGE: "logo.svg";
+      /* filling alt attribute */
+      var alt = "";
+      alt += data[i].PROPERTY_TYPE + " a ";
+      alt += data[i].SEARCH_TYPE == "For sale"? "vendre ":"louer ";
+      alt += data[i].CITY ;
+      if(data[i].hasOwnProperty('ROOMS'))
+      {
+        alt += " - " + data[i].ROOMS;
+        alt += " pièce(s)";
+      }
+      if(data[i].hasOwnProperty('SURFACE'))
+      {
+        alt += " - " + data[i].SURFACE;
+        alt += " m2";
+      }
+      alt += " - Surfyn";
+      det_ad_img.alt = alt;
+      /*end filling alt attribute */
       det_ad_image_frame_div.appendChild(det_ad_img);
 
       var det_icon_div = createNode("div");
@@ -615,6 +633,7 @@ function generate_details_page(data)
       var det_img_logo = createNode("img");
       det_img_logo.className = "det_ad_logo";
       det_img_logo.src = data[i].SOURCE_LOGO;
+      det_img_logo.alt = "origine de l'annonce immobiliere";
 
       det_ad_logo_frame_div.appendChild(det_img_logo);
       det_ad_logo_container_div.appendChild(det_ad_logo_frame_div);
@@ -650,22 +669,22 @@ function generate_details_page(data)
     nb_similar.innerHTML += " pièce(s) à ";
 
     var pagetitle = "";
-    if(data[0].hasOwnProperty('SEARCH_TYPE'))
-    {
-      pagetitle += data[0].SEARCH_TYPE == "For sale"? "Vente ":"Location ";
-    }
 
     if( data[0].hasOwnProperty('PROPERTY_TYPE'))
-    pagetitle += data[0].PROPERTY_TYPE == "Appartement"? " appartement ":" maison ";
+    pagetitle += data[0].PROPERTY_TYPE == "Appartement"? "Appartement ":"Maison ";
     pagetitle += nb_room;
     pagetitle += " pièce(s) à ";
-
+    if(data[0].hasOwnProperty('SEARCH_TYPE'))
+    {
+      pagetitle += data[0].SEARCH_TYPE == "For sale"? "vendre ":"louer ";
+    }
     if( data[0].hasOwnProperty('CITY'))
     {
       var cityname = data[0].CITY[0].toUpperCase() + data[0].CITY.slice(1);
       nb_similar.innerHTML += cityname;
       pagetitle += cityname;
     }
+    pagetitle += " - Surfyn"
 
     document.title = pagetitle;
     document.getElementsByTagName('meta')["description"].content = pagetitle;
