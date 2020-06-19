@@ -84,7 +84,7 @@ class StephanePlazaImoSpider(scrapy.Spider):
             print (ret)
             self.announces_cnt += 1
          else:
-            self.updateTimeStamp(ID)
+            self.serializer.updateTimeStamp(ID)
 
 
                
