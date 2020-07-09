@@ -24,7 +24,7 @@ config_leboncoin.read('spiders/config.ini')
 ip = config_leboncoin['COMMON']['db_access_ip']
 port = int(config_leboncoin['COMMON']['db_access_port'])
 tablename = config_leboncoin['COMMON']['tablename']
-max_pages = int(config_leboncoin['COMMON']['max_pages'])
+max_pages = int(config_leboncoin['LEBONCOIN']['max_pages'])
 
 class LeboncoinSpider(scrapy.Spider):
    
