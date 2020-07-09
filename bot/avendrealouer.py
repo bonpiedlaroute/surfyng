@@ -38,15 +38,6 @@ class AvendreAlouerSpider(scrapy.Spider):
       self.city = city
       self.images_folder_name=config_avendrealouer[city.upper()]['images']
       self.region = config_avendrealouer[city.upper()]['region']
-      self.mapping = dict()
-      self.mapping['Surface: '] = "SURFACE"
-      self.mapping['Piece(s): '] = "ROOMS"
-      self.mapping['etage du bien: '] = "FLOOR"
-      self.mapping['Chauffage: '] = "TYPE_OF_HEATING"
-      self.mapping['Construit en: '] = "CONSTRUCTION_YEAR"
-      self.mapping['Parking: '] = "PARKING"
-      self.mapping['Ascenseur'] = "LIFT"
-      self.mapping['Cave'] = "CELLAR"
       
       if not os.path.exists(self.images_folder_name):
          os.mkdir(self.images_folder_name)
@@ -98,57 +89,83 @@ class AvendreAlouerSpider(scrapy.Spider):
       data = dict()
  
       #price
-      price = response.xpath('//div[@class="page-wrapper"]/div/div/div[@class="price"]/div/span/text()').extract()
+      price = response.xpath(u'//div/div[@id="debutBlocDetail"]/main/div/div/div[@class="Criteria__DivStyledValue-sc-1ftsbop-3 eZqQiC"]/text()').extract()
       if price:
          px = price[0].encode('ascii', 'ignore')
-
-      data['PRICE'] = px
+         data['PRICE'] = px
+      else:
+         print("Skipping announce [" + url + "] => no price found")
+         return
       
       #announce details
-      details = response.xpath('//div[@class="page-wrapper"]/div[@class="main-pane"]/div/div/div[@class="property-description"]/div[@class="property-description-characteristics"]/table/tr/td/span/text()').extract() 
-      
-      heating = ""
-      for i in range(len(details)):
-         value = remove_accent(details[i])
-         if value == "Surface: ":
-            raw_area = details[i+1]
-            pos = raw_area.find(' ')
-            area = raw_area[:pos]
-            data[self.mapping[value]] = area
-         if value == "Piece(s): ":
-            data[self.mapping[value]] = details[i+1]
-         if value == "etage du bien: ":
-            raw_floor = details[i+1]
-            pos = raw_floor.find('/')
-            floor = raw_floor[:pos]
-            data[self.mapping[value]] = floor
-         if value == "Chauffage: ":
-            heating += details[i+1]
-            heating += " "
+      surface = response.xpath('//div/div[@id="debutBlocDetail"]/main/div/div/div/div[@class="CriteriaCriterion__DivStyledInformation-sc-16o7bzc-2 gORa-dQ"]/p[text()="Surface"]/span/text()').extract()
 
-         if value == "Construit en: ":
-            data[self.mapping[value]] = details[i+1]
-         if value == "Parking: ":
-            data[self.mapping[value]] = details[i+1]
-         if value == "Ascenseur":
-            data[self.mapping[value]] = "oui"
-         if value == "Cave":
-            data[self.mapping[value]] = "1"
+      if surface:
+         pos = surface[0].find(' ')
+         data['SURFACE'] = surface[0][:pos]
+      else:
+         print("Skipping announce [" + url + "] => no surface found")
+         return
+
+
+      rooms = response.xpath(u'//div/div[@id="debutBlocDetail"]/main/div/div/div/div[@class="CriteriaCriterion__DivStyledInformation-sc-16o7bzc-2 gORa-dQ"]/p[text()="Pi\xe8ces" or text()="Pi\xe8ce"]/span/text()').extract()
+
+      if rooms:   
+         data['ROOMS'] = rooms[0]
+      else:
+         print("Skipping announce [" + url + "] => no rooms found")
+         return
+
+      year = response.xpath(u'//div/div[@id="debutBlocDetail"]/main/div/div/div/div[@class="CriteriaCriterion__DivStyledInformation-sc-16o7bzc-2 gORa-dQ"]/p[text()="Construction"]/span/text()').extract()
+
+      if year:
+         data['CONSTRUCTION_YEAR'] = year[0]
+
+      floor = response.xpath(u'//div/div[@id="debutBlocDetail"]/main/div/div/div/div[@class="CriteriaCriterion__DivStyledInformation-sc-16o7bzc-2 gORa-dQ"]/p[text()="\xc9tage "]/span/text()').extract()
+
+      if floor:
+         data['FLOOR'] = floor[0]
+
+      parking = response.xpath(u'//div/div[@id="debutBlocDetail"]/main/div[@id="blocProfessional"]/div/ul[@class="Professional__UlStyled-sc-133x9p4-6 gINLoU"]/li[text()="Parking"]/text()').extract()
+
+      if "Parking" in parking:
+         data['PARKING'] = '1'
+         
+      lift = response.xpath(u'//div/div[@id="debutBlocDetail"]/main/div[@id="blocProfessional"]/div/ul[@class="Professional__UlStyled-sc-133x9p4-6 gINLoU"]/li[text()="Ascenseur"]/text()').extract()
+
+      if lift:
+         data['LIFT'] = '1'
+
+      heating = ""
+      first_part_heating = response.xpath(u'//div/div[@id="debutBlocDetail"]/main/div[@id="blocProfessional"]/div/ul[@class="Professional__UlStyled-sc-133x9p4-6 gINLoU"]/li[text()="Nature chauffage"]/text()').extract()
+
+      if first_part_heating:
+         heating += first_part_heating[2][3:]
+
+      second_part_heating = response.xpath(u'//div/div[@id="debutBlocDetail"]/main/div[@id="blocProfessional"]/div/ul[@class="Professional__UlStyled-sc-133x9p4-6 gINLoU"]/li[text()="Type chauffage"]/text()').extract()
+
+      if second_part_heating:
+         heating += " "
+         heating += second_part_heating[2][3:]
 
       if heating:
-         real_heating = "Chauffage " + heating[:-1]
-         data["TYPE_OF_HEATING"] = real_heating
- 
+         data['TYPE_OF_HEATING'] = heating
+
+      cellar = response.xpath(u'//div/div[@id="debutBlocDetail"]/main/div[@id="blocProfessional"]/div/ul[@class="Professional__UlStyled-sc-133x9p4-6 gINLoU"]/li[text()="Cave"]/text()').extract()
+
+      if "Cave" in cellar:
+         data['CELLAR'] = '1'
+     
+       
       # get images
-      images = response.xpath('//div[@class="page-wrapper"]/div[@class="main-pane"]/div[@class="tabPanel"]/div[@id="property-tab-content"]/div/div[@id="bxSliderContainer"]/ul/li/img/@src').extract()
+      images = response.xpath('//div/div/div[@class="SliderImages__DivStyledContainer-sc-18z29ar-0 enZetH"]/div/div/div/div[contains(@class, "slick-slide")]/div/div/img/@src').extract()
       image_count = 1
       img_cnt = 0
       for img in images:
-         if 'avendrealouer' in img:
-            image_name = os.path.join(self.images_folder_name, str(ID) + '_' + str(image_count) + '.jpg')
-            urllib.urlretrieve(img, image_name)
-            image_count = image_count + 1
-            img_cnt += 1
+         image_name = os.path.join(self.images_folder_name, str(ID) + '_' + str(image_count) + '.jpg')
+         urllib.urlretrieve(img, image_name)
+         image_count = image_count + 1
+         img_cnt += 1
 
       # prepare data and send it!
 
