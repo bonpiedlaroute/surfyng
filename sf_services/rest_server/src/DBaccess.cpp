@@ -531,7 +531,12 @@ std::string searchTypeValue = "";
 
       m_client->get(_return, details_table,key , attributestoget);
 
-
+      // if we have nothing, directly return empty list
+      if(_return.values.empty())
+      {
+         sstream << U("[]");
+         return;
+      }
       std::map<std::string, std::string>::iterator iter_duplicate_ad = _return.values.end();
       sstream << U("[\n");
       sstream << U("{\n");
