@@ -685,5 +685,10 @@ function generate_details_page(data)
 
     document.title = pagetitle;
     document.getElementsByTagName('meta')["description"].content = pagetitle;
+
+    var facebook_icon = document.getElementById("facebook-icon");
+    facebook_icon.style.color = "white";
+    var twitter_icon = document.getElementById("twitter-icon");
+    twitter_icon.style.color = "white";
   }
 }
