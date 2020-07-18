@@ -226,6 +226,7 @@ function generate_summary_page(data)
         announces_found.innerHTML += propertyType + rooms_text + " à ";
         announces_found.innerHTML += searchType == 1 ? "vendre à " : "louer à ";
         announces_found.innerHTML += search_city;
+        var main_content = document.getElementById("main-content");
         for(var i = 0; i < data.length; i++)
         {
              var ad_link = createNode("a");
@@ -418,13 +419,12 @@ function generate_summary_page(data)
 
             ad_link.appendChild(ad_div);
 
-            document.body.appendChild(ad_link);
-            if( i != data.length - 1)
-            {
-              var line_div = createNode("div");
-              line_div.className = "sf_line_results row mx-auto";
-              document.body.appendChild(line_div);
-            }
+            main_content.appendChild(ad_link);
+
+            var line_div = createNode("div");
+            line_div.className = "sf_line_results row mx-auto";
+            main_content.appendChild(line_div);
+
         }
   }
 }

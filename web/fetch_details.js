@@ -50,17 +50,12 @@ function loadJSON(path, success, error) {
 
 function generate_details_page(data)
 {
-  if(data.length == 0)
+  if(data.length == 0 )
   {
+    document.title = "Annonce introuvable - Surfyn";
+    document.getElementsByTagName('meta')["description"].content = "Cette annonce n'est plus disponible";
     var announces_found = document.getElementById("nb_announces_found");
-    announces_found.innerHTML = " Nous avons trouvé pour vous aucune announce ";
-
-    var text = createNode("p");
-
-    text.innerHTML = " Aucune annonce ne correspond à vos critères ";
-
-    document.body.appendChild(text);
-
+    announces_found.innerHTML = "Cette annonce n'est plus disponible";
   }
   else
   {
@@ -68,6 +63,7 @@ function generate_details_page(data)
 
     var ismobile   = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
     var det_container_div;
+    var main_content = document.getElementById("main-content");
     for(var i = 0; i < data.length; i++)
     {
       if(i%2 == 0 )
@@ -364,7 +360,8 @@ function generate_details_page(data)
 
         if(data[i].hasOwnProperty('ROOMS'))
         det_nb_rooms_span.innerHTML = String(data[i].ROOMS);
-        nb_room = det_nb_rooms_span.innerHTML;
+        if(nb_room.length === 0 )
+          nb_room = det_nb_rooms_span.innerHTML;
         det_nb_rooms_span.innerHTML += " pièce(s)";
 
         det_nb_rooms_span_div.appendChild(det_nb_rooms_span);
@@ -644,7 +641,7 @@ function generate_details_page(data)
 
       det_container_div.appendChild(det_ad_container_div);
       if(i%2 == 0 || i == (data.length - 1) )
-      document.body.appendChild(det_container_div);
+      main_content.appendChild(det_container_div);
     } //end of for loop
 
     var nb_similar = document.getElementById("nb_announces_found");
