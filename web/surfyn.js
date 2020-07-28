@@ -218,7 +218,6 @@ function handleEvtMove(event) {
             valuePriceMax.innerHTML = newPriceMax + " €";
           }
 
-
         }
         else {
           if (isDown[inputType.areaMin]) {
@@ -512,6 +511,26 @@ function submit_request(event)
 if( validate)
 validate.onclick=submit_request;
 
+function hide_cross_icon(event)
+{
+  var input_city = document.getElementById('search_city');
+  var cross_icon = document.getElementById('cross_icon');
+   if( input_city.value == '' )
+   {
+     cross_icon.style.display = "none";
+   }
+   else {
+     cross_icon.style.display = "inline";
+   }
+
+}
+
+var input_city = document.getElementById('search_city');
+
+if(input_city)
+{
+  input_city.oninput=hide_cross_icon
+}
 
 
 function checkCity()

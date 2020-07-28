@@ -64,6 +64,8 @@
         <div class="sf_search_block mx-auto d-block">
          <div class="sf_input_block">
            <div class="autocomplete" style="width:100%;">
+             <i class="fas fa-times" style="position:absolute;margin:10px 10px 10px 230px;display:none;"
+             onclick="document.getElementById('search_city').value = '';document.getElementById('cross_icon').style.display = 'none';" id="cross_icon"></i>
            <i class="fa fa-search sf_search_icon"></i>
            <input class="form-control" type="search" placeholder="Ville"
            name="city" style ="padding-left:30px; width:250px;" id ="search_city" >
@@ -215,6 +217,9 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+
   </body>
 </html>
