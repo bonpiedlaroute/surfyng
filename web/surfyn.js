@@ -10,6 +10,11 @@ var valuePriceMax = document.getElementById("value_price_max");
 var valueAreaMin = document.getElementById("value_area_min");
 var valueAreaMax = document.getElementById("value_area_max");
 
+var unsetPriceLeftZone = document.getElementById("unset_price_left_zone");
+var unsetPriceRightZone = document.getElementById("unset_price_right_zone");
+var unsetAreaLeftZone = document.getElementById("unset_area_left_zone");
+var unsetAreaRightZone = document.getElementById("unset_area_right_zone");
+
 var mobile   = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
 var eventdown = mobile ? "touchstart" : "mousedown";
 var eventmove = mobile ? "touchmove" : "mousemove";
@@ -166,6 +171,8 @@ function handleEvtMove(event) {
         lastPosition[inputType.priceMin] = newValue;
 
         inputPriceMin.style.left = newValue + 'px';
+        var unsetpriceleftwidth = newValue - startPosition[inputType.priceMin];
+        unsetPriceLeftZone.style.width = unsetpriceleftwidth + 'px';
 
         var newPriceMin = computeValue(newValue, inputType.priceMin, inputType.priceMax);
 
@@ -204,6 +211,8 @@ function handleEvtMove(event) {
           }
           lastPosition[inputType.priceMax] = newValue;
           inputPriceMax.style.left = newValue + 'px';
+          var unsetpricerightwidth = startPosition[inputType.priceMax] - newValue + 3;
+          unsetPriceRightZone.style.width = unsetpricerightwidth + 'px';
 
           var newPriceMax = computeValue(newValue, inputType.priceMin, inputType.priceMax);
 
@@ -252,6 +261,9 @@ function handleEvtMove(event) {
 
               valueAreaMin.innerHTML = newAreaMin + " m<sup>2";
 
+              var unsetarealeftwidth = newValue - startPosition[inputType.areaMin];
+              unsetAreaLeftZone.style.width = unsetarealeftwidth + 'px';
+
             }
             else if (isDown[inputType.areaMax]) {
 
@@ -280,6 +292,9 @@ function handleEvtMove(event) {
 
 
                 valueAreaMax.innerHTML = newAreaMax + " m<sup>2";
+
+                var unsetarearightwidth = startPosition[inputType.areaMax] - newValue + 3;
+                unsetAreaRightZone.style.width = unsetarearightwidth + 'px';
 
               }
         }
