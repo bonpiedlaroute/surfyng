@@ -518,6 +518,8 @@ function submit_request(event)
       url_base += "/";
   }
   url_base += city.value.toLowerCase();
+  url_base += "-" ;
+  url_base += getPostalCode(city.value.toLowerCase());
   var url = url_base + url_params;
   console.log(url);
   validate.href = url;

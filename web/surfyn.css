@@ -300,12 +300,18 @@ a:hover{ text-decoration: none; }
   font-size:20px;
 }
 /* results page styles */
+.announce_link
+{
+  display:block;
+  width:45%;
+  margin:auto;
+}
 .announce_frame
 {
   height: 200px;
   border: 3px solid white;
   border-radius: 10px;
-  width: 45%;
+  width: 100%;
   background-color: white;
   box-shadow: 2px 2px #aaa;
 }
@@ -374,11 +380,15 @@ width:100%;
 }
 .announce_summary_city
 {
-  margin-left:10px;
+  margin: 0 0 0 10px;
   float:left;
   color:#4c94bc;
 }
-
+.announce_summary_city_container
+{
+  height:30px;
+  width:100%;
+}
 .announce_source_logo
 {
   border-radius:90%;
@@ -726,8 +736,7 @@ margin-left:10%;
 }
 .parameter_content a:hover
 {
-  /*background-color: #ddd;*/
-  background-color: #bfe5f5;
+  background-color:rgb(245, 247, 250);
 }
 
 .show_parameter_content
@@ -854,7 +863,12 @@ margin-left:10%;
   {
     width: 20%;
   }
-
+  .announce_link
+  {
+    display:block;
+    width:100%;
+    margin:auto;
+  }
   .announce_frame
   {
     height: 160px;
@@ -920,9 +934,14 @@ margin-left:10%;
   {
     height:50px;
     width:100%;
-    padding-top:10px;
+    padding-top:0px;
   }
 
+  .announce_summary_city_container
+  {
+    height:25px;
+    width:100%;
+  }
   .announce_summary_icon
   {
     font-size: 20px;
