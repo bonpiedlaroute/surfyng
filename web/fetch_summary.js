@@ -333,7 +333,7 @@ function generate_summary_page(data)
             ad_summary_city_p.innerHTML = "<strong>" + data[i].CITY[0].toUpperCase() + data[i].CITY.slice(1) + "</strong>";
             ad_summary_city_container_div.appendChild(ad_summary_city_p);
             url_path += data[i].CITY;
-
+            url_path += "-" + getPostalCode(data[i].CITY);
             var ad_price_p = createNode("p");
             ad_price_p.style.float = "right";
             ad_price_p.style.color = "#4c94bc";

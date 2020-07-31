@@ -679,7 +679,9 @@ function generate_details_page(data)
     {
       var cityname = data[0].CITY[0].toUpperCase() + data[0].CITY.slice(1);
       nb_similar.innerHTML += cityname;
+      nb_similar.innerHTML += " (" + getPostalCode(cityname) + ")";
       pagetitle += cityname;
+      pagetitle += " (" + getPostalCode(cityname) + ")";
     }
     pagetitle += " - Surfyn"
 
