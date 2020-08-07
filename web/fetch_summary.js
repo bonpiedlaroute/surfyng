@@ -74,10 +74,76 @@ function loadJSON(path, success, error) {
   ProcessorBySource.set("avendrealouer", function(param) { SrcProcessor(param, "#27CCC3", "AvdreAlou"); });
   ProcessorBySource.set("nestenn", function(param) { SrcProcessor(param, "#27CCC3", "nestenn"); });
 
+  var url = 'https://surfyn.fr:7878/search/all';
+  //var url = 'http://127.0.0.1:7878/search/all';
+  var url_params = '?';
 
-  const url = 'https://surfyn.fr:7878/search/all'+ window.location.search;
-  //const url = 'http://127.0.0.1:7878/search/all'+ window.location.search;
+function buildurlparams()
+{
+  var pathname = window.location.pathname.split("/").slice(1);
 
+  var s_city = pathname[3].split("-");
+
+  if( s_city[0].toUpperCase() in postalCodeByCity && getPostalCode(s_city[0]) == s_city[1])
+  {
+    url_params += "search_city=" + s_city[0];
+  }
+  else {
+    return false;
+  }
+  if(pathname[1] == "achat")
+  {
+    url_params += "&search_type=1";
+  }
+  else {
+    if(pathname[1] == "location")
+    {
+      url_params += "&search_type=2";
+    }
+    else {
+      return false;
+    }
+  }
+
+  if(pathname[2] == "appartements")
+  {
+    url_params += "&prop_type=1";
+  }else {
+    if(pathname[2] == "maisons")
+    {
+      url_params += "&prop_type=2";
+    }
+    else {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+if(window.location.search == "")
+{
+    if(buildurlparams() == true)
+    {
+      url += url_params;
+      buildpage();
+    }
+    else
+    {
+      var announces_found = document.getElementById("nb_announces_found");
+
+      announces_found.innerHTML = "Aucune annonce ";
+      announces_found.innerHTML += " ne correspond à vos critères";
+    }
+}
+else
+{
+  url += window.location.search;
+  buildpage();
+}
+
+function buildpage()
+{
   var summary_json_data = sessionStorage.getItem("summary_json_data");
   var needtosort = sessionStorage.getItem("needtosort");
   if(needtosort && summary_json_data)
@@ -123,6 +189,8 @@ function loadJSON(path, success, error) {
       console.log(error);
     });
   }
+}
+
 
   function reverse(s){
       return s.split("").reverse().join("");
@@ -142,7 +210,14 @@ var ismobile   = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.use
 
 function generate_summary_page(data)
 {
-  const Params = new URLSearchParams(window.location.search);
+  var url_parameters = ''
+  if(window.location.search == "")
+    url_parameters = url_params;
+  else
+    url_parameters = window.location.search;
+
+
+  const Params = new URLSearchParams(url_parameters);
   const searchType = Params.get('search_type');
   var pagetitle = "";
   var propertyType_param = Params.get('prop_type');
@@ -471,7 +546,13 @@ function generate_summary_page(data)
 
 function gotosearchcriteria()
 {
-  const Params = new URLSearchParams(window.location.search);
+  var url_parameters = ''
+  if(window.location.search == "")
+    url_parameters = url_params;
+  else
+    url_parameters = window.location.search;
+
+  const Params = new URLSearchParams(url_parameters);
   const searchType = Params.get('search_type');
 
   var search_criteria = document.getElementById("modify_search_criteria");
