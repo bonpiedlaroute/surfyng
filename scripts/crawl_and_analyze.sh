@@ -6,16 +6,15 @@ export PYTHONPATH=/home/ubuntu/software/thrift-0.10.0/lib/py/build/lib.linux-x86
 #cd /home/ubuntu/software/surfyng/sklearn
 #./stop_predictor
 
+cd ~/software/surfyng/sf_services/dynamodb_access/build
+./start_dyndb
+
 for CITY in colombes nanterre puteaux houilles
 do
-        cd ~/software/surfyng/sf_services/dynamodb_access/build
-        #./stop_dyndb
-        #sleep 5
-        ./start_dyndb
         cd ~/scrapy_env/
         source bin/activate
         cd surfyn_bot/surfyn_bot/
-        rm -f images/*
+        rm -f ~/scrapy_env/surfyn_bot/surfyn_bot/images_"$CITY"/*
         index=0
         DATE=$(date +%Y_%m_%d"_"%H_%M_%S)
         scrapy crawl seloger -a city="$CITY" >> "seloger_"$DATE".log" 2>&1 &
@@ -76,13 +75,26 @@ do
         scrapy crawl pap -a city="$CITY" >> "pap_"$DATE".log" 2>&1 &
         pids[$index]=$!
         index=$((index+1))
-        if [ "$CITY" = "colombes" ]; then
-            sleep 7
-            DATE=$(date +%Y_%m_%d"_"%H_%M_%S)
-            scrapy crawl logicimmo -a city="$CITY" >> "logicimmo_"$DATE".log" 2>&1 &
-            pids[$index]=$!
-            index=$((index+1))
-        fi
+        sleep 7
+        DATE=$(date +%Y_%m_%d"_"%H_%M_%S)
+        scrapy crawl iadfrance -a city="$CITY" >> "iadfrance_"$DATE".log" 2>&1 &
+        pids[$index]=$!
+        index=$((index+1))
+        sleep 7
+        DATE=$(date +%Y_%m_%d"_"%H_%M_%S)
+        scrapy crawl paruvendu -a city="$CITY" >> "paruvendu_"$DATE".log" 2>&1 &
+        pids[$index]=$!
+        index=$((index+1))
+        sleep 7
+        DATE=$(date +%Y_%m_%d"_"%H_%M_%S)
+        scrapy crawl avendrealouer -a city="$CITY" >> "avendrealouer_"$DATE".log" 2>&1 &
+        pids[$index]=$!
+        index=$((index+1))
+        sleep 7
+        DATE=$(date +%Y_%m_%d"_"%H_%M_%S)
+        scrapy crawl nestenn -a city="$CITY" >> "nestenn_"$DATE".log" 2>&1 &
+        pids[$index]=$!
+        index=$((index+1))
         # wait for all scrapy pids
         for pid in ${pids[*]}; do
             wait $pid
@@ -111,7 +123,8 @@ do
         #sudo ./start_rest
         rm -f ~/scrapy_env/surfyn_bot/surfyn_bot/images_"$CITY"/*
         rm -rf image_to_labels.json image_vectors nearest_neighbors
-        cd ~/software/surfyng/sf_services/dynamodb_access/build
-        ./stop_dyndb
         sleep 60
 done
+cd ~/software/surfyng/sf_services/dynamodb_access/build
+./stop_dyndb
+

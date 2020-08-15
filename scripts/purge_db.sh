@@ -4,13 +4,15 @@ export PYTHONPATH=/home/ubuntu/software/thrift-0.10.0/lib/py/build/lib.linux-x86
 
 cd ~/software/surfyng/sf_services/dynamodb_access/build
 ./start_dyndb
+sleep 15
 for CITY in colombes nanterre puteaux houilles
 do
         cd ~/software/surfyng/sf_services/sf_classifier/build/
         ./sf_classifier config_fr_properties.ini $CITY
+        sleep 30 
         cd ~/software/surfyng/sf_services/sf_classifier/build/
         ./sf_classifier config_fr_summary.ini $CITY
-        sleep 60
+        sleep 30
 done
 cd ~/software/surfyng/sf_services/dynamodb_access/build
 ./stop_dyndb
