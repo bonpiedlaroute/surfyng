@@ -86,6 +86,8 @@ class ParuVenduSpider(scrapy.Spider):
       price = response.xpath('//div[@class="navete12-globcontent"]/div[@class="navete12-content"]/div/div/div/div[@id="autoprix"]/text()').extract()
       if not price:
          price = response.xpath('//div[@class="navete12-globcontent"]/div[@class="navete12-content"]/div/div/div/div/div[@id="autoprix"]/text()').extract()
+         if not price:
+            return
       px = price[0].encode('ascii', 'ignore')
       px = px.replace('CC', '')
       px = px.replace('\n', '')
@@ -95,12 +97,34 @@ class ParuVenduSpider(scrapy.Spider):
       data['PRICE'] = px
       #announce details
       details = response.xpath('//div[@class="navete12-globcontent"]/div[@class="navete12-content"]/div/div/div/div[@class="cotea16-graphicimmo"]/div/ul/li/span/text()').extract()
+      
+      if not details:
+         return
 
       data['ROOMS'] = details[0]
 
       area = details[1]
       area = area.replace('m', '')
       data['SURFACE'] = area
+
+      parking = response.xpath('//div[@class="navete12-globcontent"]/div[@class="navete12-content"]/div/div/div/div[@class="cotea16-graphicimmo"]/div/ul/li[text()="Parking / Garage"]/text()').extract()
+
+      if parking == "Parking / Garage":
+         data['PARKING'] = '1'
+
+      bedrooms = response.xpath('//div[@class="navete12-globcontent"]/div[@class="navete12-content"]/div/div/div/div[@class="cotea16-graphicimmo"]/div/ul/li/span[starts-with(text(),"Nombre de chambre(s)")]/text()').extract()
+
+      if bedrooms:
+         data['BEDROOMS'] = bedrooms[0][23:]
+
+      floor = response.xpath('//div[@class="navete12-globcontent"]/div[@class="navete12-content"]/div/div/div/div[@class="cotea16-graphicimmo"]/div/ul/li/span[starts-with(text(),"Etage")]/text()').extract()
+      if floor:
+         data['FLOOR'] = floor[0][8:]
+
+      land_surface = response.xpath('//div[@class="navete12-globcontent"]/div[@class="navete12-content"]/div/div/div/div[@class="cotea16-graphicimmo"]/div/ul/li/span[starts-with(text(),"Surface du terrain")]/text()').extract()
+
+      if land_surface:
+         data['LAND_SURFACE'] = land_surface[0][21:]
 
       # get images
       images = response.xpath('//div[@class="navete12-globcontent"]/div[@class="navete12-content"]/div/div/div/div[@id="listePhotos"]/div/div/div/a/p/span/img/@src').extract()

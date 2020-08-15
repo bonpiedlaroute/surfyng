@@ -52,7 +52,7 @@ class PapSpider(scrapy.Spider):
          yield scrapy.Request(url=url, callback= lambda r, ptype = ptype, stype = stype :self.parse(r, ptype, stype))
 
    def parse(self, response, ptype, stype):
-      links = response.xpath('//div[@class="search-results-list"]/div[@class="search-list-item"]/div[@class="col-right"]/a[@class="item-title"]/@href').extract()
+      links = response.xpath('//div/div[@id="pages-list"]/div/div/div[@class="search-list-item-alt"]/div[@class="item-body"]/a[@class="item-title"]/@href').extract()
       urls = []
       key_code = self.city + '-' + postalcodeByCity[self.city]
       for link in links:
@@ -92,6 +92,16 @@ class PapSpider(scrapy.Spider):
       pos = surface.find(u'\xa0')
       data['SURFACE'] = surface[:pos]
 
+      bedrooms = response.xpath('//div[contains(@class, "item-description")]/ul[contains(@class, "item-tags")]/li/strong[contains(text(),"chambres" )]/text()').extract()
+      if bedrooms:
+         pos_bedrooms = bedrooms[0].find('c')
+         data['BEDROOMS'] = bedrooms[0][:pos_bedrooms].replace(' ', '')
+      landsurface = response.xpath('//div[contains(@class, "item-description")]/ul[contains(@class, "item-tags")]/li/strong[contains(text(),"Terrain" )]/text()').extract()
+      if landsurface:
+         land = landsurface[0].encode('ascii', 'ignore')
+         pos_end = land[8:].find('m')
+         data['LAND_SURFACE'] = land[8:][:pos_end]
+  
       # get images
       images_list = response.xpath('//div[contains(@class, "owl-thumbs")]/a/img/@src').extract() 
       images = []

@@ -258,6 +258,10 @@ std::string searchTypeValue = "";
 
             fillFilterExprAndExprValue(filterExpression, expressionValue, "CITY", exprval_city, city, "=");
          }
+         else {
+               sstream << U("[]");
+               return;
+         }
 
          iter = query.find("search_type");
          if( iter != query.end() )
@@ -265,6 +269,11 @@ std::string searchTypeValue = "";
             filterExpression << " and ";
             searchTypeValue = strcmp((iter->second).c_str(), "1") == 0 ? "For sale":"For rent";
             fillFilterExprAndExprValue(filterExpression, expressionValue, "SEARCH_TYPE", exprval_searchType, searchTypeValue , "=");
+         }
+         else
+         {
+               sstream << U("[]");
+               return;
          }
 
          iter = query.find("price_min");

@@ -54,6 +54,8 @@ class EraimmoSpider(scrapy.Spider):
       self.fieldmapping['Surface habitable'] = 'SURFACE'
       self.fieldmapping['Garage'] = 'PARKING'
       self.fieldmapping['Ascenseur'] = 'LIFT'
+      self.fieldmapping['Nbre de chambres'] = 'BEDROOMS'
+      self.fieldmapping['Superficie terrain'] = 'LAND_SURFACE'
 
    def start_requests(self):
       prop_list = [(APART_ID, BUY_ID), (HOUSE_ID, BUY_ID)]

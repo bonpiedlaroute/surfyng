@@ -1,3 +1,4 @@
+#include <bits/stdint-intn.h>
 #include <iostream>
 #include <vector>
 #include <map>
@@ -14,8 +15,8 @@
 #include <set>
 #include <locale>
 #include <unordered_map>
-
 #include "sf_services/sf_classifier/inc/RealEstateAd.h"
+#include <unordered_set>
 
 namespace surfyn
 {
@@ -28,6 +29,7 @@ namespace surfyn
       void ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tableName, const std::string& city);
       void CheckSimilarAnnounces();
       void PutTargetTable(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tableName);
+      void ReadSummaryTable(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tableName, const std::string& city);
 
    private:
       void ReadSelogerJSON(const std::string& json, classifier::RealEstateAd* realEstate);
@@ -49,6 +51,7 @@ namespace surfyn
       void ReadNestennJSON(const std::string& json, classifier::RealEstateAd* realEstate);
    private:
       std::unordered_map<int64_t, classifier::RealEstateAd*> m_AnnouncesByID;
+      std::unordered_set<int64_t> m_SummaryId;
       std::unordered_map<std::string, std::function<void (const std::string&, classifier::RealEstateAd* realEstate)>> m_ReaderBySources;
    };
 }

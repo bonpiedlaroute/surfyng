@@ -118,6 +118,15 @@ class ArthurImmoSpider(scrapy.Spider):
       if type_of_heating:
          data['TYPE_OF_HEATING'] = type_of_heating[0]
 
+      bedrooms = details.xpath(u".//li[@title='Chambres']").xpath(".//div[@class='fiche-sign-val']/text()").extract()
+      if bedrooms:
+         data['BEDROOMS'] = bedrooms[0].replace(' ', '')
+
+      landsurface = details.xpath(u".//li[@title='Terrain']").xpath(".//div[@class='fiche-sign-val']/text()").extract()
+      if landsurface:
+         land = landsurface[0].encode('ascii','ignore')
+         pos_end = land.find('m')
+         data['LAND_SURFACE'] = land[:pos_end].replace(' ','')
 
       # get images
       images = response.xpath('//div/div/div[@class="row-fluid"]/div/div/div/div[@class="item"]/img/@src').extract()

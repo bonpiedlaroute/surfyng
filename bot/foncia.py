@@ -62,6 +62,8 @@ class FonciaSpider(scrapy.Spider):
       self.fieldmapping['Surface habitable'] = 'SURFACE'
       self.fieldmapping['Parking exterieur'] = 'PARKING'
       self.fieldmapping['Parking prive'] = 'PARKING'
+      self.fieldmapping['Nombre de chambres'] = 'BEDROOMS'
+      self.fieldmapping['Surface totale terrain'] = 'LAND_SURFACE'
 
    def start_requests(self):
       prop_list = [(APART_ID, BUY_ID), (HOUSE_ID, BUY_ID), (APART_ID, RENT_ID), (HOUSE_ID, RENT_ID)]

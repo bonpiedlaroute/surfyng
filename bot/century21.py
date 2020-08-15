@@ -87,30 +87,44 @@ class Century21Spider(scrapy.Spider):
       data['PRICE'] = price
 
       #announce details
-      li_list = response.xpath('//section[@id="ficheDetail"]/div/div/div[@class="box"]/ul/li').extract()
-      #not sufficient details in the announce, we skip it!
-      if not li_list:
-         return
+      #surface
+      surface = response.xpath('//section[@id="ficheDetail"]/div/div/div[@class="box"]/ul/li/span[starts-with(text(),"Surface totale")]/parent::li/text()').extract()
+      if surface:
+         begin_surface = surface[0].find(':')
+         raw_surface = surface[0][begin_surface+2:]
+         end = raw_surface.find(' ')
+         data['SURFACE'] = raw_surface[:end].replace(',','.')
 
-      for li in li_list:
-         field = li[30:]
-         pos_end_field = field.find('<')
-         key = remove_accent(field[:pos_end_field])
-         
-         if key in self.fieldmapping:
-            raw_value = field[pos_end_field+10:]
-            pos_end_value = raw_value.find('<')
-            value = remove_accent(raw_value[:pos_end_value])
-            
-            data[self.fieldmapping[key]] = value
-         else:
-            pos_nb_piece = li.find("Nombre de pi")
-            if pos_nb_piece > 0 :
-               offset = li[pos_nb_piece:].find('>')
-               offset += 1
-               pos_end_nb_piece = li[pos_nb_piece+offset:].find('<')
-               value = li[pos_nb_piece+offset:][:pos_end_nb_piece]
-               data['ROOMS'] = value
+      #nbroom
+      nb_room = response.xpath(u"//section[@id='ficheDetail']/div/div/div[@class='box']/ul/li/span[text()='Nombre de pièces : ']/parent::li/text()").extract()
+      if nb_room:
+         room = nb_room[1].replace(' ', '')
+         data['ROOMS'] = room.replace('\n', '')      
+      
+      #construction year
+      year = response.xpath(u"//section[@id='ficheDetail']/div/div/div[@class='box']/ul/li/span[text()='Année construction']/parent::li/text()").extract()
+      if year:
+         data['CONSTRUCTION_YEAR'] = year[0][3:]
+
+      #heating
+      heating = response.xpath(u"//section[@id='ficheDetail']/div/div/div[@class='box']/ul/li/span[text()='Chauffage']/parent::li/text()").extract()
+      if heating:
+         data['HEATING'] = heating[0][3:]
+
+      #land surface
+      land = response.xpath(u"//section[@id='ficheDetail']/div/div/div[@class='box']/ul/li/span[text()='Surface terrain']/parent::li/text()").extract()
+      if land:
+         begin = land[0].find(':')
+         end = land[0][begin+2:].find('m')
+         landsurface=land[0][begin+2:]
+         landsurface[:end]
+         data['LAND_SURFACE'] = landsurface[:end].replace(' ', '')
+
+      #parking
+      parking = response.xpath(u"//section[@id='ficheDetail']/div/div/div[@class='box']/ul/li[@class='picto parking']").extract()
+
+      if parking:
+         data['PARKING'] = "1"
                
       # get images
       images = response.xpath('//div[@id="galeriePIX"]/div[@id="formatL"]/div[contains(@class, "zone-galerie")]').xpath('.//img/@src').extract() 

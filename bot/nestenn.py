@@ -113,7 +113,7 @@ class NestennSpider(scrapy.Spider):
             data["SURFACE"] = info[:pos]
          if 'chambres' in info:
             pos = info.find(' ')
-            data["BEDS"] = info[:pos]
+            data["BEDROOMS"] = info[:pos]
  
  
       # get images 

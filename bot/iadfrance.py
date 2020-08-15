@@ -51,6 +51,8 @@ class IadfranceSpider(scrapy.Spider):
       self.fieldmapping['Surface'] = 'SURFACE'
       self.fieldmapping['Nb de pieces'] = 'ROOMS'
       self.fieldmapping['Annee de construction'] = 'CONSTRUCTION_YEAR'
+      self.fieldmapping['Nb de chambres'] = 'BEDROOMS'
+      self.fieldmapping['Surface terrain'] = 'LAND_SURFACE'
 
    def start_requests(self):
       prop_list = [(APART_ID, BUY_ID), (HOUSE_ID, BUY_ID), (APART_ID, RENT_ID), (HOUSE_ID, RENT_ID)]
@@ -95,6 +97,11 @@ class IadfranceSpider(scrapy.Spider):
             data[self.fieldmapping[value]] = details[i+2]
          if value == 'Annee de construction':
             data[self.fieldmapping[value]] = details[i+1]
+         if value == 'Nb de chambres':
+            data[self.fieldmapping[value]] = details[i+2]
+         if value == 'Surface terrain':
+            data[self.fieldmapping[value]] = details[i+2]
+
 
       # get images
       images = response.xpath('//div[contains(@class, "offer__slider-item")]/img/@src').extract()

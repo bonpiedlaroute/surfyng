@@ -155,8 +155,18 @@ class AvendreAlouerSpider(scrapy.Spider):
 
       if "Cave" in cellar:
          data['CELLAR'] = '1'
-     
-       
+
+      bedrooms = response.xpath(u'//div/div[@id="debutBlocDetail"]/main/div/div/div/div[@class="CriteriaCriterion__DivStyledInformation-sc-16o7bzc-2 gORa-dQ"]/p[text()="Chambres"]/span/text()').extract()       
+      if bedrooms:
+         data['BEDROOMS'] = bedrooms[0]
+ 
+      land_surface = response.xpath(u'//div/div[@id="debutBlocDetail"]/main/div/div/div/div[@class="CriteriaCriterion__DivStyledInformation-sc-16o7bzc-2 gORa-dQ"]/p[text()="Terrain"]/span/text()').extract()
+      if land_surface:
+         pos = land_surface[0].find('m')
+         land = land_surface[0][:pos]
+         land.replace(' ', '')
+         data['LAND_SURFACE'] = land
+
       # get images
       images = response.xpath('//div/div/div[@class="SliderImages__DivStyledContainer-sc-18z29ar-0 enZetH"]/div/div/div/div[contains(@class, "slick-slide")]/div/div/img/@src').extract()
       image_count = 1
