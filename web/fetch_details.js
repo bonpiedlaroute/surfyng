@@ -404,7 +404,7 @@ function generate_details_page(data)
         else
         det_year_span.style.color = "lightgray";
 
-        if(ismobile)
+
         det_year_span.style.fontSize = "12px";
 
         if(data[i].hasOwnProperty('CONSTRUCTION_YEAR'))
@@ -612,12 +612,155 @@ function generate_details_page(data)
 
         det_desc_container_div.appendChild(det_ad_cellar_div);
       }
-      for( var j = 0 ; j < (9 - count_desc); j++)
+      /* BEDROOMS */
       {
-        var div = createNode("div");
-        div.className = "det_ad_desc_shape";
+        count_desc++;
+        var det_ad_bedrooms_div = createNode("div");
+        det_ad_bedrooms_div.className = "det_ad_desc_shape det_ad_desc_border det_ad_desc_center";
 
-        det_desc_container_div.appendChild(div);
+        if(!data[i].hasOwnProperty('BEDROOMS'))
+        det_ad_bedrooms_div.style = "border:3px solid lightgray";
+
+        var det_ad_ticker_div = createNode("div");
+        det_ad_ticker_div.className = "det_ad_ticker";
+        var det_ad_ticker = createNode("i");
+        det_ad_ticker.className ="fas fa-check-circle det_ad_ticker_icon";
+
+        if(!data[i].hasOwnProperty('BEDROOMS'))
+        det_ad_ticker.style.color = "lightgray";
+        else
+        det_ad_ticker.style.color = "green";
+
+        det_ad_ticker_div.appendChild(det_ad_ticker);
+        det_ad_bedrooms_div.appendChild(det_ad_ticker);
+
+        var det_bedrooms_span_div = createNode("div");
+        det_bedrooms_span_div.className = "det_ad_span_box";
+
+        var det_ad_bedrooms_span = createNode("span");
+        det_ad_bedrooms_span.className = "no_select";
+        det_ad_bedrooms_span.style.fontWeight = "bold";
+
+        if(data[i].hasOwnProperty('BEDROOMS'))
+        det_ad_bedrooms_span.style.color = "#4C8E99";
+        else
+        det_ad_bedrooms_span.style.color = "lightgray";
+
+        det_ad_bedrooms_span.style.fontSize = "12px";
+
+        if(data[i].hasOwnProperty('BEDROOMS'))
+        det_ad_bedrooms_span.innerHTML = data[i].BEDROOMS;
+
+        det_ad_bedrooms_span.innerHTML += " Chambre(s)";
+
+        det_bedrooms_span_div.appendChild(det_ad_bedrooms_span);
+
+        det_ad_bedrooms_div.appendChild(det_bedrooms_span_div);
+
+        det_desc_container_div.appendChild(det_ad_bedrooms_div);
+      }
+
+      /* LAND_SURFACE */
+      {
+        count_desc++;
+        var det_ad_landsurface_div = createNode("div");
+        det_ad_landsurface_div.className = "det_ad_desc_shape det_ad_desc_border det_ad_desc_center";
+
+        if(!data[i].hasOwnProperty('LAND_SURFACE'))
+        det_ad_landsurface_div.style = "border:3px solid lightgray";
+
+        var det_ad_ticker_div = createNode("div");
+        det_ad_ticker_div.className = "det_ad_ticker";
+        var det_ad_ticker = createNode("i");
+        det_ad_ticker.className ="fas fa-check-circle det_ad_ticker_icon";
+
+        if(!data[i].hasOwnProperty('LAND_SURFACE'))
+        det_ad_ticker.style.color = "lightgray";
+        else
+        det_ad_ticker.style.color = "green";
+
+        det_ad_ticker_div.appendChild(det_ad_ticker);
+        det_ad_landsurface_div.appendChild(det_ad_ticker);
+
+        var det_landsurface_span_div = createNode("div");
+        det_landsurface_span_div.className = "det_ad_span_box";
+
+        var det_ad_landsurface_span = createNode("span");
+        det_ad_landsurface_span.className = "no_select";
+        det_ad_landsurface_span.style.fontWeight = "bold";
+
+        if(data[i].hasOwnProperty('LAND_SURFACE'))
+        det_ad_landsurface_span.style.color = "#4C8E99";
+        else
+        det_ad_landsurface_span.style.color = "lightgray";
+
+        if(ismobile)
+        det_ad_landsurface_span.style.fontSize = "12px";
+
+        det_ad_landsurface_span.innerHTML = "Terrain ";
+
+        if(data[i].hasOwnProperty('LAND_SURFACE'))
+        {
+          det_ad_landsurface_span.innerHTML = data[i].LAND_SURFACE;
+
+          det_ad_landsurface_span.innerHTML += " m<sup>2</sup>";
+        }
+
+
+
+        det_landsurface_span_div.appendChild(det_ad_landsurface_span);
+
+        det_ad_landsurface_div.appendChild(det_landsurface_span_div);
+
+        det_desc_container_div.appendChild(det_ad_landsurface_div);
+      }
+      /* PRICE IN SQUARE METER */
+      {
+        count_desc++;
+        var det_ad_pricebym2_div = createNode("div");
+        det_ad_pricebym2_div.className = "det_ad_desc_shape det_ad_desc_border det_ad_desc_center";
+
+        if(!data[i].hasOwnProperty('PRICE') || !data[i].hasOwnProperty('SURFACE'))
+        det_ad_pricebym2_div.style = "border:3px solid lightgray";
+
+        var det_ad_ticker_div = createNode("div");
+        det_ad_ticker_div.className = "det_ad_ticker";
+        var det_ad_ticker = createNode("i");
+        det_ad_ticker.className ="fas fa-check-circle det_ad_ticker_icon";
+
+        if(!data[i].hasOwnProperty('PRICE') || !data[i].hasOwnProperty('SURFACE'))
+        det_ad_ticker.style.color = "lightgray";
+        else
+        det_ad_ticker.style.color = "green";
+
+        det_ad_ticker_div.appendChild(det_ad_ticker);
+        det_ad_pricebym2_div.appendChild(det_ad_ticker);
+
+        var det_pricebym2_span_div = createNode("div");
+        det_pricebym2_span_div.className = "det_ad_span_box";
+
+        var det_ad_pricebym2_span = createNode("span");
+        det_ad_pricebym2_span.className = "no_select";
+        det_ad_pricebym2_span.style.fontWeight = "bold";
+
+        if(data[i].hasOwnProperty('PRICE') && data[i].hasOwnProperty('SURFACE'))
+        det_ad_pricebym2_span.style.color = "#4C8E99";
+        else
+        det_ad_pricebym2_span.style.color = "lightgray";
+
+        if(ismobile)
+        det_ad_pricebym2_span.style.fontSize = "12px";
+        if(data[i].hasOwnProperty('PRICE') && data[i].hasOwnProperty('SURFACE'))
+        {
+          var price_bym2 = Math.floor(data[i].PRICE / data[i].SURFACE);
+          det_ad_pricebym2_span.innerHTML = formatPrice(String(price_bym2)) + " €/m<sup>2</sup>";
+        }
+
+        det_pricebym2_span_div.appendChild(det_ad_pricebym2_span);
+
+        det_ad_pricebym2_div.appendChild(det_pricebym2_span_div);
+
+        det_desc_container_div.appendChild(det_ad_pricebym2_div);
       }
 
       ad_link.appendChild(det_desc_container_div);

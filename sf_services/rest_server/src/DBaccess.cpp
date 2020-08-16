@@ -56,6 +56,8 @@ const std::string id_parking = "PARKING";
 const std::string id_searchtype = "SEARCH_TYPE";
 const std::string id_timestamp = "TIMESTAMP";
 const std::string id_first_timestamp = "FIRST_TIMESTAMP";
+const std::string id_bedrooms = "BEDROOMS";
+const std::string id_landsurface = "LAND_SURFACE";
 
 const std::string details_table = "FR_SUMMARY";
 const std::string exprval_city = ":ct";
@@ -531,6 +533,12 @@ std::string searchTypeValue = "";
 
       value.fieldtype = Type::type::STRING;
       attributestoget[id_city] = value;
+
+      value.fieldtype = Type::type::STRING;
+      attributestoget[id_bedrooms] = value;
+
+      value.fieldtype = Type::type::STRING;
+      attributestoget[id_landsurface] = value;
 
       GetResult _return;
       KeyValue key;

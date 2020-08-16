@@ -192,18 +192,7 @@ function buildpage()
 }
 
 
-  function reverse(s){
-      return s.split("").reverse().join("");
-  }
 
-  function formatPrice(p)
-  {
-    var val = reverse(p);
-
-    var tmp = val.replace(/(.{3})/g,"$1 ");
-
-    return reverse(tmp);
-  }
 
 
 var ismobile   = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
@@ -435,7 +424,7 @@ function generate_summary_page(data)
             ad_price_bym2_p.style.margin = "0";
             ad_price_bym2_p.style.fontSize = "14px";
             var price_bym2 = Math.floor(data[i].PRICE / data[i].SURFACE);
-            ad_price_bym2_p.innerHTML =  formatPrice(String(price_bym2)) + " € /m<sup>2</sup>";
+            ad_price_bym2_p.innerHTML =  formatPrice(String(price_bym2)) + " €/m<sup>2</sup>";
             ad_summary_postalcode_container_div.appendChild(ad_price_bym2_p);
 
             ad_summary_desc_div2.appendChild(ad_summary_postalcode_container_div);
