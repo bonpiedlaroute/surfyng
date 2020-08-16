@@ -125,6 +125,9 @@ if(window.location.search == "")
 {
     if(buildurlparams() == true)
     {
+      var rel_link = document.getElementById("canonical_url");
+      rel_link.rel = "canonical";
+      rel_link.href = window.location.pathname;
       url += url_params;
       buildpage();
     }
