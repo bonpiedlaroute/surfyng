@@ -483,7 +483,9 @@ width:100%;
 }
 .det_ad_ticker_icon
 {
-  align-self: center;font-size: 15px !important;
+  align-self: center;
+  font-size: 15px !important;
+  margin-top:2px;
 }
 .det_ad_span_box
 {

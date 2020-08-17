@@ -81,6 +81,7 @@ function generate_details_page(data)
       var ad_link = createNode("a");
       ad_link.style.display = "block";
       ad_link.href = data[i].ANNOUNCE_LINK;
+      ad_link.target = "_blank";
 
       var det_ad_image_container_div = createNode("div");
       det_ad_image_container_div.className = "det_ad_image_container";
@@ -410,7 +411,7 @@ function generate_details_page(data)
         if(data[i].hasOwnProperty('CONSTRUCTION_YEAR'))
         det_year_span.innerHTML = data[i].CONSTRUCTION_YEAR;
         else {
-          det_year_span.innerHTML = "année de construction";
+          det_year_span.innerHTML = "construction";
         }
 
         det_year_span_div.appendChild(det_year_span);
@@ -604,7 +605,7 @@ function generate_details_page(data)
         if(data[i].hasOwnProperty('CELLAR'))
         det_ad_cellar_span.innerHTML = data[i].CELLAR;
 
-        det_ad_cellar_span.innerHTML += " Cave(s)";
+        det_ad_cellar_span.innerHTML += " cave(s)";
 
         det_cellar_span_div.appendChild(det_ad_cellar_span);
 
@@ -651,7 +652,7 @@ function generate_details_page(data)
         if(data[i].hasOwnProperty('BEDROOMS'))
         det_ad_bedrooms_span.innerHTML = data[i].BEDROOMS;
 
-        det_ad_bedrooms_span.innerHTML += " Chambre(s)";
+        det_ad_bedrooms_span.innerHTML += " chambre(s)";
 
         det_bedrooms_span_div.appendChild(det_ad_bedrooms_span);
 
@@ -697,11 +698,11 @@ function generate_details_page(data)
         if(ismobile)
         det_ad_landsurface_span.style.fontSize = "12px";
 
-        det_ad_landsurface_span.innerHTML = "Terrain ";
+        det_ad_landsurface_span.innerHTML = "terrain ";
 
         if(data[i].hasOwnProperty('LAND_SURFACE'))
         {
-          det_ad_landsurface_span.innerHTML = data[i].LAND_SURFACE;
+          det_ad_landsurface_span.innerHTML += data[i].LAND_SURFACE;
 
           det_ad_landsurface_span.innerHTML += " m<sup>2</sup>";
         }
