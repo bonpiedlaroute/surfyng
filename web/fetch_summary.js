@@ -172,6 +172,14 @@ function buildpage()
         if( needtosort == "bydate")
         {
           newdata.sort(ByTimeStamp);
+        }else {
+          if ( needtosort == "bypricebym2")
+          {
+            newdata.sort(function(lhs, rhs)
+                {
+                  return Math.floor( lhs.PRICE / lhs.SURFACE) - Math.floor( rhs.PRICE / rhs.SURFACE);
+                });
+          }
         }
       }
     }

@@ -26,7 +26,7 @@ function show_dropdown_list()
 
 window.onclick = function(event) {
 
-  if (event.target.className != "fas fa-sliders-h" || ( (nb_dropdown_click % 2) == 0) )
+  if (event.target.className != "fas fa-sort-amount-down" || ( (nb_dropdown_click % 2) == 0) )
   {
     var dropdowns = document.getElementsByClassName("parameter_content");
     var i;
@@ -54,4 +54,9 @@ function sortbysurface()
 function sortbydate()
 {
   sessionStorage.setItem("needtosort", "bydate");
+}
+
+function sortbypricebym2()
+{
+  sessionStorage.setItem("needtosort", "bypricebym2");
 }

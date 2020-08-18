@@ -43,18 +43,24 @@
 
               <div style="height:60px; display:flex;flex-direction:row;justify-content:flex-end;" class="header_title_right_box">
                 <div class="sf_dropdown">
-                  <div style="display:block;width:124px;height:43px;">
-                    <a onclick="show_dropdown_list()" id="sf_dropdown_link">
-                    <i class="fas fa-sliders-h" style="font-size: 30px !important; color:white;margin-top:10px; float:right;">
-                    </i>
+
+                  <div style="display:flex;width:124px;height:43px;justify-content:flex-end;flex-direction:row;align-items:center;">
+                      <a href="#" onclick="gotosearchcriteria()" id="modify_search_criteria">
+                        <i class="far fa-edit" style="font-size: 30px !important; color:white;margin-top:10px;"></i>
+                      </a>
+                      <a onclick="show_dropdown_list()" id="sf_dropdown_link">
+                        <i class="fas fa-sort-amount-down" style="font-size: 30px !important; color:white;margin-top:10px;margin-left:15px;">
+                      </i>
                     </a>
+
                   </div>
-                <div id="filter_parameter" class="parameter_content">
-                  <a href="javascript:document.location.reload()" onclick="sortbyprice()"> Trier par prix</a>
-                  <a href="javascript:document.location.reload()" onclick="sortbysurface()"> Trier par m<sup>2</a>
-                  <a href="javascript:document.location.reload()" onclick="sortbydate()"> Trier par plus récents</a>
-                  <a href="#" onclick="gotosearchcriteria()" id="modify_search_criteria"> Modifier votre recherche</a>
-                </div>
+                  <div id="filter_parameter" class="parameter_content">
+                    <a href="javascript:document.location.reload()" onclick="sortbyprice()"> Trier par prix</a>
+                    <a href="javascript:document.location.reload()" onclick="sortbysurface()"> Trier par m<sup>2</sup></a>
+                    <a href="javascript:document.location.reload()" onclick="sortbypricebym2()"> Trier par prix au m<sup>2</sup></a>
+                    <a href="javascript:document.location.reload()" onclick="sortbydate()"> Trier par plus récents</a>
+                  </div>
+
                 </div>
               </div>
             </div>
