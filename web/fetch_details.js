@@ -702,7 +702,7 @@ function generate_details_page(data)
 
         if(data[i].hasOwnProperty('LAND_SURFACE'))
         {
-          det_ad_landsurface_span.innerHTML += data[i].LAND_SURFACE;
+          det_ad_landsurface_span.innerHTML += parseInt(data[i].LAND_SURFACE);
 
           det_ad_landsurface_span.innerHTML += " m<sup>2</sup>";
         }
