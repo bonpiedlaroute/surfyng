@@ -528,14 +528,14 @@ width:100%;
   font-size:20px;
   color:#61AEB5;
 }
+
 .contact_info
 {
   text-align:center;
   width:100%;
   height:30px;
-  position:absolute;
-  bottom:5px;
 }
+
 .social_media
 {
   text-align:center;
@@ -666,15 +666,15 @@ margin-left:10%;
 }
 .sf_rooms
 {
-  width:10%;height:40px;border-radius:6px;display:flex;transform:scale(0.85);flex-direction:row;align-items: center;justify-content: space-evenly;flex-wrap:wrap;background-color:#bfe5f5;cursor:pointer;
+  width:10%;height:40px;border-radius:6px;display:flex;transform:scale(0.85);flex-direction:row;align-items:center;justify-content:space-evenly;flex-wrap:wrap;background-color:#bfe5f5;cursor:pointer;
 }
 .sf_bedrooms
 {
-  width:10%;height:40px;border-radius:6px;display:flex;transform:scale(0.85);flex-direction:row;align-items: center;justify-content: space-evenly;flex-wrap:wrap;background-color:#bfe5f5;cursor:pointer;
+  width:10%;height:40px;border-radius:6px;display:flex;transform:scale(0.85);flex-direction:row;align-items:center;justify-content:space-evenly;flex-wrap:wrap;background-color:#bfe5f5;cursor:pointer;
 }
 .sf_parking
 {
-  width:15%;height:40px;border-radius:6px;display:flex;transform:scale(0.85);flex-direction:row;align-items: center;justify-content: space-evenly;flex-wrap:wrap;background-color:#bfe5f5;cursor:pointer;
+  width:15%;height:40px;border-radius:6px;display:flex;transform:scale(0.85);flex-direction:row;align-items:center;justify-content:space-evenly;flex-wrap:wrap;background-color:#bfe5f5;cursor:pointer;
 }
 .ad_summary_src
 {
@@ -746,7 +746,59 @@ margin-left:10%;
   display:block;
 }
 
-
+.sf_ad_direct_links_frame
+{
+  display:flex;
+  width:100%;
+  height:200px;
+  justify-content:center;
+  margin-bottom:20px;
+}
+.sf_ad_direct_links_container
+{
+  display:flex;
+  flex-direction:column;
+  border-radius: 10px;
+  width:40%;
+  height:100%;
+  background-color:#1D203B;
+}
+.sf_ad_direct_links_container_title
+{
+  height:50px;
+  width:100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align:center;
+}
+.sf_ad_direct_links_title
+{
+  color:white;
+  text-align:center;
+  font-size:20px;
+}
+.sf_ad_direct_links_element
+{
+  height:30px;
+  width:100%;
+  padding-left:10px;
+  display: flex;
+  align-items: center;
+}
+.sf_ad_direct_link
+{
+  color:white;
+  text-align:left;
+  text-decoration:none;
+  font-size:16px;
+  color:#9E9EA0 !important;
+}
+.sf_ad_direct_link_icon
+{
+  font-size: 12px !important;
+  color:#9E9EA0;
+}
 @media (max-width:1024px) {
   .search_type_text
   {
@@ -1082,6 +1134,15 @@ margin-left:10%;
   .ad_summary_src_provider{
     height:70%; width:32%; border-radius:10px;text-align:center;margin-left:2px;
   }
+  .sf_ad_direct_links_container
+  {
+    display:flex;
+    flex-direction:column;
+    border-radius: 10px;
+    width:88%;
+    height:100%;
+    background-color:#1D203B;
+  }
 
 } /* end of @media (max-width:1024px)  */
 
@@ -1092,8 +1153,6 @@ margin-left:10%;
     text-align:center;
     width:100%;
     height:30px;
-    position:absolute;
-    margin-top:100px;
     bottom: unset;
   }
   .social_media
