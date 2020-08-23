@@ -815,9 +815,11 @@ function generate_details_page(data)
     pagetitle += data[0].PROPERTY_TYPE == "Appartement"? "Appartement ":"Maison ";
     pagetitle += nb_room;
     pagetitle += " pièce(s) à ";
+    var isForSale = false;
     if(data[0].hasOwnProperty('SEARCH_TYPE'))
     {
       pagetitle += data[0].SEARCH_TYPE == "For sale"? "vendre ":"louer ";
+      isForSale = data[0].SEARCH_TYPE == "For sale";
     }
     var postalcode = ""
     if( data[0].hasOwnProperty('CITY'))
@@ -834,7 +836,7 @@ function generate_details_page(data)
     document.title = pagetitle;
     document.getElementsByTagName('meta')["description"].content = pagetitle;
 
-    if(postalcode != "")
+    if(postalcode != "" && isForSale)
     {
       var dept_code = postalcode.slice(0,2);
       if( dept_code == "92")
