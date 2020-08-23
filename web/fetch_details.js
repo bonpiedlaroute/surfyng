@@ -66,6 +66,9 @@ function generate_details_page(data)
     var main_content = document.getElementById("main-content");
     for(var i = 0; i < data.length; i++)
     {
+      if(Object.keys(data[i]).length === 0)
+          continue;
+
       if(i%2 == 0 )
       {
         det_container_div = createNode("div");
