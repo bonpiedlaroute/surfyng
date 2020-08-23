@@ -819,19 +819,54 @@ function generate_details_page(data)
     {
       pagetitle += data[0].SEARCH_TYPE == "For sale"? "vendre ":"louer ";
     }
+    var postalcode = ""
     if( data[0].hasOwnProperty('CITY'))
     {
       var cityname = data[0].CITY[0].toUpperCase() + data[0].CITY.slice(1);
       nb_similar.innerHTML += cityname;
-      nb_similar.innerHTML += " (" + getPostalCode(cityname) + ")";
+      postalcode = getPostalCode(cityname);
+      nb_similar.innerHTML += " (" + postalcode + ")";
       pagetitle += cityname;
-      pagetitle += " (" + getPostalCode(cityname) + ")";
+      pagetitle += " (" + postalcode + ")";
     }
     pagetitle += " - Surfyn"
 
     document.title = pagetitle;
     document.getElementsByTagName('meta')["description"].content = pagetitle;
 
+    if(postalcode != "")
+    {
+      var dept_code = postalcode.slice(0,2);
+      if( dept_code == "92")
+      {
+         var sf_estimate_link_container = createNode("div");
+         sf_estimate_link_container.className = "sf_estimate_link_container";
+
+         var estimate_link_icon = createNode("i");
+         estimate_link_icon.className = "fas fa-calculator sf_estimate_link_icon";
+
+         sf_estimate_link_container.appendChild(estimate_link_icon);
+
+         var text = createNode("strong");
+         text.innerHTML = "Estimer ce bien";
+         var estimate_link_text = createNode("span");
+         estimate_link_text.className = "sf_estimate_link_text";
+         estimate_link_text.appendChild(text);
+
+         sf_estimate_link_container.appendChild(estimate_link_text);
+
+         var sf_estimate_link = createNode("a");
+         sf_estimate_link.className = "sf_estimate_link";
+         sf_estimate_link.href = "estimation-immobiliere-en-ligne.html";
+
+         sf_estimate_link.appendChild(sf_estimate_link_container);
+
+         var sf_estimate_link_frame = document.getElementById("estimate_link_frame");
+         sf_estimate_link_frame.className = "sf_estimate_link_frame";
+         sf_estimate_link_frame.appendChild(sf_estimate_link);
+
+      }
+    }
 
   } //end of else if(data.length == 0 )
   var facebook_icon = document.getElementById("facebook-icon");
