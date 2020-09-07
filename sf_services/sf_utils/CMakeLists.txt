@@ -9,6 +9,6 @@ project(sf_utils)
 include_directories(inc)
 
 SET(SRCS src/Logger.cpp src/Config.cpp src/Str.cpp
-	src/Math.cpp src/Algorithm.cpp)
+	src/Math.cpp src/Algorithm.cpp src/Geolocal.cpp)
 
 add_library(sf_utils SHARED	${SRCS})

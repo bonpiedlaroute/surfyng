@@ -9,7 +9,7 @@ find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS})
 
 
-SET(SRCS test_algorithm.cpp	
+SET(SRCS test_algorithm.cpp test_geolocal.cpp	
 )
 
 set( CMAKE_PREFIX_PATH "${SF_UTILS_BUILD_DIR}")
