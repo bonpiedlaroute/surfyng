@@ -268,4 +268,16 @@ def getNestennPropertiesId(_id):
 def getNestennSearchTypeId(_id):
    return NestennSearchTypeMapping[_id]
 
+NotairesPropertiesMapping = dict()
+NotairesPropertiesMapping[APART_ID] = 'APA'
+NotairesPropertiesMapping[HOUSE_ID] = 'MAA'
 
+def getNotairesPropertiesId(_id):
+   return NotairesPropertiesMapping[_id]
+
+NotairesRefererPropertiesMapping = dict()
+NotairesRefererPropertiesMapping[APART_ID] = 'APP'
+NotairesRefererPropertiesMapping[HOUSE_ID] = 'MAI'
+
+def getNotairesRefererPropertiesId(_id):
+   return NotairesRefererPropertiesMapping[_id]

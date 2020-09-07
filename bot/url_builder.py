@@ -262,3 +262,25 @@ def buildNestennUrl(city, ptype, stype):
    url += ptype
 
    return url
+
+notaires_url = 'https://www.immobilier.notaires.fr/pub-services/immodecret-stat1/v1/indicateurs?nivGeo=COMMUNE'
+
+
+def buildNotairesUrl(city, ptype):
+   url = notaires_url + '&typeBien='
+   url += ptype
+   url += '&codeInsee='
+   url += inseecodeByCity[city]
+
+   return url
+
+notaires_referer_url = 'https://www.immobilier.notaires.fr/fr/prix-immobilier?typeLocalisation=COMMUNE&neuf=false'
+
+def buildNotairesRefererUrl(city, r_ptype):
+   url = notaires_referer_url + '&typeBien='
+   url += r_ptype
+   url += '&codeInsee='
+   url += inseecodeByCity[city]
+
+   return url
+ 
