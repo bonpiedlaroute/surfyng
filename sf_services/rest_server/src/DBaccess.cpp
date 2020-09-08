@@ -7,9 +7,11 @@
 #include "DBaccess.h"
 
 
+
 #include <thrift/protocol/TBinaryProtocol.h>
 #include <thrift/transport/TSocket.h>
 #include <thrift/transport/TBufferTransports.h>
+#include "sf_services/sf_utils/inc/Geolocal.h"
 #include "sf_services/sf_utils/inc/Str.h"
 #include "sf_services/sf_utils/inc/Logger.h"
 #include <boost/algorithm/string.hpp>
@@ -77,6 +79,7 @@ std::string searchTypeValue = "";
       shared_ptr<TTransport> transport(new TBufferedTransport(socket));
       shared_ptr<TProtocol> protocol(new TBinaryProtocol(transport));
       m_client = std::make_shared<dynamodb_accessClient>(protocol);
+      m_geolocal = std::make_shared<surfyn::utils::GeoLocal>("../../../bot/data/correspondance_codeinsee_codepostal_iledefrance.csv");
 
       transport->open();
    }
@@ -489,6 +492,9 @@ std::string searchTypeValue = "";
       value.fieldtype = Type::type::STRING;
       attributestoget[id_imagecount] = value;
 
+      value.fieldtype = Type::type::STRING;
+      attributestoget[id_property_type] = value;
+
       value.fieldtype = Type::type::NUMBER;
       attributestoget[id_surface] = value;
 
@@ -555,6 +561,7 @@ std::string searchTypeValue = "";
          return;
       }
       std::map<std::string, std::string>::iterator iter_duplicate_ad = _return.values.end();
+      std::string searchCity = "", searchType = "", propertyType = "", medianPrice = "";
       sstream << U("[\n");
       sstream << U("{\n");
       for(auto iter_item = _return.values.begin(); iter_item != _return.values.end(); ++iter_item)
@@ -565,6 +572,13 @@ std::string searchTypeValue = "";
             {
                sstream << U(",\n");
             }
+            if( iter_item->first == id_city )
+               searchCity  = iter_item->second;
+            if( iter_item->first == id_searchtype )
+               searchType = iter_item->second;
+            if( iter_item->first == id_property_type )
+               propertyType = iter_item->second;
+
             sstream << "\"";
             sstream << U(iter_item->first.c_str());
             sstream << "\":\"";
@@ -574,6 +588,64 @@ std::string searchTypeValue = "";
          else
          {
             iter_duplicate_ad = iter_item;
+         }
+
+      }
+      //populating median price for the city
+      if(!searchCity.empty() && searchType == "For sale")
+      {
+         boost::to_upper(searchCity);
+         auto inseeCode = m_geolocal->getInseeCode(searchCity);
+         Log::getInstance()->info(" inseeCode = [" + inseeCode +"] City = " + searchCity );
+
+         GetResult inseeCodereturn;
+         KeyValue inseeCodeKey;
+         inseeCodeKey.key = "ID";
+         inseeCodeKey.value.fieldtype = Type::type::NUMBER;
+         inseeCodeKey.value.field  = inseeCode;
+
+         std::map<std::string, ValueType> infostoget;
+
+         ValueType medianpricevalue;
+         medianpricevalue.field = "";
+         medianpricevalue.fieldtype = Type::type::NUMBER;
+         std::string attributeName = "";
+         if( propertyType == "Appartement")
+            attributeName = "MEDIAN_PRICE_BY_M2_FLAT";
+         else {
+            attributeName = "MEDIAN_PRICE_BY_M2_HOUSE";
+         }
+         infostoget[attributeName] = medianpricevalue;
+
+         m_client->get(inseeCodereturn, "FR_PRICEBYM2_INFOS",inseeCodeKey , infostoget);
+
+         if( inseeCodereturn.result.success)
+         {
+            auto iter_medianPrice = inseeCodereturn.values.find(attributeName);
+            if( iter_medianPrice != inseeCodereturn.values.end())
+            {
+               medianPrice = iter_medianPrice->second;
+               Log::getInstance()->info(" Median price found " + medianPrice);
+
+               sstream << U(",\n");
+               sstream << "\"";
+               sstream << U("MEDIAN_PRICE_BY_M2");
+               sstream << "\":\"";
+               sstream << U(medianPrice.c_str());
+               sstream << "\"";
+            }
+         }
+         else {
+            std::stringstream error_msg;
+            error_msg << " Fail to get median price for city [";
+            error_msg << searchCity;
+            error_msg << "] ";
+            error_msg << " inseeCode [";
+            error_msg << inseeCode;
+            error_msg << "] ";
+            error_msg << inseeCodereturn.result.error;
+
+          Log::getInstance()->error(error_msg.str());
          }
 
       }
@@ -605,6 +677,15 @@ std::string searchTypeValue = "";
                   sstream << "\"";
                }
 
+            }
+            if(!medianPrice.empty())
+            {
+               sstream << U(",\n");
+               sstream << "\"";
+               sstream << U("MEDIAN_PRICE_BY_M2");
+               sstream << "\":\"";
+               sstream << U(medianPrice.c_str());
+               sstream << "\"";
             }
             sstream << U("\n}");
          }

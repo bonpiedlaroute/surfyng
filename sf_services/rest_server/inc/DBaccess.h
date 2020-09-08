@@ -11,6 +11,7 @@
 #include "sf_services/dynamodb_access/thrift_generated/dynamodb_access.h"
 #include <memory>
 #include <set>
+#include "sf_services/sf_utils/inc/Geolocal.h"
 
 namespace surfyn
 {
@@ -21,6 +22,7 @@ class DBaccess
 {
 private:
    std::shared_ptr<dynamodb_accessClient> m_client;
+   std::shared_ptr<surfyn::utils::GeoLocal> m_geolocal;
 public:
    DBaccess(const std::string& host, int port);
    void fetchSummary(utility::stringstream_t& sstream, const std::map<utility::string_t,  utility::string_t>& query );

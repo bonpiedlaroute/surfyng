@@ -833,6 +833,24 @@ function generate_details_page(data)
       nb_similar.innerHTML += " (" + postalcode + ")";
       pagetitle += cityname;
       pagetitle += " (" + postalcode + ")";
+
+      if(isForSale)
+      {
+        if( data[0].hasOwnProperty('MEDIAN_PRICE_BY_M2') )
+        {
+          var medianpricebox = document.getElementById("medianprice_box");
+          medianpricebox.className = "row mx-auto det_median_price_box";
+          var medianpricetext = document.getElementById("medianprice_text");
+          medianpricetext.className = "det_median_price_text";
+          medianpricetext.innerHTML = "Prix au m<sup>2</sup> médian ";
+          if( data[0].hasOwnProperty('PROPERTY_TYPE'))
+          medianpricetext.innerHTML += data[0].PROPERTY_TYPE == "Appartement"? "d'un appartement ":"d'une maison ";
+
+          medianpricetext.innerHTML += "à " + cityname + " (" + postalcode + "): ";
+
+          medianpricetext.innerHTML += formatPrice(data[0].MEDIAN_PRICE_BY_M2) + " €/m<sup>2</sup>";
+        }
+      }
     }
     pagetitle += " - Surfyn"
 
