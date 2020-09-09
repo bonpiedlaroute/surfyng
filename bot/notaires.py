@@ -35,7 +35,7 @@ class NotairesSpider(scrapy.Spider):
    name = "notaires"
 
    def __init__(self, city='', **kwargs):
-      self.city = city
+      self.city = city.lower()
 
       self.serializer = Serializer(ip, port, tablename)
 
