@@ -10,6 +10,7 @@
 #include "stdafx.h"
 #include "DBaccess.h"
 #include "EstimatorAccess.h"
+#include "sf_services/sf_utils/inc/Geolocal.h"
 
 using namespace web;
 using namespace http;
@@ -42,6 +43,7 @@ namespace rest_server
            http_listener m_listener;
            DBaccess m_dbaccess;
            EstimatorAccess m_estimatoraccess;
+           std::shared_ptr<surfyn::utils::GeoLocal> m_geoLocalService;
 
    };
 }

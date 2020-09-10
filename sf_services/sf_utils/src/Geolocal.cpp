@@ -56,5 +56,16 @@ namespace utils
       return "";
       }
    }
+
+   std::string GeoLocal::getInseeCodeFromPostalCode(const std::string& postalcode) const
+   {
+      auto iter = std::find_if(citiesInfos.begin(), citiesInfos.end(), [&postalcode](const std::pair<std::string, CityCode>& elt)
+      {
+         return elt.second.postalCode == postalcode ;
+      }
+      );
+
+      return iter != citiesInfos.end() ? iter->second.inseeCode : "";
+   }
 }
 }

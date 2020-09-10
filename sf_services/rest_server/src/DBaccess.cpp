@@ -8,10 +8,10 @@
 
 
 
+#include <sstream>
 #include <thrift/protocol/TBinaryProtocol.h>
 #include <thrift/transport/TSocket.h>
 #include <thrift/transport/TBufferTransports.h>
-#include "sf_services/sf_utils/inc/Geolocal.h"
 #include "sf_services/sf_utils/inc/Str.h"
 #include "sf_services/sf_utils/inc/Logger.h"
 #include <boost/algorithm/string.hpp>
@@ -79,7 +79,6 @@ std::string searchTypeValue = "";
       shared_ptr<TTransport> transport(new TBufferedTransport(socket));
       shared_ptr<TProtocol> protocol(new TBinaryProtocol(transport));
       m_client = std::make_shared<dynamodb_accessClient>(protocol);
-      m_geolocal = std::make_shared<surfyn::utils::GeoLocal>("../../../bot/data/correspondance_codeinsee_codepostal_iledefrance.csv");
 
       transport->open();
    }
@@ -471,7 +470,8 @@ std::string searchTypeValue = "";
       }
       sstream << U("\n]\n");
    }
-   void DBaccess::fetchDetails(utility::stringstream_t& sstream, const std::map<utility::string_t,  utility::string_t>& query )
+   void DBaccess::fetchDetails(utility::stringstream_t& sstream, const std::map<utility::string_t,  utility::string_t>& query, 
+   const std::shared_ptr<surfyn::utils::GeoLocal>&  geolocalservice )
    {
       auto iter_id = query.find("id");
       if( iter_id == query.end())
@@ -595,7 +595,7 @@ std::string searchTypeValue = "";
       if(!searchCity.empty() && searchType == "For sale")
       {
          boost::to_upper(searchCity);
-         auto inseeCode = m_geolocal->getInseeCode(searchCity);
+         auto inseeCode = geolocalservice->getInseeCode(searchCity);
          Log::getInstance()->info(" inseeCode = [" + inseeCode +"] City = " + searchCity );
 
          GetResult inseeCodereturn;
@@ -693,6 +693,61 @@ std::string searchTypeValue = "";
       }
       sstream << U("\n]\n");
 
+   }
+
+   void DBaccess::fetchHighAndLowPriceByM2(const std::string& cityId, bool isFlat, std::string& highpricebym2, std::string& lowpricebym2)
+   {
+      GetResult inseeCodereturn;
+      KeyValue inseeCodeKey;
+      inseeCodeKey.key = "ID";
+      inseeCodeKey.value.fieldtype = Type::type::NUMBER;
+      inseeCodeKey.value.field  = cityId;
+
+      std::map<std::string, ValueType> infostoget;
+
+      ValueType highpricevalue;
+      highpricevalue.field = "";
+      highpricevalue.fieldtype = Type::type::NUMBER;
+      std::string HighPriceAttributeName = "";
+      if( isFlat )
+         HighPriceAttributeName = "HIGH_PRICE_BY_M2_FLAT";
+      else {
+         HighPriceAttributeName = "HIGH_PRICE_BY_M2_HOUSE";
+      }
+      infostoget[HighPriceAttributeName] = highpricevalue;
+
+      ValueType lowpricevalue;
+      lowpricevalue.field = "";
+      lowpricevalue.fieldtype = Type::type::NUMBER;
+      std::string LowPriceAttributeName = "";
+      if( isFlat )
+         LowPriceAttributeName = "LOW_PRICE_BY_M2_FLAT";
+      else {
+         LowPriceAttributeName = "LOW_PRICE_BY_M2_HOUSE";
+      }
+      infostoget[LowPriceAttributeName] = lowpricevalue;
+
+      m_client->get(inseeCodereturn, "FR_PRICEBYM2_INFOS",inseeCodeKey , infostoget);
+
+      if(inseeCodereturn.result.success)
+      {
+         auto iter_highprice = inseeCodereturn.values.find(HighPriceAttributeName);
+         if(iter_highprice != inseeCodereturn.values.end())
+            highpricebym2 = iter_highprice->second;
+
+         auto iter_lowprice = inseeCodereturn.values.find(LowPriceAttributeName);
+         if(iter_lowprice != inseeCodereturn.values.end())
+            lowpricebym2 = iter_lowprice->second;
+      }
+      else 
+      {
+         std::stringstream msg;
+         msg << "Fail to get price by m2 infos for city insee code [";
+         msg << cityId;
+         msg << "] error msg => ";
+         msg << inseeCodereturn.result.error;
+         Log::getInstance()->error(msg.str());
+      }
    }
 }
 }

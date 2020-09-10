@@ -30,6 +30,7 @@ namespace utils
       GeoLocal(const std::string& csvfile);
       std::string getInseeCode(const std::string& city) const;
       std::string getPostalCode(const std::string& city) const;
+      std::string getInseeCodeFromPostalCode(const std::string& postalcode) const;
    };    
 }
 

@@ -22,11 +22,12 @@ class DBaccess
 {
 private:
    std::shared_ptr<dynamodb_accessClient> m_client;
-   std::shared_ptr<surfyn::utils::GeoLocal> m_geolocal;
 public:
    DBaccess(const std::string& host, int port);
    void fetchSummary(utility::stringstream_t& sstream, const std::map<utility::string_t,  utility::string_t>& query );
-   void fetchDetails(utility::stringstream_t& sstream, const std::map<utility::string_t,  utility::string_t>& query );
+   void fetchDetails(utility::stringstream_t& sstream, const std::map<utility::string_t,  utility::string_t>& query, 
+   const std::shared_ptr<surfyn::utils::GeoLocal>&  geolocalservice);
+   void fetchHighAndLowPriceByM2(const std::string& cityId, bool isFlat, std::string& highpricebym2, std::string& lowpricebym2);
 private:
    static void fillFilterExprAndExprValue(std::stringstream &filterexpression, std::map<std::string, ValueType> &expressionValue,
                                       const std::string &param, const std::string& paramvalue, const std::string & value,

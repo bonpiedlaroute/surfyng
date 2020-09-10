@@ -18,7 +18,8 @@ namespace rest_server
 HttpRequestHandler::HttpRequestHandler(utility::string_t url, http_listener_config conf, const std::string& dbaccess_host, int dbaccess_port,
                                        const std::string& estimator_host, int estimator_port):m_listener(url, conf),
                                              m_dbaccess(dbaccess_host, dbaccess_port),
-                                             m_estimatoraccess(estimator_host, estimator_port)
+                                             m_estimatoraccess(estimator_host, estimator_port),
+                                             m_geoLocalService(std::make_shared<surfyn::utils::GeoLocal>("../../../bot/data/correspondance_codeinsee_codepostal_iledefrance.csv"))
 {
     m_listener.support(methods::GET, [this](http_request message) { handle_get(message);});
     m_listener.support(methods::PUT, [this](http_request message) { handle_put(message);});
@@ -66,14 +67,30 @@ void HttpRequestHandler::handle_get(http_request message)
        if(paths.size() == 2  && paths[0] == "search" && paths[1] == "ad")
        {
           auto query = http::uri::split_query(http::uri::decode(message.relative_uri().query()));
-          m_dbaccess.fetchDetails(sstream, query);
+          m_dbaccess.fetchDetails(sstream, query, m_geoLocalService);
        }
        else
        {
           if(paths.size() == 1  && paths[0] == "predict")
            {
-              auto query = http::uri::split_query(http::uri::decode(message.relative_uri().query()));
-              m_estimatoraccess.fetchHousePrice(sstream, query);
+            auto query = http::uri::split_query(http::uri::decode(message.relative_uri().query()));
+            auto iter_postalcode = query.find("code_postal");
+            std::string highpricebym2 = "", lowpricebym2 = "";
+
+            bool isFlat = false;
+            auto iter_proptype = query.find("code_type_local");
+            if( iter_proptype != query.end())
+                isFlat = iter_proptype->second == "2";
+            
+            if(iter_postalcode != query.end())
+            {
+                auto inseecode = m_geoLocalService->getInseeCodeFromPostalCode(iter_postalcode->second);
+                
+                
+                
+                m_dbaccess.fetchHighAndLowPriceByM2(inseecode, isFlat, highpricebym2, lowpricebym2);
+            }
+            m_estimatoraccess.fetchHousePrice(sstream, query,  isFlat, highpricebym2, lowpricebym2);
 
            }
            else

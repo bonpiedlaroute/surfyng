@@ -21,7 +21,8 @@ namespace rest_server
       std::shared_ptr<house_predictionClient> m_client;
    public:
       EstimatorAccess(const std::string& host, int port);
-      void fetchHousePrice(utility::stringstream_t& sstream, const std::map<utility::string_t,  utility::string_t>& query);
+      void fetchHousePrice(utility::stringstream_t& sstream, const std::map<utility::string_t,  utility::string_t>& query,
+        bool isFlat, const std::string& highpricebym2, const std::string& lowpricebym2);
 
    };
 }

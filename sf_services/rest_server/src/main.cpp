@@ -109,6 +109,7 @@ int main(int argc, char *argv[])
 
     address.append(port);
 
+    // Initialize and run rest_server
     try
     {
       on_initialize(address, dbaccess_host, dbaccess_port, estimator_host, estimator_port);
