@@ -281,3 +281,19 @@ NotairesRefererPropertiesMapping[HOUSE_ID] = 'MAI'
 
 def getNotairesRefererPropertiesId(_id):
    return NotairesRefererPropertiesMapping[_id]
+
+AgencePrincipalePropertiesMapping = dict()
+AgencePrincipalePropertiesMapping[APART_ID] = '1'
+AgencePrincipalePropertiesMapping[HOUSE_ID] = '2'
+
+AgencePrincipaleSearchTypeMapping = dict()
+AgencePrincipaleSearchTypeMapping[BUY_ID] = 'Vente'
+AgencePrincipaleSearchTypeMapping[RENT_ID] = 'Location'
+
+def getAgencePrincipalePropertiesId(_id):
+   return AgencePrincipalePropertiesMapping[_id]
+
+def getAgencePrincipaleSearchTypeId(_id):
+   return AgencePrincipaleSearchTypeMapping[_id]
+
+

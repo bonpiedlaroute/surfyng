@@ -208,6 +208,7 @@ namespace surfyn
       m_ReaderBySources["paruvendu"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadParuVenduJSON(json, realEstate);};
       m_ReaderBySources["avendrealouer"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadAvendreAlouerJSON(json, realEstate);};
       m_ReaderBySources["nestenn"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadNestennJSON(json, realEstate);};
+      m_ReaderBySources["agenceprincipale"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadAgencePrincipaleJSON(json, realEstate);};
    }
    DataFormater::~DataFormater()
    {
@@ -1829,8 +1830,84 @@ void DataFormater::ReadNestennJSON(const std::string& json, classifier::RealEsta
       realEstate->setDescription(RealEstateBedRooms, document[RealEstateBedRooms].GetString());
    }
 
-
    realEstate->setDescription(SOURCE_LOGO, "data/nestenn.jpeg");
+}
+
+void DataFormater::ReadAgencePrincipaleJSON(const std::string& json, classifier::RealEstateAd* realEstate)
+{
+   std::locale::global(std::locale(""));
+
+   rapidjson::Document document;
+   document.Parse(json.c_str());
+
+   if(document.HasParseError())
+   {
+      std::stringstream error;
+      error << "failed to parse agenceprincipale json: error code [";
+      error << document.GetParseError();
+      error << "] error offset :[";
+      error << document.GetErrorOffset();
+      error << "]";
+      Log::getInstance()->error(error.str());
+
+      return;
+   }
+   if (document.HasMember(RealEstatePrice))
+   {
+      realEstate->setDescription(RealEstatePrice, document[RealEstatePrice].GetString());
+   }
+
+   if( document.HasMember(RealEstateSurface))
+   {
+     realEstate->setDescription(RealEstateSurface, document[RealEstateSurface].GetString());
+   }
+   if( document.HasMember(RealEstateRooms))
+   {
+      realEstate->setDescription(RealEstateRooms, document[RealEstateRooms].GetString());
+   }
+
+   if (document.HasMember(RealEstateParking))
+   {
+      realEstate->setDescription(RealEstateParking, document[RealEstateParking].GetString());
+   }
+   if (document.HasMember(RealEstateLift))
+   {
+      realEstate->setDescription(RealEstateLift, document[RealEstateLift].GetString());
+   }
+   if (document.HasMember(RealEstateFloor))
+   {
+      std::string floor;
+      std::string nb_floor = document[RealEstateFloor].GetString();
+      boost::erase_all(nb_floor, " ");
+      if( atoi(nb_floor.c_str()) == 1)
+      {
+         floor = "1er";
+      }
+      else
+      {
+         floor = nb_floor + "ème";
+      }
+      realEstate->setDescription(RealEstateFloor, floor);
+   }
+
+   if( document.HasMember(RealEstateBedRooms))
+   {
+      realEstate->setDescription(RealEstateBedRooms, document[RealEstateBedRooms].GetString());
+   }
+
+   if (document.HasMember(RealEstateTypeOfHeating))
+   {
+      realEstate->setDescription(RealEstateTypeOfHeating, document[RealEstateTypeOfHeating].GetString());
+   }
+   if( document.HasMember(RealEstateConstructionYear))
+   {
+      realEstate->setDescription(RealEstateConstructionYear, document[RealEstateConstructionYear].GetString());
+   }
+   if(document.HasMember(RealEstateLandSurface))
+   {
+      realEstate->setDescription(RealEstateLandSurface, document[RealEstateLandSurface].GetString());
+   }
+   realEstate->setDescription(SOURCE_LOGO, "data/agenceprincipale.png");
 }
 
 void DataFormater::ReadSummaryTable(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tableName, const std::string& city)

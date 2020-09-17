@@ -283,4 +283,19 @@ def buildNotairesRefererUrl(city, r_ptype):
    url += inseecodeByCity[city]
 
    return url
- 
+
+agenceprincipale_url = "https://www.agenceprincipale.com/catalog/advanced_search_result_carto.php?action=update_search&C_28_search=EGAL&C_28_type=UNIQUE&C_65_search=CONTIENT&C_65_type=TEXT&nb_rows_per_page=96"
+
+def buildAgencePrincipaleUrl(city, ptype, stype):
+   url = agenceprincipale_url + "C_28="
+   url += stype
+   url += "&cfamille_id="
+   url += ptype
+   url += "&C_65="
+   url += postalcodeByCity[city]
+   url += "+"
+   url += city
+   
+   return url
+
+
