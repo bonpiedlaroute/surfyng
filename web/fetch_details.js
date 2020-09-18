@@ -769,6 +769,23 @@ function generate_details_page(data)
 
       ad_link.appendChild(det_desc_container_div);
 
+      var det_ad_notary_fees_frame_div = createNode("div");
+      det_ad_notary_fees_frame_div.className = "det_notary_fees_frame";
+      if(data[i].hasOwnProperty('PRICE') && data[i].hasOwnProperty('SEARCH_TYPE') && data[i].SEARCH_TYPE == "For sale")
+      {
+          var det_ad_notary_fees_box_div = createNode("div");
+          det_ad_notary_fees_box_div.className = "det_notary_fees_box";
+          var det_ad_notary_fees_span = createNode("span");
+          det_ad_notary_fees_span.className = "no_select det_notary_fees_text";
+          det_ad_notary_fees_span.innerHTML = "+ ";
+          var notary_fees = Math.floor(data[i].PRICE * 0.078);
+          det_ad_notary_fees_span.innerHTML += formatPrice(String(notary_fees));
+          det_ad_notary_fees_span.innerHTML += " € env. de frais de notaires"
+          det_ad_notary_fees_box_div.appendChild(det_ad_notary_fees_span);
+          det_ad_notary_fees_frame_div.appendChild(det_ad_notary_fees_box_div);
+      }
+      ad_link.appendChild(det_ad_notary_fees_frame_div);
+
       var det_ad_logo_container_div = createNode("div");
       det_ad_logo_container_div.className = "det_ad_logo_container";
       var det_ad_logo_frame_div = createNode("div");
