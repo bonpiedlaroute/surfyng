@@ -40,10 +40,7 @@ function loadJSON(path, success, error) {
 
   })
   .catch(function(error) {
-    var id = window.location.search.substr(1);
-    const localurl = "data/announces_details" + id + ".json";
-    loadJSON(localurl,
-    function (data) { generate_details_page(JSON.parse(data.response));}, function(err) {console.log(err);})
+
     console.log(error);
   });
 

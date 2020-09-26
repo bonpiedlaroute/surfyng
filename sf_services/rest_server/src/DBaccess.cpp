@@ -661,33 +661,37 @@ std::string searchTypeValue = "";
             key.value.field = item;
             m_client->get(_return, details_table,key , attributestoget);
 
-            sstream << U(",\n{\n");
-            for(auto iter_item = _return.values.begin(); iter_item != _return.values.end(); ++iter_item)
+            if(_return.values.size() > 0)
             {
-               if(iter_item->first != id_duplicates)
+               sstream << U(",\n{\n");
+               for(auto iter_item = _return.values.begin(); iter_item != _return.values.end(); ++iter_item)
                {
-                  if( iter_item != _return.values.begin())
+                  if(iter_item->first != id_duplicates)
                   {
-                     sstream << U(",\n");
+                     if( iter_item != _return.values.begin())
+                     {
+                        sstream << U(",\n");
+                     }
+                     sstream << "\"";
+                     sstream << U(iter_item->first.c_str());
+                     sstream << "\":\"";
+                     sstream << U(iter_item->second.c_str());
+                     sstream << "\"";
                   }
+
+               }
+               if(!medianPrice.empty())
+               {
+                  sstream << U(",\n");
                   sstream << "\"";
-                  sstream << U(iter_item->first.c_str());
+                  sstream << U("MEDIAN_PRICE_BY_M2");
                   sstream << "\":\"";
-                  sstream << U(iter_item->second.c_str());
+                  sstream << U(medianPrice.c_str());
                   sstream << "\"";
                }
-
+               sstream << U("\n}");
             }
-            if(!medianPrice.empty())
-            {
-               sstream << U(",\n");
-               sstream << "\"";
-               sstream << U("MEDIAN_PRICE_BY_M2");
-               sstream << "\":\"";
-               sstream << U(medianPrice.c_str());
-               sstream << "\"";
-            }
-            sstream << U("\n}");
+            
          }
 
       }
