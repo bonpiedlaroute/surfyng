@@ -71,6 +71,9 @@ const std::string exprval_areaMin = ":ai";
 const std::string exprval_areaMax = ":aa";
 const std::string exprval_rooms = ":ro";
 
+const std::string city_info_table = "FR_CITIES_DESCRIPTION";
+const std::string descriptionAttribute = "DESCRIPTION";
+
 std::string searchTypeValue = "";
 
    DBaccess::DBaccess(const std::string& host, int port)
@@ -750,6 +753,55 @@ std::string searchTypeValue = "";
          msg << cityId;
          msg << "] error msg => ";
          msg << inseeCodereturn.result.error;
+         Log::getInstance()->error(msg.str());
+      }
+   }
+
+   void DBaccess::fetchCityInfo(utility::stringstream_t& sstream, const std::map<utility::string_t,  utility::string_t>& query, 
+   const std::shared_ptr<surfyn::utils::GeoLocal>&  geolocalservice)
+   {
+      auto iter_city = query.find("city");
+      if( iter_city == query.end())
+      {
+         Log::getInstance()->error("fetchCityInfo : no city found");
+         return;
+      }
+      std::string city = iter_city->second;
+      boost::to_upper(city);
+      auto inseeCode = geolocalservice->getInseeCode(city);
+
+      GetResult cityDescriptionreturn;
+      KeyValue inseeCodeKey;
+      inseeCodeKey.key = "ID";
+      inseeCodeKey.value.fieldtype = Type::type::NUMBER;
+      inseeCodeKey.value.field  = inseeCode;
+
+      std::map<std::string, ValueType> infostoget;
+
+      ValueType descriptionValue;
+      descriptionValue.field = "";
+      descriptionValue.fieldtype = Type::type::STRING;
+
+      infostoget[descriptionAttribute] = descriptionValue;
+
+      m_client->get(cityDescriptionreturn, city_info_table,inseeCodeKey , infostoget);
+
+      if(cityDescriptionreturn.result.success)
+      {
+         auto iter_desc = cityDescriptionreturn.values.find(descriptionAttribute);
+         if(iter_desc != cityDescriptionreturn.values.end())
+            sstream << U(iter_desc->second.c_str());
+         else
+            sstream << "{}";
+
+      }
+      else 
+      {
+         std::stringstream msg;
+         msg << "Fail to get description for city insee code [";
+         msg << inseeCode;
+         msg << "] error msg => ";
+         msg << cityDescriptionreturn.result.error;
          Log::getInstance()->error(msg.str());
       }
    }

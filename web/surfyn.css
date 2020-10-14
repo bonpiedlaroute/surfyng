@@ -113,7 +113,6 @@ a:hover{ text-decoration: none; }
 {
   width :500px;
   height: 140px;
-  #padding-top:10px;
   background-image:url('map.svg');
   background-repeat: no-repeat;
   background-size: cover;
@@ -131,7 +130,7 @@ a:hover{ text-decoration: none; }
 {
   position:absolute;
   padding: 10px;
-  pointers-events:none;
+  pointer-events:none;
 }
 
 .sf_line
@@ -587,7 +586,6 @@ width:100%;
 {
   width :30%;
   height: 140px;
-  #padding-top:10px;
   background-image:url('map.svg');
   background-repeat: no-repeat;
   background-size: cover;
@@ -723,7 +721,7 @@ margin-left:10%;
 }
 .ad_summary_src_text
 {
-  font-size:15px;color : gray; fond-weight:bold;
+  font-size:15px;color : gray;
 }
 .ad_summary_src_provider_cont
 {
@@ -771,7 +769,6 @@ margin-left:10%;
   padding: 8px 12px;
   text-decoration: none;
   display: block;
-  font-size: bold;
 }
 .parameter_content a:hover
 {
@@ -868,6 +865,79 @@ margin-left:10%;
 {
   margin-left:10px;
   color:#61AEB5;
+}
+.sf_city_description_text_color
+{
+  color:#61AEB5 !important;
+}
+.sf_city_description_container
+{
+  display:none;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  flex-direction:column;
+  margin-top:30px;
+}
+.sf_city_description_frame
+{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  flex-direction:column;
+  border:1px solid #61AEB5;
+  width:70%;
+  height:950px;
+  background-color:rgb(187, 220, 221);
+}
+.sf_city_description_box
+{
+  width:100%;height:220px;
+  text-align:center;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+.sf_city_description_details_container
+{
+  display:flex;
+  justify-content: center;
+  align-items:center;
+  flex-direction:column;
+  width:100%;
+  height:680px;
+}
+.sf_city_description_details_element
+{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:row;
+  width:100%;
+  height:85px;
+}
+.sf_city_description_details_icon_box
+{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  border:1px solid #61AEB5;
+  width:10%;
+  height:82px;
+}
+.sf_city_description_details_icon_size
+{
+  font-size:30px;color:#61AEB5;
+}
+.sf_city_description_details_element_text
+{
+  width:85%;
+  height:82px;
+  display:flex;
+  align-items:center;
+  justify-content: center;
+  padding:3px;
 }
 @media (max-width:1024px) {
   .search_type_text
@@ -1138,7 +1208,6 @@ margin-left:10%;
   {
     width :100%;
     height: 140px;
-    #padding-top:10px;
     background-image:url('map.svg');
     background-repeat: no-repeat;
     background-size: cover;
@@ -1168,8 +1237,7 @@ margin-left:10%;
   {
     width:0%;
     height:0px;
-    #border-radius:6px;
-    #transform:scale(0.85);
+
   }
   .estimate_area
   {
@@ -1247,6 +1315,36 @@ margin-left:10%;
     margin:auto;
     font-size:11px;
     color:black;
+  }
+  .sf_city_description_frame
+  {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    flex-direction:column;
+    border:1px solid #61AEB5;
+    width:90%;
+    height:950px;
+    background-color:rgb(187, 220, 221);
+  }
+  .sf_city_description_text_color
+  {
+    color:#61AEB5 !important;
+    font-size: 12px;
+  }
+  .sf_city_description_details_icon_box
+  {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    border:1px solid #61AEB5;
+    width:20%;
+    height:82px;
+  }
+  .sf_city_description_details_icon_size
+  {
+    font-size:20px;color:#61AEB5;
   }
 
 } /* end of @media (max-width:1024px)  */

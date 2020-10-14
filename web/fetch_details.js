@@ -865,6 +865,67 @@ function generate_details_page(data)
           medianpricetext.innerHTML += formatPrice(data[0].MEDIAN_PRICE_BY_M2) + " €/m<sup>2</sup>";
         }
       }
+
+      /* complete the page with city description */
+      const city_description_endpoint =  'https://surfyn.fr:7878/city_info?city='+ data[0].CITY;
+      //const city_description_endpoint = 'http://127.0.0.1:7878/city_info?city='+ data[0].CITY;
+      fetch(city_description_endpoint)
+      .then(function(resp) { return resp.json(); } )
+      .then(function(data) {
+
+        if(data.hasOwnProperty("DESCRIPTION"))
+        {
+          var city_description_text = document.getElementById("city_description_text");
+          city_description_text.innerHTML = data.DESCRIPTION;
+        }
+        if(data.hasOwnProperty("TRANSPORTATION"))
+        {
+          var city_transportation = document.getElementById("city_transportation");
+          city_transportation.innerHTML = data.TRANSPORTATION;
+        }
+        if(data.hasOwnProperty("BIKE"))
+        {
+          var city_bike = document.getElementById("city_bike");
+          city_bike.innerHTML = data.BIKE;
+        }
+        if(data.hasOwnProperty("GREEN_SPACE"))
+        {
+          var city_green_space = document.getElementById("city_green_space");
+          city_green_space.innerHTML = data.GREEN_SPACE;
+        }
+        if(data.hasOwnProperty("RESTAURANT"))
+        {
+          var city_restaurant = document.getElementById("city_restaurant");
+          city_restaurant.innerHTML = data.RESTAURANT;
+        }
+        if(data.hasOwnProperty("SCHOOL"))
+        {
+          var city_school = document.getElementById("city_school");
+          city_school.innerHTML = data.SCHOOL;
+        }
+        if(data.hasOwnProperty("HOSPITAL"))
+        {
+          var city_hospital = document.getElementById("city_hospital");
+          city_hospital.innerHTML = data.HOSPITAL;
+        }
+        if(data.hasOwnProperty("SHOPPING"))
+        {
+          var city_shopping = document.getElementById("city_shopping");
+          city_shopping.innerHTML = data.SHOPPING;
+        }
+        if(data.hasOwnProperty("CINEMA"))
+        {
+          var city_cinema = document.getElementById("city_cinema");
+          city_cinema.innerHTML = data.CINEMA;
+        }
+        var city_description_container = document.getElementById("city_description_container");
+        city_description_container.style.display="flex";
+
+      })
+      .catch(function(error) {
+
+        console.log(error);
+      });
     }
     pagetitle += " - Surfyn"
 

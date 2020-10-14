@@ -92,20 +92,28 @@ void HttpRequestHandler::handle_get(http_request message)
             }
             m_estimatoraccess.fetchHousePrice(sstream, query,  isFlat, highpricebym2, lowpricebym2);
 
-           }
-           else
+           }else 
            {
-              std::string error = "Unknown requested service: ";
-              for( auto valuepath : paths)
-              {
-                  error += valuepath;
-                  error +="/";
-              }
-              Log::getInstance()->error(error);
-              message.reply(status_codes::NotFound, "resource not found!");
-              return;
+                if(paths.size() == 1  && paths[0] == "city_info")
+                {
+                    auto query = http::uri::split_query(http::uri::decode(message.relative_uri().query()));
+                    m_dbaccess.fetchCityInfo(sstream, query, m_geoLocalService);
+                }
+                else
+                {
+                    std::string error = "Unknown requested service: ";
+                    for( auto valuepath : paths)
+                    {
+                        error += valuepath;
+                        error +="/";
+                    }
+                    Log::getInstance()->error(error);
+                    message.reply(status_codes::NotFound, "resource not found!");
+                    return;
 
+                }
            }
+           
        }
 
     }
