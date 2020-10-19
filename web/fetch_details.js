@@ -867,6 +867,9 @@ function generate_details_page(data)
       }
 
       /* complete the page with city description */
+      var city_description_text_header = document.getElementById("city_description_text_header");
+      city_description_text_header.innerHTML = "En savoir plus sur ";
+      city_description_text_header.innerHTML += cityname + " (" + postalcode + ")";
       const city_description_endpoint =  'https://surfyn.fr:7878/city_info?city='+ data[0].CITY;
       //const city_description_endpoint = 'http://127.0.0.1:7878/city_info?city='+ data[0].CITY;
       fetch(city_description_endpoint)

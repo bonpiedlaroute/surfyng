@@ -889,7 +889,7 @@ margin-left:10%;
   border:1px solid #61AEB5;
   width:70%;
   height:950px;
-  background-color:rgb(187, 220, 221);
+  background-color:white;
 }
 .sf_city_description_box
 {
@@ -898,7 +898,33 @@ margin-left:10%;
   display:flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 }
+.sf_city_description_text_box
+{
+  display:flex;
+  align-items:center;
+  width:100%;
+  height:150px;
+  text-align:center;
+}
+.sf_city_description_text_header_box
+{
+  height:70px;
+  width:100%;
+  display:flex;
+  align-items:center;
+  text-align:center;
+}
+
+.sf_city_description_text_header
+{
+  color:#61AEB5;
+  font-size:20px;
+  margin: auto;
+}
+
+
 .sf_city_description_details_container
 {
   display:flex;
@@ -922,13 +948,13 @@ margin-left:10%;
   display:flex;
   justify-content:center;
   align-items:center;
-  border:1px solid #61AEB5;
   width:10%;
   height:82px;
+  border-radius: 8px;
 }
 .sf_city_description_details_icon_size
 {
-  font-size:30px;color:#61AEB5;
+  font-size:30px;
 }
 .sf_city_description_details_element_text
 {
@@ -1325,8 +1351,39 @@ margin-left:10%;
     flex-direction:column;
     border:1px solid #61AEB5;
     width:90%;
-    height:1140px;
-    background-color:rgb(187, 220, 221);
+    height:1240px;
+    background-color:white;
+  }
+  .sf_city_description_box
+  {
+    width:100%;height:320px;
+    text-align:center;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  .sf_city_description_text_box
+  {
+    display:flex;
+    align-items:center;
+    width:100%;
+    height:240px;
+    text-align:center;
+  }
+  .sf_city_description_text_header_box
+  {
+    height:80px;
+    width:100%;
+    display:flex;
+    align-items:center;
+    text-align:center;
+  }
+  .sf_city_description_text_header
+  {
+    color:#61AEB5;
+    font-size:18px;
+    margin: auto;
   }
   .sf_city_description_text_color
   {
@@ -1341,10 +1398,11 @@ margin-left:10%;
     border:1px solid #61AEB5;
     width:20%;
     height:110px;
+    border-radius:8px;
   }
   .sf_city_description_details_icon_size
   {
-    font-size:20px;color:#61AEB5;
+    font-size:20px;
   }
   .sf_city_description_details_element
   {
