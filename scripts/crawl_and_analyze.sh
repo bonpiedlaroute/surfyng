@@ -124,6 +124,8 @@ do
         #sleep 10
         #cd ~/software/surfyng/sf_services/rest_server/build/
         #sudo ./start_rest
+        cd ~/software/surfyng/sf_services/duplicates_fix/build
+        ./duplicates_fix config.ini $CITY
         rm -f ~/scrapy_env/surfyn_bot/surfyn_bot/images_"$CITY"/*
         rm -rf image_to_labels.json image_vectors nearest_neighbors
         sleep 60
