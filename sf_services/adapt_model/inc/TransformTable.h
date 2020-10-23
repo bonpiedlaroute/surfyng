@@ -50,6 +50,7 @@ namespace surfyn
       void ReadAvendreAlouerJSON(const std::string& json, classifier::RealEstateAd* realEstate);
       void ReadNestennJSON(const std::string& json, classifier::RealEstateAd* realEstate);
       void ReadAgencePrincipaleJSON(const std::string& json, classifier::RealEstateAd* realEstate);
+      void ReadLeFigaroImmobilierJSON(const std::string& json, classifier::RealEstateAd* realEstate);
    private:
       std::unordered_map<int64_t, classifier::RealEstateAd*> m_AnnouncesByID;
       std::unordered_set<int64_t> m_SummaryId;

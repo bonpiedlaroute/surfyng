@@ -296,4 +296,16 @@ def getAgencePrincipalePropertiesId(_id):
 def getAgencePrincipaleSearchTypeId(_id):
    return AgencePrincipaleSearchTypeMapping[_id]
 
+LefigaroImmobilierPropertiesMapping = dict()
+LefigaroImmobilierPropertiesMapping[APART_ID] = 'appartement'                                                     
+LefigaroImmobilierPropertiesMapping[HOUSE_ID] = 'maison'                                                     
 
+LefigaroImmobilierSearchTypeMapping = dict()
+LefigaroImmobilierSearchTypeMapping[BUY_ID] = 'vente'
+LefigaroImmobilierSearchTypeMapping[RENT_ID] = 'location'                                               
+
+def getLefigaroImmobilierPropertiesId(_id):
+   return LefigaroImmobilierPropertiesMapping[_id]                                                      
+
+def getLefigaroImmobilierSearchTypeId(_id):
+   return LefigaroImmobilierSearchTypeMapping[_id]      
