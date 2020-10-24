@@ -298,7 +298,7 @@ def buildAgencePrincipaleUrl(city, ptype, stype):
    
    return url
 
-lefigaroimmobilier_url = "https://immobilier.lefigaro.fr/rest/classifieds?sortType=5&resultsPerPage=100&"
+lefigaroimmobilier_url = "https://immobilier.lefigaro.fr/rest/classifieds?sortType=5&resultsPerPage=50&"
 
 def buildLefigaroImmobilierUrl(city, ptype, stype):
     url = lefigaroimmobilier_url + "transaction="
