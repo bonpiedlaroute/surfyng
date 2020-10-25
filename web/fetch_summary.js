@@ -42,17 +42,24 @@ function loadJSON(path, success, error) {
 
   function ByTimeStamp(lhs, rhs)
   {
-    if( lhs.hasOwnProperty("FIRST_TIMESTAMP") && rhs.hasOwnProperty("FIRST_TIMESTAMP"))
+    var d1, d2;
+    if(!lhs.hasOwnProperty("FIRST_TIMESTAMP"))
     {
-      var d1 = new Date(lhs.FIRST_TIMESTAMP);
-      var d2 = new Date(rhs.FIRST_TIMESTAMP);
-      return d2 - d1; //descending order
+      d1 = new Date(lhs.TIMESTAMP);
     }
     else {
-      var d1 = new Date(lhs.TIMESTAMP);
-      var d2 = new Date(rhs.TIMESTAMP);
-      return d2 - d1; //descending order
+      d1 = new Date(lhs.FIRST_TIMESTAMP);
     }
+
+    if(!rhs.hasOwnProperty("FIRST_TIMESTAMP"))
+    {
+      d2 = new Date(rhs.TIMESTAMP);
+    }
+    else {
+      d2 = new Date(rhs.FIRST_TIMESTAMP);
+    }
+
+    return d2 - d1; //descending order
   }
 
   var ProcessorBySource = new Map();
@@ -386,12 +393,47 @@ function generate_summary_page(data)
 
             ad_summary_desc_div1.appendChild(ad_summary_details_h2);
 
-            //var ad_summary_refresh_time_p = createNode("p");
-            //ad_summary_refresh_time_p.className = "announce_summary_refresh_time";
-            //ad_summary_refresh_time_p.innerHTML = data[i].HISTORY;
-            //ad_summary_refresh_time_p.innerHTML = "il y a 1h";
+            var ad_summary_history = createNode("a");
+            ad_summary_history.className = "announce_summary_history";
+            ad_summary_history.innerHTML = "il y'a ";
 
-            //ad_summary_desc_div1.appendChild(ad_summary_refresh_time_p);
+            var firstDate;
+            if(data[i].hasOwnProperty('FIRST_TIMESTAMP'))
+            {
+              firstDate = new Date(data[i].FIRST_TIMESTAMP);
+            }
+            else {
+              firstDate = new Date(data[i].TIMESTAMP);
+            }
+            var currentDate = new Date();
+
+            var elapsedTime = (currentDate - firstDate)/(1000*60*60);
+
+            if( elapsedTime < 24 )
+            {
+              ad_summary_history.innerHTML+= String(Math.floor(elapsedTime));
+              ad_summary_history.innerHTML+="h";
+            }
+            else {
+                     var elapsedTimeInDays = Math.floor(elapsedTime / 24);
+                     if(elapsedTimeInDays < 31)
+                     {
+                       ad_summary_history.innerHTML+= String(elapsedTimeInDays);
+                       if(elapsedTimeInDays == 1)
+                        ad_summary_history.innerHTML+=" jour";
+                       else
+                        ad_summary_history.innerHTML+=" jours";
+                     }
+                     else
+                     {
+                       var elapsedTimeInMonths = Math.floor(elapsedTime / (24*30) );
+                       ad_summary_history.innerHTML+= String(elapsedTimeInMonths);
+                       ad_summary_history.innerHTML+=" mois";
+                     }
+
+                 }
+
+            ad_summary_desc_div1.appendChild(ad_summary_history);
 
             ad_summary_container_div.appendChild(ad_summary_desc_div1);
 
