@@ -781,7 +781,39 @@ function generate_details_page(data)
           det_ad_notary_fees_box_div.appendChild(det_ad_notary_fees_span);
           det_ad_notary_fees_frame_div.appendChild(det_ad_notary_fees_box_div);
       }
+
       ad_link.appendChild(det_ad_notary_fees_frame_div);
+
+      /* populate announce text description if present */
+      if( data[i].hasOwnProperty('AD_TEXT_DESCRIPTION'))
+      {
+        det_ad_container_div.style.height = "820px";
+        var det_ad_text_description_frame = createNode("div");
+        det_ad_text_description_frame.className = "announce_text_description_frame";
+
+        var det_ad_text_description_header = createNode("div");
+        det_ad_text_description_header.className = "announce_text_description_header";
+        var det_ad_text_description_header_text = createNode("span");
+        det_ad_text_description_header_text.className = "no_select announce_text_description_header_text";
+        det_ad_text_description_header_text.style.fontWeight = "bold";
+        det_ad_text_description_header_text.innerHTML = "Description";
+
+        det_ad_text_description_header.appendChild(det_ad_text_description_header_text);
+        det_ad_text_description_frame.appendChild(det_ad_text_description_header);
+
+        var det_ad_text_description_container = createNode("div");
+        det_ad_text_description_container.className = "announce_text_description_container";
+        var det_ad_text_description_container_description = createNode("span");
+        det_ad_text_description_container_description.className = "no_select announce_text_description_header_text";
+        var ad_text_description = data[i].AD_TEXT_DESCRIPTION.slice(0,430);
+        det_ad_text_description_container_description.innerHTML = ad_text_description;
+        det_ad_text_description_container_description.innerHTML+= " ...";
+
+        det_ad_text_description_container.appendChild(det_ad_text_description_container_description);
+        det_ad_text_description_frame.appendChild(det_ad_text_description_container);
+
+        ad_link.appendChild(det_ad_text_description_frame);
+      }
 
       var det_ad_logo_container_div = createNode("div");
       det_ad_logo_container_div.className = "det_ad_logo_container";

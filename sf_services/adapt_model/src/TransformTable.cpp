@@ -7,6 +7,7 @@
 #include "TransformTable.h"
 #include <algorithm>
 #include "sf_services/sf_utils/inc/Config.h"
+#include <boost/algorithm/string/erase.hpp>
 #include <math.h>
 
 using namespace ::apache::thrift;
@@ -96,6 +97,7 @@ namespace surfyn
    const char* RealEstateKey = "ID";
    const char* RealEstateSimilarAd = "SIMILAR_AD";
    const char* RealEstateLocation = "LOCATION";
+   const char* RealEstateTextDescription = "AD_TEXT_DESCRIPTION";
 
    // Fields for table FR_SUMMARY
    const std::string HISTORY = "HISTORY";
@@ -485,6 +487,14 @@ namespace surfyn
             realEstate->setDescription(IMAGE, ss.str());
          }
       }*/
+      if(document.HasMember("body"))
+      {
+         std::string description = document["body"].GetString();
+         std::replace(description.begin(), description.end(), '\t', ' ');
+         std::replace(description.begin(), description.end(), '\n', ' ');
+         boost::erase_all(description, "\"");
+         realEstate->setDescription(RealEstateTextDescription, description);
+      }
       realEstate->setDescription(SOURCE_LOGO, "data/lbc0.svg");
    }
 
@@ -535,12 +545,14 @@ namespace surfyn
       std::locale::global(std::locale(""));
 
       rapidjson::Document document;
-      document.Parse(json.c_str());
+      std::string bieniciJson = json;
+      boost::erase_all(bieniciJson, "\n");
+      document.Parse(bieniciJson.c_str());
 
       if(document.HasParseError())
       {
          std::stringstream error;
-         error << "failed to parse logicimmo json: error code [";
+         error << "failed to parse bienici json: error code [";
          error << document.GetParseError();
          error << "] error offset :[";
          error << document.GetErrorOffset();
@@ -640,6 +652,12 @@ namespace surfyn
          std::string constructionyear = std::to_string(document["yearOfConstruction"].GetUint());
          realEstate->setDescription(RealEstateConstructionYear, constructionyear);
       }
+      if(document.HasMember("description"))
+      {
+         std::string desc = document["description"].GetString();
+         realEstate->setDescription(RealEstateTextDescription, desc);
+      }
+
       realEstate->setDescription(SOURCE_LOGO, "data/bienici.png");
    }
 
@@ -779,6 +797,12 @@ void DataFormater::ReadLaForetJSON(const std::string& json, classifier::RealEsta
       realEstate->setDescription(RealEstateLandSurface, landarea);
    }
 
+   if(document.HasMember("description"))
+   {
+      std::string desc = document["description"].GetString();
+      realEstate->setDescription(RealEstateTextDescription, desc);
+   }
+
    realEstate->setDescription(SOURCE_LOGO, "data/laforet.jpg");
 }
 
@@ -894,6 +918,12 @@ void DataFormater::ReadOrpiJSON(const std::string& json, classifier::RealEstateA
          std::replace(landarea_str.begin(), landarea_str.end(), ',', '.');
          realEstate->setDescription(RealEstateLandSurface, landarea_str);
       }
+   }
+   
+   if(document.HasMember("longAd"))
+   {
+      std::string desc = document["longAd"].GetString();
+      realEstate->setDescription(RealEstateTextDescription, desc);
    }
    /*if (document.HasMember("heatingNature") && document["heatingNature"].IsString())
    {
@@ -1036,7 +1066,11 @@ void DataFormater::ReadStephanePlazaImoJSON(const std::string& json, classifier:
          }
       }
       
-
+      if(document.HasMember("description"))
+      {
+         std::string desc = document["description"].GetString();
+         realEstate->setDescription(RealEstateTextDescription, desc);
+      }
       
       
    }
@@ -1762,6 +1796,10 @@ void DataFormater::ReadAvendreAlouerJSON(const std::string& json, classifier::Re
       realEstate->setDescription(RealEstateLandSurface, document[RealEstateLandSurface].GetString());
    }
 
+   if(document.HasMember(RealEstateTextDescription))
+   {
+      realEstate->setDescription(RealEstateTextDescription, document[RealEstateTextDescription].GetString());
+   }
    realEstate->setDescription(SOURCE_LOGO, "data/avendrealouer.png");
 }
 
