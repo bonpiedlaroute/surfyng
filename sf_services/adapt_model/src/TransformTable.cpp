@@ -655,6 +655,9 @@ namespace surfyn
       if(document.HasMember("description"))
       {
          std::string desc = document["description"].GetString();
+         std::replace(desc.begin(), desc.end(),'\n', ' ');
+         std::replace(desc.begin(), desc.end(),'\t', ' ');
+         std::replace(desc.begin(), desc.end(),'\"', ' ');
          realEstate->setDescription(RealEstateTextDescription, desc);
       }
 
