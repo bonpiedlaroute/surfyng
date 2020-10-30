@@ -803,6 +803,9 @@ void DataFormater::ReadLaForetJSON(const std::string& json, classifier::RealEsta
    if(document.HasMember("description"))
    {
       std::string desc = document["description"].GetString();
+      std::replace(desc.begin(), desc.end(),'\n', ' ');
+      std::replace(desc.begin(), desc.end(),'\t', ' ');
+      std::replace(desc.begin(), desc.end(),'\"', ' ');
       realEstate->setDescription(RealEstateTextDescription, desc);
    }
 
@@ -926,6 +929,9 @@ void DataFormater::ReadOrpiJSON(const std::string& json, classifier::RealEstateA
    if(document.HasMember("longAd"))
    {
       std::string desc = document["longAd"].GetString();
+      std::replace(desc.begin(), desc.end(),'\n', ' ');
+      std::replace(desc.begin(), desc.end(),'\t', ' ');
+      std::replace(desc.begin(), desc.end(),'\"', ' ');
       realEstate->setDescription(RealEstateTextDescription, desc);
    }
    /*if (document.HasMember("heatingNature") && document["heatingNature"].IsString())
@@ -1072,6 +1078,9 @@ void DataFormater::ReadStephanePlazaImoJSON(const std::string& json, classifier:
       if(document.HasMember("description"))
       {
          std::string desc = document["description"].GetString();
+         std::replace(desc.begin(), desc.end(),'\n', ' ');
+         std::replace(desc.begin(), desc.end(),'\t', ' ');
+         std::replace(desc.begin(), desc.end(),'\"', ' ');
          realEstate->setDescription(RealEstateTextDescription, desc);
       }
       
@@ -1801,7 +1810,11 @@ void DataFormater::ReadAvendreAlouerJSON(const std::string& json, classifier::Re
 
    if(document.HasMember(RealEstateTextDescription))
    {
-      realEstate->setDescription(RealEstateTextDescription, document[RealEstateTextDescription].GetString());
+      std::string desc = document[RealEstateTextDescription].GetString();
+      std::replace(desc.begin(), desc.end(),'\n', ' ');
+      std::replace(desc.begin(), desc.end(),'\t', ' ');
+      std::replace(desc.begin(), desc.end(),'\"', ' ');
+      realEstate->setDescription(RealEstateTextDescription, desc);
    }
    realEstate->setDescription(SOURCE_LOGO, "data/avendrealouer.png");
 }
