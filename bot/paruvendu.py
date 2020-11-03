@@ -96,35 +96,56 @@ class ParuVenduSpider(scrapy.Spider):
 
       data['PRICE'] = px
       #announce details
-      details = response.xpath('//div[@class="navete12-globcontent"]/div[@class="navete12-content"]/div/div/div/div[@class="cotea16-graphicimmo"]/div/ul/li/span/text()').extract()
-      
-      if not details:
+      rooms = response.xpath(u'//*[@id="maindetail"]/div[3]/div[12]/div/ul/li[text()="\r\nNombre de pièces"]/span/text()').extract()
+
+      if rooms:
+         data['ROOMS'] = rooms[0]
+      else:
          return
 
-      data['ROOMS'] = details[0]
+      raw_area = response.xpath(u'//*[@id="maindetail"]/div[3]/div[12]/div/ul/li[text()="\r\nSurface"]/span/text()').extract()
 
-      area = details[1]
-      area = area.replace('m', '')
-      data['SURFACE'] = area
+      if raw_area:
+         area = raw_area[0]
 
-      parking = response.xpath('//div[@class="navete12-globcontent"]/div[@class="navete12-content"]/div/div/div/div[@class="cotea16-graphicimmo"]/div/ul/li[text()="Parking / Garage"]/text()').extract()
+         area = area.replace('m', '')
+         data['SURFACE'] = area
 
-      if parking == "Parking / Garage":
+      else:
+         return
+
+      parking = response.xpath(u'//*[@id="maindetail"]/div[3]/div[12]/div/ul/li[text()="Parking / Garage"]/text()').extract()
+
+      if parking:
          data['PARKING'] = '1'
 
-      bedrooms = response.xpath('//div[@class="navete12-globcontent"]/div[@class="navete12-content"]/div/div/div/div[@class="cotea16-graphicimmo"]/div/ul/li/span[starts-with(text(),"Nombre de chambre(s)")]/text()').extract()
+      bedrooms = response.xpath(u'//*[@id="maindetail"]/div[3]/div[14]/div/ul/li/span[starts-with(text(),"- Nombre de chambre(s)")]/text()').extract()
 
       if bedrooms:
-         data['BEDROOMS'] = bedrooms[0][23:]
+         data['BEDROOMS'] = bedrooms[0][25:]
 
-      floor = response.xpath('//div[@class="navete12-globcontent"]/div[@class="navete12-content"]/div/div/div/div[@class="cotea16-graphicimmo"]/div/ul/li/span[starts-with(text(),"Etage")]/text()').extract()
+      floor = response.xpath(u'//*[@id="maindetail"]/div[3]/div[14]/div/ul/li/span[starts-with(text(),"- Etage")]/text()').extract()
+
       if floor:
-         data['FLOOR'] = floor[0][8:]
+         data['FLOOR'] = floor[0][10:]
 
-      land_surface = response.xpath('//div[@class="navete12-globcontent"]/div[@class="navete12-content"]/div/div/div/div[@class="cotea16-graphicimmo"]/div/ul/li/span[starts-with(text(),"Surface du terrain")]/text()').extract()
-
+      land_surface = response.xpath(u'//*[@id="maindetail"]/div[3]/div[14]/div/ul/li/span[starts-with(text(),"- Surface du terrain")]/text()').extract()
       if land_surface:
-         data['LAND_SURFACE'] = land_surface[0][21:]
+         data['LAND_SURFACE'] = land_surface[0][23:]
+      
+      heating = response.xpath(u'//*[@id="maindetail"]/div[3]/div[14]/div/ul/li/span[starts-with(text(),"- Chauffage")]/text()').extract()
+      
+      if heating:
+         data['TYPE_OF_HEATING'] = "Chauffage " + heating[0][14:]
+
+      cellar = response.xpath(u'//*[@id="maindetail"]/div[3]/div[14]/div/ul/li/span[starts-with(text(),"- Cave")]/text()').extract()
+      if cellar:
+         data['CELLAR'] = '1'
+
+      text = response.xpath('//*[@id="txtAnnonceTrunc"]/text()').extract()
+      if text:
+         desc = " ".join(text)
+         data['AD_TEXT_DESCRIPTION'] = desc
 
       # get images
       images = response.xpath('//div[@class="navete12-globcontent"]/div[@class="navete12-content"]/div/div/div/div[@id="listePhotos"]/div/div/div/a/p/span/img/@src').extract()

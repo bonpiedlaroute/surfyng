@@ -127,7 +127,7 @@ class AgenceprincipaleSpider(scrapy.Spider):
          mode_heating = response.xpath(u"//div[@id='infos_bien']/div[@class='container']/div/div/div/div[@id='container_caract']/div/div/ul[@class='list-group']/li/div/div[text()='Mode Chauffage']/following-sibling::div/b/text()").extract()
          heating += " " + mode_heating[0]
 
-         data['HEATING'] = heating
+         data['TYPE_OF_HEATING'] = heating
 
       construction_year = response.xpath(u"//div[@id='infos_bien']/div[@class='container']/div/div/div/div[@id='container_caract']/div/div/ul[@class='list-group']/li/div/div[text()='Année construction']/following-sibling::div/b/text()").extract()
 

@@ -61,8 +61,7 @@ class AvendreAlouerSpider(scrapy.Spider):
 
    def parse(self, response, ptype, stype, page):
 
-      links = response.xpath('//section/div[@class="container-lr"]/div/div/div[@class="property-list"]/ul[@id="result-list"]/li/a/@href').extract()
- 
+      links = response.xpath('//*[@id="property-list-content-responsive"]/div[2]/main/div[2]/div[contains(@class, "listing-item")]/div/a/@href').extract() 
       for link in links:
 
          if "programme-neuf" not in link:
@@ -78,7 +77,7 @@ class AvendreAlouerSpider(scrapy.Spider):
          return
       else:
          page += 1
-         next_links = response.xpath('//div[@class="container-lr"]/div/div/div/div[@class="pagination-block"]/ul[@class="pagination"]/li/a[@class="next"]/@href').extract()
+         next_links = response.xpath('//*[@id="pager-next"]/a/@href').extract()
          if next_links:
             next_link = 'https://www.avendrealouer.fr' + next_links[0]
             yield response.follow(next_link, callback= lambda r, ptype = ptype, stype = stype :self.parse(r, ptype, stype, page))
@@ -89,7 +88,7 @@ class AvendreAlouerSpider(scrapy.Spider):
       data = dict()
  
       #price
-      price = response.xpath(u'//div/div[@id="debutBlocDetail"]/main/div/div/div[@class="Criteria__DivStyledValue-sc-1ftsbop-3 eZqQiC"]/text()').extract()
+      price = response.xpath('//*[@id="debutBlocDetail"]/main/div[1]/div[2]/div[1]/text()').extract()
       if price:
          px = price[0].encode('ascii', 'ignore')
          data['PRICE'] = px
@@ -98,8 +97,7 @@ class AvendreAlouerSpider(scrapy.Spider):
          return
       
       #announce details
-      surface = response.xpath('//div/div[@id="debutBlocDetail"]/main/div/div/div/div[@class="CriteriaCriterion__DivStyledInformation-sc-16o7bzc-2 gORa-dQ"]/p[text()="Surface"]/span/text()').extract()
-
+      surface = response.xpath('//*[@id="debutBlocDetail"]/main/div[1]/div[3]/div[1]/div[2]/p/span/text()').extract()
       if surface:
          pos = surface[0].find(' ')
          data['SURFACE'] = surface[0][:pos]
@@ -108,64 +106,56 @@ class AvendreAlouerSpider(scrapy.Spider):
          return
 
 
-      rooms = response.xpath(u'//div/div[@id="debutBlocDetail"]/main/div/div/div/div[@class="CriteriaCriterion__DivStyledInformation-sc-16o7bzc-2 gORa-dQ"]/p[text()="Pi\xe8ces" or text()="Pi\xe8ce"]/span/text()').extract()
-
+      rooms = response.xpath('//*[@id="debutBlocDetail"]/main/div[1]/div[3]/div[2]/div[2]/p/span/text()').extract()
       if rooms:   
          data['ROOMS'] = rooms[0]
       else:
          print("Skipping announce [" + url + "] => no rooms found")
          return
 
-      year = response.xpath(u'//div/div[@id="debutBlocDetail"]/main/div/div/div/div[@class="CriteriaCriterion__DivStyledInformation-sc-16o7bzc-2 gORa-dQ"]/p[text()="Construction"]/span/text()').extract()
+      year = response.xpath('//*[@id="debutBlocDetail"]/main/div[1]/div[3]/div[*]/div[2]/p[text()="Construction"]/span/text()').extract()
 
       if year:
          data['CONSTRUCTION_YEAR'] = year[0]
 
-      floor = response.xpath(u'//div/div[@id="debutBlocDetail"]/main/div/div/div/div[@class="CriteriaCriterion__DivStyledInformation-sc-16o7bzc-2 gORa-dQ"]/p[text()="\xc9tage "]/span/text()').extract()
+      floor = response.xpath(u'//*[@id="debutBlocDetail"]/main/div[1]/div[3]/div[4]/div[2]/p[text()="Étage "]/span/text()').extract()
 
       if floor:
          data['FLOOR'] = floor[0]
 
-      parking = response.xpath(u'//div/div[@id="debutBlocDetail"]/main/div[@id="blocProfessional"]/div/ul[@class="Professional__UlStyled-sc-133x9p4-6 gINLoU"]/li[text()="Parking"]/text()').extract()
+      parking = response.xpath('//*[@id="debutBlocDetail"]/main/div[1]/div[5]/div/div[text()="Parking"]/text()').extract()
 
       if "Parking" in parking:
          data['PARKING'] = '1'
          
-      lift = response.xpath(u'//div/div[@id="debutBlocDetail"]/main/div[@id="blocProfessional"]/div/ul[@class="Professional__UlStyled-sc-133x9p4-6 gINLoU"]/li[text()="Ascenseur"]/text()').extract()
+      lift = response.xpath('//*[@id="0Extensions" and text()="Ascenseur"]/text()').extract()
 
       if lift:
          data['LIFT'] = '1'
 
-      heating = ""
-      first_part_heating = response.xpath(u'//div/div[@id="debutBlocDetail"]/main/div[@id="blocProfessional"]/div/ul[@class="Professional__UlStyled-sc-133x9p4-6 gINLoU"]/li[text()="Nature chauffage"]/text()').extract()
-
-      if first_part_heating:
-         heating += first_part_heating[2][3:]
-
-      second_part_heating = response.xpath(u'//div/div[@id="debutBlocDetail"]/main/div[@id="blocProfessional"]/div/ul[@class="Professional__UlStyled-sc-133x9p4-6 gINLoU"]/li[text()="Type chauffage"]/text()').extract()
-
-      if second_part_heating:
-         heating += " "
-         heating += second_part_heating[2][3:]
-
+      heating = response.xpath('//*[@id="0Heatings"]/text()[3]').extract()
       if heating:
-         data['TYPE_OF_HEATING'] = heating
+         data['TYPE_OF_HEATING'] = "Chauffage " + heating[0][3:]
 
-      cellar = response.xpath(u'//div/div[@id="debutBlocDetail"]/main/div[@id="blocProfessional"]/div/ul[@class="Professional__UlStyled-sc-133x9p4-6 gINLoU"]/li[text()="Cave"]/text()').extract()
-
+      cellar = response.xpath('//*[@id="debutBlocDetail"]/main/div[1]/div[5]/div/div[text()="Cave"]/text()').extract()
       if "Cave" in cellar:
          data['CELLAR'] = '1'
 
-      bedrooms = response.xpath(u'//div/div[@id="debutBlocDetail"]/main/div/div/div/div[@class="CriteriaCriterion__DivStyledInformation-sc-16o7bzc-2 gORa-dQ"]/p[text()="Chambres"]/span/text()').extract()       
+      bedrooms = response.xpath('//*[@id="debutBlocDetail"]/main/div[1]/div[3]/div[3]/div[2]/p[text()="Chambre"]/span/text()').extract()
       if bedrooms:
          data['BEDROOMS'] = bedrooms[0]
  
-      land_surface = response.xpath(u'//div/div[@id="debutBlocDetail"]/main/div/div/div/div[@class="CriteriaCriterion__DivStyledInformation-sc-16o7bzc-2 gORa-dQ"]/p[text()="Terrain"]/span/text()').extract()
+      land_surface = response.xpath('//*[@id="debutBlocDetail"]/main/div[1]/div[3]/div[4]/div[2]/p[text()="Terrain"]/span/text()').extract()
+
       if land_surface:
          pos = land_surface[0].find('m')
          land = land_surface[0][:pos]
          land.replace(' ', '')
          data['LAND_SURFACE'] = land
+
+      ad_text_description = response.xpath('//*[@id="blocProfessional"]/p/text()').extract()
+      if ad_text_description:
+         data['AD_TEXT_DESCRIPTION'] = ad_text_description[0]
 
       # get images
       images = response.xpath('//div/div/div[@class="SliderImages__DivStyledContainer-sc-18z29ar-0 enZetH"]/div/div/div/div[contains(@class, "slick-slide")]/div/div/img/@src').extract()

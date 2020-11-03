@@ -109,7 +109,7 @@ class Century21Spider(scrapy.Spider):
       #heating
       heating = response.xpath(u"//section[@id='ficheDetail']/div/div/div[@class='box']/ul/li/span[text()='Chauffage']/parent::li/text()").extract()
       if heating:
-         data['HEATING'] = heating[0][3:]
+         data['TYPE_OF_HEATING'] = heating[0][3:]
 
       #land surface
       land = response.xpath(u"//section[@id='ficheDetail']/div/div/div[@class='box']/ul/li/span[text()='Surface terrain']/parent::li/text()").extract()

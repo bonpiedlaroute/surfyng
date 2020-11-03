@@ -122,7 +122,12 @@ function buildurlparams()
     {
       url_params += "&prop_type=2";
     }
-    else {
+    else if( pathname[2] == "appartements-studios")
+    {
+      url_params += "&prop_type=1";
+      url_params += "&rooms=1";
+    }else
+    {
       return false;
     }
   }

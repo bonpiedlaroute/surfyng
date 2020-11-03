@@ -492,6 +492,7 @@ namespace surfyn
          std::string description = document["body"].GetString();
          std::replace(description.begin(), description.end(), '\t', ' ');
          std::replace(description.begin(), description.end(), '\n', ' ');
+         std::replace(description.begin(), description.end(), '\r', ' ');
          boost::erase_all(description, "\"");
          realEstate->setDescription(RealEstateTextDescription, description);
       }
@@ -658,6 +659,7 @@ namespace surfyn
          std::replace(desc.begin(), desc.end(),'\n', ' ');
          std::replace(desc.begin(), desc.end(),'\t', ' ');
          std::replace(desc.begin(), desc.end(),'\"', ' ');
+         std::replace(desc.begin(), desc.end(),'\r', ' ');
          realEstate->setDescription(RealEstateTextDescription, desc);
       }
 
@@ -806,6 +808,7 @@ void DataFormater::ReadLaForetJSON(const std::string& json, classifier::RealEsta
       std::replace(desc.begin(), desc.end(),'\n', ' ');
       std::replace(desc.begin(), desc.end(),'\t', ' ');
       std::replace(desc.begin(), desc.end(),'\"', ' ');
+      std::replace(desc.begin(), desc.end(),'\r', ' ');
       realEstate->setDescription(RealEstateTextDescription, desc);
    }
 
@@ -932,6 +935,7 @@ void DataFormater::ReadOrpiJSON(const std::string& json, classifier::RealEstateA
       std::replace(desc.begin(), desc.end(),'\n', ' ');
       std::replace(desc.begin(), desc.end(),'\t', ' ');
       std::replace(desc.begin(), desc.end(),'\"', ' ');
+      std::replace(desc.begin(), desc.end(),'\r', ' ');
       realEstate->setDescription(RealEstateTextDescription, desc);
    }
    /*if (document.HasMember("heatingNature") && document["heatingNature"].IsString())
@@ -1081,6 +1085,7 @@ void DataFormater::ReadStephanePlazaImoJSON(const std::string& json, classifier:
          std::replace(desc.begin(), desc.end(),'\n', ' ');
          std::replace(desc.begin(), desc.end(),'\t', ' ');
          std::replace(desc.begin(), desc.end(),'\"', ' ');
+         std::replace(desc.begin(), desc.end(),'\r', ' ');
          realEstate->setDescription(RealEstateTextDescription, desc);
       }
       
@@ -1574,6 +1579,16 @@ void DataFormater::ReadPapJSON(const std::string& json, classifier::RealEstateAd
       realEstate->setDescription(RealEstateLandSurface, document[RealEstateLandSurface].GetString());
    }
 
+   if(document.HasMember(RealEstateTextDescription))
+   {
+      std::string desc = document[RealEstateTextDescription].GetString();
+      std::replace(desc.begin(), desc.end(),'\n', ' ');
+      std::replace(desc.begin(), desc.end(),'\t', ' ');
+      std::replace(desc.begin(), desc.end(),'\"', ' ');
+      std::replace(desc.begin(), desc.end(),'\r', ' ');
+      realEstate->setDescription(RealEstateTextDescription, desc);
+   }
+
    realEstate->setDescription(SOURCE_LOGO, "data/pap.png");
 }
 
@@ -1717,10 +1732,29 @@ void DataFormater::ReadParuVenduJSON(const std::string& json, classifier::RealEs
    {
       realEstate->setDescription(RealEstateBedRooms, document[RealEstateBedRooms].GetString());
    }
+   if( document.HasMember(RealEstateTypeOfHeating))
+   {
+      realEstate->setDescription(RealEstateTypeOfHeating, document[RealEstateTypeOfHeating].GetString());
+   }
+
+   if( document.HasMember(RealEstateCellar))
+   {
+      realEstate->setDescription(RealEstateCellar, document[RealEstateCellar].GetString());
+   }
 
    if(document.HasMember(RealEstateLandSurface))
    {
       realEstate->setDescription(RealEstateLandSurface, document[RealEstateLandSurface].GetString());
+   }
+
+   if(document.HasMember(RealEstateTextDescription))
+   {
+      std::string desc = document[RealEstateTextDescription].GetString();
+      std::replace(desc.begin(), desc.end(),'\n', ' ');
+      std::replace(desc.begin(), desc.end(),'\t', ' ');
+      std::replace(desc.begin(), desc.end(),'\"', ' ');
+      std::replace(desc.begin(), desc.end(),'\r', ' ');
+      realEstate->setDescription(RealEstateTextDescription, desc);
    }
 
    realEstate->setDescription(SOURCE_LOGO, "data/paruvendu.jpg");
@@ -2029,6 +2063,16 @@ void DataFormater::ReadLeFigaroImmobilierJSON(const std::string& json, classifie
    if(document.HasMember(RealEstateLandSurface))
    {
       realEstate->setDescription(RealEstateLandSurface, document[RealEstateLandSurface].GetString());
+   }
+
+   if(document.HasMember(RealEstateTextDescription))
+   {
+      std::string desc = document[RealEstateTextDescription].GetString();
+      std::replace(desc.begin(), desc.end(),'\n', ' ');
+      std::replace(desc.begin(), desc.end(),'\t', ' ');
+      std::replace(desc.begin(), desc.end(),'\"', ' ');
+      std::replace(desc.begin(), desc.end(),'\r', ' ');
+      realEstate->setDescription(RealEstateTextDescription, desc);
    }
    realEstate->setDescription(SOURCE_LOGO, "data/figaroimmo.png");
 }

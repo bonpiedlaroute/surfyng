@@ -101,6 +101,11 @@ class PapSpider(scrapy.Spider):
          land = landsurface[0].encode('ascii', 'ignore')
          pos_end = land[8:].find('m')
          data['LAND_SURFACE'] = land[8:][:pos_end]
+
+      text_description = response.xpath('/html/body/div[2]/div/div[1]/div[6]/div/p[1]/text()').extract()
+
+      if text_description:
+         data['AD_TEXT_DESCRIPTION'] = text_description[0]
   
       # get images
       images_list = response.xpath('//div[contains(@class, "owl-thumbs")]/a/img/@src').extract() 

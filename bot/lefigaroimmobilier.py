@@ -105,11 +105,11 @@ class LefigaroImmobilierSpider(scrapy.Spider):
       if heating:
          heating_list = heating[0].split(':')
 
-         ads_info['HEATING'] = "Chauffage "
+         ads_info['TYPE_OF_HEATING'] = "Chauffage "
          val = heating_list[1].replace(' ', '')
          val = val.replace('\n', '')
          val = val.replace('\t', '')
-         ads_info['HEATING'] += val
+         ads_info['TYPE_OF_HEATING'] += val
 
       floor = response.xpath(u"//div[@id='js-container-main']/div/ul[@class='list-features']/li[contains(text(), 'étage')]/text()").extract()
       if floor:
@@ -132,6 +132,10 @@ class LefigaroImmobilierSpider(scrapy.Spider):
       if cellar:
          ads_info['PARKING'] = '1'
 
+
+      ad_description = response.xpath('//*[@id="js-clicphone-description"]/text()').extract()
+      if ad_description:
+         ads_info['AD_TEXT_DESCRIPTION'] = ad_description[0]
 
       #get images
       images = response.xpath('//div[@id="js-container-main"]/div/div[contains(@class,"owl-carousel")]/div/a/img/@src').extract()
