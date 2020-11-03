@@ -95,7 +95,9 @@ function buildurlparams()
 
   if( s_city[0].toUpperCase() in postalCodeByCity && getPostalCode(s_city[0]) == s_city[1])
   {
-    url_params += "search_city=" + s_city[0];
+    var city_param = s_city[0][0].toUpperCase();
+    city_param += s_city[0].slice(1);
+    url_params += "search_city=" + city_param;
   }
   else {
     return false;
