@@ -843,21 +843,22 @@ function generate_details_page(data)
     } //end of for loop
 
     var nb_similar = document.getElementById("nb_announces_found");
+    var isFlat = false;
+    if( data[0].hasOwnProperty('PROPERTY_TYPE'))
+      isFlat = data[0].PROPERTY_TYPE == "Appartement";
+
     if( data.length == 1 )
     {
       nb_similar.innerHTML = "1 annonce pour ";
-      if( data[0].hasOwnProperty('PROPERTY_TYPE'))
-      {
-        nb_similar.innerHTML += data[0].PROPERTY_TYPE == "Appartement"? "cet appartement ":"cette maison ";
-      }
 
+      nb_similar.innerHTML += isFlat ? "cet appartement ":"cette maison ";
     }
     else {
 
         nb_similar.innerHTML = data.length;
         nb_similar.innerHTML += " annonces correspondent à";
-        if( data[0].hasOwnProperty('PROPERTY_TYPE'))
-        nb_similar.innerHTML += data[0].PROPERTY_TYPE == "Appartement"? " ce même appartement ":" cette même maison ";
+
+        nb_similar.innerHTML += isFlat? " ce même appartement ":" cette même maison ";
     }
     nb_similar.innerHTML += "de ";
     nb_similar.innerHTML += nb_room;
@@ -1005,6 +1006,44 @@ function generate_details_page(data)
 
       }
     }
+
+
+    /* populating visit file download link */
+    var sf_visit_file_link_container = createNode("div");
+    sf_visit_file_link_container.className = "sf_estimate_link_container";
+
+    var visit_file_link_icon = createNode("i");
+    visit_file_link_icon.className = "far fa-file-alt sf_estimate_link_icon";
+
+    sf_visit_file_link_container.appendChild(visit_file_link_icon);
+
+    var text = createNode("strong");
+    text.innerHTML = "Fiche de visite pour ";
+    if(isFlat)
+      text.innerHTML += "cet appartement";
+      else {
+        text.innerHTML += "cette maison";
+      }
+    var visit_file_link_text = createNode("span");
+    visit_file_link_text.className = "sf_estimate_link_text";
+    visit_file_link_text.appendChild(text);
+
+    sf_visit_file_link_container.appendChild(visit_file_link_text);
+
+    var sf_visit_file_link = createNode("a");
+    sf_visit_file_link.className = "sf_visit_file_link";
+    if(isForSale)
+    sf_visit_file_link.href = "data/docs/fiche-visite-achat-appartement-maison.pdf";
+    else {
+      sf_visit_file_link.href = "data/docs/fiche-visite-location-appartement-maison.pdf";
+    }
+
+    sf_visit_file_link.appendChild(sf_visit_file_link_container);
+
+    var sf_visit_file_link_frame = document.getElementById("visit_file_link_frame");
+    sf_visit_file_link_frame.className = "sf_estimate_link_frame";
+    sf_visit_file_link_frame.appendChild(sf_visit_file_link);
+
 
   } //end of else if(data.length == 0 )
   var facebook_icon = document.getElementById("facebook-icon");

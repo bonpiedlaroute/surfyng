@@ -846,6 +846,11 @@ margin-left:10%;
   display:block;
   width:15%;
 }
+.sf_visit_file_link
+{
+  display:block;
+  width:20%;
+}
 .sf_estimate_link_container
 {
   width:100%;
@@ -1356,6 +1361,11 @@ margin-left:10%;
     display:block;
     width:50%;
   }
+  .sf_visit_file_link
+  {
+    display:block;
+    width:80%;
+  }
   .sf_estimate_link_frame
   {
     width:100%;height:40px;
@@ -1482,7 +1492,7 @@ margin-left:10%;
     align-items:center;
     justify-content:center;
     flex-direction:column;
-    height:270px;
+    height:290px;
     width:100%;
   }
 
@@ -1491,7 +1501,7 @@ margin-left:10%;
      display:flex;
      justify-content:center;
      align-items:center;
-     height:250px;
+     height:270px;
      width:100%;
    }
 } /* end of @media (max-width:1024px)  */
