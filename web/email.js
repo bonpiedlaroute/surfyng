@@ -16,8 +16,8 @@ function sendemail_to_surfyn()
         email.className = "form-control";
 
 
-        //var email_service = 'https://surfyn.fr:7878/sendemailtosurfyn?';
-        var email_service = 'http://127.0.0.1:7878/sendemailtosurfyn?';
+        var email_service = 'https://surfyn.fr:7878/sendemailtosurfyn?';
+        //var email_service = 'http://127.0.0.1:7878/sendemailtosurfyn?';
         email_service += "sender_email=";
         email_service += email.value;
 
