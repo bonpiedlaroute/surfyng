@@ -240,6 +240,13 @@
   </div>
 </main>
 <footer>
+  <div class="contact_info" style="display:flex;flex-direction:row; justify-content:center;">
+    <div style ="margin-left:10px;">
+      <a data-toggle="modal" data-target="#sendemail" style="color:white;cursor:pointer;">
+        <i class="far fa-envelope" style="color:white;"></i> Nous contacter
+      </a>
+    </div>
+  </div>
     <div class="contact_info" style="display:flex;flex-direction:row; justify-content:center;">
 	   <!--span style="color:white"><b><a href="/login">Se connecter</a></b></span><br/-->
 
@@ -253,7 +260,77 @@
       <i class="fab fa-twitter" style="color:white;"></i>
     </a>
     </div>
+
+    <div style ="margin-left:10px;">
+    <a href="https://www.instagram.com/surfynimmo">
+      <i class="fab fa-instagram" style="color:white;"></i>
+    </a>
     </div>
+    <div style ="margin-left:10px;">
+    <a href="https://www.linkedin.com/company/surfyn/">
+      <i class="fab fa-linkedin" style="color:white;"></i>
+    </a>
+    </div>
+
+    </div>
+
+    <!-- Modal -->
+<div id="sendemail" class="modal fade" role="dialog">
+  <script src="email.js"> </script>
+  <div class="modal-dialog" style="height:90%;">
+
+    <!-- Modal content-->
+    <div class="modal-content" style="height:100%;">
+      <div class="modal-body">
+          <div style="height:3%;">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+
+          <div class="modal-title sf_modal_title_box" ><a class="sf_modal_title_text">Votre message</a></div>
+            <div class="sf_modal_frame">
+              <div class="sf_modal_box_width sf_modal_input" >
+                <input class="form-control" type="text" placeholder="Votre e-mail" id ="email" >
+                </input>
+              </div>
+              <div class="sf_modal_box_width" style="height:20px;" id="email-feedback">
+
+              </div>
+              <div class="sf_modal_box_width sf_modal_input" >
+                <input class="form-control" type="text" placeholder="Sujet" id ="email-subject" >
+                </input>
+              </div>
+              <div class="sf_modal_box_width sf_modal_input" style="margin-top:20px;">
+                <textarea class="form-control" id="email-msg" placeholder="Votre message" rows="10"></textarea>
+              </div>
+              <div class="sf_modal_box_width sf_modal_connect_button"  style="margin-top:20px;" onclick="sendemail_to_surfyn()">
+                <a class="sf_modal_connect_button_text">Envoyer</a>
+              </div>
+
+            </div>
+
+      </div>
+
+    </div>
+    <!-- End Modal content-->
+  </div>
+</div>
+<!-- End Modal -->
+<!-- Modal -->
+<div id="sendemail-result" class="modal fade" role="dialog">
+  <div class="modal-dialog" style="height:10%;">
+
+    <!-- Modal content-->
+    <div class="modal-content" style="height:100%;">
+      <div class="modal-body" style="height:100%;padding:0px;">
+
+        <div class="alert alert-success" role="alert" style="height:100%;text-align:center;">
+          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <strong>Votre message a bien été envoyé à Surfyn</strong></div>
+      </div>
+    </div>
+    <!-- End Modal content -->
+  </div>
+</div>
 </footer>
 
     <!-- Bootstrap core JavaScript

@@ -1009,6 +1009,52 @@ margin-left:10%;
    height:180px;
    width:100%;
  }
+ .sf_modal_box_width
+ {
+   width: 65%;
+ }
+ .sf_modal_title_box
+ {
+   text-align:center;margin-bottom:20px;
+ }
+ .sf_modal_title_text
+ {
+   color:#61AEB5!important;font-weight:bold;font-size:20px;
+ }
+ .sf_modal_frame
+ {
+   display:flex;
+   width:100%;
+   justify-content:center;
+   align-items:center;
+   flex-direction:column;
+   background-color:white;
+   border-radius:8px;
+ }
+ .sf_modal_input
+ {
+   display:flex;
+   justify-content:center;
+   align-items:center;
+   flex-direction:column;
+ }
+ .sf_modal_connect_button
+ {
+   display:flex;
+   justify-content:center;
+   align-items:center;
+   text-align:center;
+   background-color:#4C8E99;
+   height:35px;
+   border-radius:8px;
+   margin-bottom:15px;
+   cursor:pointer;
+ }
+ .sf_modal_connect_button_text
+ {
+   color:white !important;font-size:20px;
+ }
+
 @media (max-width:1024px) {
   .search_type_text
   {
@@ -1504,6 +1550,10 @@ margin-left:10%;
      height:270px;
      width:100%;
    }
+   .sf_modal_box_width
+  {
+    width: 80%;
+  }
 } /* end of @media (max-width:1024px)  */
 
 @media (max-height:800px)

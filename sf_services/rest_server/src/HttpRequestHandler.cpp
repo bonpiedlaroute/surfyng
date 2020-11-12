@@ -8,6 +8,8 @@
 #include "sf_services/sf_utils/inc/Logger.h"
 
 #include <iostream>
+#include "SendEmailAccess.h"
+
 using Log = surfyn::utils::Logger;
 
 namespace surfyn
@@ -145,10 +147,58 @@ void HttpRequestHandler::handle_get(http_request message)
 //
 void HttpRequestHandler::handle_post(http_request message)
 {
-    ucout <<  message.to_string() << std::endl;
+    
+   Log::getInstance()->info(std::string(message.to_string()));
+
+    auto paths = http::uri::split_path(http::uri::decode(message.relative_uri().path()));
 
 
-    message.reply(status_codes::OK,"OK");
+    if( paths.size() == 1  && paths[0] == "sendemailtosurfyn" )
+    {
+        std::string host = "localhost";
+        int port = 7800;
+        SendEmailAccess emailAccess(host, port);
+
+        auto query = http::uri::split_query(http::uri::decode(message.relative_uri().query()));
+        auto iter = query.find("sender_email");
+        std::string sender_email;
+        if(iter != query.end())
+            sender_email = iter->second;
+
+        iter = query.find("subject");
+        std::string subject;
+        if(iter != query.end())
+            subject = iter->second;
+        
+        iter = query.find("msg");
+        std::string msg;
+        if(iter != query.end())
+            msg = iter->second;
+
+        if( !emailAccess.sendToSurfyn(sender_email, subject, msg) )
+        {
+            message.reply(status_codes::ServiceUnavailable,"ServiceUnavailable");
+            return;
+        }
+    }
+    else 
+    {
+        message.reply(status_codes::NotFound,"resource not found!");
+        return;
+    }
+
+    http_response response (status_codes::OK);
+    response.headers().add(U("Access-Control-Allow-Origin"), U("*"));
+    message.reply(response)
+     .then([](pplx::task<void> t)
+     {
+        try{
+           t.get();
+        }
+        catch(...){
+           //
+        }
+     });
     return ;
 };
 
