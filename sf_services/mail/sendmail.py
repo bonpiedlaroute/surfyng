@@ -50,8 +50,8 @@ class SendMailHandler(Iface):
 
       message = 'Subject: {}\n\n{}'.format(subject, msg_to_send) 
       logging.info("sending msg :\n\n"+message)
-      
-      smtp_server.sendmail(self.from_addr, self.to_addrs, message)
+      recipients = self.to_addrs.split(",")      
+      smtp_server.sendmail(self.from_addr, recipients, message)
 
 
       smtp_server.quit()
