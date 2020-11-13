@@ -595,6 +595,13 @@ function generate_summary_page(data)
   facebook_icon.style.color = "white";
   var twitter_icon = document.getElementById("twitter-icon");
   twitter_icon.style.color = "white";
+  var instagram_icon = document.getElementById("instagram-icon");
+  instagram_icon.style.color = "white";
+  var linkedin_icon = document.getElementById("linkedin-icon");
+  linkedin_icon.style.color = "white";
+  var youtube_icon = document.getElementById("youtube-icon");
+  youtube_icon.style.color = "white";
+
 }
 
 function gotosearchcriteria()

@@ -3,6 +3,8 @@ function sendemail_to_surfyn()
     var email = document.getElementById("email");
     var email_subject = document.getElementById("email-subject");
     var email_msg = document.getElementById("email-msg");
+    var name = document.getElementById("name");
+    var firstname = document.getElementById("firstname");
 
 
     var email_check = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
@@ -25,6 +27,11 @@ function sendemail_to_surfyn()
         email_service += email_subject.value;
 
         email_service += "&msg=";
+        email_service += "Nom: ";
+        email_service += name.value;
+        email_service += " Prenom: ";
+        email_service += firstname.value;
+        email_service += ", ";
         email_service += email_msg.value;
 
         fetch(email_service, { method: "POST"})
@@ -43,32 +50,10 @@ function sendemail_to_surfyn()
     }
     else
     {
-        if(email_check.test(email.value) == false)
-        {
-          email.className = "form-control is-invalid";
-          email_feedback.innerHTML = "Merci de saisir une adresse e-mail valide!";
-          email_feedback.style.color = "red";
-          email_feedback.style.fontSize = "12px";
-        }
-        else
-        {
-          email_feedback.innerHTML = "";
-          email_feedback.style.color = "";
-          email.className = "form-control";
-        }
-        if( mot_de_passe.value == "")
-        {
-          mot_de_passe.className = "form-control is-invalid";
-          pass_feedback.innerHTML = "Merci de saisir un mot de passe!";
-          pass_feedback.style.color = "red";
-          pass_feedback.style.fontSize = "12px";
-        }
-        else
-        {
-          pass_feedback.innerHTML = "";
-          pass_feedback.style.color = "";
-          mot_de_passe.className = "form-control";
-        }
+        email.className = "form-control is-invalid";
+        email_feedback.innerHTML = "Merci de saisir une adresse e-mail valide!";
+        email_feedback.style.color = "red";
+        email_feedback.style.fontSize = "12px";
     }
 }
 

@@ -53,6 +53,14 @@ class SendMailHandler(Iface):
       recipients = self.to_addrs.split(",")      
       smtp_server.sendmail(self.from_addr, recipients, message)
 
+      new_recipients = []
+      new_recipients.append(sender_email)
+      new_subject = "Merci d'avoir contacté Surfyn"
+      new_msg = "Bonjour\n nous avons bien reçu votre message, nous allons revenir vers vous dans les meilleurs délais\n\n  A bientôt\nL'équipe Surfyn"
+      new_message = 'Subject: {}\n\n{}'.format(new_subject, new_msg)
+      smtp_server.sendmail(self.from_addr, new_recipients, new_message)
+
+
 
       smtp_server.quit()
 
