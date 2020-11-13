@@ -41,6 +41,8 @@ function sendemail_to_surfyn()
           email.value = "";
           email_subject.value = "";
           email_msg.value = "";
+          name.value = "";
+          firstname.value = "";
         } )
         .catch(function(error) {
 
