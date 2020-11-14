@@ -48,7 +48,7 @@ class SendMailHandler(Iface):
 
       msg_to_send = 'De la part de :' + sender_email + '\n\n '+ msg
 
-      message = 'Subject: {}\n\n{}'.format(subject, msg_to_send) 
+      message = 'Subject: {}\n\n{}'.format("Contact depuis surfyn.fr: " + subject, msg_to_send) 
       logging.info("sending msg :\n\n"+message)
       recipients = self.to_addrs.split(",")      
       smtp_server.sendmail(self.from_addr, recipients, message)
