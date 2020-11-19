@@ -24,6 +24,15 @@
 
       gtag('config', 'UA-140583317-1');
     </script>
+    <script>
+      var init = function () {
+          window.focus();
+          //get scroll position in session storage and go to that scroll position
+          setTimeout(function() {window.scrollTo(parseInt(sessionStorage.getItem("scrollX"), 10),
+           parseInt(sessionStorage.getItem("scrollY"), 10)) ;}, 100);
+      };
+      window.onload = init;
+    </script>
   </head>
 
     <body style="background-color:rgb(191, 229, 245);">

@@ -1055,6 +1055,55 @@ margin-left:10%;
    color:white !important;font-size:20px;
  }
 
+ .sf_realestate_agencies_frame
+ {
+   height: 150px;
+   border: 3px solid white;
+   width: 45%;
+   background-color: white;
+   box-shadow: 2px 2px #aaa;
+   display:flex;
+   align-items:center;
+   justify-content: center;
+   flex-direction:row;
+   margin-top:30px;
+ }
+ .sf_realestate_agencies_logo
+ {
+   display:flex;
+   align-items:center;
+   justify-content: center;
+   height:130px;
+   width:30%;
+   border-radius:8px;
+ }
+ .sf_realestate_agencies_container
+ {
+   height:130px;
+   width:60%;
+   display:flex;
+   flex-direction:column;
+   align-items:center;
+   justify-content: space-evenly;
+   margin-left:20px;
+ }
+ .sf_realestate_agencies_box
+ {
+   width:100%;
+   height:30px;
+   display:flex;
+   align-items:center;
+ }
+ .sf_realestate_agencies_icon
+ {
+   color:#4c94bc;font-size:20px;
+ }
+.sf_realestate_agencies_text
+{
+   margin-left:10px;font-size:12px;
+}
+
+
 @media (max-width:1024px) {
   .search_type_text
   {
@@ -1553,6 +1602,29 @@ margin-left:10%;
    .sf_modal_box_width
   {
     width: 80%;
+  }
+  .sf_realestate_agencies_frame
+  {
+    height: 150px;
+    border: 3px solid white;
+    width: 95%;
+    background-color: white;
+    box-shadow: 2px 2px #aaa;
+    display:flex;
+    align-items:center;
+    justify-content: center;
+    flex-direction:row;
+    margin-top:10px;
+  }
+  .sf_realestate_agencies_container
+  {
+    height:130px;
+    width:65%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content: space-evenly;
+    margin-left:5px;
   }
 } /* end of @media (max-width:1024px)  */
 

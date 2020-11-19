@@ -19,13 +19,7 @@ function scrollToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-var init = function () {
-    window.focus();
-    //get scroll position in session storage and go to that scroll position
-    setTimeout(function() {window.scrollTo(parseInt(sessionStorage.getItem("scrollX"), 10),
-     parseInt(sessionStorage.getItem("scrollY"), 10)) ;}, 100);
-};
-window.onload = init;
+
 
 var nb_dropdown_click = 0;
 function show_dropdown_list()
