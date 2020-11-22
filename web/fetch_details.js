@@ -76,7 +76,7 @@ function generate_details_page(data)
       det_ad_container_div.className = "det_ad_container";
 
       if(i%2 != 0 )
-      det_ad_container_div.style.marginLeft = ismobile ? "20px" : "70px";
+      det_ad_container_div.style.marginLeft = ismobile ? "15px" : "70px";
 
       var ad_link = createNode("a");
       ad_link.style.display = "block";
@@ -806,7 +806,7 @@ function generate_details_page(data)
         det_ad_text_description_container.className = "announce_text_description_container";
         var det_ad_text_description_container_description = createNode("span");
         det_ad_text_description_container_description.className = "no_select announce_text_description_header_text";
-        var ad_text_description = data[i].AD_TEXT_DESCRIPTION.slice(0,430);
+        var ad_text_description = data[i].AD_TEXT_DESCRIPTION.slice(0,614);
         det_ad_text_description_container_description.innerHTML = ad_text_description;
         det_ad_text_description_container_description.innerHTML+= " ...";
 

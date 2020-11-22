@@ -409,7 +409,7 @@ width:100%;
 }
 .det_ad_container
 {
-  height:820px;
+  height:880px;
   width:15%;
   background-color:#FFFFFF;
   box-shadow: 3px 3px #aaaaaa;
@@ -492,7 +492,7 @@ width:100%;
 }
 .det_ad_logo_container
 {
-  height:75px;
+  height:55px;
   width:100%;
   position:relative;
 }
@@ -982,7 +982,7 @@ margin-left:10%;
   align-items:center;
   justify-content:center;
   flex-direction:column;
-  height:200px;
+  height:280px;
   width:100%;
 }
 .announce_text_description_header
@@ -1006,7 +1006,7 @@ margin-left:10%;
    display:flex;
    justify-content:center;
    align-items:center;
-   height:180px;
+   height:260px;
    width:100%;
  }
  .sf_modal_box_width
@@ -1289,7 +1289,7 @@ margin-left:10%;
   }
   .det_ad_container
   {
-    height:820px;
+    height:925px;
     width:50%;
     background-color:#FFFFFF;
     box-shadow: 3px 3px #aaaaaa;
@@ -1341,7 +1341,7 @@ margin-left:10%;
   }
   .det_ad_logo_container
   {
-    height:70px;
+    height:50px;
     width:100%;
     position:relative;
   }
@@ -1587,7 +1587,7 @@ margin-left:10%;
     align-items:center;
     justify-content:center;
     flex-direction:column;
-    height:290px;
+    height:415px;
     width:100%;
   }
 
@@ -1596,7 +1596,7 @@ margin-left:10%;
      display:flex;
      justify-content:center;
      align-items:center;
-     height:270px;
+     height:395px;
      width:100%;
    }
    .sf_modal_box_width
