@@ -105,7 +105,7 @@ class PapSpider(scrapy.Spider):
       text_description = response.xpath('/html/body/div[2]/div/div[1]/div[6]/div/p[1]/text()').extract()
 
       if text_description:
-         data['AD_TEXT_DESCRIPTION'] = text_description[0]
+         data['AD_TEXT_DESCRIPTION'] = " ".join(text_description)
   
       # get images
       images_list = response.xpath('//div[contains(@class, "owl-thumbs")]/a/img/@src').extract() 
