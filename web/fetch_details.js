@@ -808,7 +808,7 @@ function generate_details_page(data)
         det_ad_text_description_container_description.className = "no_select announce_text_description_header_text";
         var ad_text_description = data[i].AD_TEXT_DESCRIPTION.slice(0,614);
         det_ad_text_description_container_description.innerHTML = ad_text_description;
-        det_ad_text_description_container_description.innerHTML+= " ...";
+        det_ad_text_description_container_description.innerHTML+= " [...]";
 
         det_ad_text_description_container.appendChild(det_ad_text_description_container_description);
         det_ad_text_description_frame.appendChild(det_ad_text_description_container);
