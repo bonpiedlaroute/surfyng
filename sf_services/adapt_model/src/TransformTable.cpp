@@ -212,6 +212,7 @@ namespace surfyn
       m_ReaderBySources["nestenn"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadNestennJSON(json, realEstate);};
       m_ReaderBySources["agenceprincipale"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadAgencePrincipaleJSON(json, realEstate);};
       m_ReaderBySources["lefigaroimmobilier"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadLeFigaroImmobilierJSON(json, realEstate);};
+      m_ReaderBySources["etreproprio"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadEtreProprioJSON(json, realEstate);};
    }
    DataFormater::~DataFormater()
    {
@@ -2075,6 +2076,69 @@ void DataFormater::ReadLeFigaroImmobilierJSON(const std::string& json, classifie
       realEstate->setDescription(RealEstateTextDescription, desc);
    }
    realEstate->setDescription(SOURCE_LOGO, "data/figaroimmo.png");
+}
+void DataFormater::ReadEtreProprioJSON(const std::string& json, classifier::RealEstateAd* realEstate)
+{
+   std::locale::global(std::locale(""));
+
+   rapidjson::Document document;
+   document.Parse(json.c_str());
+
+   if(document.HasParseError())
+   {
+      std::stringstream error;
+      error << "failed to parse EtreProprio json: error code [";
+      error << document.GetParseError();
+      error << "] error offset :[";
+      error << document.GetErrorOffset();
+      error << "]";
+      Log::getInstance()->error(error.str());
+
+      return;
+   }
+
+   if (document.HasMember(RealEstatePrice))
+   {
+      realEstate->setDescription(RealEstatePrice, document[RealEstatePrice].GetString());
+   }
+
+   if( document.HasMember(RealEstateSurface))
+   {
+      std::string surface = document[RealEstateSurface].GetString();
+      std::replace(surface.begin(), surface.end(), ',', '.');
+     realEstate->setDescription(RealEstateSurface, surface);
+   }
+   if( document.HasMember(RealEstateRooms))
+   {
+      realEstate->setDescription(RealEstateRooms, document[RealEstateRooms].GetString());
+   }
+
+   if(document.HasMember(RealEstateTextDescription))
+   {
+      std::string desc = document[RealEstateTextDescription].GetString();
+      std::replace(desc.begin(), desc.end(),'\n', ' ');
+      std::replace(desc.begin(), desc.end(),'\t', ' ');
+      std::replace(desc.begin(), desc.end(),'\"', ' ');
+      std::replace(desc.begin(), desc.end(),'\r', ' ');
+
+      auto pos = desc.find("cave");
+      if(pos != std::string::npos)
+      {
+         realEstate->setDescription(RealEstateCellar, "1");
+      }
+      pos = desc.find("parking");
+      if(pos != std::string::npos)
+      {
+         realEstate->setDescription(RealEstateParking, "1");
+      }
+      pos = desc.find("avec ascenseur");
+      if(pos != std::string::npos)
+      {
+         realEstate->setDescription(RealEstateLift, "1");
+      }
+      realEstate->setDescription(RealEstateTextDescription, desc);
+   }
+   realEstate->setDescription(SOURCE_LOGO, "data/etreproprio.svg");
 }
 void DataFormater::ReadSummaryTable(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tableName, const std::string& city)
 {

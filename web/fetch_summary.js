@@ -82,6 +82,7 @@ function loadJSON(path, success, error) {
   ProcessorBySource.set("nestenn", function(param) { SrcProcessor(param, "#27CCC3", "nestenn"); });
   ProcessorBySource.set("agenceprincipale", function(param) { SrcProcessor(param, "#FFC331", "Agenprinc"); });
   ProcessorBySource.set("lefigaroimmobilier", function(param) { SrcProcessor(param, "red", "Figaroimm"); });
+  ProcessorBySource.set("etreproprio", function(param) { SrcProcessor(param, "green", "Etrepropr"); });
 
   var url = 'https://surfyn.fr:7878/search/all';
   //var url = 'http://127.0.0.1:7878/search/all';
@@ -526,7 +527,8 @@ function generate_summary_page(data)
             avendrealouer:false,
             nestenn:false,
             agenceprincipale:false,
-            lefigaroimmobilier:false
+            lefigaroimmobilier:false,
+            etreproprio:false
             }
             var ad_sum_src_provider_cont = createNode("div");
             ad_sum_src_provider_cont.className = "ad_summary_src_provider_cont";

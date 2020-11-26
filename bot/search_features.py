@@ -309,3 +309,10 @@ def getLefigaroImmobilierPropertiesId(_id):
 
 def getLefigaroImmobilierSearchTypeId(_id):
    return LefigaroImmobilierSearchTypeMapping[_id]      
+
+EtreProprioSearchTypeMapping = dict()
+EtreProprioSearchTypeMapping[APART_ID] = 'f'
+EtreProprioSearchTypeMapping[HOUSE_ID] = 'h'
+
+def getEtreProprioPropertiesId(_id):
+   return EtreProprioSearchTypeMapping[_id]

@@ -311,3 +311,16 @@ def buildLefigaroImmobilierUrl(city, ptype, stype):
     url += ptype
 
     return url
+
+
+etreproprio_url = 'https://www.etreproprio.com/annonces/t'
+
+def buildEtreProprioUrl(city, ptype):
+   url = etreproprio_url + ptype
+   url += '.lc'
+   url += inseecodeByCity[city]
+   url += '#list'
+
+   return url
+
+
