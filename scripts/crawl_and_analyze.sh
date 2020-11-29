@@ -104,6 +104,12 @@ do
         DATE=$(date +%Y_%m_%d"_"%H_%M_%S)
         scrapy crawl lefigaroimmobilier -a city="$CITY" >> "lefigaroimmobilier_"$DATE".log" 2>&1 &
         pids[$index]=$!
+        index=$((index+1))
+        sleep 3
+        DATE=$(date +%Y_%m_%d"_"%H_%M_%S)
+        scrapy crawl etreproprio -a city="$CITY" >> "etreproprio_"$DATE".log" 2>&1 &
+        pids[$index]=$!
+
 
         # wait for all scrapy pids
         for pid in ${pids[*]}; do
