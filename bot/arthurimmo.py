@@ -128,6 +128,10 @@ class ArthurImmoSpider(scrapy.Spider):
          pos_end = land.find('m')
          data['LAND_SURFACE'] = land[:pos_end].replace(' ','')
 
+      desc = response.xpath('//div/div/div/div/div/div/div[@class="detail-accordeon-item-txt"]/p/text()').extract()
+      if desc:
+         data['AD_TEXT_DESCRIPTION'] = desc[0]
+ 
       # get images
       images = response.xpath('//div/div/div[@class="row-fluid"]/div/div/div/div[@class="item"]/img/@src').extract()
  

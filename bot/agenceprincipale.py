@@ -155,6 +155,10 @@ class AgenceprincipaleSpider(scrapy.Spider):
       if parking:
          data['PARKING'] = parking[0]
 
+      desc = response.xpath('//*[@id="infos_bien"]/div/div/div[7]/div/text()').extract()
+      if desc:
+         data['AD_TEXT_DESCRIPTION'] = " ".join(desc)
+
       # get images
       images = response.xpath(u"//div[@id='infos_bien']/div[@class='container']/div/div/div/div[@id='slider_bien']/div[@class='slide']/a/img/@src").extract() 
       image_count = 1

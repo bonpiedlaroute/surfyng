@@ -82,10 +82,13 @@ class IadfranceSpider(scrapy.Spider):
       
       #get price
       raw_price = response.xpath('//div[@class="offer__price"]/div/p[@class="price"]/text()').extract()
-      px = raw_price[0]
-      price = px.strip()
+      if raw_price:
+         px = raw_price[0]
+         price = px.strip()
 
-      data['PRICE'] = price
+         data['PRICE'] = price
+      else:
+         return
 
       #announce details
       details = response.xpath('//div[@class="offer"]/div/div/div/div/div/p/text()').extract()
@@ -102,6 +105,11 @@ class IadfranceSpider(scrapy.Spider):
          if value == 'Surface terrain':
             data[self.fieldmapping[value]] = details[i+2]
 
+
+
+      desc = response.xpath('//*[@id="fiche-bien"]/div[5]/div/div/div/div[2]/p/text()').extract()
+      if desc:
+         data['AD_TEXT_DESCRIPTION'] = desc[0]
 
       # get images
       images = response.xpath('//div[contains(@class, "offer__slider-item")]/img/@src').extract()

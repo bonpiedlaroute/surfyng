@@ -112,6 +112,11 @@ class EraimmoSpider(scrapy.Spider):
             if f in self.fieldmapping:
                data[self.fieldmapping[f]] = value[0] 
 
+      desc = response.xpath('//div/div/div/div/div[@class="description principale"]/text()').extract()
+
+      if desc:
+         data['AD_TEXT_DESCRIPTION'] = desc[0]
+
       # get images
       images = response.xpath('//div[@class="container"]/div[@id="flex_slider_bien"]/ul/li/a[@class="link_img_bien"]/@href').extract()
       

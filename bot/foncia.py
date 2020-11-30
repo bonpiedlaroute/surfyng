@@ -92,12 +92,15 @@ class FonciaSpider(scrapy.Spider):
       
       #get price
       raw_price = response.xpath('//div[@class="OfferTop-cols"]').xpath('.//p[@class="OfferTop-price"]/text()').extract()
-      px = raw_price[0]
-      px = px.strip()
-      pos = px.find(u'\xa0')
-      price = px[:pos]
+      if raw_price:
+         px = raw_price[0]
+         px = px.strip()
+         pos = px.find(u'\xa0')
+         price = px[:pos]
 
-      data['PRICE'] = price
+         data['PRICE'] = price
+      else:
+         return
 
       #announce details
       div_details = response.xpath('//div[@class="OfferDetails"]').xpath('.//div[@class="OfferDetails-columnize"]')
@@ -117,6 +120,11 @@ class FonciaSpider(scrapy.Spider):
       for info in more_info:
          if info in self.fieldmapping:
             data[self.fieldmapping[info]] = '1'
+
+      desc = response.xpath('//section/div/main/div/section/div[@class="OfferDetails-content"]/p/text()').extract()
+
+      if desc:
+         data['AD_TEXT_DESCRIPTION'] = desc[0]
 
       # get images
       images = response.xpath('//div[@class="OfferSlider"]//ul[@class="OfferSlider-main-slides"]//img/@src').extract()

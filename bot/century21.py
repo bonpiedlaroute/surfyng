@@ -81,10 +81,13 @@ class Century21Spider(scrapy.Spider):
       
       #get price
       raw_price = response.xpath('//section[@class="tarif"]/span/b/text()').extract()[0]
-      pos = raw_price.rfind(' ')
-      price = raw_price[:pos]
+      if raw_price:
+         pos = raw_price.rfind(' ')
+         price = raw_price[:pos]
 
-      data['PRICE'] = price
+         data['PRICE'] = price
+      else:
+         return
 
       #announce details
       #surface
@@ -94,13 +97,17 @@ class Century21Spider(scrapy.Spider):
          raw_surface = surface[0][begin_surface+2:]
          end = raw_surface.find(' ')
          data['SURFACE'] = raw_surface[:end].replace(',','.')
+      else:
+         return
 
       #nbroom
       nb_room = response.xpath(u"//section[@id='ficheDetail']/div/div/div[@class='box']/ul/li/span[text()='Nombre de pièces : ']/parent::li/text()").extract()
       if nb_room:
          room = nb_room[1].replace(' ', '')
          data['ROOMS'] = room.replace('\n', '')      
-      
+      else:
+         return
+ 
       #construction year
       year = response.xpath(u"//section[@id='ficheDetail']/div/div/div[@class='box']/ul/li/span[text()='Année construction']/parent::li/text()").extract()
       if year:
@@ -125,6 +132,11 @@ class Century21Spider(scrapy.Spider):
 
       if parking:
          data['PARKING'] = "1"
+
+
+      desc = response.xpath('//*[@id="focusAnnonceV2"]/section[2]/div[2]/p/text()').extract()
+      if desc:
+         data['AD_TEXT_DESCRIPTION'] = " ".join(desc)
                
       # get images
       images = response.xpath('//div[@id="galeriePIX"]/div[@id="formatL"]/div[contains(@class, "zone-galerie")]').xpath('.//img/@src').extract() 

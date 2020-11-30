@@ -224,6 +224,24 @@ namespace surfyn
       m_AnnouncesByID.clear();
       m_ReaderBySources.clear();
    }
+   void DataFormater::PopulateValuesExtractFromDescription(const std::string& desc, classifier::RealEstateAd* realEstate) const
+   {
+      auto pos = desc.find("cave");
+      if(pos != std::string::npos)
+      {
+         realEstate->setDescription(RealEstateCellar, "1");
+      }
+      pos = desc.find("parking");
+      if(pos != std::string::npos)
+      {
+         realEstate->setDescription(RealEstateParking, "1");
+      }
+      pos = desc.find("avec ascenseur");
+      if(pos != std::string::npos)
+      {
+         realEstate->setDescription(RealEstateLift, "1");
+      }
+   }
    void DataFormater::ReadSelogerJSON(const std::string& json, classifier::RealEstateAd* realEstate)
    {
       std::locale::global(std::locale(""));
@@ -1205,6 +1223,17 @@ void DataFormater::ReadFonciaJSON(const std::string& json, classifier::RealEstat
      }
    }
 
+   if(document.HasMember(RealEstateTextDescription))
+   {
+      std::string desc = document[RealEstateTextDescription].GetString();
+      std::replace(desc.begin(), desc.end(),'\n', ' ');
+      std::replace(desc.begin(), desc.end(),'\t', ' ');
+      std::replace(desc.begin(), desc.end(),'\"', ' ');
+      std::replace(desc.begin(), desc.end(),'\r', ' ');
+
+      realEstate->setDescription(RealEstateTextDescription, desc);
+   }
+
    realEstate->setDescription(SOURCE_LOGO, "data/foncia.png");
 }
 
@@ -1350,6 +1379,17 @@ void DataFormater::ReadCentury21JSON(const std::string& json, classifier::RealEs
       realEstate->setDescription(RealEstateParking, document[RealEstateParking].GetString());
    }
 
+   if(document.HasMember(RealEstateTextDescription))
+   {
+      std::string desc = document[RealEstateTextDescription].GetString();
+      std::replace(desc.begin(), desc.end(),'\n', ' ');
+      std::replace(desc.begin(), desc.end(),'\t', ' ');
+      std::replace(desc.begin(), desc.end(),'\"', ' ');
+      std::replace(desc.begin(), desc.end(),'\r', ' ');
+
+      PopulateValuesExtractFromDescription(desc, realEstate);
+      realEstate->setDescription(RealEstateTextDescription, desc);
+   }
    realEstate->setDescription(SOURCE_LOGO, "data/century21.png");
 }
 
@@ -1463,6 +1503,17 @@ void DataFormater::ReadArthurImmoJSON(const std::string& json, classifier::RealE
       realEstate->setDescription(RealEstateLandSurface, document[RealEstateLandSurface].GetString());
    }
 
+   if(document.HasMember(RealEstateTextDescription))
+   {
+      std::string desc = document[RealEstateTextDescription].GetString();
+      std::replace(desc.begin(), desc.end(),'\n', ' ');
+      std::replace(desc.begin(), desc.end(),'\t', ' ');
+      std::replace(desc.begin(), desc.end(),'\"', ' ');
+      std::replace(desc.begin(), desc.end(),'\r', ' ');
+
+      realEstate->setDescription(RealEstateTextDescription, desc);
+   }
+
    realEstate->setDescription(SOURCE_LOGO, "data/arthurimmo.jpeg");
 }
 void DataFormater::ReadEraImmoJSON(const std::string& json, classifier::RealEstateAd* realEstate)
@@ -1528,6 +1579,17 @@ void DataFormater::ReadEraImmoJSON(const std::string& json, classifier::RealEsta
    if(document.HasMember(RealEstateLandSurface))
    {
       realEstate->setDescription(RealEstateLandSurface, document[RealEstateLandSurface].GetString());
+   }
+   if(document.HasMember(RealEstateTextDescription))
+   {
+      std::string desc = document[RealEstateTextDescription].GetString();
+      std::replace(desc.begin(), desc.end(),'\n', ' ');
+      std::replace(desc.begin(), desc.end(),'\t', ' ');
+      std::replace(desc.begin(), desc.end(),'\"', ' ');
+      std::replace(desc.begin(), desc.end(),'\r', ' ');
+
+      PopulateValuesExtractFromDescription(desc, realEstate);
+      realEstate->setDescription(RealEstateTextDescription, desc);
    }
 
    realEstate->setDescription(SOURCE_LOGO, "data/eraimmo.png");
@@ -1671,6 +1733,18 @@ void DataFormater::ReadIadFranceJSON(const std::string& json, classifier::RealEs
       boost::erase_all(bedrooms, " ");
       boost::erase_all(bedrooms, "\n");
       realEstate->setDescription(RealEstateBedRooms, bedrooms);
+   }
+
+   if(document.HasMember(RealEstateTextDescription))
+   {
+      std::string desc = document[RealEstateTextDescription].GetString();
+      std::replace(desc.begin(), desc.end(),'\n', ' ');
+      std::replace(desc.begin(), desc.end(),'\t', ' ');
+      std::replace(desc.begin(), desc.end(),'\"', ' ');
+      std::replace(desc.begin(), desc.end(),'\r', ' ');
+
+      PopulateValuesExtractFromDescription(desc, realEstate);
+      realEstate->setDescription(RealEstateTextDescription, desc);
    }
    realEstate->setDescription(SOURCE_LOGO, "data/iadfrance.jpeg");
 }
@@ -1920,6 +1994,17 @@ void DataFormater::ReadNestennJSON(const std::string& json, classifier::RealEsta
       realEstate->setDescription(RealEstateBedRooms, document[RealEstateBedRooms].GetString());
    }
 
+   if(document.HasMember(RealEstateTextDescription))
+   {
+      std::string desc = document[RealEstateTextDescription].GetString();
+      std::replace(desc.begin(), desc.end(),'\n', ' ');
+      std::replace(desc.begin(), desc.end(),'\t', ' ');
+      std::replace(desc.begin(), desc.end(),'\"', ' ');
+      std::replace(desc.begin(), desc.end(),'\r', ' ');
+
+      realEstate->setDescription(RealEstateTextDescription, desc);
+   }
+
    realEstate->setDescription(SOURCE_LOGO, "data/nestenn.jpeg");
 }
 
@@ -1996,6 +2081,17 @@ void DataFormater::ReadAgencePrincipaleJSON(const std::string& json, classifier:
    if(document.HasMember(RealEstateLandSurface))
    {
       realEstate->setDescription(RealEstateLandSurface, document[RealEstateLandSurface].GetString());
+   }
+
+   if(document.HasMember(RealEstateTextDescription))
+   {
+      std::string desc = document[RealEstateTextDescription].GetString();
+      std::replace(desc.begin(), desc.end(),'\n', ' ');
+      std::replace(desc.begin(), desc.end(),'\t', ' ');
+      std::replace(desc.begin(), desc.end(),'\"', ' ');
+      std::replace(desc.begin(), desc.end(),'\r', ' ');
+
+      realEstate->setDescription(RealEstateTextDescription, desc);
    }
    realEstate->setDescription(SOURCE_LOGO, "data/agenceprincipale.png");
 }
@@ -2121,21 +2217,8 @@ void DataFormater::ReadEtreProprioJSON(const std::string& json, classifier::Real
       std::replace(desc.begin(), desc.end(),'\"', ' ');
       std::replace(desc.begin(), desc.end(),'\r', ' ');
 
-      auto pos = desc.find("cave");
-      if(pos != std::string::npos)
-      {
-         realEstate->setDescription(RealEstateCellar, "1");
-      }
-      pos = desc.find("parking");
-      if(pos != std::string::npos)
-      {
-         realEstate->setDescription(RealEstateParking, "1");
-      }
-      pos = desc.find("avec ascenseur");
-      if(pos != std::string::npos)
-      {
-         realEstate->setDescription(RealEstateLift, "1");
-      }
+      PopulateValuesExtractFromDescription(desc, realEstate);
+
       realEstate->setDescription(RealEstateTextDescription, desc);
    }
    realEstate->setDescription(SOURCE_LOGO, "data/etreproprio.svg");

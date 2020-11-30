@@ -85,11 +85,14 @@ class NestennSpider(scrapy.Spider):
  
       #price
       raw_price = response.xpath('//section[@id="annonce_entete"]/div[@class="container"]/div/div/div/div/div[@class="content_prix"]/text()').extract()
-      px = raw_price[0].replace('\t', '')
-      px = px.replace('\n', '')
-      px = px.replace(' ', '')
-      pos  = px.find(u'\u20ac') 
-      data['PRICE'] = px[:pos] 
+      if raw_price:
+         px = raw_price[0].replace('\t', '')
+         px = px.replace('\n', '')
+         px = px.replace(' ', '')
+         pos  = px.find(u'\u20ac') 
+         data['PRICE'] = px[:pos] 
+      else:
+         return
       
       #announce details
       details = response.xpath('//section[@id="annonce_detail"]/div/div[@id="groupeIcon"]/div[contains(@class,"blockIcon")]/div/text()').extract()
@@ -115,6 +118,10 @@ class NestennSpider(scrapy.Spider):
             pos = info.find(' ')
             data["BEDROOMS"] = info[:pos]
  
+      # ad description
+      desc = response.xpath('//*[@id="annonce_detail"]/div/p[1]/text()').extract()
+      if desc:
+         data['AD_TEXT_DESCRIPTION'] = desc[0]
  
       # get images 
       images = response.xpath('//section[@id="annonce_entete"]/div/div/div/div/div[@class="slider_bien"]/a/@href').extract()
