@@ -1,0 +1,195 @@
+a:hover{ text-decoration: none; }
+.header_title_left_box
+{
+  width: 20%;
+}
+
+.header_title_right_box
+{
+  width: 20%;
+}
+.actu_header_title
+{
+  font-size:20px;
+  color:#61AEB5;
+}
+
+.icon_arrow_left
+{
+  font-size: 30px;
+}
+
+.social_media
+{
+  text-align:center;
+  width:100%;
+  height:30px;
+  bottom:5px;
+  display:flex;
+  flex-direction:row;
+  justify-content:center;
+  margin-top:40px;
+}
+.sf_actu_immo_container
+{
+  height: 150px;
+  border: 3px solid white;
+  width: 55%;
+  background-color: white;
+  box-shadow: 2px 2px #aaa;
+  display:flex;
+  align-items:center;
+  justify-content: center;
+  flex-direction:row;
+  margin-top:10px;
+}
+
+.sf_actu_immo_image_container
+{
+  display:flex;
+  align-items:center;
+  justify-content: center;
+  height:140px;
+  width:20%;
+  border-radius:8px;
+}
+
+.sf_actu_immo_text_container
+{
+  height:140px;
+  width:75%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content: space-evenly;
+  margin-left:20px;
+}
+.sf_actu_immo_text_title
+{
+  width:100%;
+  height:30px;
+  display:flex;
+  align-items:center;
+}
+.sf_actu_immo_source_container
+{
+  width:100%;
+  height:20px;
+  display:flex;
+  align-items:center;
+}
+.sf_actu_immo_text_box
+{
+  width:100%;
+  height:90px;
+  display:flex;
+  align-items:center;
+}
+
+.sf_actu_immo_text_title_size
+{
+  color:#787878;
+  font-size:16px;
+}
+
+.sf_actu_immo_text_source_size
+{
+  color:#787878;
+  font-size:12px;
+}
+
+.sf_actu_immo_text_size
+{
+  color:black !important;
+}
+
+@media (max-width:1024px) {
+  .social_media
+  {
+    text-align:center;
+    width:100%;
+    height:30px;
+    bottom:5px;
+    display:flex;
+    flex-direction:row;
+    justify-content:center;
+    margin-top:20px;
+  }
+  .icon_arrow_left
+  {
+    font-size: 25px;
+  }
+  .sf_actu_immo_container
+  {
+    height: 250px;
+    border: 3px solid white;
+    width: 95%;
+    background-color: white;
+    box-shadow: 2px 2px #aaa;
+    display:flex;
+    align-items:center;
+    justify-content: center;
+    flex-direction:row;
+    margin-top:10px;
+  }
+  .sf_actu_immo_image_container
+  {
+    display:flex;
+    align-items:center;
+    justify-content: center;
+    height:240px;
+    width:26%;
+    border-radius:8px;
+  }
+  .sf_actu_immo_text_container
+  {
+    height:240px;
+    width:70%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content: space-evenly;
+    margin-left:5px;
+  }
+  .sf_actu_immo_text_title
+  {
+    width:100%;
+    height:60px;
+    display:flex;
+    align-items:center;
+  }
+  .sf_actu_immo_text_box
+  {
+    width:100%;
+    height:160px;
+    display:flex;
+    align-items:center;
+  }
+  .sf_actu_immo_text_title_size
+  {
+    color:#787878;
+    font-size:14px;
+  }
+  .sf_actu_immo_text_size
+  {
+    color:black !important;
+    font-size:14px;
+  }
+}/*@endof @media (max-width:1024px) */
+
+
+@media (max-height:800px)
+{
+  .social_media
+  {
+    text-align:center;
+    width:100%;
+    height:30px;
+    margin-top:100px;
+    bottom: unset;
+    display:flex;
+    flex-direction:row;
+    justify-content:center;
+    margin-top:20px;
+  }
+} /* end of @media (max-height:700px)  */
