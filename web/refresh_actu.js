@@ -63,7 +63,7 @@ function generate_actu(data, actu_source, image_url)
 
     var actu_immo_text_source_1 = createNode("span");
     actu_immo_text_source_1.className = "sf_actu_immo_text_source_size";
-    actu_immo_text_source_1.innerHTML = actu_source == "lefigaro"? "Le Figaro - Gestion de patrimoine immobilier": data.querySelector("title").textContent;
+    actu_immo_text_source_1.innerHTML = actu_source == "lefigaro"? "Le Figaro - immobilier": data.querySelector("title").textContent;
     actu_immo_source_container.append(actu_immo_text_source_1);
 
     var pubDate = items[i].querySelector("pubDate");
