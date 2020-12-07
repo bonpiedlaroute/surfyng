@@ -17,6 +17,7 @@ function generate_actu(data, actu_source, image_url)
     var actu_link  = createNode("a");
     actu_link.href = items[i].querySelector("link").innerHTML;
     actu_link.target = "_blank";
+    actu_link.rel = "nofollow";
 
     var actu_immo_container = createNode("div");
     actu_immo_container.className = "row mx-auto sf_actu_immo_container";
