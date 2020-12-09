@@ -53,6 +53,10 @@ function generate_details_page(data)
     document.getElementsByTagName('meta')["description"].content = "Cette annonce n'est plus disponible";
     var announces_found = document.getElementById("nb_announces_found");
     announces_found.innerHTML = "Cette annonce n'est plus disponible";
+    const metaRobots = document.createElement('meta');
+    metaRobots.name = 'robots';
+    metaRobots.content = 'noindex';
+    document.head.appendChild(metaRobots);
   }
   else
   {
