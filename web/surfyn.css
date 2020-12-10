@@ -1103,7 +1103,71 @@ margin-left:10%;
    margin-left:10px;font-size:12px;
 }
 
-
+.sf_technology_frame
+{
+  display:flex;
+  justify-content:center;
+  height:910px;
+  width:100%;
+  margin-bottom: 20px;
+}
+.sf_technology_container
+{
+  display:flex;
+  justify-content:center;
+  flex-direction:column;
+  height:100%;
+  width:40%;
+  background-color:white;
+}
+.sf_technology_image_container
+{
+  display:flex;
+  justify-content:center;
+  height:400px;
+  width:100%;
+}
+.sf_technology_text_container
+{
+  display:flex;
+  justify-content:center;
+  height:510px;
+  width:100%;
+  flex-direction:column;
+}
+.sf_technology_text_header_container
+{
+  display:flex;
+  justify-content:center;
+  align-items: center;
+  height:40px;
+  width:100%;
+}
+.sf_technology_functionality
+{
+  display:flex;
+  justify-content:center;
+  height:470px;
+  width:100%;
+  flex-direction:column;
+}
+.sf_technology_subtitle
+{
+  width:100%;
+  height:35px;
+}
+.sf_technology_assist
+{
+  width:100%;
+  height:265px;
+  padding:2px;
+}
+.sf_technology_estimate
+{
+  width:100%;
+  height:135px;
+  padding:2px;
+}
 @media (max-width:1024px) {
   .search_type_text
   {
@@ -1625,6 +1689,71 @@ margin-left:10%;
     align-items:center;
     justify-content: space-evenly;
     margin-left:5px;
+  }
+  .sf_technology_frame
+  {
+    display:flex;
+    justify-content:center;
+    height:1440px;
+    width:100%;
+    margin-bottom: 20px;
+  }
+  .sf_technology_container
+  {
+    display:flex;
+    justify-content:center;
+    flex-direction:column;
+    height:100%;
+    width:88%;
+    background-color:white;
+  }
+  .sf_technology_image_container
+  {
+    display:flex;
+    justify-content:center;
+    height:350px;
+    width:100%;
+  }
+  .sf_technology_text_container
+  {
+    display:flex;
+    justify-content:center;
+    height:1090px;
+    width:100%;
+    flex-direction:column;
+  }
+  .sf_technology_text_header_container
+  {
+    display:flex;
+    justify-content:center;
+    align-items: center;
+    height:60px;
+    width:100%;
+  }
+  .sf_technology_functionality
+  {
+    display:flex;
+    justify-content:center;
+    height:1020px;
+    width:100%;
+    flex-direction:column;
+  }
+  .sf_technology_subtitle
+  {
+    width:100%;
+    height:70px;
+  }
+  .sf_technology_assist
+  {
+    width:100%;
+    height:630px;
+    padding:2px;
+  }
+  .sf_technology_estimate
+  {
+    width:100%;
+    height:350px;
+    padding:2px;
   }
 } /* end of @media (max-width:1024px)  */
 
