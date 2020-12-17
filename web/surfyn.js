@@ -15,7 +15,7 @@ var unsetPriceRightZone = document.getElementById("unset_price_right_zone");
 var unsetAreaLeftZone = document.getElementById("unset_area_left_zone");
 var unsetAreaRightZone = document.getElementById("unset_area_right_zone");
 
-var mobile   = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
+var mobile   = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) || (navigator.userAgent.includes("Mac") && "ontouchend" in document);
 var eventdown = mobile ? "touchstart" : "mousedown";
 var eventmove = mobile ? "touchmove" : "mousemove";
 var eventup = mobile ? "touchend" : "mouseup";
