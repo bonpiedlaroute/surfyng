@@ -78,7 +78,10 @@ class BieniciSpider(scrapy.Spider):
          if ad['adType'] == 'buy':
             search_type = BUY_ID
          else:
-            search_type = RENT_ID
+            if ad['adType'] == 'rent':
+               search_type = RENT_ID
+            else:
+               continue
 
          ID = hash_id(ad_url)
 
