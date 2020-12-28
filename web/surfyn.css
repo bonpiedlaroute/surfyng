@@ -755,12 +755,17 @@ margin-left:10%;
 {
 
 }
+.param_icon_box_width
+{
+  width:220px;
+}
+
 .parameter_content
 {
   display: none;
   position: absolute;
   background-color: white;
-  min-width: 124px;
+  min-width: 220px;
   z-index: 2;
   border: 2px solid #bfe5f5;
 }
@@ -1325,6 +1330,7 @@ padding:5px;
   {
     width: 20%;
   }
+
   .announce_link
   {
     display:block;

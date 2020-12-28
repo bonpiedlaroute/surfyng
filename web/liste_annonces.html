@@ -54,21 +54,26 @@
               <div style="height:60px; display:flex;flex-direction:row;justify-content:flex-end;" class="header_title_right_box">
                 <div class="sf_dropdown">
 
-                  <div style="display:flex;width:124px;height:43px;justify-content:flex-end;flex-direction:row;align-items:center;">
-                      <a href="#" onclick="gotosearchcriteria()" id="modify_search_criteria">
-                        <i class="far fa-edit" style="font-size: 30px !important; color:white;margin-top:10px;"></i>
-                      </a>
+                  <div class="param_icon_box_width" style="display:flex;height:43px;justify-content:flex-end;flex-direction:row;align-items:center;">
                       <a onclick="show_dropdown_list()" id="sf_dropdown_link">
-                        <i class="fas fa-sort-amount-down" style="font-size: 30px !important; color:white;margin-top:10px;margin-left:15px;">
+                        <i class="fas fa-bars" style="font-size: 30px !important; color:white;margin-top:10px;margin-left:15px;">
                       </i>
                     </a>
 
                   </div>
                   <div id="filter_parameter" class="parameter_content">
-                    <a href="javascript:document.location.reload()" onclick="sortbyprice()"> Trier par prix</a>
-                    <a href="javascript:document.location.reload()" onclick="sortbysurface()"> Trier par m<sup>2</sup></a>
-                    <a href="javascript:document.location.reload()" onclick="sortbypricebym2()"> Trier par prix au m<sup>2</sup></a>
-                    <a href="javascript:document.location.reload()" onclick="sortbydate()"> Trier par plus récents</a>
+                    <div style="border-bottom: 1px solid #c8d0da;">
+                        <a href="javascript:document.location.reload()" onclick="sortbyprice()"> Trier par prix</a>
+                        <a href="javascript:document.location.reload()" onclick="sortbysurface()"> Trier par m<sup>2</sup></a>
+                        <a href="javascript:document.location.reload()" onclick="sortbypricebym2()"> Trier par prix au m<sup>2</sup></a>
+                        <a href="javascript:document.location.reload()" onclick="sortbydate()"> Trier par plus récents</a>
+                        <a href="#" onclick="gotosearchcriteria()" id="modify_search_criteria"> Modifier votre recherche</a>
+                        <a href="#" id="realestate_agencies_city"></a>
+                    </div>
+                    <a href="/" > Accueil </a>
+                    <a href="estimation-immobiliere-en-ligne.html" > Estimer un bien </a>
+                    <a href="conseil-immobilier.html" > Conseil immobilier </a>
+                    <a href="actualite-immobilier.html" > Actualité immobilière en France </a>
                   </div>
 
                 </div>
@@ -127,5 +132,6 @@
     <script src="utils.js"></script>
     <script src="fetch_summary.js"></script>
     <script src="refresh_scroll.js"></script>
+    <script src="dropdownmenu.js"></script>
   </body>
 </html>

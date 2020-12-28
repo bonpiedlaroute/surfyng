@@ -33,9 +33,34 @@
    <body style="background-color:#222545;">
     <header>
     <div style="height:250px;" class="row mx-auto" >
+      <div style="display:flex;align-items:center;justify-content: space-evenly;flex-direction:row; height:100%;width:100%">
+        <div style="width:20%;height:100%;">
+        </div>
+        <div style="width:58%;height:100%;">
+          <img src="logo.svg" class="home_logo mx-auto d-block" alt="Surfyn" />
+        </div>
+        <div style="display:flex;flex-direction:row;justify-content: flex-end;width:20%;height:100%;">
+          <div class="sf_dropdown">
 
-         <img src="logo.svg" class="home_logo mx-auto d-block" alt="Surfyn" />
+            <div class="param_icon_box_width" style="display:flex;height:43px;justify-content:flex-end;flex-direction:row;align-items:center;">
+                <a onclick="show_dropdown_list()" id="sf_dropdown_link">
+                  <i class="fas fa-bars" style="font-size: 30px !important; color:white;margin-top:10px;margin-left:15px;">
+                </i>
+              </a>
 
+            </div>
+            <div id="filter_parameter" class="parameter_content">
+              <a href="/" > Accueil </a>
+              <a href="/recherche/achat/immobilier?search_type=1" > Acheter un bien </a>
+              <a href="/recherche/location/immobilier?search_type=2" > Louer un bien </a>
+              <a href="estimation-immobiliere-en-ligne.html" > Estimer un bien </a>
+              <a href="conseil-immobilier.html" > Conseil immobilier </a>
+              <a href="actualite-immobilier.html" > Actualité immobilière en France </a>
+            </div>
+
+          </div>
+        </div>
+       </div>
     </div>
   </header>
   <main>
@@ -534,5 +559,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
     <script src="index.js"></script>
+    <script src="dropdownmenu.js"></script>
   </body>
 </html>

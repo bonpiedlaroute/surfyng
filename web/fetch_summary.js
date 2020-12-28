@@ -307,6 +307,9 @@ function generate_summary_page(data)
 
   document.getElementsByTagName('meta')["description"].content = meta_description;
 
+  var realestate_agencies_city = document.getElementById('realestate_agencies_city');
+  realestate_agencies_city.href = 'agence-immobiliere-'+ search_city.toLowerCase() +'-' + postalcode + '.html';
+  realestate_agencies_city.innerHTML = 'Agences immobilières à ' + search_city + " ("+ postalcode + ")";
 
   var announces_found = document.getElementById("nb_announces_found");
   if( data.length == 0)

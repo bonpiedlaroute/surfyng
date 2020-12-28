@@ -30,6 +30,31 @@ a:hover{ text-decoration: none; }
   justify-content:center;
   margin-top:40px;
 }
+
+.parameter_content
+{
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 220px;
+  z-index: 2;
+  border: 2px solid #bfe5f5;
+}
+.parameter_content a {
+  color: #61AEB5;
+  padding: 8px 12px;
+  text-decoration: none;
+  display: block;
+}
+.parameter_content a:hover
+{
+  background-color:rgb(245, 247, 250);
+}
+
+.show_parameter_content
+{
+  display:block;
+}
 .sf_actu_immo_container
 {
   height: 180px;
