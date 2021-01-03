@@ -42,7 +42,25 @@
               </div>
 
               <div style="height:60px; display:flex;flex-direction:row;justify-content:flex-end;" class="header_title_right_box">
+                <div style="position:relative;display: inline-block;">
 
+                  <div style="display:flex;width:220px;height:43px;justify-content:flex-end;flex-direction:row;align-items:center;">
+                      <a onclick="show_dropdown_list()" id="sf_dropdown_link">
+                        <i class="fas fa-bars" style="font-size: 30px !important; color:white;margin-top:10px;margin-left:15px;">
+                      </i>
+                    </a>
+
+                  </div>
+                  <div id="filter_parameter" class="parameter_content">
+                    <a href="/" > Accueil </a>
+                    <a href="/recherche/achat/immobilier?search_type=1" > Acheter un bien </a>
+                    <a href="/recherche/location/immobilier?search_type=2" > Louer un bien </a>
+                    <a href="estimation-immobiliere-en-ligne.html" > Estimer un bien </a>
+                    <a href="conseil-immobilier.html" > Conseil immobilier </a>
+                    <a href="actualite-immobilier.html" > Actualité immobilière en France </a>
+                  </div>
+
+                </div>
               </div>
             </div>
           </div>
@@ -282,10 +300,7 @@ prix au m<sup>2</sup> , date</a>
             </div>
             <div class="sf_waw_usefull_info" style="width:100%;display:flex;flex-direction:row;justify-content:space-evenly;">
               <div class="sf_waw_usefull_info_width" style="padding:5px;height:100%;display:flex;flex-direction:column;background-color:#61AEB5;">
-                <a class="sf_waw_text_size" style="color:#222545 !important;"><strong>Données utiles mises en
-évidence au sujet du bien
-comparative des
-immobilier</strong></a>
+                <a class="sf_waw_text_size" style="color:#222545 !important;"><strong>Données utiles mises en évidence au sujet du bien immobilier</strong></a>
                 <a class="sf_waw_text_size" style="color:#222545 !important;"><i class="fas fa-check" style="color:#222545 !important;"></i> Prix, surface, prix au m<sup>2</sup>
                 </a>
                 <a class="sf_waw_text_size" style="color:#222545 !important;"><i class="fas fa-check" style="color:#222545 !important;"></i> Présence de la localisation, étage
@@ -439,6 +454,6 @@ notaires des 5 dernières années
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
 
     <script src="refresh_scroll.js"></script>
-
+    <script src="dropdownmenu.js"></script>
 
 </body></html>
