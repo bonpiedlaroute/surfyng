@@ -57,14 +57,14 @@ fetch(lesEchosRssUrl)
       .then(response => response.text() )
       .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
       .then(function(data) {
-        update_actu(data, 1,3 );
+        update_actu(data, 1,2 );
       } );
 const lefigaroRssUrl = "data/actus/figaro_immobilier.xml";
 fetch(lefigaroRssUrl)
   .then(response => response.text() )
   .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
   .then(function(data) {
-    update_actu(data, 4, 6 );
+    update_actu(data, 2, 4 );
   });
 
 var last_actu = document.getElementById("last_actu");

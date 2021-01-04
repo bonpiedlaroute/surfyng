@@ -5,6 +5,9 @@ function show_dropdown_list()
   var filter_parameter = document.getElementById("filter_parameter");
   filter_parameter.className = "parameter_content show_parameter_content";
   nb_dropdown_click += 1;
+
+  var dropdown = document.getElementById("dropdownmenu");
+  dropdown.style.zIndex = "6";
 }
 
 window.onclick = function(event) {
@@ -20,6 +23,9 @@ window.onclick = function(event) {
       }
     }
     nb_dropdown_click = 0;
+
+    var dropdown = document.getElementById("dropdownmenu");
+    dropdown.style.zIndex = "4";
   }
 
 }
