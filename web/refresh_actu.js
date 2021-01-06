@@ -8,14 +8,89 @@ function append(parent, el) {
 
 const maxItemsPerSource = 10;
 
-function generate_actu(data, actu_source, image_url)
+var AllActuData = [];
+
+function extract_actu_data(data, actu_source, image_url)
 {
   const items = data.querySelectorAll("item");
   var main_content = document.getElementById("main-content");
   for(var i = 0; i < items.length && i < maxItemsPerSource; i++)
   {
+    var actuitem = {"link":"", "img":"", "title":"", "source":"","pubdate":new Date(),"description":""};
+
+    actuitem.link = items[i].querySelector("link").innerHTML;
+
+    if(actu_source == "lesechos" || actu_source == "bfmimmo" || actu_source == "notaires")
+    {
+      actuitem.img = items[i].querySelector("enclosure").getAttribute('url');
+    }
+    else if( actu_source == "capital")
+    {
+      var media = items[i].getElementsByTagName("media\:content");
+      actuitem.img = media[0].getAttribute('url');
+    }else if(actu_source == "lejournaldelagence")
+    {
+      actuitem.img = items[i].querySelector("media").textContent;
+    }else{
+      actuitem.img = image_url;
+    }
+
+
+    actuitem.title = items[i].querySelector("title").textContent;
+
+
+    if(actu_source == "lefigaro")
+    {
+      actuitem.source  = "Le Figaro - immobilier";
+    }
+    else {
+      if(actu_source == "lesechos")
+      {
+        actuitem.source = "Les Echos - Immobilier";
+      }
+      else {
+        if( actu_source == "capital")
+        {
+          actuitem.source = "https://www.capital.fr";
+        }
+        else if( actu_source == "notaires"){
+            actuitem.source = "Notaires - Immobilier"
+        } else{
+          actuitem.source = data.querySelector("title").textContent;
+        }
+      }
+    }
+
+    var pubDate = items[i].querySelector("pubDate");
+    var today = new Date()
+    var lastdate = new Date().setDate(today.getDate()-30)
+    if( pubDate !== null )
+    {
+      if( new Date(lastdate) < new Date(pubDate.innerHTML))
+      actuitem.pubdate= pubDate.innerHTML;
+      else {
+        continue;
+      }
+    }
+    else {
+
+      actuitem.pubdate = lastdate;
+    }
+
+    actuitem.description = items[i].querySelector("description").textContent.slice(0,342);
+
+    AllActuData.push(actuitem);
+  }
+}
+
+
+function generate_actu(items)
+{
+  var main_content = document.getElementById("main-content");
+  for(var i = 0; i < items.length ; i++)
+  {
     var actu_link  = createNode("a");
-    actu_link.href = items[i].querySelector("link").innerHTML;
+    actu_link.href = items[i].link;
     actu_link.target = "_blank";
     actu_link.rel = "nofollow";
 
@@ -29,20 +104,9 @@ function generate_actu(data, actu_source, image_url)
     img.style.height = "100px";
     img.style.width = "100px";
     img.style.borderRadius = "8px";
-    if(actu_source == "lesechos" || actu_source == "bfmimmo")
-    {
-      img.src = items[i].querySelector("enclosure").getAttribute('url');
-    }
-    else if( actu_source == "capital")
-    {
-      var media = items[i].getElementsByTagName("media\:content");
-      img.src = media[0].getAttribute('url');
-    }else if(actu_source == "lejournaldelagence")
-    {
-      img.src = items[i].querySelector("media").textContent;
-    }else{
-      img.src = image_url;
-    }
+
+    img.src = items[i].img;
+
     actu_immo_image_container.append(img);
 
     actu_immo_container.append(actu_immo_image_container);
@@ -53,7 +117,7 @@ function generate_actu(data, actu_source, image_url)
     actu_immo_text_title.className = "sf_actu_immo_text_title";
     var title = createNode("strong");
     title.className = "sf_actu_immo_text_title_size";
-    title.innerHTML = items[i].querySelector("title").textContent;
+    title.innerHTML = items[i].title;
 
 
     actu_immo_text_title.append(title);
@@ -64,17 +128,21 @@ function generate_actu(data, actu_source, image_url)
 
     var actu_immo_text_source_1 = createNode("span");
     actu_immo_text_source_1.className = "sf_actu_immo_text_source_size";
-    actu_immo_text_source_1.innerHTML = actu_source == "lefigaro"? "Le Figaro - immobilier": data.querySelector("title").textContent;
+
+
+    actu_immo_text_source_1.innerHTML = items[i].source;
+
+
     actu_immo_source_container.append(actu_immo_text_source_1);
 
-    var pubDate = items[i].querySelector("pubDate");
-    if( pubDate !== null )
+
+    var actu_immo_text_source_2 = createNode("span");
+    actu_immo_text_source_2.className = "sf_actu_immo_text_source_size";
+    actu_immo_text_source_2.style.marginLeft = "3px";
+    if(items[i].source != "Logement - Business Immo")
     {
-      var actu_immo_text_source_2 = createNode("span");
-      actu_immo_text_source_2.className = "sf_actu_immo_text_source_size";
-      actu_immo_text_source_2.style.marginLeft = "3px";
       actu_immo_text_source_2.innerHTML = " - il y'a ";
-      var firstDate = new Date(pubDate.innerHTML);
+      var firstDate = new Date(items[i].pubdate);
 
       var currentDate = new Date();
 
@@ -93,10 +161,11 @@ function generate_actu(data, actu_source, image_url)
                else
                 actu_immo_text_source_2.innerHTML+=" jours";
            }
-
-      actu_immo_source_container.append(actu_immo_text_source_2);
-
     }
+
+    actu_immo_source_container.append(actu_immo_text_source_2);
+
+
 
     actu_immo_text_container.append(actu_immo_source_container);
 
@@ -106,17 +175,8 @@ function generate_actu(data, actu_source, image_url)
     var actu_immo_text_size = createNode("span");
     actu_immo_text_size.className = "sf_actu_immo_text_size";
 
-    if(actu_source == "bfmimmo"){
-      var index = v=items[i].querySelector("description").textContent.indexOf("<img");
-      if(index != - 1)
-      actu_immo_text_size.innerHTML = items[i].querySelector("description").textContent.slice(0,index);
-      else {
-        actu_immo_text_size.innerHTML = items[i].querySelector("description").textContent.slice(0,342);
-      }
-    }
-    else {
-      actu_immo_text_size.innerHTML = items[i].querySelector("description").textContent.slice(0,342);
-    }
+    actu_immo_text_size.innerHTML = items[i].description;
+
 
     actu_immo_text_box.append(actu_immo_text_size);
 
@@ -131,37 +191,39 @@ function generate_actu(data, actu_source, image_url)
 }
 
 const lesEchosRssUrl = "data/actus/lesechos_immobilier.xml";
+const capitalRssUrl = "data/actus/capital.xml";
+const journaldelagenceRssUrl = "data/actus/lejournaldelagence.xml";
+const lefigaroRssUrl = "data/actus/figaro_immobilier.xml";
+const businessImmoRssUrl = "data/actus/businessimmo.xml";
+const notairesImmoUrl = "data/actus/immobiliernotaires.xml"
+
 fetch(lesEchosRssUrl)
   .then(response => response.text() )
   .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
-  .then(data => generate_actu(data, "lesechos", ""));
-
-const capitalRssUrl = "data/actus/capital.xml";
-fetch(capitalRssUrl)
-    .then(response => response.text() )
-    .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
-    .then(data => generate_actu(data, "capital", "https://www.capital.fr/logo_capital.png"));
-
-const bfmimmoRssUrl = "data/actus/bfmimmobilier.xml";
-fetch(bfmimmoRssUrl)
-    .then(response => response.text() )
-    .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
-    .then(data => generate_actu(data, "bfmimmo", "https://www.bfmtv.com/assets/images/BFM_BUSINESS_default_16x9.jpg"));
-
-const journaldelagenceRssUrl = "data/actus/lejournaldelagence.xml";
-fetch(journaldelagenceRssUrl)
-    .then(response => response.text() )
-    .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
-    .then(data => generate_actu(data, "lejournaldelagence", "https://www.journaldelagence.com/wp-content/themes/jda-2018/img/logo.png"));
-
-const lefigaroRssUrl = "data/actus/figaro_immobilier.xml";
-fetch(lefigaroRssUrl)
-    .then(response => response.text() )
-    .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
-    .then(data => generate_actu(data, "lefigaro", "http://a.f1g.fr/assets-img/i/f/m150.png"));
-
-const businessImmoRssUrl = "data/actus/businessimmo.xml";
-fetch(businessImmoRssUrl)
-    .then(response => response.text() )
-    .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
-    .then(data => generate_actu(data, "businessimmo", "https://www.businessimmo.com/images/logo-bi-nobaseline.svg"));
+  .then(data => extract_actu_data(data, "lesechos", ""))
+  .then(function() {return fetch(capitalRssUrl);})
+  .then(response => response.text() )
+  .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+  .then(data => extract_actu_data(data, "capital", "https://www.capital.fr/logo_capital.png"))
+  .then(function(){return fetch(journaldelagenceRssUrl);})
+  .then(response => response.text() )
+  .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+  .then(data => extract_actu_data(data, "lejournaldelagence", "https://www.journaldelagence.com/wp-content/themes/jda-2018/img/logo.png"))
+  .then(function(){return fetch(lefigaroRssUrl);})
+  .then(response => response.text() )
+  .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+  .then(data => extract_actu_data(data, "lefigaro", "http://a.f1g.fr/assets-img/i/f/m150.png"))
+  .then(function(){return fetch(businessImmoRssUrl);})
+  .then(response => response.text() )
+  .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+  .then(data => extract_actu_data(data, "businessimmo", "https://www.businessimmo.com/images/logo-bi-nobaseline.svg"))
+  .then(function(){return fetch(notairesImmoUrl);})
+  .then(response => response.text() )
+  .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+  .then(data => extract_actu_data(data, "notaires", ""))
+  .then(function() {
+    AllActuData.sort(function(lhs, rhs) { return new Date(rhs.pubdate) - new Date(lhs.pubdate); } );
+    generate_actu(AllActuData);
+  }).catch(function(error){
+    console.log(error);
+  });
