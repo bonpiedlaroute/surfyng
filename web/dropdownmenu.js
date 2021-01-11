@@ -7,7 +7,8 @@ function show_dropdown_list()
   nb_dropdown_click += 1;
 
   var dropdown = document.getElementById("dropdownmenu");
-  dropdown.style.zIndex = "6";
+  if(dropdown)
+    dropdown.style.zIndex = "6";
 }
 
 window.onclick = function(event) {
@@ -25,7 +26,8 @@ window.onclick = function(event) {
     nb_dropdown_click = 0;
 
     var dropdown = document.getElementById("dropdownmenu");
-    dropdown.style.zIndex = "4";
+    if(dropdown)
+      dropdown.style.zIndex = "4";
   }
 
 }
