@@ -184,8 +184,8 @@ namespace surfyn
          }
       }
       CHECK_SIMILAR_ANNOUNCE_ATTRIBUTE_AS_INT(Room, RealEstateRooms);
-      CHECK_SIMILAR_ANNOUNCE_ATTRIBUTE_AS_INT(Bed, RealEstateBedRooms);
-      CHECK_SIMILAR_ANNOUNCE_ATTRIBUTE_AS_INT(Floor, RealEstateFloor);
+      //CHECK_SIMILAR_ANNOUNCE_ATTRIBUTE_AS_INT(Bed, RealEstateBedRooms);
+      //CHECK_SIMILAR_ANNOUNCE_ATTRIBUTE_AS_INT(Floor, RealEstateFloor);
       CHECK_SIMILAR_ANNOUNCE_ATTRIBUTE_AS_STRING(RealEstateType, RealEstateType); 
       CHECK_SIMILAR_ANNOUNCE_ATTRIBUTE_AS_STRING(RealEstateSearchType, RealEstateSearchType);
       return true;
@@ -2484,6 +2484,8 @@ void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_acce
 
                classifier::RealEstateAd* otherRealEstate = iter_otherid->second;
 
+               Log::getInstance()->info("Checking if [" + std::to_string(it->first) + "] and [" + similarIDStr + "could be same announce");
+
                if (IsSimilarAnnounces(*realEstate, *otherRealEstate))
                {
                   std::string otherAnnounceSource = otherRealEstate->getDescription(ANNOUNCE_SOURCE);
@@ -2492,6 +2494,8 @@ void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_acce
                      sources.push_back(otherAnnounceSource);
                   }
                   checkedSimilarIDs.push_back(similarIDStr);
+                  Log::getInstance()->info("[" + std::to_string(it->first) + "] and [" + similarIDStr + "are same announce!");
+
                }
                else
                {
