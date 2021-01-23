@@ -316,3 +316,10 @@ EtreProprioSearchTypeMapping[HOUSE_ID] = 'h'
 
 def getEtreProprioPropertiesId(_id):
    return EtreProprioSearchTypeMapping[_id]
+
+EfficityPropertiesMapping = dict()
+EfficityPropertiesMapping[APART_ID] = '1'
+EfficityPropertiesMapping[HOUSE_ID] = '2'
+
+def getEfficityPropertiesId(_id):
+   return EfficityPropertiesMapping[_id]

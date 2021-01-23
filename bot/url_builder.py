@@ -323,4 +323,8 @@ def buildEtreProprioUrl(city, ptype):
 
    return url
 
+efficity_url = 'https://www.efficity.com/achat-immobilier/results/?inputed_location=80{}&property_type={}&order_by=0'
+def buildEfficityUrl(city, ptype):
+   url = efficity_url.format(inseecodeByCity[city], ptype)
 
+   return url
