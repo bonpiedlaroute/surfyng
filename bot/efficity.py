@@ -7,16 +7,16 @@
 
 
 from hash_id import hash_id
-from url_builder import *
-from search_features import *
+from url_builder import buildEfficityUrl
+from search_features import getEfficityPropertiesId, APART_ID, HOUSE_ID, BUY_ID
 from unidecode import unidecode
 from Serializer import Serializer
-from scrapy.crawler import CrawlerProcess
 
 
 import os
 import json
 import scrapy
+import urllib
 import configparser
 
 config_efficity = configparser.ConfigParser()
@@ -28,7 +28,6 @@ tablename = config_efficity['COMMON']['tablename']	# To change
 
 class EfficitySpider(scrapy.Spider):
 	name = 'efficity'
-
 	def __init__(self, city='', **kwargs):
 
 		self.city = city
@@ -49,23 +48,29 @@ class EfficitySpider(scrapy.Spider):
 			announcers_id = getEfficityPropertiesId(ptype)
 
 			url = buildEfficityUrl(self.city, announcers_id)
-			yield scrapy.Request(url=url, callback=lambda response, ptype = ptype: self.parse(r, ptype, 1))
+			yield scrapy.Request(url=url, callback=lambda response, ptype = ptype: self.parse(response, ptype, 1))
 
 	def parse(self, response, ptype, nextpage):
-		links = response.css('.programs-list-item-visual a')
+		base_url = 'https://www.efficity.com'
+		
+		links = response.css('.programs-list-item-visual a::attr("href")').getall()
 
 		for link in links:
-
-			ID = hash_id(link)
+			true_link = (base_url + link).encode('utf-8', 'ignore')
+			ID = hash_id(true_link)
 
 			if str(ID) not in self.ads:
-				yield scrapy.Request(url=link, callback=lambda response, url=link, ptype=ptype: self.parse_announce(response, url, ptype))
+				yield scrapy.Request(url=true_link, callback=lambda response, url=true_link, ptype=ptype: self.parse_announce(response, url, ptype))
 			else:
 				self.serializer.updateTimeStamp(ID)
-
+		
+		href = response.xpath('/html/body/div[2]/ul/li[3]/a/@href').get()
 		if nextpage == 1:
-			next_link = response.css('div.pagination a.next')
-
+			if href is not None:
+				next_link = base_url + href
+			else:
+				return
+				
 			if next_link:
 				yield scrapy.Request(url=next_link, callback=lambda response, ptype=ptype: self.parse(response, ptype, 2))
 		else:
@@ -74,10 +79,13 @@ class EfficitySpider(scrapy.Spider):
 	def parse_announce(self, response, url, ptype):
 		def extract_css_query(query):
 			return response.css(query).get(default='')
-		def extract_css_all(query):
+		def extract_css_equip(query):
 			items = []
+			it = None
 			for item in response.css(query).getall():
-				items.append(unidecode(' '.join(item.split())))
+				it = unidecode(' '.join(item.split()))
+				if it:
+					items.append(it)
 			return items
 
 		data = dict()
@@ -101,37 +109,37 @@ class EfficitySpider(scrapy.Spider):
 			return
 
 		desc = dict()
-		description = response.xpath('/html/body/section[1]/div[4]/div/div/div[1]/div[3]/div/p/text()').get()
+		description = unidecode(response.xpath('/html/body/section[1]/div[4]/div/div/div[1]/div[3]/div/p/text()').get())
 		desc['description'] = description.split('<br>')[0].strip()
-		desc['features'] = extract_css_all('.program-details-features li::text') 
-		
+		desc['equipments'] = extract_css_equip('.program-details-features li::text')
+
+		features = map(lambda item: unidecode(item), response.css('.program-details-sidebar ul li::text').getall())
+		desc['features'] = features
 		data['AD_TEXT_DESCRIPTION'] = desc
 
-		# yield {
-		# 	'link': response.request,
-		# 	'name': extract_css_query('h1.program-details-title::text'),
-		# 	'area': 
-		# 	'price': ,
-		# 	'features':  ,
-		# 	'description': response.xpath('//*[@id="default-presentation"]').get().split('<br>')[0].strip()
-		# }
-
 		# Images
-		json_data = json.dumps(data)
-		text_title = unidecode(response.xpath('//title/text()').get())
-		announce_title = ""
-		if text_title:
-			announce_title = text_title
-		
-		ret = self.serializer.send(ID, ptype, json_data, self.city, self.region, url, 'efficity', announce_title, BUY_ID)
-		
-	
+		images = map(lambda item: 'https:' + unidecode(item), response.css('img.d-none.d-sm-block.img-fluid::attr("src")').getall())
 
-# if __name__ == '__main__':
-# 	scraper = CrawlerProcess({
-#     'USER_AGENT': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.131 Safari/537.36',
-# 	'FEED_FORMAT': 'json',
-# 	'FEED_URI': 'annonces.json'
-# 	})
-# 	scraper.crawl(EfficitySpider)
-# 	scraper.start()
+		ID = hash_id(url)
+
+		images_count = 1
+		for img in images:
+			image_name = os.path.join(self.images_folder_name, str(ID) + '_' + str(images_count) + '.jpg')
+			urllib.urlretrieve(img, image_name)
+			images_count += 1
+
+		images_count = len(images)
+
+		json_data = json.dumps(data)
+		announce_image = ''
+		if images:
+			announce_image = images[0]
+
+
+		text_title = unidecode(response.xpath('//title/text()').get())
+		announce_title = text_title
+		# ret = self.serializer.send(ID, ptype, json_data, self.city, self.region, url, 'efficity', announce_title, BUY_ID, announce_image, images_count)
+		self.announces_count += 1
+
+	def closed(self, reason):
+		print('Announces found: {}\n'.format(self.announces_count))
