@@ -138,7 +138,8 @@ class EfficitySpider(scrapy.Spider):
 
 		text_title = unidecode(response.xpath('//title/text()').get())
 		announce_title = text_title
-		# ret = self.serializer.send(ID, ptype, json_data, self.city, self.region, url, 'efficity', announce_title, BUY_ID, announce_image, images_count)
+		ret = self.serializer.send(ID, ptype, json_data, self.city, self.region, url, 'efficity', announce_title, BUY_ID, announce_image, images_count)
+		print(ret)
 		self.announces_count += 1
 
 	def closed(self, reason):
