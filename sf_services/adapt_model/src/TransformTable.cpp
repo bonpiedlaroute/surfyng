@@ -2468,7 +2468,7 @@ void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_acce
 
          Log::getInstance()->info("CheckSimilarAnnounces [" + std::to_string(it->first) + "] SOURCES [" + realEstate->getDescription(ANNOUNCE_SOURCE) + "]");
          const std::string& similarAnnouces = realEstate->getDescription(SIMILAR_ANNOUNCE);
-         if (!similarAnnouces.empty() && realEstate->getDescription(TIMESTAMP) == realEstate->getDescription(FIRST_TIMESTAMP))
+         if (!similarAnnouces.empty() && m_SummaryId.find(it->first) == m_SummaryId.end())
          {
             std::vector<std::string> annoucesIDs;
             boost::split(annoucesIDs, similarAnnouces, [](char c) { return c == ','; });
@@ -2484,7 +2484,7 @@ void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_acce
 
                classifier::RealEstateAd* otherRealEstate = iter_otherid->second;
 
-               Log::getInstance()->info("Checking if [" + std::to_string(it->first) + "] and [" + similarIDStr + "could be same announce");
+               Log::getInstance()->info("Checking if [" + std::to_string(it->first) + "] and [" + similarIDStr + "] could be same announce");
 
                if (IsSimilarAnnounces(*realEstate, *otherRealEstate))
                {
@@ -2494,15 +2494,15 @@ void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_acce
                      sources.push_back(otherAnnounceSource);
                   }
                   checkedSimilarIDs.push_back(similarIDStr);
-                  Log::getInstance()->info("[" + std::to_string(it->first) + "] and [" + similarIDStr + "are same announce!");
+                  Log::getInstance()->info("[" + std::to_string(it->first) + "] and [" + similarIDStr + "] are same announce!");
 
                }
-               else
+               /*else
                {
                   std::string otherSimilarAnnounces = otherRealEstate->getDescription(SIMILAR_ANNOUNCE);
                   RemoveElementFromVectorString(otherSimilarAnnounces, std::to_string(realEstate->getId()));
                   otherRealEstate->setDescription(SIMILAR_ANNOUNCE, otherSimilarAnnounces);
-               }
+               }*/
             }
             if (!checkedSimilarIDs.empty())
             {
@@ -2514,6 +2514,7 @@ void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_acce
                   return a.empty() ? b : a + ',' + b;
                });
                realEstate->setDescription(DUPLICATES, duplicates);
+               Log::getInstance()->info("[" + std::to_string(it->first) + "] list of duplicates [" + duplicates + "]");
 
                std::string annouceSources = std::accumulate(std::begin(sources),
                   std::end(sources),
