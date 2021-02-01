@@ -213,7 +213,7 @@ namespace surfyn
       m_ReaderBySources["agenceprincipale"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadAgencePrincipaleJSON(json, realEstate);};
       m_ReaderBySources["lefigaroimmobilier"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadLeFigaroImmobilierJSON(json, realEstate);};
       m_ReaderBySources["etreproprio"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadEtreProprioJSON(json, realEstate);};
-      m_ReaderBySources["efficity"] = [this](const std::string& json, classifer::RealEstateAd* realEstate) { ReadEfficityJSON(json, realEstate);};
+      m_ReaderBySources["efficity"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadEfficityJSON(json, realEstate);};
    }
    DataFormater::~DataFormater()
    {
