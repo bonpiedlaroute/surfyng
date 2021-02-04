@@ -4,7 +4,10 @@
 
    author(s): Noel Tchidjo
 */
+#include <boost/algorithm/string/erase.hpp>
+#include <boost/algorithm/string/split.hpp>
 #include <iostream>
+#include <string>
 #include <vector>
 #include <map>
 #include <sstream>
@@ -19,7 +22,8 @@
 #include <boost/algorithm/string.hpp>
 #include "sf_services/sf_classifier/inc/RealEstateAd.h"
 #include <numeric>
-
+#include <unordered_set>
+#include <math.h>
 
 using namespace ::apache::thrift;
 using namespace ::apache::thrift::protocol;
@@ -35,6 +39,50 @@ using std::shared_ptr;
 using boost::shared_ptr;
 #endif
 
+#define CHECK_SIMILAR_ANNOUNCE_ATTRIBUTE_AS_INT(attribute, filedName) \
+   std::string left##attribute##Str = leftAnnounce->getDescription(filedName); \
+   std::string right##attribute##Str = rightAnnounce->getDescription(filedName); \
+   if (!left##attribute##Str.empty() && !right##attribute##Str.empty()) \
+   { \
+      int left##attribute##Nb = atoi(left##attribute##Str.c_str()); \
+      int right##attribute##Nb = atoi(right##attribute##Str.c_str()); \
+      if (left##attribute##Nb != right##attribute##Nb) \
+      { \
+         logStream << leftAnnounce->getId() << " ##attribute##[" << left##attribute##Nb << "] and " << rightAnnounce->getId() << " ##attribute##[" \
+            << right##attribute##Nb << "] are not similar as their ##attribute## differ"; \
+         Log::getInstance()->info(logStream.str()); \
+         return false; \
+      } \
+   } \
+   else \
+   { \
+         logStream << leftAnnounce->getId() << " ##attribute##[" << left##attribute##Str << "] and " << rightAnnounce->getId() << " ##attribute##[" \
+            << right##attribute##Str << "] are not similar as one of their ##attribute## is empty"; \
+         Log::getInstance()->info(logStream.str()); \
+         return false; \
+   }
+
+#define CHECK_SIMILAR_ANNOUNCE_ATTRIBUTE_AS_STRING(attribute, filedName) \
+   std::string left##attribute##Str = leftAnnounce->getDescription(filedName); \
+   std::string right##attribute##Str = rightAnnounce->getDescription(filedName); \
+   if (!left##attribute##Str.empty() && !right##attribute##Str.empty()) \
+   { \
+      if (left##attribute##Str != right##attribute##Str) \
+      { \
+         logStream << leftAnnounce->getId() << " ##attribute##[" << left##attribute##Str << "] and " << rightAnnounce->getId() << " ##attribute##[" \
+            << right##attribute##Str << "] are not similar as their ##attribute## differ"; \
+         Log::getInstance()->info(logStream.str()); \
+         return false; \
+      } \
+   } \
+   else \
+   { \
+         logStream << leftAnnounce->getId() << " ##attribute##[" << left##attribute##Str << "] and " << rightAnnounce->getId() << " ##attribute##[" \
+            << right##attribute##Str << "] are not similar as their ##attribute## differ"; \
+         Log::getInstance()->info(logStream.str()); \
+         return false; \
+   }
+
 namespace surfyn
 {
 
@@ -48,8 +96,11 @@ namespace surfyn
    const char* RealEstateType = "PROPERTY_TYPE";
    const char* RealEstateAnnounceSource = "ANNOUNCE_SOURCE";
    const char* RealEstateSources = "SOURCES";
+   const char* SEARCH_TYPE = "SEARCH_TYPE";
+   const char* FIRST_TIMESTAMP = "FIRST_TIMESTAMP";
+   const char* RealEstateSearchType = "SEARCH_TYPE";
 
-   std::vector<classifier::RealEstateAd*> announcestoUpdate;
+   
 
    ValueType BuildValueType(const std::string& fieldName, const std::string& fieldValue)
    {
@@ -82,7 +133,7 @@ namespace surfyn
       expressionValue[paramvalue] = exprValue;
    }
 
-void readTable(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tableName, std::vector<classifier::RealEstateAd*>& announcesID, const std::string& city,
+void readTable(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tableName, std::vector<std::shared_ptr<classifier::RealEstateAd>>& announcesID, const std::string& city,
 const std::pair<std::string, std::string>& propType)
 {
    std::map<std::string, ValueType> attributestoget;
@@ -103,6 +154,7 @@ const std::pair<std::string, std::string>& propType)
    attributestoget[RealEstateCity] = value;
    //attributestoget[PROPERTY_DESCRIPTION] = value;
    attributestoget[RealEstateType] = value;
+   attributestoget[SEARCH_TYPE] = value;
    attributestoget[RealEstateAnnounceSource] = value;
    attributestoget[RealEstateSources] = value;
 
@@ -137,7 +189,7 @@ const std::pair<std::string, std::string>& propType)
       {
          int64_t id = atol((*iter)[RealEstateKey].c_str());
 
-         classifier::RealEstateAd*  realEstate = new classifier::RealEstateAd(id);
+         auto  realEstate = std::make_shared<classifier::RealEstateAd>(id);
 
 
          std::map<std::string, std::string>::const_iterator it_field;
@@ -174,15 +226,98 @@ const std::pair<std::string, std::string>& propType)
          {
             realEstate->setDescription(RealEstateAnnounceSource, it_field->second);
          }
+         if ((it_field = iter->find(SEARCH_TYPE)) != iter->end())
+         {
+            realEstate->setDescription(SEARCH_TYPE, it_field->second);
+         }
+         if ((it_field = iter->find(FIRST_TIMESTAMP)) != iter->end())
+         {
+            realEstate->setDescription(FIRST_TIMESTAMP, it_field->second);
+         }
+         
          announcesID.push_back(realEstate);
       }
 
       scanend = scanReturn.scanend;
    } while (!scanend);
 
+   std::stringstream msg;
+   msg <<  announcesID.size() << " elements loaded from databases\n";
+   Log::getInstance()->info(msg.str());
 }
-bool IsSimilar(classifier::RealEstateAd* lhs, classifier::RealEstateAd* rhs)
+
+/*bool isNotTooFar(std::shared_ptr<classifier::RealEstateAd>& lhs, std::shared_ptr<classifier::RealEstateAd>& rhs, int maxDelayToConsider)
 {
+   const auto lhsFirsttimestamp = lhs->getDescription(FIRST_TIMESTAMP);
+   struct tm lhsFirst;
+   strptime(lhsFirsttimestamp.c_str(), "%Y-%m-%dT%H:%M:%S", &lhsFirst);
+   time_t lhs_modification_time = timegm(&lhsFirst);
+
+   const auto rhsFirsttimestamp = rhs->getDescription(FIRST_TIMESTAMP);
+   struct tm rhsFirst;
+   strptime(rhsFirsttimestamp.c_str(), "%Y-%m-%dT%H:%M:%S", &rhsFirst);
+   time_t rhs_modification_time = timegm(&rhsFirst);
+
+   return std::abs(lhs_modification_time - rhs_modification_time) < maxDelayToConsider;
+}*/
+
+  bool IsSimilar_v2(const std::shared_ptr<classifier::RealEstateAd>& leftAnnounce, const std::shared_ptr<classifier::RealEstateAd>& rightAnnounce)
+   {
+      if( leftAnnounce->getId() == rightAnnounce->getId())
+         return false;
+      std::stringstream logStream;
+      std::string leftPriceStr = leftAnnounce->getDescription(RealEstatePrice);
+      std::string rightPriceStr = rightAnnounce->getDescription(RealEstatePrice);
+      if (!leftPriceStr.empty() && !rightPriceStr.empty())
+      {
+         double leftPrice = atof(leftPriceStr.c_str());
+         double rightPrice = atof(rightPriceStr.c_str());
+         if (fabs(leftPrice - rightPrice) / leftPrice > 0.01)
+         {
+            logStream << leftAnnounce->getId() << " price[" << leftPrice << "] and " << rightAnnounce->getId() << " price[" 
+               << rightPrice << "] are not similar as their prices differ";
+            Log::getInstance()->info(logStream.str());
+            return false;
+         }
+      }
+      else 
+      {
+      logStream << leftAnnounce->getId() << " price[" << leftPriceStr << "] and " << rightAnnounce->getId() << " price[" 
+               << rightPriceStr << "] are not similar as one price is empty";
+            Log::getInstance()->info(logStream.str());
+            return false;
+      }
+      std::string leftSurfaceStr = leftAnnounce->getDescription(RealEstateSurface);
+      std::string rightSurfaceStr = rightAnnounce->getDescription(RealEstateSurface);
+      if (!leftSurfaceStr.empty() && !rightSurfaceStr.empty())
+      {
+         double leftSurface = atof(leftSurfaceStr.c_str());
+         double rightSurface = atof(rightSurfaceStr.c_str());
+         if (fabs(leftSurface - rightSurface) / leftSurface > 0.02)
+         {
+            logStream << leftAnnounce->getId() << " surface[" << leftSurface << "] and " << rightAnnounce->getId() << " surface["
+               << rightSurface << "] are not similar as their surfaces differ";
+            Log::getInstance()->info(logStream.str());
+            return false;
+         }
+      }
+      else
+      {
+            logStream << leftAnnounce->getId() << " surface[" << leftSurfaceStr << "] and " << rightAnnounce->getId() << " surface["
+               << rightSurfaceStr << "] are not similar as one surfaces is empty";
+            Log::getInstance()->info(logStream.str());
+            return false;
+      }
+      CHECK_SIMILAR_ANNOUNCE_ATTRIBUTE_AS_INT(Room, RealEstateRooms);
+
+      CHECK_SIMILAR_ANNOUNCE_ATTRIBUTE_AS_STRING(RealEstateType, RealEstateType); 
+      CHECK_SIMILAR_ANNOUNCE_ATTRIBUTE_AS_STRING(RealEstateSearchType, RealEstateSearchType);
+      return true;
+   }
+
+/*bool IsSimilar(const std::shared_ptr<classifier::RealEstateAd>& lhs, const std::shared_ptr<classifier::RealEstateAd>& rhs, int maxDelayToConsider)
+{
+   Log::getInstance()->info("IsSimilar: checking if [" + std::to_string(lhs->getId()) + "] and [" + std::to_string(rhs->getId()) + "] can be similar");
    std::string lhs_raw_price = lhs->getDescription(RealEstatePrice);
    std::string rhs_raw_price = rhs->getDescription(RealEstatePrice);
    int price_lhs = atoi(lhs_raw_price.c_str());
@@ -199,78 +334,112 @@ bool IsSimilar(classifier::RealEstateAd* lhs, classifier::RealEstateAd* rhs)
    float surface_rhs = atof(rhs_raw_surface.c_str());
 
    return (price_lhs == price_rhs) && (rooms_lhs == rooms_rhs) &&
-         (abs(surface_lhs -surface_rhs) < 1) ;
-}
+         (std::abs(surface_lhs -surface_rhs) < 1
+         && rhs->getDescription(RealEstateType) == lhs->getDescription(RealEstateType)
+         && rhs->getDescription(SEARCH_TYPE) == lhs->getDescription(SEARCH_TYPE)
+         && isNotTooFar(lhs, rhs, maxDelayToConsider)) ;
+}*/
 
-void updateGroupOfDuplicates(std::vector<classifier::RealEstateAd*>& duplicatesAd)
+void updateGroupOfDuplicates(std::vector<std::shared_ptr<classifier::RealEstateAd>>& duplicatesAd)
 {
-   for(auto* ad: duplicatesAd)
+   for(auto ad: duplicatesAd)
    {
-      std::string duplicates = "";
-      std::string source = ad->getDescription(RealEstateAnnounceSource);
+      std::string duplicates = ad->getDescription(RealEstateDuplicates);
+      boost::erase_all(duplicates, " ");
+      std::unordered_set<std::string> uniqueDuplicatesIds;
+      boost::split(uniqueDuplicatesIds, duplicates, [](char c) { return c == ','; });
 
-      for(auto* dup : duplicatesAd)
+      
+      std::string sources = ad->getDescription(RealEstateSources);
+      boost::erase_all(sources, " ");
+      std::unordered_set<std::string> uniqueSources;
+      boost::split(uniqueSources, sources, [](char c) { return c == ','; });
+
+      for(auto dup : duplicatesAd)
       {
          if(dup != ad )
          {
-            if(!duplicates.empty())
-               duplicates += ",";
-
-            duplicates += std::to_string(dup->getId());
-            source += ",";
-            source += dup->getDescription(RealEstateAnnounceSource);
+            uniqueDuplicatesIds.insert(std::to_string(dup->getId()));
+            uniqueSources.insert(dup->getDescription(RealEstateAnnounceSource));
          }
 
       }
+
+      duplicates = "";
+      for(auto strId: uniqueDuplicatesIds)
+      {
+         if(!strId.empty())
+         {
+            if(!duplicates.empty())
+            {
+               duplicates += ",";
+            }
+            duplicates += strId;
+         }
+
+      }
+
+      sources = "";
+      for(auto strSource: uniqueSources)
+      {
+         if(!strSource.empty())
+         {
+            if(!sources.empty())
+            {
+               sources += ",";
+            }
+            sources += strSource;
+         }
+         
+      }
+
+      Log::getInstance()->info("Announce ["+ std::to_string(ad->getId()) +"] list of duplicates [" + duplicates + "] list of sources [" + sources + "]");
       ad->setDescription(RealEstateDuplicates, duplicates);
-      ad->setDescription(RealEstateSources, source);
+      ad->setDescription(RealEstateSources, sources);
    }
 }
 
-void updateDuplicates(std::vector<classifier::RealEstateAd*>& announcesID)
+void updateDuplicates(const std::vector<std::shared_ptr<classifier::RealEstateAd>>& announcesID, std::vector<std::shared_ptr<surfyn::classifier::RealEstateAd>>& announcestoUpdate)
 {
+   Log::getInstance()->info("updateDuplicates: Begin to check for new duplicates");
    for (auto it = announcesID.begin(), it_next = std::next(it, 1); it != announcesID.end() && it_next != announcesID.end(); )
    {
       std::string similarAnnounces = (*it)->getDescription(RealEstateDuplicates);
 
-      if( similarAnnounces.empty())
+      std::vector<std::shared_ptr<classifier::RealEstateAd>> duplicatesAd;
+      bool firstTime = true;
+      while(it_next != announcesID.end() && IsSimilar_v2(*it, *it_next))
       {
-         std::vector<classifier::RealEstateAd*> duplicatesAd;
-         bool firstTime = true;
-         while(it_next != announcesID.end() && IsSimilar(*it, *it_next))
+         Log::getInstance()->info("updateDuplicates: Announce [" + std::to_string((*it)->getId()) + "] and Announce ["
+         + std::to_string((*it_next)->getId()) + " are Similar");
+         if(firstTime)
          {
-            if(firstTime)
-            {
-               duplicatesAd.push_back(*it);
-               announcestoUpdate.push_back(*it);
-               firstTime = false;
-            }
-            duplicatesAd.push_back(*it_next);
-            announcestoUpdate.push_back(*it_next);
-            ++it_next;
+            duplicatesAd.push_back(*it);
+            announcestoUpdate.push_back(*it);
+            firstTime = false;
          }
-         if(!duplicatesAd.empty())
-         {
-            updateGroupOfDuplicates(duplicatesAd);
-            it = it_next;
-         }
-         else
-         {
-            ++it;
-         }
+         duplicatesAd.push_back(*it_next);
+         announcestoUpdate.push_back(*it_next);
          ++it_next;
+      }
+      if(!duplicatesAd.empty())
+      {
+         updateGroupOfDuplicates(duplicatesAd);
+         it = it_next;
       }
       else
       {
          ++it;
-         ++it_next;
       }
+      ++it_next;
+      
    }
 }
 
-void updateTable(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tableName)
+void updateTable(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tableName, const std::vector<std::shared_ptr<surfyn::classifier::RealEstateAd>>& announcestoUpdate)
 {
-   for (auto* ad : announcestoUpdate)
+   Log::getInstance()->info("updateTable: "+std::to_string(announcestoUpdate.size()) + " elements to update!");
+   for (auto ad : announcestoUpdate)
    {
       std::map<std::string, ValueType> valuesToUpdate;
 
@@ -307,18 +476,30 @@ void updateTable(const std::shared_ptr<dynamodb_accessClient>& client, const std
 
 struct Compare
 {
-   bool operator()(surfyn::classifier::RealEstateAd* announce1, surfyn::classifier::RealEstateAd* announce2)
+   bool operator()(std::shared_ptr<surfyn::classifier::RealEstateAd> announce1, std::shared_ptr<surfyn::classifier::RealEstateAd> announce2)
    {
       std::string raw_price1 = announce1->getDescription(surfyn::RealEstatePrice);
       std::string raw_price2 = announce2->getDescription(surfyn::RealEstatePrice);
 
-      return atoi(raw_price1.c_str()) < atoi(raw_price2.c_str());
+      if( atoi(raw_price1.c_str()) < atoi(raw_price2.c_str()) )
+         return true;
+      else 
+      {
+         if(atoi(raw_price1.c_str()) > atoi(raw_price2.c_str()))
+            return false;
+         else {
+            auto surface1 = announce1->getDescription(surfyn::RealEstateSurface);
+            auto surface2 = announce2->getDescription(surfyn::RealEstateSurface);
+
+            return atof(surface1.c_str()) < atof(surface2.c_str());
+         }
+      }
    }
 };
 
 int main(int argc, char* argv[])
 {
-   std::vector<surfyn::classifier::RealEstateAd*> announces;
+   
 
    Log::Init("duplicates_fix");
    Log::getInstance()->info("Starting duplicates_fix ...");
@@ -326,6 +507,7 @@ int main(int argc, char* argv[])
    std::string tablename = "";
    int port = 0;
    std::string host = "", city = "";
+   //int maxDelayToConsider = 1209600;
    if(argc == 3)
    {
       surfyn::utils::Config duplicates_fix_conf(argv[1]);
@@ -334,7 +516,14 @@ int main(int argc, char* argv[])
 
       host = duplicates_fix_conf.getStringValue("host");
       port = duplicates_fix_conf.getIntValue("port");
+      //maxDelayToConsider = duplicates_fix_conf.getIntValue("max_delay_to_consider");
       city = argv[2];
+   }
+   else
+   {
+      std::cout << "[ERROR] not enough parameters in command line\n";
+      std::cout << "please run ./duplicate_fix config.ini city \n";
+      return 1;
    }
    shared_ptr<TTransport> socket(new TSocket(host, port));
    shared_ptr<TTransport> transport(new TBufferedTransport(socket));
@@ -346,16 +535,16 @@ int main(int argc, char* argv[])
 
    for(auto propType: propertyTypes)
    {
+      std::vector<std::shared_ptr<surfyn::classifier::RealEstateAd>> announces;
+      std::vector<std::shared_ptr<surfyn::classifier::RealEstateAd>> announcestoUpdate;
+
       surfyn::readTable(client, tablename, announces, city, propType);
       std::sort(announces.begin(), announces.end(), Compare());
-      surfyn::updateDuplicates(announces);
-      surfyn::updateTable(client, tablename);
+      surfyn::updateDuplicates(announces, announcestoUpdate);
+      surfyn::updateTable(client, tablename, announcestoUpdate);
    }
    
    Log::getInstance()->info("Table " + tablename + " successfully updated ");
-   for( auto * ad : announces)
-   {
-      delete ad;
-   }
+
    return 0;
 }

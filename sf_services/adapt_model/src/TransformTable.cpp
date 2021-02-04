@@ -43,6 +43,13 @@ using Log = surfyn::utils::Logger;
          Log::getInstance()->info(logStream.str()); \
          return false; \
       } \
+   } \
+   else \
+   { \
+      logStream << leftAnnounce.getId() << " ##attribute##[" << left##attribute##Str << "] and " << rightAnnounce.getId() << " ##attribute##[" \
+         << right##attribute##Str << "] are not similar as one of their ##attribute## is empty"; \
+      Log::getInstance()->info(logStream.str()); \
+      return false; \
    }
 
 #define CHECK_SIMILAR_ANNOUNCE_ATTRIBUTE_AS_STRING(attribute, filedName) \
@@ -57,6 +64,13 @@ using Log = surfyn::utils::Logger;
          Log::getInstance()->info(logStream.str()); \
          return false; \
       } \
+   } \
+   else \
+   { \
+      logStream << leftAnnounce.getId() << " ##attribute##[" << left##attribute##Str << "] and " << rightAnnounce.getId() << " ##attribute##[" \
+         << right##attribute##Str << "] are not similar as one of their ##attribute## is empty"; \
+      Log::getInstance()->info(logStream.str()); \
+      return false; \
    }
 
 namespace surfyn
@@ -169,6 +183,13 @@ namespace surfyn
             return false;
          }
       }
+      else 
+      {
+         logStream << leftAnnounce.getId() << " price[" << leftPriceStr << "] and " << rightAnnounce.getId() << " price[" 
+            << rightPriceStr << "] are not similar as one of their prices is empty";
+         Log::getInstance()->info(logStream.str());
+         return false;
+      }
       std::string leftSurfaceStr = leftAnnounce.getDescription(RealEstateSurface);
       std::string rightSurfaceStr = rightAnnounce.getDescription(RealEstateSurface);
       if (!leftSurfaceStr.empty() && !rightSurfaceStr.empty())
@@ -182,6 +203,13 @@ namespace surfyn
             Log::getInstance()->info(logStream.str());
             return false;
          }
+      }
+      else 
+      {
+         logStream << leftAnnounce.getId() << " surface[" << leftSurfaceStr << "] and " << rightAnnounce.getId() << " surface["
+            << rightSurfaceStr << "] are not similar as one their surfaces is empty";
+         Log::getInstance()->info(logStream.str());
+         return false;
       }
       CHECK_SIMILAR_ANNOUNCE_ATTRIBUTE_AS_INT(Room, RealEstateRooms);
       //CHECK_SIMILAR_ANNOUNCE_ATTRIBUTE_AS_INT(Bed, RealEstateBedRooms);
