@@ -2228,32 +2228,33 @@ void DataFormater::ReadEfficityJSON(const std::string& json, classifier::RealEst
    std::locale::global(std::locale(""));
 
    rapidjson::Document document;
+   document.Parse(json.c_str());
 
    if(document.HasParseError())
    {
       std::stringstream error;
-      error << "failed to parse Efficity json: error code [";
+      error << "failed to parse EtreProprio json: error code [";
       error << document.GetParseError();
       error << "] error offset :[";
-      error <<  "]";
+      error << document.GetErrorOffset();
+      error << "]";
       Log::getInstance()->error(error.str());
 
       return;
    }
 
-   if(document.HasMember(RealEstatePrice))
+   if (document.HasMember(RealEstatePrice))
    {
       realEstate->setDescription(RealEstatePrice, document[RealEstatePrice].GetString());
    }
 
-   if(document.HasMember(RealEstateSurface))
+   if( document.HasMember(RealEstateSurface))
    {
       std::string surface = document[RealEstateSurface].GetString();
       std::replace(surface.begin(), surface.end(), ',', '.');
-      realEstate->setDescription(RealEstateSurface, surface);
+     realEstate->setDescription(RealEstateSurface, surface);
    }
-
-   if(document.HasMember(RealEstateRooms))
+   if( document.HasMember(RealEstateRooms))
    {
       realEstate->setDescription(RealEstateRooms, document[RealEstateRooms].GetString());
    }
@@ -2261,28 +2262,12 @@ void DataFormater::ReadEfficityJSON(const std::string& json, classifier::RealEst
    if(document.HasMember(RealEstateTextDescription))
    {
       std::string desc = document[RealEstateTextDescription].GetString();
-      std::replace(desc.begin(), desc.end(), '\n', ' ');
-      std::replace(desc.begin(), desc.end(), '\t', ' ');
-      std::replace(desc.begin(), desc.end(), '\"', ' ');
-      std::replace(desc.begin(), desc.end(), '\r', ' ');
+      std::replace(desc.begin(), desc.end(),'\n', ' ');
+      std::replace(desc.begin(), desc.end(),'\t', ' ');
+      std::replace(desc.begin(), desc.end(),'\"', ' ');
+      std::replace(desc.begin(), desc.end(),'\r', ' ');
 
-      auto pos = desc.find("cave");
-      if(pos != std::string::npos)
-      {
-         realEstate->setDescription(RealEstateCellar, "1");
-      }
-      
-      pos = desc.find("parking");
-      if(pos != std::string::npos)
-      {
-         realEstate->setDescription(RealEstateParking, "1");
-      }
-
-      pos = desc.find("avec ascenseur");
-      if(pos != std::string::npos)
-      {
-         realEstate->setDescription(RealEstateLift, "1");
-      }
+      PopulateValuesExtractFromDescription(desc, realEstate);
 
       realEstate->setDescription(RealEstateTextDescription, desc);
    }
@@ -2417,7 +2402,6 @@ void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_acce
             if ((it_field = iter->find(IMAGE_COUNT)) != iter->end())
             {
                CurrentImageCount = it_field->second;
-
             }
             if ((it_field = iter->find(ANNOUNCE_IMAGE)) != iter->end())
             {
@@ -2675,7 +2659,7 @@ void DataFormater::ReadTableAndFormatEntries(const std::shared_ptr<dynamodb_acce
 int main(int argc, char* argv[])
 {
    Log::Init("adapt_model");
-   Log::getInstance()->info("Starting adapt model ...");
+   Log::getInstance()->info("Starting adapt_model ...");
 
    std::string input_tablename = "", output_tablename = "";
    std::string host = "";
