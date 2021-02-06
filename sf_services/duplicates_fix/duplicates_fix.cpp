@@ -99,7 +99,8 @@ namespace surfyn
    const char* SEARCH_TYPE = "SEARCH_TYPE";
    const char* FIRST_TIMESTAMP = "FIRST_TIMESTAMP";
    const char* RealEstateSearchType = "SEARCH_TYPE";
-
+   static double priceMaxErrorPercentage = 0.001;
+   static double surfaceMaxErrorPercentage = 0.02;
    
 
    ValueType BuildValueType(const std::string& fieldName, const std::string& fieldValue)
@@ -272,7 +273,7 @@ const std::pair<std::string, std::string>& propType)
       {
          double leftPrice = atof(leftPriceStr.c_str());
          double rightPrice = atof(rightPriceStr.c_str());
-         if (fabs(leftPrice - rightPrice) / leftPrice > 0.01)
+         if (fabs(leftPrice - rightPrice) / leftPrice > priceMaxErrorPercentage)
          {
             logStream << leftAnnounce->getId() << " price[" << leftPrice << "] and " << rightAnnounce->getId() << " price[" 
                << rightPrice << "] are not similar as their prices differ";
@@ -293,7 +294,7 @@ const std::pair<std::string, std::string>& propType)
       {
          double leftSurface = atof(leftSurfaceStr.c_str());
          double rightSurface = atof(rightSurfaceStr.c_str());
-         if (fabs(leftSurface - rightSurface) / leftSurface > 0.02)
+         if (fabs(leftSurface - rightSurface) / leftSurface > surfaceMaxErrorPercentage)
          {
             logStream << leftAnnounce->getId() << " surface[" << leftSurface << "] and " << rightAnnounce->getId() << " surface["
                << rightSurface << "] are not similar as their surfaces differ";
@@ -516,6 +517,10 @@ int main(int argc, char* argv[])
 
       host = duplicates_fix_conf.getStringValue("host");
       port = duplicates_fix_conf.getIntValue("port");
+      surfyn::priceMaxErrorPercentage = duplicates_fix_conf.getDoubleValue("price_max_error_percentage");
+      surfyn::surfaceMaxErrorPercentage = duplicates_fix_conf.getDoubleValue("surface_max_error_percentage");
+      Log::getInstance()->info("duplicates_fix: Initializing priceMaxErrorPercentage with value [" + std::to_string(surfyn::priceMaxErrorPercentage) + "]");
+      Log::getInstance()->info("duplicates_fix: Initializing surfaceMaxErrorPercentage with value [" + std::to_string(surfyn::surfaceMaxErrorPercentage) + "]");
       //maxDelayToConsider = duplicates_fix_conf.getIntValue("max_delay_to_consider");
       city = argv[2];
    }
