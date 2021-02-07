@@ -2233,7 +2233,7 @@ void DataFormater::ReadEfficityJSON(const std::string& json, classifier::RealEst
    if(document.HasParseError())
    {
       std::stringstream error;
-      error << "failed to parse EtreProprio json: error code [";
+      error << "failed to parse Efficity json: error code [";
       error << document.GetParseError();
       error << "] error offset :[";
       error << document.GetErrorOffset();
