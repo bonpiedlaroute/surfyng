@@ -2130,6 +2130,7 @@ void DataFormater::ReadLeFigaroImmobilierJSON(const std::string& json, classifie
       std::replace(surface.begin(), surface.end(), ',', '.');
      realEstate->setDescription(RealEstateSurface, surface);
    }
+   
    if( document.HasMember(RealEstateRooms))
    {
       realEstate->setDescription(RealEstateRooms, document[RealEstateRooms].GetString());
@@ -2254,9 +2255,40 @@ void DataFormater::ReadEfficityJSON(const std::string& json, classifier::RealEst
       std::replace(surface.begin(), surface.end(), ',', '.');
      realEstate->setDescription(RealEstateSurface, surface);
    }
+   
    if( document.HasMember(RealEstateRooms))
    {
       realEstate->setDescription(RealEstateRooms, document[RealEstateRooms].GetString());
+   }
+   
+   if (document.HasMember(RealEstateParking))
+   {
+      realEstate->setDescription(RealEstateParking, document[RealEstateParking].GetString());
+   }
+   
+   if (document.HasMember(RealEstateLift))
+   {
+      realEstate->setDescription(RealEstateLift, document[RealEstateLift].GetString());
+   }
+
+   if( document.HasMember(RealEstateConstructionYear))
+   {
+      realEstate->setDescription(RealEstateConstructionYear, document[RealEstateConstructionYear].GetString());
+   }
+
+   if (document.HasMember(RealEstateTypeOfHeating))
+   {
+      realEstate->setDescription(RealEstateTypeOfHeating, document[RealEstateTypeOfHeating].GetString());
+   }
+
+   if( document.HasMember(RealEstateBedRooms))
+   {
+      realEstate->setDescription(RealEstateBedRooms, document[RealEstateBedRooms].GetString());
+   }
+
+   if (document.HasMember(RealEstateBalcony))
+   {
+      realEstate->setDescription(RealEstateBalcony, document[RealEstateBalcony].GetString());
    }
 
    if(document.HasMember(RealEstateTextDescription))
