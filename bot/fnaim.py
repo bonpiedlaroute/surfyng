@@ -49,7 +49,6 @@ class FnaimSpider(scrapy.Spider):
             search_id = getFnaimSearchPropertiesId(stype)
 
             url = buildFnaimUrl(self.city, prop_id, search_id)
-            print('Url built: '+ url)
             yield scrapy.Request(url=url, callback= lambda r, ptype = ptype, stype = stype :self.parse(r, ptype, stype, 1))
         
     def parse(self, response, ptype, stype, page):
@@ -170,10 +169,7 @@ class FnaimSpider(scrapy.Spider):
         for img in images:
             try:
                 image_name = os.path.join(self.images_folder_name, str(ID) + '_' + str(image_count) + '.jpg')
-                print('\nIMAGE to download: ' + img)
-                print('Name of the image: ' + image_name + '\n')
                 urllib.urlretrieve(img, image_name)
-                print('After downloading image')
                 image_count += 1
             except:
                 import traceback

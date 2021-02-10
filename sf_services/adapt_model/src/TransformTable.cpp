@@ -2306,6 +2306,7 @@ void DataFormater::ReadFnaimJSON(const std::string& json, classifier::RealEstate
    {
      realEstate->setDescription(RealEstateSurface, document[RealEstateSurface].GetString());
    }
+   
    if( document.HasMember(RealEstateRooms))
    {
       realEstate->setDescription(RealEstateRooms, document[RealEstateRooms].GetString());
@@ -2315,14 +2316,22 @@ void DataFormater::ReadFnaimJSON(const std::string& json, classifier::RealEstate
    {
       realEstate->setDescription(RealEstateCellar, document[RealEstateCellar].GetString());
    }
+   
    if (document.HasMember(RealEstateParking))
    {
       realEstate->setDescription(RealEstateParking, document[RealEstateParking].GetString());
    }
+   
    if (document.HasMember(RealEstateLift))
    {
       realEstate->setDescription(RealEstateLift, document[RealEstateLift].GetString());
    }
+
+   if (document.HasMember(RealEstateBalcony))
+   {
+      realEstate->setDescription(RealEstateBalcony, document[RealEstateBalcony].GetString());
+   }
+   
    if (document.HasMember(RealEstateFloor))
    {
       std::string floor;
