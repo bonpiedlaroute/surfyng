@@ -108,14 +108,53 @@ class EfficitySpider(scrapy.Spider):
 		else:
 			return
 
-		desc = dict()
-		description = unidecode(response.xpath('/html/body/section[1]/div[4]/div/div/div[1]/div[3]/div/p/text()').get())
-		desc['description'] = description.split('<br>')[0].strip()
-		desc['equipments'] = extract_css_equip('.program-details-features li::text')
+		description = response.xpath('/html/body/section[1]/div[4]/div/div/div[1]/div[3]/div/p/text()').get()
+		description = description.split('<br>')[0].strip()
+		data['AD_TEXT_DESCRIPTION'] = description
 
+		if 'balcon' in description.lower():
+			data['BALCONY'] = '1'
+
+		equipments = extract_css_equip('.program-details-features li::text')
 		features = map(lambda item: unidecode(item), response.css('.program-details-sidebar ul li::text').getall())
-		desc['features'] = features
-		data['AD_TEXT_DESCRIPTION'] = desc
+
+		# First step data extraction
+		for feature in equipments:
+			if 'chambre' in feature.lower():
+				data['BEDROOMS'] = feature.split()[0]
+			if 'parking' in feature.lower():
+				data['PARKING'] = '1'
+
+		parsed_features = {}
+		linear_features = []
+		
+		# parsing
+		for feature in features:
+			data_splited = feature.split(':')
+			if len(data_splited) == 2:
+				key = data_splited[0].strip()
+				value = data_splited[1].strip()
+				parsed_features[key] = value
+			else:
+				linear_features.append(feature)
+
+		# Second step extraction
+		for key in parsed_features.keys():
+			if 'origine du chauffage' in key.lower():
+				heating = parsed_features[key]
+				data['TYPE_OF_HEATING'] = heating
+			
+			if 'type du chauffage' in key.lower():
+				heating += ' + {}'.format(parsed_features[key])
+				data['TYPE_OF_HEATING'] = heating
+
+		# Third step extraction
+		for feature in linear_features:
+			if 'ascenseur' in feature.lower():
+				data['LIFT'] = '1'
+
+			if  'construit en' in feature.lower():
+				data['CONSTRUCTION_YEAR'] = int(re.findall(r'\d+', feature.lower())[-1])
 
 		# Images
 		images = map(lambda item: 'https:' + unidecode(item), response.css('img.d-none.d-sm-block.img-fluid::attr("src")').getall())
@@ -136,7 +175,7 @@ class EfficitySpider(scrapy.Spider):
 			announce_image = images[0]
 
 
-		text_title = unidecode(response.xpath('//title/text()').get())
+		text_title = response.xpath('//title/text()').get()
 		announce_title = text_title
 		ret = self.serializer.send(ID, ptype, json_data, self.city, self.region, url, 'efficity', announce_title, BUY_ID, announce_image, images_count)
 		print(ret)
