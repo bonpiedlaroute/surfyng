@@ -22,7 +22,7 @@ config_fnaim.read('spiders/config.ini')
 ip = config_fnaim['COMMON']['db_access_ip']
 port = int(config_fnaim['COMMON']['db_access_port'])
 tablename = config_fnaim['COMMON']['tablename']
-max_pages = int(config_fnaim['COMMON']['max_pages'])
+max_pages = int(config_fnaim['FNAIM']['max_pages'])
 
 class FnaimSpider(scrapy.Spider):
 
