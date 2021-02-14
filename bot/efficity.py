@@ -18,6 +18,7 @@ import json
 import scrapy
 import urllib
 import configparser
+import re
 
 config_efficity = configparser.ConfigParser()
 config_efficity.read('spiders/config.ini')
@@ -140,6 +141,7 @@ class EfficitySpider(scrapy.Spider):
 
 		# Second step extraction
 		for key in parsed_features.keys():
+			heating = ""
 			if 'origine du chauffage' in key.lower():
 				heating = parsed_features[key]
 				data['TYPE_OF_HEATING'] = heating
@@ -154,7 +156,7 @@ class EfficitySpider(scrapy.Spider):
 				data['LIFT'] = '1'
 
 			if  'construit en' in feature.lower():
-				data['CONSTRUCTION_YEAR'] = int(re.findall(r'\d+', feature.lower())[-1])
+				data['CONSTRUCTION_YEAR'] = re.findall(r'\d+', feature.lower())[-1]
 
 		# Images
 		images = map(lambda item: 'https:' + unidecode(item), response.css('img.d-none.d-sm-block.img-fluid::attr("src")').getall())
