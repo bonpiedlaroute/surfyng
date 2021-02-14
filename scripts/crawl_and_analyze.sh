@@ -109,6 +109,10 @@ do
         DATE=$(date +%Y_%m_%d"_"%H_%M_%S)
         scrapy crawl etreproprio -a city="$CITY" >> "etreproprio_"$DATE".log" 2>&1 &
         pids[$index]=$!
+        sleep 3
+        DATE=$(date +%Y_%m_%d"_"%H_%M_%S)
+        scrapy crawl efficity -a city="$CITY" >> "efficity_"$DATE".log" 2>&1 &
+        pids[$index]=$!
 
 
         # wait for all scrapy pids
