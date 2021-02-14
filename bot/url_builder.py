@@ -328,3 +328,26 @@ def buildEfficityUrl(city, ptype):
    url = efficity_url.format(inseecodeByCity[city], ptype)
 
    return url
+
+fnaim_url = 'https://www.fnaim.fr/{filename}?localites=[{{"id":{id}, "type":3, "insee":{insee}}}]&TYPE[]={property_type}&TRANSACTION={search_type}&idtf={idtf}&submit=Rechercher'
+def buildFnaimUrl(city, ptype, stype):
+   ids = {
+      'puteaux': 35777,
+      'houilles': 7813,
+      'colombes': 16906,
+      'nanterre': 30819
+   }
+
+   filename = ''
+   idtf = None
+   if stype == 1:
+      filename = '17-acheter.htm'
+      idtf = 17
+   elif stype == 2:
+      filename = '18-location.htm'
+      idtf = 18
+   
+   url = fnaim_url.format(filename=filename, id=ids[city], insee=inseecodeByCity[city], property_type=ptype, search_type=stype, idtf=idtf)
+
+   return url
+   

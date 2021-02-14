@@ -242,6 +242,7 @@ namespace surfyn
       m_ReaderBySources["lefigaroimmobilier"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadLeFigaroImmobilierJSON(json, realEstate);};
       m_ReaderBySources["etreproprio"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadEtreProprioJSON(json, realEstate);};
       m_ReaderBySources["efficity"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadEfficityJSON(json, realEstate);};
+      m_ReaderBySources["fnaim"] = [this](const std::string& json, classifier::RealEstateAd* realEstate) { ReadFnaimJSON(json, realEstate);};
    }
    DataFormater::~DataFormater()
    {
@@ -2332,6 +2333,107 @@ void DataFormater::ReadEfficityJSON(const std::string& json, classifier::RealEst
       realEstate->setDescription(RealEstateTextDescription, desc);
    }
    realEstate->setDescription(SOURCE_LOGO, "data/efficity.svg");
+}
+
+void DataFormater::ReadFnaimJSON(const std::string& json, classifier::RealEstateAd* realEstate)
+{
+   std::locale::global(std::locale(""));
+
+   rapidjson::Document document;
+   document.Parse(json.c_str());
+
+   if(document.HasParseError())
+   {
+      std::stringstream error;
+      error << "failed to parse fnaim json: error code [";
+      error << document.GetParseError();
+      error << "] error offset :[";
+      error << document.GetErrorOffset();
+      error << "]";
+      Log::getInstance()->error(error.str());
+
+      return;
+   }
+   if (document.HasMember(RealEstatePrice))
+   {
+      std::string price = document[RealEstatePrice].GetString();
+
+      realEstate->setDescription(RealEstatePrice, price);
+
+   }
+
+   if( document.HasMember(RealEstateSurface))
+   {
+     realEstate->setDescription(RealEstateSurface, document[RealEstateSurface].GetString());
+   }
+   
+   if( document.HasMember(RealEstateRooms))
+   {
+      realEstate->setDescription(RealEstateRooms, document[RealEstateRooms].GetString());
+   }
+
+   if (document.HasMember(RealEstateCellar))
+   {
+      realEstate->setDescription(RealEstateCellar, document[RealEstateCellar].GetString());
+   }
+   
+   if (document.HasMember(RealEstateParking))
+   {
+      realEstate->setDescription(RealEstateParking, document[RealEstateParking].GetString());
+   }
+   
+   if (document.HasMember(RealEstateLift))
+   {
+      realEstate->setDescription(RealEstateLift, document[RealEstateLift].GetString());
+   }
+
+   if (document.HasMember(RealEstateBalcony))
+   {
+      realEstate->setDescription(RealEstateBalcony, document[RealEstateBalcony].GetString());
+   }
+   
+   if (document.HasMember(RealEstateFloor))
+   {
+      std::string floor;
+      std::string nb_floor = document[RealEstateFloor].GetString();
+      boost::erase_all(nb_floor, " ");
+      if( atoi(nb_floor.c_str()) == 1)
+      {
+         floor = "1er";
+      }
+      else
+      {
+         floor = nb_floor + "ème";
+      }
+      realEstate->setDescription(RealEstateFloor, floor);
+   }
+   if( document.HasMember(RealEstateConstructionYear))
+   {
+      realEstate->setDescription(RealEstateConstructionYear, document[RealEstateConstructionYear].GetString());
+   }
+   if (document.HasMember(RealEstateTypeOfHeating))
+   {
+      realEstate->setDescription(RealEstateTypeOfHeating, document[RealEstateTypeOfHeating].GetString());
+   }
+
+   if( document.HasMember(RealEstateBedRooms))
+   {
+      realEstate->setDescription(RealEstateBedRooms, document[RealEstateBedRooms].GetString());
+   }
+   if(document.HasMember(RealEstateLandSurface))
+   {
+      realEstate->setDescription(RealEstateLandSurface, document[RealEstateLandSurface].GetString());
+   }
+
+   if(document.HasMember(RealEstateTextDescription))
+   {
+      std::string desc = document[RealEstateTextDescription].GetString();
+      std::replace(desc.begin(), desc.end(),'\n', ' ');
+      std::replace(desc.begin(), desc.end(),'\t', ' ');
+      std::replace(desc.begin(), desc.end(),'\"', ' ');
+      realEstate->setDescription(RealEstateTextDescription, desc);
+   }
+   realEstate->setDescription(SOURCE_LOGO, "data/fnaim.svg");
 }
 
 void DataFormater::ReadSummaryTable(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tableName, const std::string& city)

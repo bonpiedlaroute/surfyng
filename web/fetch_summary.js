@@ -84,6 +84,7 @@ function loadJSON(path, success, error) {
   ProcessorBySource.set("lefigaroimmobilier", function(param) { SrcProcessor(param, "red", "Figaroimm"); });
   ProcessorBySource.set("etreproprio", function(param) { SrcProcessor(param, "green", "Etrepropr"); });
   ProcessorBySource.set("efficity", function(param) {SrcProcessor(param, "green", "Efficity"); });
+  ProcessorBySource.set("fnaim", function(param) {SrcProcessor(param, "yellow", "FNAIM"); });
 
   var url = 'https://surfyn.fr:7878/search/all';
   //var url = 'http://127.0.0.1:7878/search/all';

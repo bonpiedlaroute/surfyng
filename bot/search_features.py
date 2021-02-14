@@ -323,3 +323,17 @@ EfficityPropertiesMapping[HOUSE_ID] = '2'
 
 def getEfficityPropertiesId(_id):
    return EfficityPropertiesMapping[_id]
+
+FnaimPropertiesMapping = dict()
+FnaimPropertiesMapping[APART_ID] = 1
+FnaimPropertiesMapping[HOUSE_ID] = 2
+
+FnaimSearchTypeMapping = dict()
+FnaimSearchTypeMapping[BUY_ID] = 1
+FnaimSearchTypeMapping[RENT_ID] = 2
+
+def getFnaimPropertiesId(_id):
+   return FnaimPropertiesMapping[_id]
+
+def getFnaimSearchPropertiesId(_id):
+   return FnaimSearchTypeMapping[_id]

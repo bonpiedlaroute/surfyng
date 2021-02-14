@@ -53,6 +53,7 @@ namespace surfyn
       void ReadLeFigaroImmobilierJSON(const std::string& json, classifier::RealEstateAd* realEstate);
       void ReadEtreProprioJSON(const std::string& json, classifier::RealEstateAd* realEstate);
       void ReadEfficityJSON(const std::string& json, classifier::RealEstateAd* realEstate);
+      void ReadFnaimJSON(const std::string& json, classifier::RealEstateAd* realEstate);
 
       void PopulateValuesExtractFromDescription(const std::string& desc, classifier::RealEstateAd* realEstate) const;
    private:
