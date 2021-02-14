@@ -5,5 +5,14 @@ wget "http://feed.prismamediadigital.com/v1/cap/rss?sources=capital,polemik,xerf
 wget https://www.journaldelagence.com/feed -O lejournaldelagence.xml
 wget https://syndication.lesechos.fr/rss/rss_immobilier_btp.xml -O lesechos_immobilier.xml
 wget https://www.notaires.fr/fr/actualites-rss -O immobiliernotaires.xml
+sed -i -e 's/<a [^>]*>//g' *.xml
+sed -i -e 's/<p [^>]*>//g' *.xml
+sed -i -e 's/<img [^>]*>//g' *.xml
+sed -i 's/<a>//g' *.xml
+sed -i 's/<p>//g' *.xml
+sed -i 's/<\/a>//g' *.xml
+sed -i 's/<\/p>//g' *.xml
+sed -i 's/<\/strong>//g' *.xml
+sed -i 's/<strong>//g' *.xml
 sudo mkdir -p /var/www/html/data/actus/
 sudo mv *.xml /var/www/html/data/actus/

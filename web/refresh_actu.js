@@ -177,7 +177,7 @@ function generate_actu(items)
 
     actu_immo_text_size.innerHTML = items[i].description;
 
-
+    actu_immo_text_size.innerHTML = actu_immo_text_size.innerHTML.replace(/&nbsp;/g,' ');
     actu_immo_text_box.append(actu_immo_text_size);
 
     actu_immo_text_container.append(actu_immo_text_box);
