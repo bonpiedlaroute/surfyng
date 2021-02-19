@@ -41,7 +41,7 @@ class SendMailHandler(Iface):
    def sendemailtosurfyn(self, sender_email, subject, msg):
       logging.info("start sending email to Surfyn")
       smtp_host_port = self.smtp_host + ':' + self.smtp_port
-      smtp_server = smtplib.SMTP(smtp_host_port)  
+      smtp_server = smtplib.SMTP(smtp_host_port) 
       smtp_server.starttls()
       logging.info("log in to smtp server")
       smtp_server.login(self.from_addr, self.password)
@@ -50,7 +50,7 @@ class SendMailHandler(Iface):
 
       message = 'Subject: {}\n\n{}'.format("Contact depuis surfyn.fr: " + subject, msg_to_send) 
       logging.info("sending msg :\n\n"+message)
-      recipients = self.to_addrs.split(",")      
+      recipients = self.to_addrs.split(",")
       smtp_server.sendmail(self.from_addr, recipients, message)
 
       new_recipients = []
