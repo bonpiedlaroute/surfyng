@@ -29,7 +29,8 @@ std::string certificate_file = "";
 std::string private_key_file = "";
 std::string certificate_chain_file = "";
 
-void on_initialize(const string_t& address, const std::string& dbaccess_host, int dbaccess_port,  const std::string& estimator_host, int estimator_port)
+void on_initialize(const string_t& address, const std::string& dbaccess_host, int dbaccess_port,  const std::string& estimator_host, int estimator_port,
+const std::string& emailalert_host, int emailalert_port)
 {
     uri_builder uri(address);
     web::http::experimental::listener::http_listener_config             conf;
@@ -50,7 +51,8 @@ void on_initialize(const string_t& address, const std::string& dbaccess_host, in
      });
 
     auto addr = uri.to_uri().to_string();
-    g_httpHandler = std::make_unique<HttpRequestHandler>(addr, conf, dbaccess_host, dbaccess_port, estimator_host, estimator_port);
+    g_httpHandler = std::make_unique<HttpRequestHandler>(addr, conf, dbaccess_host, dbaccess_port, estimator_host, estimator_port,
+    emailalert_host, emailalert_port);
     g_httpHandler->open().wait();
 
     //ucout << utility::string_t(U("Listening for requests at: ")) << addr << std::endl;
@@ -82,6 +84,8 @@ int main(int argc, char *argv[])
     int         dbaccess_port = 5050;
     std::string estimator_host = "localhost";
     int         estimator_port = 12200;
+    std::string emailalert_host = "localhost";
+    int         emailalert_port = 7810;
 
     if(argc == 2)
     {
@@ -105,6 +109,8 @@ int main(int argc, char *argv[])
        dbaccess_port = restserver_conf.getIntValue("dbaccess_port");
        estimator_host = restserver_conf.getStringValue("estimator_host");
        estimator_port = restserver_conf.getIntValue("estimator_port");
+       emailalert_host = restserver_conf.getStringValue("emailalert_host");
+       emailalert_port = restserver_conf.getIntValue("emailalert_port");
     }
 
     address.append(port);
@@ -112,7 +118,7 @@ int main(int argc, char *argv[])
     // Initialize and run rest_server
     try
     {
-      on_initialize(address, dbaccess_host, dbaccess_port, estimator_host, estimator_port);
+      on_initialize(address, dbaccess_host, dbaccess_port, estimator_host, estimator_port, emailalert_host, emailalert_port);
       Log::getInstance()->info("Listening to request at " + address);
       Log::getInstance()->info("rest server started");
       while(true) std::this_thread::sleep_for(std::chrono::hours(1)); // loop forever

@@ -1,4 +1,5 @@
 var nb_dropdown_click = 0;
+var nb_login_click = 0;
 function show_dropdown_list()
 {
 
@@ -10,7 +11,13 @@ function show_dropdown_list()
   if(dropdown)
     dropdown.style.zIndex = "6";
 }
+function show_login_menu()
+{
+  var login_menu = document.getElementById("login_menu");
+  login_menu.className = "sf_login_menu_content sf_show_login_menu_content";
 
+  nb_login_click+=1;
+}
 window.onclick = function(event) {
 
   if (event.target.className != "fas fa-bars" || ( (nb_dropdown_click % 2) == 0) )
@@ -24,6 +31,23 @@ window.onclick = function(event) {
       }
     }
     nb_dropdown_click = 0;
+
+    var dropdown = document.getElementById("dropdownmenu");
+    if(dropdown)
+      dropdown.style.zIndex = "4";
+  }
+
+  if ( (event.target.className != "sf_login_connected_icon" && event.target.className != "sf_user_display_name") || ( (nb_login_click % 2) == 0) )
+  {
+    var dropdownslogin = document.getElementsByClassName("sf_login_menu_content");
+    var i;
+    for (i = 0; i < dropdownslogin.length; i++) {
+      var openDropdown = dropdownslogin[i];
+      if (openDropdown.classList.contains('sf_show_login_menu_content')) {
+        openDropdown.classList.remove('sf_show_login_menu_content');
+      }
+    }
+    nb_login_click = 0;
 
     var dropdown = document.getElementById("dropdownmenu");
     if(dropdown)
