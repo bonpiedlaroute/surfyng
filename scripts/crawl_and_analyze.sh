@@ -147,6 +147,8 @@ do
         ./duplicates_fix config.ini $CITY
         rm -f ~/scrapy_env/surfyn_bot/surfyn_bot/images_"$CITY"/*
         rm -rf image_to_labels.json image_vectors nearest_neighbors
+        cd ~/software/surfyng/sf_services/emailalertservice/
+        python notifyUsers.py $CITY
         sleep 60
 done
 cd ~/software/surfyng/sf_services/dynamodb_access/build
