@@ -477,7 +477,7 @@ function register_alert()
 {
     if(isConnectedUser())
     {
-      var url = 'https://surfyn.fr:7878/registeremailalert?';
+      var url = 'https://surfyn.fr:7878/registeremailalert';
       //var url = "http://localhost:7878/registeremailalert";
 
       if(window.location.search == "")
