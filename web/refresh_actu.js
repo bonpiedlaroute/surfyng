@@ -8,7 +8,7 @@ function append(parent, el) {
 
 const maxItemsPerSource = 10;
 var logo_url = {"lesechos":"data/lesechos.svg", "notaires":"https://www.notaires.fr/sites/all/themes/custom/notaires_v2/assets/img/Notaires_de_France.png",
-                "bfmimmo":"https://www.lavieimmo.com/refonte/img/logos/LVI.svg"}
+                "bfmimmo":"https://www.lavieimmo.com/refonte/img/logos/LVI.svg"};
 var AllActuData = [];
 
 function extract_actu_data(data, actu_source, image_url)
