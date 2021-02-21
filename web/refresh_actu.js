@@ -7,7 +7,8 @@ function append(parent, el) {
 }
 
 const maxItemsPerSource = 10;
-
+var logo_url = {"lesechos":"data/lesechos.svg", "notaires":"https://www.notaires.fr/sites/all/themes/custom/notaires_v2/assets/img/Notaires_de_France.png",
+                "bfmimmo":"https://www.lavieimmo.com/refonte/img/logos/LVI.svg"}
 var AllActuData = [];
 
 function extract_actu_data(data, actu_source, image_url)
@@ -22,7 +23,14 @@ function extract_actu_data(data, actu_source, image_url)
 
     if(actu_source == "lesechos" || actu_source == "bfmimmo" || actu_source == "notaires")
     {
-      actuitem.img = items[i].querySelector("enclosure").getAttribute('url');
+      var img_enclosure = items[i].querySelector("enclosure");
+      if(img_enclosure)
+      {
+        actuitem.img = img_enclosure.getAttribute('url');
+      }
+      else {
+        actuitem.img = logo_url[actu_source];
+      }
     }
     else if( actu_source == "capital")
     {
