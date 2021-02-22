@@ -108,7 +108,7 @@ function generate_my_search_page(data)
 
    var property_type = createNode("span");
    property_type.className = "sf_my_research_text";
-   property_type.innerHTML = data[i].PROPERTY_TYPE;
+   property_type.innerHTML = data[i].PROPERTY_TYPE == "Appartement"? "Appart":"Maison";
 
    property_type_box.append(property_type);
    my_research_infos.append(property_type_box);
@@ -160,7 +160,7 @@ function generate_my_search_page(data)
 
    var city = createNode("span");
    city.className = "sf_my_research_text";
-   city.innerHTML = String(data[i].CITY);
+   city.innerHTML = data[i].CITY[0].toUpperCase() + data[i].CITY.slice(1);
 
    city_box.append(city);
    my_research_link.append(city_box);
