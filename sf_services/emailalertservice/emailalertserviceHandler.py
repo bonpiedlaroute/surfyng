@@ -48,7 +48,7 @@ class UserAlert:
       self.user_display_name = ""
       self.email = ""
       self.ads_list = []
-
+      self.forbidden_ads = set()
 
 class EmailAlertServiceHandler(Iface):
    def __init__(self, config):
@@ -488,6 +488,12 @@ class EmailAlertServiceHandler(Iface):
          area_value.fieldtype = ttypes.Type.NUMBER
          attribute_to_get["SURFACE"] = area_value
 
+         #DUPLICATES
+         duplicates_value = ttypes.ValueType()
+         duplicates_value.fieldtype = ttypes.Type.STRING
+         attribute_to_get["DUPLICATES"] = duplicates_value
+
+
          expression_value = {}
          city_value = ttypes.ValueType()
          city_value.field =  city
@@ -520,12 +526,15 @@ class EmailAlertServiceHandler(Iface):
          #useralert.user_display_name = alert["USER_DISPLAY_NAME"]
          userToNotify[alert["USERID"]]= useralert
 
-
+      
       for ads in new_ads:
          for alert in active_alert_list:
-            if self.ads_match(ads, alert):
+            if self.ads_match(ads, alert) and ads["ID"] not in userToNotify[alert["USERID"]].forbidden_ads:
                userToNotify[alert["USERID"]].ads_list.append(ads["ID"])
-
+               if "DUPLICATES" in ads:
+                  duplicates_ad=ads["DUPLICATES"].split(",")
+                  for announce in duplicates_ad:
+                     userToNotify[alert["USERID"]].forbidden_ads.add(announce)
 
       smtp_server = smtplib.SMTP(self.smtp_host, self.smtp_port)  
       logging.info("log in to smtp server")
