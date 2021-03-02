@@ -5,7 +5,20 @@ function createNode(element) {
 function append(parent, el) {
   return parent.append(el);
 }
-
+function addGoogleAds(main_content)
+{
+  var ins = createNode("ins");
+  ins.className = "adsbygoogle"
+  ins.style.display ="block";
+  ins.setAttribute('data-ad-format', "fluid");
+  ins.setAttribute('data-ad-layout-key', "-fb+5w+4e-db+86");
+  ins.setAttribute('data-ad-client', "ca-pub-3950735685733517");
+  ins.setAttribute('data-ad-slot', "2808340986");
+  main_content.append(ins);
+  var script = createNode("script");
+  script.innerHTML = "(adsbygoogle = window.adsbygoogle || []).push({})";
+  main_content.append(script);
+}
 const maxItemsPerSource = 10;
 var logo_url = {"lesechos":"data/lesechos.svg", "notaires":"https://www.notaires.fr/sites/all/themes/custom/notaires_v2/assets/img/Notaires_de_France.png",
                 "bfmimmo":"https://www.lavieimmo.com/refonte/img/logos/LVI.svg"};
@@ -195,6 +208,11 @@ function generate_actu(items)
     actu_link.append(actu_immo_container);
 
     main_content.append(actu_link);
+
+    if( (i+1)%5 == 0)
+    {
+      addGoogleAds(main_content);
+    }
   }
 }
 

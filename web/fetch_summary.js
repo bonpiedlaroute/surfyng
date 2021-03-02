@@ -221,7 +221,20 @@ function buildpage()
   }
 }
 
-
+function addGoogleAds(main_content)
+{
+  var ins = createNode("ins");
+  ins.className = "adsbygoogle"
+  ins.style.display ="block";
+  ins.setAttribute('data-ad-format', "fluid");
+  ins.setAttribute('data-ad-layout-key', "-fb+5w+4e-db+86");
+  ins.setAttribute('data-ad-client', "ca-pub-3950735685733517");
+  ins.setAttribute('data-ad-slot', "2808340986");
+  main_content.append(ins);
+  var script = createNode("script");
+  script.innerHTML = "(adsbygoogle = window.adsbygoogle || []).push({})";
+  main_content.append(script);
+}
 
 
 
@@ -596,6 +609,12 @@ function generate_summary_page(data)
             var line_div = createNode("div");
             line_div.className = "sf_line_results row mx-auto";
             main_content.appendChild(line_div);
+
+            /* adding google adsense */
+            if( (i+1)%5 == 0)
+            {
+              addGoogleAds(main_content);
+            }
 
         }
   }
