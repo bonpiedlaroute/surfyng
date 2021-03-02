@@ -223,6 +223,9 @@ function buildpage()
 
 function addGoogleAds(main_content)
 {
+  var ad_link = createNode("a");
+  ad_link.className = "announce_link";
+
   var ins = createNode("ins");
   ins.className = "adsbygoogle"
   ins.style.display ="block";
@@ -230,10 +233,18 @@ function addGoogleAds(main_content)
   ins.setAttribute('data-ad-layout-key', "-fb+5w+4e-db+86");
   ins.setAttribute('data-ad-client', "ca-pub-3950735685733517");
   ins.setAttribute('data-ad-slot', "2808340986");
-  main_content.append(ins);
+
+  ad_link.append(ins);
   var script = createNode("script");
   script.innerHTML = "(adsbygoogle = window.adsbygoogle || []).push({})";
-  main_content.append(script);
+
+  ad_link.append(script);
+
+  main_content.append(ad_link);
+
+  var separator = createNode("div");
+  separator.className = "sf_line_results row mx-auto";
+  main_content.append(separator);
 }
 
 
