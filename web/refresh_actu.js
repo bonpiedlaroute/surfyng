@@ -13,8 +13,8 @@ function addGoogleAds(main_content)
   var ins = createNode("ins");
   ins.className = "adsbygoogle adslot_1"
   ins.style.display ="block";
-  //ins.setAttribute('data-ad-format', "fluid");
-  //ins.setAttribute('data-ad-layout-key', "-fb+5w+4e-db+86");
+  ins.setAttribute('data-ad-format', "fluid");
+  ins.setAttribute('data-ad-layout-key', "-fb+5w+4e-db+86");
   ins.setAttribute('data-ad-client', "ca-pub-3950735685733517");
   ins.setAttribute('data-ad-slot', "2808340986");
   actu_immo_container.append(ins);
