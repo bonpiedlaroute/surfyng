@@ -344,6 +344,8 @@ border-left: 50px solid #222545;
 {
   height:200px;
 }
+.adslot_1 { width: 100%; height: 180px; }
+
 @media (max-width:1024px) {
   .social_media
   {
@@ -628,6 +630,7 @@ border-left: 50px solid #222545;
   {
     height:500px;
   }
+  .adslot_1 { width: 100%; height: 300px; }
 }/*@endof @media (max-width:1024px) */
 
 
@@ -645,4 +648,5 @@ border-left: 50px solid #222545;
     justify-content:center;
     margin-top:20px;
   }
+
 } /* end of @media (max-height:700px)  */
