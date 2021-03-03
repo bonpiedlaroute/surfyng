@@ -344,7 +344,18 @@ border-left: 50px solid #222545;
 {
   height:200px;
 }
-.adslot_1 { width: 100%; height: 180px; }
+
+.sf_actu_immo_gads_container
+{
+  height: 180px;
+  border: 3px solid white;
+  width: 55%;
+  box-shadow: 2px 2px #aaa;
+  display:block;
+  margin-top:10px;
+  margin:auto;
+  background-color: white;
+}
 
 @media (max-width:1024px) {
   .social_media
@@ -630,7 +641,18 @@ border-left: 50px solid #222545;
   {
     height:500px;
   }
-  .adslot_1 { width: 100%; height: 300px; }
+  .sf_actu_immo_gads_container
+  {
+    height: 300px;
+    border: 3px solid white;
+    width: 98%;
+    box-shadow: 2px 2px #aaa;
+    display:block;
+    margin:auto;
+    margin-top:10px;
+    background-color: white;
+  }
+
 }/*@endof @media (max-width:1024px) */
 
 
