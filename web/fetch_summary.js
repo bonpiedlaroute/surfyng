@@ -439,10 +439,19 @@ function buildurlparams()
   return true;
 }
 
+<<<<<<< HEAD
 // Check if div with id #prerendered-page is already on the DOM to
 // To prevent re-hydratation
 var puppeteer = document.getElementById('prerendered-page');
 
+=======
+// Check if div with id #puppeteer is already on the DOM to
+// To prevent re-hydratation
+var content = document.querySelector('#main-content');
+var puppeteer = content.querySelector('#puppeteer');
+
+// Reload data only if the ssr has not already load it.
+>>>>>>> Announce deposit and puppeteer integration
 if (!puppeteer)
 {
   if(window.location.search == "")
@@ -565,6 +574,7 @@ function generate_summary_page(data, empty=false)
       meta_description = "1 annonce ";
     }
 
+<<<<<<< HEAD
     if (split_propertyType.indexOf("1") !== -1 || split_propertyType.indexOf("3") !== -1)
     {
       if(first_proptype)
@@ -635,14 +645,52 @@ function generate_summary_page(data, empty=false)
       realestate_agencies_city.innerHTML = 'Agences immobilières à ' + search_city + " ("+ postalcode + ")";
 
   }
+=======
+  }
+  pagetitle += " à ";
+  meta_description += " à ";
+  pagetitle += searchType == 1 ? "vendre ": "louer ";
+  meta_description += searchType == 1 ? "vendre ": "louer ";
+  meta_description += " à ";
+
+  var search_city = Params.get('search_city');
+  pagetitle += search_city;
+  meta_description += search_city;
+  var postalcode = getPostalCode(search_city);
+  pagetitle +=" ("+ postalcode + ")";
+  meta_description += " ("+ postalcode + ")";
+  pagetitle += " - Surfyn";
+  meta_description += " actualisées en temps réel, à partir de tous les sites de petites annonces immobilières et d'agences immobilières couvrant la ville de "
+  meta_description += search_city;
+  meta_description += "  - Surfyn";
+
+  document.title = pagetitle;
+
+  document.getElementsByTagName('meta')["description"].content = meta_description;
+
+  var realestate_agencies_city = document.getElementById('realestate_agencies_city');
+  realestate_agencies_city.href = 'agence-immobiliere-'+ search_city.toLowerCase() +'-' + postalcode + '.html';
+  realestate_agencies_city.innerHTML = 'Agences immobilières à ' + search_city + " ("+ postalcode + ")";
+
+>>>>>>> Announce deposit and puppeteer integration
   var announces_found = document.getElementById("nb_announces_found");
   if( data.length == 0)
   {
     announces_found.innerHTML = "Aucune annonce à ";
     announces_found.innerHTML += search_city;
     announces_found.innerHTML += " ne correspond à vos critères";
+<<<<<<< HEAD
     document.title = announces_found.innerHTML;
     document.title +=" - Surfyn";
+=======
+
+    // Indicator to finish loading
+    var main_content = document.getElementById("main-content");
+    var forPuppeteer = document.createElement("div");
+    forPuppeteer.setAttribute("id", "puppeteer");
+    forPuppeteer.style.visibility = 'hidden';
+    main_content.appendChild(forPuppeteer);
+>>>>>>> Announce deposit and puppeteer integration
   }
   else
   {
@@ -938,6 +986,7 @@ function generate_summary_page(data, empty=false)
         line_div.className = "sf_line_results row mx-auto";
         ad_content.appendChild(line_div);
 
+<<<<<<< HEAD
 
         /* adding google adsense */
         if( (i+1)%5 == 0)
@@ -1027,6 +1076,18 @@ function generate_summary_page(data, empty=false)
     forPuppeteer.setAttribute("data-ad-json", JSON.stringify(data));
     forPuppeteer.style.visibility = 'hidden';
     header_content.appendChild(forPuppeteer);
+=======
+            var line_div = createNode("div");
+            line_div.className = "sf_line_results row mx-auto";
+            main_content.appendChild(line_div);
+        }
+
+        // Indicator to finish loading
+        var forPuppeteer = document.createElement("div");
+        forPuppeteer.setAttribute("id", "puppeteer");
+        forPuppeteer.style.visibility = 'hidden';
+        main_content.appendChild(forPuppeteer);
+>>>>>>> Announce deposit and puppeteer integration
   }
 
 
