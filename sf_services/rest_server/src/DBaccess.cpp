@@ -62,7 +62,7 @@ const std::string id_bedrooms = "BEDROOMS";
 const std::string id_landsurface = "LAND_SURFACE";
 const std::string id_adtextdescription = "AD_TEXT_DESCRIPTION";
 
-const std::string details_table = "FR_SUMMARY";
+const std::string details_table = "FR_SUMMARY_COPY";
 const std::string exprval_city = ":ct";
 const std::string exprval_searchType = ":st";
 const std::string exprval_priceMin = ":pi";

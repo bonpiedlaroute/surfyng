@@ -86,8 +86,8 @@ function loadJSON(path, success, error) {
   ProcessorBySource.set("efficity", function(param) {SrcProcessor(param, "green", "Efficity"); });
   ProcessorBySource.set("fnaim", function(param) {SrcProcessor(param, "yellow", "Fnaim"); });
 
-  var url = 'https://surfyn.fr:7878/search/all';
-  //var url = 'http://127.0.0.1:7878/search/all';
+  //var url = 'https://surfyn.fr:7878/search/all';
+  var url = 'http://127.0.0.1:7878/search/all';
   var url_params = '?';
 
 function buildurlparams()
@@ -140,28 +140,37 @@ function buildurlparams()
   return true;
 }
 
-if(window.location.search == "")
-{
-    if(buildurlparams() == true)
-    {
-      var rel_link = document.getElementById("canonical_url");
-      rel_link.rel = "canonical";
-      rel_link.href = window.location.pathname;
-      url += url_params;
-      buildpage();
-    }
-    else
-    {
-      var announces_found = document.getElementById("nb_announces_found");
+// Check if div with id #puppeteer is already on the DOM to
+// To prevent re-hydratation
+var content = document.querySelector('#main-content');
+var puppeteer = content.querySelector('#puppeteer');
 
-      announces_found.innerHTML = "Aucune annonce ";
-      announces_found.innerHTML += " ne correspond à vos critères";
-    }
-}
-else
+// Reload data only if the ssr has not already load it.
+if (!puppeteer)
 {
-  url += window.location.search;
-  buildpage();
+  if(window.location.search == "")
+  {
+      if(buildurlparams() == true)
+      {
+        var rel_link = document.getElementById("canonical_url");
+        rel_link.rel = "canonical";
+        rel_link.href = window.location.pathname;
+        url += url_params;
+        buildpage();
+      }
+      else
+      {
+        var announces_found = document.getElementById("nb_announces_found");
+
+        announces_found.innerHTML = "Aucune annonce ";
+        announces_found.innerHTML += " ne correspond à vos critères";
+      }
+  }
+  else
+  {
+    url += window.location.search;
+    buildpage();
+  }
 }
 
 function buildpage()
@@ -312,13 +321,20 @@ function generate_summary_page(data)
   var realestate_agencies_city = document.getElementById('realestate_agencies_city');
   realestate_agencies_city.href = 'agence-immobiliere-'+ search_city.toLowerCase() +'-' + postalcode + '.html';
   realestate_agencies_city.innerHTML = 'Agences immobilières à ' + search_city + " ("+ postalcode + ")";
-
+  
   var announces_found = document.getElementById("nb_announces_found");
   if( data.length == 0)
   {
     announces_found.innerHTML = "Aucune annonce à ";
     announces_found.innerHTML += search_city;
     announces_found.innerHTML += " ne correspond à vos critères";
+
+    // Indicator to finish loading
+    var main_content = document.getElementById("main-content");
+    var forPuppeteer = document.createElement("div");
+    forPuppeteer.setAttribute("id", "puppeteer");
+    forPuppeteer.style.visibility = 'hidden';
+    main_content.appendChild(forPuppeteer);
   }
   else
   {
@@ -596,8 +612,13 @@ function generate_summary_page(data)
             var line_div = createNode("div");
             line_div.className = "sf_line_results row mx-auto";
             main_content.appendChild(line_div);
-
         }
+
+        // Indicator to finish loading
+        var forPuppeteer = document.createElement("div");
+        forPuppeteer.setAttribute("id", "puppeteer");
+        forPuppeteer.style.visibility = 'hidden';
+        main_content.appendChild(forPuppeteer);
   }
 
   var facebook_icon = document.getElementById("facebook-icon");

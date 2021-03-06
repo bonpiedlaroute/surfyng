@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "express": "^4.17.1",
+    "puppeteer": "^7.1.0",
+    "puppeteer-firefox": "^0.5.1"
+  }
+}
