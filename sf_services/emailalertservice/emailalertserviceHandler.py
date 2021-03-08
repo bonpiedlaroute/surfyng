@@ -38,6 +38,9 @@ from hash_id import *
 from email.mime.text import MIMEText
 import threading
 import Queue
+from email.header import Header
+from email.utils import formataddr
+
 
 
 #EmailAlertResult registerEmailAlert(1: string userid, 2: map<string, string> parameters),
@@ -558,7 +561,7 @@ class EmailAlertServiceHandler(Iface):
             body_msg +="\n\n A votre service\nL'équipe Surfyn"
             msg = MIMEText(body_msg)
             msg['Subject'] = '[SURFYN] Vos annonces immobilières'
-            msg['From'] = self.from_addr
+            msg['From'] = formataddr((str(Header('Surfyn', 'utf-8')), self.from_addr))
             msg['To'] = userToNotify[userid].email
 
             logging.info('sending msg:\n{} to user [{}] '.format(body_msg, userToNotify[userid].email))
