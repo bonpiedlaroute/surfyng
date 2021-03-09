@@ -22,18 +22,6 @@ width:26%;
 border-radius:8px;
 }
 
-.deposit_button
-{
-  height: 50px;
-  width: 26%;
-  border-radius: 5px;
-}
-
-.deposit_text
-{
-  font-size: 18px;
-  font-weight: bold;
-}
 .estimate_settings
 {
 /*background-color: #bfe5f5;*/
@@ -147,7 +135,7 @@ a:hover{ text-decoration: none; }
 
 .sf_line
 {
-  height:27px;
+  height:22px;
   background-color:#F2F2F2;
 }
 
@@ -707,107 +695,7 @@ margin-left:10%;
 {
   padding-left:15px;width:100%;border-radius:20px; border: 2px solid #61AEB5;
 }
-
-.sf_title_decoration{
-  padding-left: 15px;
-  width: 100%;
-  border-radius: 5px;
-  border: 2px solid #61AEB5;
-}
-
-.sf_description_decoration
-{
-  width: 100%;
-  height: 100px;
-  border-radius: 5px;
-  border: 2px solid "light-gray";
-  resize: none;
-}
-
-.preview
-{
-  width: 180px;
-  height: 180px;
-  background-position: center center;
-  background-size: cover;
-
-  display: inline-block;
-  cursor: pointer;
-  border-radius: 10px;
-  border: 2px dashed rgba(0, 0, 0, .3);
-}
-
-.upload
-{
-    display: none;
-}
-
-/* Switch button*/
- /* The switch - the box around the slider */
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 52px;
-  height: 26px;
-}
-
-/* Hide default HTML checkbox */
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-/* The slider */
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 20px;
-  width: 20px;
-  left: 3px;
-  bottom: 3px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-input:checked + .slider {
-  background-color: #3dc4eb;
-}
-
-input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
-}
-
-input:checked + .slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(24px);
-  transform: translateX(24px);
-}
-
-/* Rounded sliders */
-.slider.round {
-  border-radius: 34px;
-}
-
-.slider.round:before {
-  border-radius: 50%;
-} 
-
-
-.sf_title_decorationsf_form_error
+.sf_form_error
 {
   padding-left:15px;width:100%;border-radius:20px; border: 1px solid red;
 }
@@ -1438,13 +1326,6 @@ padding:5px;
   height:120px;
   width:88%;
   border-radius:8px;
-  }
-
-  .deposit_button
-  {
-    height: 30px;
-    width: 88%;
-    border-radius: 5px;
   }
 
   .estimate_icon_box
