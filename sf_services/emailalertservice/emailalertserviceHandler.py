@@ -110,12 +110,12 @@ class EmailAlertServiceHandler(Iface):
       userid_value.fieldtype = ttypes.Type.STRING
       values["USERID"] = userid_value
 
-      #FIXME
-      #USER_DISPLAY_NAME, no USER_DISPLAY_NAME for now 
-      #userdisplayname_value = ttypes.ValueType()
-      #userdisplayname_value.field = user.display_name
-      #userid_value.fieldtype = ttypes.Type.STRING
-      #values["USER_DISPLAY_NAME"] = userid_value
+      #USER_DISPLAY_NAME
+      if user.display_name:
+         userdisplayname_value = ttypes.ValueType()
+         userdisplayname_value.field = user.display_name
+         userdisplayname_value.fieldtype = ttypes.Type.STRING
+         values["USER_DISPLAY_NAME"] = userdisplayname_value
   
       #EMAIL
       email_value = ttypes.ValueType()
@@ -284,12 +284,10 @@ class EmailAlertServiceHandler(Iface):
          url_value.fieldtype = ttypes.Type.STRING
          attribute_to_get["ADS_URL"] = url_value
 
-
-         #FIXME
-         #USER_DISPLAY_NAME, no USER_DISPLAY_NAME for now
-         #userdisplayname_value = ttypes.ValueType()
-         #userdisplayname_value.fieldtype = ttypes.Type.STRING
-         #attribute_to_get["USER_DISPLAY_NAME"] = userdisplayname_value
+         #USER_DISPLAY_NAME
+         userdisplayname_value = ttypes.ValueType()
+         userdisplayname_value.fieldtype = ttypes.Type.STRING
+         attribute_to_get["USER_DISPLAY_NAME"] = userdisplayname_value
   
          expression_value = {}
          userid_value = ttypes.ValueType()
@@ -429,9 +427,9 @@ class EmailAlertServiceHandler(Iface):
          attribute_to_get["AREA_MAX"] = area_max_value
 
          #USER_DISPLAY_NAME
-         #userdisplayname_value = ttypes.ValueType()
-         #userdisplayname_value.fieldtype = ttypes.Type.STRING
-         #attribute_to_get["USER_DISPLAY_NAME"] = userdisplayname_value
+         userdisplayname_value = ttypes.ValueType()
+         userdisplayname_value.fieldtype = ttypes.Type.STRING
+         attribute_to_get["USER_DISPLAY_NAME"] = userdisplayname_value
 
          #EMAIL
          email_value = ttypes.ValueType()
@@ -526,7 +524,7 @@ class EmailAlertServiceHandler(Iface):
       for alert in active_alert_list:
          useralert = UserAlert()
          useralert.email = alert["EMAIL"]
-         #useralert.user_display_name = alert["USER_DISPLAY_NAME"]
+         useralert.user_display_name = alert["USER_DISPLAY_NAME"] if "USER_DISPLAY_NAME" in alert else ""
          userToNotify[alert["USERID"]]= useralert
 
       
@@ -546,25 +544,43 @@ class EmailAlertServiceHandler(Iface):
 
       for userid in userToNotify:
          if userToNotify[userid].ads_list:
-            recipients = [userToNotify[userid].email]
 
-            subject_msg = '[SURFYN] Vos annonces immobilières'
-            #body_msg = 'Bonjour '+ user.user_display_name+'\n'
-            body_msg = 'Bonjour \n'
-            body_msg += 'Voici le(s) nouvelle(s) annonce(s) sur https://surfyn.fr'
-            body_msg += ' qui correspondent à vos critères de recherche immobilière\n'
+            recipients = [userToNotify[userid].email]
+            isplural = True if len(userToNotify[userid].ads_list) > 1 else False
+
+            subject_msg = '[Surfyn] '
+            subject_msg += str(len(userToNotify[userid].ads_list))
+            if isplural:
+               subject_msg += u' nouvelles annonces immobilières'
+            else:
+               subject_msg += u' nouvelle annonce immobilière'
+            
+            body_msg = 'Bonjour '
+            if userToNotify[userid].user_display_name:
+               pos = userToNotify[userid].user_display_name.find(' ')
+               name = userToNotify[userid].user_display_name[:pos] if pos != -1 else userToNotify[userid].user_display_name 
+               body_msg += name
+            body_msg += '\n'
+            body_msg += str(len(userToNotify[userid].ads_list))
+            if isplural:
+               body_msg += u' nouvelles annonces sur https://surfyn.fr'
+               body_msg += u' correspondent à vos critères de recherche immobilière\n'
+            else:
+               body_msg += u' nouvelle annonce sur https://surfyn.fr'
+               body_msg += u' correspond à vos critères de recherche immobilière\n'
+
             for ad in userToNotify[userid].ads_list:
                url = 'https://surfyn.fr/annonce_detaille.html?'+ str(ad)
                body_msg += url
                body_msg += '\n'
 
-            body_msg +="\n\n A votre service\nL'équipe Surfyn"
-            msg = MIMEText(body_msg)
-            msg['Subject'] = '[SURFYN] Vos annonces immobilières'
+            body_msg += u"\n\n A votre service\nL' équipe Surfyn"
+            msg = MIMEText(body_msg, _charset='utf-8')
+            msg['Subject'] = subject_msg
             msg['From'] = formataddr((str(Header('Surfyn', 'utf-8')), self.from_addr))
             msg['To'] = userToNotify[userid].email
 
-            logging.info('sending msg:\n{} to user [{}] '.format(body_msg, userToNotify[userid].email))
+            logging.info(u'sending msg:\n{} to user [{}] '.format(body_msg, userToNotify[userid].email))
             smtp_server.sendmail(self.from_addr, recipients, msg.as_string())
          else:
             logging.info('No alert for user [{}]'.format(userid)) 

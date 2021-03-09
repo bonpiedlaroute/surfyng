@@ -401,9 +401,23 @@ function subscribe_to_surfyn()
 
 
       firebase.auth().createUserWithEmailAndPassword(email.value, mot_de_passe.value)
-      .then((user) => {
+      .then((usercredentials) => {
         // Signed in
         // ...
+        var prenom = document.getElementById("inscription_prenom");
+        var user = usercredentials.user;
+        if(user && prenom.value)
+        {
+          user.updateProfile({
+           displayName: prenom.value
+         }).then(function() {
+           console.log('username successfully updated');
+         }, function(error) {
+           // An error happened.
+           console.log(error);
+         });
+        }
+
         $("#inscription").modal("hide");
         showSuccessSubscriptionMessage();
       }).catch(function(error) {
