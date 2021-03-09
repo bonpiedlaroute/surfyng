@@ -19,19 +19,21 @@ function loadJSON(path, success, error) {
     xobj.send(null);
  }
 
-  function createNode(element) {
-      return document.createElement(element);
-  }
+function createNode(element) {
+    return document.createElement(element);
+}
 
-  function append(parent, el) {
-    return parent.appendChild(el);
-  }
-
-
-  const url = 'https://surfyn.fr:7878/search/ad?id='+ window.location.search.substr(1);
-  //const url = 'http://127.0.0.1:7878/search/ad?id='+ window.location.search.substr(1);
+function append(parent, el) {
+  return parent.appendChild(el);
+}
 
 
+//const url = 'https://surfyn.fr:7878/search/ad?id='+ window.location.search.substr(1);
+const url = 'http://127.0.0.1:7878/search/ad?id='+ window.location.search.substr(1);
+
+var puppeter = document.getElementById("target");
+if(!puppeter)
+{
   fetch(url)
   .then(function(resp) { return resp.json(); } )
   .then(function(data) {
@@ -43,6 +45,7 @@ function loadJSON(path, success, error) {
 
     console.log(error);
   });
+}
 
 
 function generate_details_page(data)
@@ -1051,6 +1054,12 @@ function generate_details_page(data)
 
 
   } //end of else if(data.length == 0 )
+
+  var forPuppeteer = document.createElement("div");
+  forPuppeteer.setAttribute("id", "target");
+  forPuppeteer.style.visibility = 'hidden';
+  main_content.appendChild(forPuppeteer);
+
   var facebook_icon = document.getElementById("facebook-icon");
   facebook_icon.style.color = "white";
   var twitter_icon = document.getElementById("twitter-icon");

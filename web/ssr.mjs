@@ -1,10 +1,11 @@
 import puppeteer from 'puppeteer';
 
+var HOST = "http://localhost"
+var url_params = '?';
 
 async function ssr(path) {
 
 	// Formatting url for request
-	var url_params = '?';
 	var postalCodeByCity = [];
 
 	postalCodeByCity["COLOMBES"]="92700";
@@ -72,15 +73,33 @@ async function ssr(path) {
 		return true;
 	}
 
-	var url = 'http://localhost' +  path;
-	console.log('url before building:' + url);
-	if (build_params(path))
+	function build_params_detail(path)
 	{
-		url = 'http://localhost/liste_annonces.html' + url_params;
-		console.log('url after building: ' + url);
+		var id = path.split('?')[1];
+		return HOST + '/annonce_detaille.html?' + id;
 	}
 
+	var url = HOST +  path;
+	console.log('url before building:' + url);
 
+	if(path.includes("liste-annonces"))
+	{
+		if (build_params(path))
+		{
+			url = HOST + '/liste_annonces.html' + url_params;
+		}
+	}
+	else if(path.includes("annonce"))
+	{
+		url = build_params_detail(path);
+	}
+	else if(path.includes("actualite-immobilier.html"))
+	{
+		// Manage code to avoid loop between express server and nginx
+	}
+
+	console.log('url after building: ' + url);
+	
 	const start =  Date.now();
 
 	const browser = await puppeteer.launch();
@@ -117,4 +136,4 @@ async function ssr(path) {
 	return {html, ttRenderMs};
 }
 
-export {ssr as default};
+export { ssr as default };
