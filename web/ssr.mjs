@@ -84,8 +84,7 @@ async function ssr(path) {
 	const start =  Date.now();
 
 	const browser = await puppeteer.launch();
-	const context = await browser.createIncognitoBrowserContext();
-	const page = await context.newPage();
+	const page = await browser.newPage();
 	
 	page
     .on('console', message =>
@@ -96,14 +95,13 @@ async function ssr(path) {
     .on('requestfailed', request =>
       console.log(`${request.failure().errorText} ${request.url()}`));
 
+
     await page.setDefaultTimeout(0);
     try {
-		await page.goto(url, {
-			waitUntil: 'load',
-		});
-		console.log('Waiting for #puppeteer');
-		await page.waitForSelector('#puppeteer');
-		console.log('#puppeter loaded');
+		await page.goto(url);
+		console.log('Waiting for #target');
+		await page.waitForSelector('#target');
+		console.log('#target loaded');
     } catch(err) {
     	console.error(err);
     	throw new Error('page.goto/waitForselector time out.');
