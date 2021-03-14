@@ -24,7 +24,7 @@ namespace rest_server
       EmailAlertAccess(const std::string& host, int port);
       EmailAlertResult registerEmailAlert(const std::map<utility::string_t,  utility::string_t>& query);
       void my_realestate_search(utility::stringstream_t& sstream, const std::map<utility::string_t,  utility::string_t>& query );
-      EmailAlertResult deactivate_alert(const std::map<utility::string_t,  utility::string_t>& query );
+      EmailAlertResult changeAlertStatus(const std::map<utility::string_t,  utility::string_t>& query );
 
    };
 }

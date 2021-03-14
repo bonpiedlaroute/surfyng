@@ -33,7 +33,8 @@ namespace rest_server
    EmailAlertResult registerEmailAlert(1: string userid, 2: map<string, string> parameters),
    EmailAlertResult notifyNewAnnounces(1: string city),
    list<map<string, string>> my_realestate_search(1: string userid),
-   EmailAlertResult  deactivate_alert(1: string alert_id) 
+   EmailAlertResult  deactivate_alert(1: string alert_id)
+   EmailAlertResult  delete_alert(1: string alert_id) 
 */
    EmailAlertAccess::EmailAlertAccess(const std::string& host, int port)
    {
@@ -117,7 +118,7 @@ namespace rest_server
       sstream << U("\n]");
 
    }
-   EmailAlertResult EmailAlertAccess::deactivate_alert(const std::map<utility::string_t,  utility::string_t>& query )
+   EmailAlertResult EmailAlertAccess::changeAlertStatus(const std::map<utility::string_t,  utility::string_t>& query )
    {
       auto iter = query.find("alert_id");
 
@@ -129,10 +130,20 @@ namespace rest_server
 
          return _return;
       }
-
       std::string alert_id = iter->second;
 
-      m_client->deactivate_alert(_return,alert_id);
+      iter = query.find("alert_status");
+      if( iter == query.end())
+      {
+         _return.success = false;
+         _return.error = "no alert_status found!";
+
+         return _return;
+      }
+
+      std::string alert_status = iter->second;
+
+      m_client->changeAlertStatus(_return,alert_id, alert_status);
 
       return _return;
    }

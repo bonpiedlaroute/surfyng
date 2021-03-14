@@ -38,10 +38,11 @@ class Iface(object):
         """
         pass
 
-    def deactivate_alert(self, alert_id):
+    def changeAlertStatus(self, alert_id, alert_status):
         """
         Parameters:
          - alert_id
+         - alert_status
         """
         pass
 
@@ -148,23 +149,25 @@ class Client(Iface):
             return result.success
         raise TApplicationException(TApplicationException.MISSING_RESULT, "my_realestate_search failed: unknown result")
 
-    def deactivate_alert(self, alert_id):
+    def changeAlertStatus(self, alert_id, alert_status):
         """
         Parameters:
          - alert_id
+         - alert_status
         """
-        self.send_deactivate_alert(alert_id)
-        return self.recv_deactivate_alert()
+        self.send_changeAlertStatus(alert_id, alert_status)
+        return self.recv_changeAlertStatus()
 
-    def send_deactivate_alert(self, alert_id):
-        self._oprot.writeMessageBegin('deactivate_alert', TMessageType.CALL, self._seqid)
-        args = deactivate_alert_args()
+    def send_changeAlertStatus(self, alert_id, alert_status):
+        self._oprot.writeMessageBegin('changeAlertStatus', TMessageType.CALL, self._seqid)
+        args = changeAlertStatus_args()
         args.alert_id = alert_id
+        args.alert_status = alert_status
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
 
-    def recv_deactivate_alert(self):
+    def recv_changeAlertStatus(self):
         iprot = self._iprot
         (fname, mtype, rseqid) = iprot.readMessageBegin()
         if mtype == TMessageType.EXCEPTION:
@@ -172,12 +175,12 @@ class Client(Iface):
             x.read(iprot)
             iprot.readMessageEnd()
             raise x
-        result = deactivate_alert_result()
+        result = changeAlertStatus_result()
         result.read(iprot)
         iprot.readMessageEnd()
         if result.success is not None:
             return result.success
-        raise TApplicationException(TApplicationException.MISSING_RESULT, "deactivate_alert failed: unknown result")
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "changeAlertStatus failed: unknown result")
 
 
 class Processor(Iface, TProcessor):
@@ -187,7 +190,7 @@ class Processor(Iface, TProcessor):
         self._processMap["registerEmailAlert"] = Processor.process_registerEmailAlert
         self._processMap["notifyNewAnnounces"] = Processor.process_notifyNewAnnounces
         self._processMap["my_realestate_search"] = Processor.process_my_realestate_search
-        self._processMap["deactivate_alert"] = Processor.process_deactivate_alert
+        self._processMap["changeAlertStatus"] = Processor.process_changeAlertStatus
 
     def process(self, iprot, oprot):
         (name, type, seqid) = iprot.readMessageBegin()
@@ -261,13 +264,13 @@ class Processor(Iface, TProcessor):
         oprot.writeMessageEnd()
         oprot.trans.flush()
 
-    def process_deactivate_alert(self, seqid, iprot, oprot):
-        args = deactivate_alert_args()
+    def process_changeAlertStatus(self, seqid, iprot, oprot):
+        args = changeAlertStatus_args()
         args.read(iprot)
         iprot.readMessageEnd()
-        result = deactivate_alert_result()
+        result = changeAlertStatus_result()
         try:
-            result.success = self._handler.deactivate_alert(args.alert_id)
+            result.success = self._handler.changeAlertStatus(args.alert_id, args.alert_status)
             msg_type = TMessageType.REPLY
         except (TTransport.TTransportException, KeyboardInterrupt, SystemExit):
             raise
@@ -275,7 +278,7 @@ class Processor(Iface, TProcessor):
             msg_type = TMessageType.EXCEPTION
             logging.exception(ex)
             result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
-        oprot.writeMessageBegin("deactivate_alert", msg_type, seqid)
+        oprot.writeMessageBegin("changeAlertStatus", msg_type, seqid)
         result.write(oprot)
         oprot.writeMessageEnd()
         oprot.trans.flush()
@@ -682,19 +685,22 @@ class my_realestate_search_result(object):
         return not (self == other)
 
 
-class deactivate_alert_args(object):
+class changeAlertStatus_args(object):
     """
     Attributes:
      - alert_id
+     - alert_status
     """
 
     thrift_spec = (
         None,  # 0
         (1, TType.STRING, 'alert_id', 'UTF8', None, ),  # 1
+        (2, TType.STRING, 'alert_status', 'UTF8', None, ),  # 2
     )
 
-    def __init__(self, alert_id=None,):
+    def __init__(self, alert_id=None, alert_status=None,):
         self.alert_id = alert_id
+        self.alert_status = alert_status
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -710,6 +716,11 @@ class deactivate_alert_args(object):
                     self.alert_id = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.STRING:
+                    self.alert_status = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -719,10 +730,14 @@ class deactivate_alert_args(object):
         if oprot._fast_encode is not None and self.thrift_spec is not None:
             oprot.trans.write(oprot._fast_encode(self, (self.__class__, self.thrift_spec)))
             return
-        oprot.writeStructBegin('deactivate_alert_args')
+        oprot.writeStructBegin('changeAlertStatus_args')
         if self.alert_id is not None:
             oprot.writeFieldBegin('alert_id', TType.STRING, 1)
             oprot.writeString(self.alert_id.encode('utf-8') if sys.version_info[0] == 2 else self.alert_id)
+            oprot.writeFieldEnd()
+        if self.alert_status is not None:
+            oprot.writeFieldBegin('alert_status', TType.STRING, 2)
+            oprot.writeString(self.alert_status.encode('utf-8') if sys.version_info[0] == 2 else self.alert_status)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -742,7 +757,7 @@ class deactivate_alert_args(object):
         return not (self == other)
 
 
-class deactivate_alert_result(object):
+class changeAlertStatus_result(object):
     """
     Attributes:
      - success
@@ -779,7 +794,7 @@ class deactivate_alert_result(object):
         if oprot._fast_encode is not None and self.thrift_spec is not None:
             oprot.trans.write(oprot._fast_encode(self, (self.__class__, self.thrift_spec)))
             return
-        oprot.writeStructBegin('deactivate_alert_result')
+        oprot.writeStructBegin('changeAlertStatus_result')
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.STRUCT, 0)
             self.success.write(oprot)

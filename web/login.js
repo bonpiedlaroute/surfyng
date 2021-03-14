@@ -49,6 +49,21 @@ function showSuccessMessage(id_box, id_message, message)
        $(id_box).modal('hide');
    }, 3000);
 }
+function showSuccessMessageAndReload(id_box, id_message, message)
+{
+  var box_msg = document.getElementById(id_message);
+  box_msg.innerHTML = message;
+   $(id_box).modal(
+     {
+       focus:true,
+       show:true
+     }
+   );
+   setTimeout(function() {
+       $(id_box).modal('hide');
+       window.location.reload();
+   }, 3000);
+}
 
 function showSurfynLoginPage()
 {
@@ -570,7 +585,7 @@ function passwordResetByEmail()
 
     firebase.auth().sendPasswordResetEmail(email.value).then(function() {
       $("#passwordresetbox").modal("hide");
-     showSuccessMessage("generic-box-message-result","generic-message-result","Un email sera envoyé à votre adresse pour la réinitialisation de votre mot de passe");
+     showSuccessMessage("#generic-box-message-result","generic-message-result","Un email sera envoyé à votre adresse pour la réinitialisation de votre mot de passe");
     }).catch(function(error) {
      alert("Erreur lors de la reinitialisation de mot de passe");
     });

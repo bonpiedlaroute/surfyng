@@ -26,16 +26,48 @@ function createNode(element) {
 function append(parent, el) {
   return parent.appendChild(el);
 }
-function deactivate_alert_by_id(event){
-  var endpoint = "https://surfyn.fr:7878/deactivate_alert?alert_id=";
-  //var endpoint ="http://localhost:7878/deactivate_alert?alert_id="
+function delete_alert_by_id(event){
+  var endpoint = "https://surfyn.fr:7878/change_alert_status?alert_id=";
+  //var endpoint ="http://localhost:7878/change_alert_status?alert_id="
   endpoint += event.currentTarget.id;
+  endpoint +="&alert_status=DELETED";
   fetch(endpoint, {
     method : 'POST'
   })
   .then(function(resp) {
-    window.location.reload();
-    showSuccessMessage("generic-box-message-result","generic-message-result","Votre alerte email a bien été supprimée");
+    showSuccessMessageAndReload("#generic-box-message-result","generic-message-result","Votre alerte email a bien été supprimée");
+   } )
+  .catch(function(error) {
+    console.log(error);
+  });
+}
+
+function change_alert_status(event){
+  var endpoint = "https://surfyn.fr:7878/change_alert_status?alert_id=";
+  //var endpoint ="http://localhost:7878/change_alert_status?alert_id="
+  endpoint += event.currentTarget.id;
+  endpoint +="&alert_status=";
+  var alert_status= document.getElementById(event.currentTarget.id).getAttribute("data-alert-status");
+  if(alert_status == "ON")
+  {
+    endpoint +="OFF";
+  }
+  else {
+    endpoint +="ON";
+  }
+  fetch(endpoint, {
+    method : 'POST'
+  })
+  .then(function(resp) {
+
+      if(alert_status == "ON")
+      {
+        showSuccessMessageAndReload("#generic-box-message-result","generic-message-result","Votre alerte email a bien été désactivée");
+      }
+      else {
+        showSuccessMessageAndReload("#generic-box-message-result","generic-message-result","Votre alerte email a bien été activée");
+      }
+
    } )
   .catch(function(error) {
     console.log(error);
@@ -70,24 +102,6 @@ function generate_my_search_page(data)
    my_research_link.href = data[i].ADS_URL;
    my_research_link.className ="sf_my_research_link";
 
-   var my_research_email_alert = createNode("div");
-   my_research_email_alert.className = "sf_my_research_email_alert";
-
-   if(data[i].ALERT_STATUS == "ON")
-   {
-     var email_alert_icon = createNode("i");
-     email_alert_icon.className = "fas fa-bell sf_bell_alert_icon";
-
-     my_research_email_alert.append(email_alert_icon);
-
-     var email_alert_msg  = createNode("span");
-     email_alert_msg.className = "sf_alert_text";
-     email_alert_msg.innerHTML = "Alerte email activée";
-
-     my_research_email_alert.append(email_alert_msg);
-   }
-
-   my_research_link.append(my_research_email_alert);
 
    var my_research_type_box = createNode("div");
    my_research_type_box.className = "sf_my_research_email_alert";
@@ -167,11 +181,43 @@ function generate_my_search_page(data)
 
    my_research_container.append(my_research_link);
 
+   var my_research_email_alert = createNode("div");
+   my_research_email_alert.className = "sf_my_research_email_alert";
+   my_research_email_alert.id = data[i].ID;
+   my_research_email_alert.setAttribute("data-alert-status", data[i].ALERT_STATUS);
+
+   var email_alert_icon = createNode("i");
+   var email_alert_msg  = createNode("span");
+
+
+   if(data[i].ALERT_STATUS == "ON")
+   {
+     email_alert_icon.className = "fas fa-bell sf_bell_alert_icon";
+     email_alert_msg.innerHTML = "Alerte email activée";
+     email_alert_msg.className = "sf_alert_text";
+   }
+   else
+   {
+     email_alert_icon.className = "fas fa-bell sf_bell_alert_deactivated_icon";
+     email_alert_msg.innerHTML = "Alerte email désactivée";
+     email_alert_msg.className = "sf_alert_deactivated_text";
+   }
+
+   my_research_email_alert.append(email_alert_icon);
+   my_research_email_alert.append(email_alert_msg);
+
+   my_research_email_alert.style.border = "1px solid #61AEB5";
+   my_research_email_alert.style.marginBottom = "20px";
+   my_research_email_alert.style.cursor = "pointer";
+   my_research_email_alert.onclick = change_alert_status;
+
+   my_research_container.append(my_research_email_alert);
+
    var delete_alert_box = createNode("div");
    delete_alert_box.className = "sf_my_research_small_box";
    delete_alert_box.style.cursor = "pointer";
    delete_alert_box.id = data[i].ID;
-   delete_alert_box.onclick = deactivate_alert_by_id;
+   delete_alert_box.onclick = delete_alert_by_id;
 
    var delete_alert_icon = createNode("i");
    delete_alert_icon.className = "fas fa-trash-alt sf_alert_trash";
@@ -182,6 +228,7 @@ function generate_my_search_page(data)
    my_research_frame.append(my_research_container);
  }
 
+  if(data.length > 0)
   main_section.appendChild(my_research_frame);
 
 }

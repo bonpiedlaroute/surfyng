@@ -230,7 +230,7 @@ class EmailAlertServiceHandler(Iface):
       
    def my_realestate_search(self, userid):
       my_search = []
-      filterexpression_search = "USERID = :ui and ALERT_STATUS = :als"
+      filterexpression_search = "USERID = :ui and ALERT_STATUS <> :als"
       
       while True:
          attribute_to_get = {}
@@ -296,7 +296,7 @@ class EmailAlertServiceHandler(Iface):
          expression_value [":ui"] = userid_value
 
          alertstatus_value = ttypes.ValueType()
-         alertstatus_value.field =  "ON"
+         alertstatus_value.field =  "DELETED"
          alertstatus_value.fieldtype = ttypes.Type.STRING
          expression_value [":als"] = alertstatus_value
          query_result = self.client.scan(self.alert_tablename, attribute_to_get, filterexpression_search, expression_value)
@@ -354,7 +354,7 @@ class EmailAlertServiceHandler(Iface):
       retval.error = "notification not sent! for city [" + city + "]"
 
 
-   def deactivate_alert(self, alert_id):
+   def changeAlertStatus(self, alert_id, alert_status):
       id_value = ttypes.ValueType()
       id_value.field = alert_id
       id_value.fieldtype = Type.NUMBER
@@ -362,15 +362,15 @@ class EmailAlertServiceHandler(Iface):
 
       values = {}
       alertstatus = ttypes.ValueType()
-      alertstatus.field ='OFF'
+      alertstatus.field = alert_status
       alertstatus.fieldtype = Type.STRING
       values["ALERT_STATUS"] = alertstatus
  
-      logging.info("update alert status to OFF for item {}".format(alert_id))
+      logging.info("update alert status to {} for item {}".format(alert_status, alert_id))
       ret = self.client.update(self.alert_tablename, item_key, values)
       retval = EmailAlertResult()
       if ret.success:
-         logging.info("successfully deactivate alert {}".format(alert_id))
+         logging.info("successfully {} alert {}".format(alert_status, alert_id))
          retval.success = True
       else:
          logging.error(ret.error)
@@ -378,8 +378,7 @@ class EmailAlertServiceHandler(Iface):
          retval.error = ret.error
 
       return retval
-      
-
+ 
    def checkAndNotifyUsers(self, city):
       active_alert_list = []
       filterexpression_alert = "CITY = :ct and ALERT_STATUS = :als"

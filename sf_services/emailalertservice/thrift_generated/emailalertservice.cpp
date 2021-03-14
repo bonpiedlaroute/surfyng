@@ -690,11 +690,11 @@ uint32_t emailalertservice_my_realestate_search_presult::read(::apache::thrift::
 }
 
 
-emailalertservice_deactivate_alert_args::~emailalertservice_deactivate_alert_args() throw() {
+emailalertservice_changeAlertStatus_args::~emailalertservice_changeAlertStatus_args() throw() {
 }
 
 
-uint32_t emailalertservice_deactivate_alert_args::read(::apache::thrift::protocol::TProtocol* iprot) {
+uint32_t emailalertservice_changeAlertStatus_args::read(::apache::thrift::protocol::TProtocol* iprot) {
 
   apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
   uint32_t xfer = 0;
@@ -723,6 +723,14 @@ uint32_t emailalertservice_deactivate_alert_args::read(::apache::thrift::protoco
           xfer += iprot->skip(ftype);
         }
         break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->alert_status);
+          this->__isset.alert_status = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -735,32 +743,17 @@ uint32_t emailalertservice_deactivate_alert_args::read(::apache::thrift::protoco
   return xfer;
 }
 
-uint32_t emailalertservice_deactivate_alert_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
+uint32_t emailalertservice_changeAlertStatus_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
   uint32_t xfer = 0;
   apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
-  xfer += oprot->writeStructBegin("emailalertservice_deactivate_alert_args");
+  xfer += oprot->writeStructBegin("emailalertservice_changeAlertStatus_args");
 
   xfer += oprot->writeFieldBegin("alert_id", ::apache::thrift::protocol::T_STRING, 1);
   xfer += oprot->writeString(this->alert_id);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldStop();
-  xfer += oprot->writeStructEnd();
-  return xfer;
-}
-
-
-emailalertservice_deactivate_alert_pargs::~emailalertservice_deactivate_alert_pargs() throw() {
-}
-
-
-uint32_t emailalertservice_deactivate_alert_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
-  uint32_t xfer = 0;
-  apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
-  xfer += oprot->writeStructBegin("emailalertservice_deactivate_alert_pargs");
-
-  xfer += oprot->writeFieldBegin("alert_id", ::apache::thrift::protocol::T_STRING, 1);
-  xfer += oprot->writeString((*(this->alert_id)));
+  xfer += oprot->writeFieldBegin("alert_status", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString(this->alert_status);
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -769,11 +762,34 @@ uint32_t emailalertservice_deactivate_alert_pargs::write(::apache::thrift::proto
 }
 
 
-emailalertservice_deactivate_alert_result::~emailalertservice_deactivate_alert_result() throw() {
+emailalertservice_changeAlertStatus_pargs::~emailalertservice_changeAlertStatus_pargs() throw() {
 }
 
 
-uint32_t emailalertservice_deactivate_alert_result::read(::apache::thrift::protocol::TProtocol* iprot) {
+uint32_t emailalertservice_changeAlertStatus_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("emailalertservice_changeAlertStatus_pargs");
+
+  xfer += oprot->writeFieldBegin("alert_id", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString((*(this->alert_id)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("alert_status", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString((*(this->alert_status)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+emailalertservice_changeAlertStatus_result::~emailalertservice_changeAlertStatus_result() throw() {
+}
+
+
+uint32_t emailalertservice_changeAlertStatus_result::read(::apache::thrift::protocol::TProtocol* iprot) {
 
   apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
   uint32_t xfer = 0;
@@ -814,11 +830,11 @@ uint32_t emailalertservice_deactivate_alert_result::read(::apache::thrift::proto
   return xfer;
 }
 
-uint32_t emailalertservice_deactivate_alert_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
+uint32_t emailalertservice_changeAlertStatus_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
 
   uint32_t xfer = 0;
 
-  xfer += oprot->writeStructBegin("emailalertservice_deactivate_alert_result");
+  xfer += oprot->writeStructBegin("emailalertservice_changeAlertStatus_result");
 
   if (this->__isset.success) {
     xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_STRUCT, 0);
@@ -831,11 +847,11 @@ uint32_t emailalertservice_deactivate_alert_result::write(::apache::thrift::prot
 }
 
 
-emailalertservice_deactivate_alert_presult::~emailalertservice_deactivate_alert_presult() throw() {
+emailalertservice_changeAlertStatus_presult::~emailalertservice_changeAlertStatus_presult() throw() {
 }
 
 
-uint32_t emailalertservice_deactivate_alert_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
+uint32_t emailalertservice_changeAlertStatus_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
 
   apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
   uint32_t xfer = 0;
@@ -1051,19 +1067,20 @@ void emailalertserviceClient::recv_my_realestate_search(std::vector<std::map<std
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "my_realestate_search failed: unknown result");
 }
 
-void emailalertserviceClient::deactivate_alert(EmailAlertResult& _return, const std::string& alert_id)
+void emailalertserviceClient::changeAlertStatus(EmailAlertResult& _return, const std::string& alert_id, const std::string& alert_status)
 {
-  send_deactivate_alert(alert_id);
-  recv_deactivate_alert(_return);
+  send_changeAlertStatus(alert_id, alert_status);
+  recv_changeAlertStatus(_return);
 }
 
-void emailalertserviceClient::send_deactivate_alert(const std::string& alert_id)
+void emailalertserviceClient::send_changeAlertStatus(const std::string& alert_id, const std::string& alert_status)
 {
   int32_t cseqid = 0;
-  oprot_->writeMessageBegin("deactivate_alert", ::apache::thrift::protocol::T_CALL, cseqid);
+  oprot_->writeMessageBegin("changeAlertStatus", ::apache::thrift::protocol::T_CALL, cseqid);
 
-  emailalertservice_deactivate_alert_pargs args;
+  emailalertservice_changeAlertStatus_pargs args;
   args.alert_id = &alert_id;
+  args.alert_status = &alert_status;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -1071,7 +1088,7 @@ void emailalertserviceClient::send_deactivate_alert(const std::string& alert_id)
   oprot_->getTransport()->flush();
 }
 
-void emailalertserviceClient::recv_deactivate_alert(EmailAlertResult& _return)
+void emailalertserviceClient::recv_changeAlertStatus(EmailAlertResult& _return)
 {
 
   int32_t rseqid = 0;
@@ -1091,12 +1108,12 @@ void emailalertserviceClient::recv_deactivate_alert(EmailAlertResult& _return)
     iprot_->readMessageEnd();
     iprot_->getTransport()->readEnd();
   }
-  if (fname.compare("deactivate_alert") != 0) {
+  if (fname.compare("changeAlertStatus") != 0) {
     iprot_->skip(::apache::thrift::protocol::T_STRUCT);
     iprot_->readMessageEnd();
     iprot_->getTransport()->readEnd();
   }
-  emailalertservice_deactivate_alert_presult result;
+  emailalertservice_changeAlertStatus_presult result;
   result.success = &_return;
   result.read(iprot_);
   iprot_->readMessageEnd();
@@ -1106,7 +1123,7 @@ void emailalertserviceClient::recv_deactivate_alert(EmailAlertResult& _return)
     // _return pointer has now been filled
     return;
   }
-  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "deactivate_alert failed: unknown result");
+  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "changeAlertStatus failed: unknown result");
 }
 
 bool emailalertserviceProcessor::dispatchCall(::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, const std::string& fname, int32_t seqid, void* callContext) {
@@ -1290,38 +1307,38 @@ void emailalertserviceProcessor::process_my_realestate_search(int32_t seqid, ::a
   }
 }
 
-void emailalertserviceProcessor::process_deactivate_alert(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
+void emailalertserviceProcessor::process_changeAlertStatus(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
 {
   void* ctx = NULL;
   if (this->eventHandler_.get() != NULL) {
-    ctx = this->eventHandler_->getContext("emailalertservice.deactivate_alert", callContext);
+    ctx = this->eventHandler_->getContext("emailalertservice.changeAlertStatus", callContext);
   }
-  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "emailalertservice.deactivate_alert");
+  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "emailalertservice.changeAlertStatus");
 
   if (this->eventHandler_.get() != NULL) {
-    this->eventHandler_->preRead(ctx, "emailalertservice.deactivate_alert");
+    this->eventHandler_->preRead(ctx, "emailalertservice.changeAlertStatus");
   }
 
-  emailalertservice_deactivate_alert_args args;
+  emailalertservice_changeAlertStatus_args args;
   args.read(iprot);
   iprot->readMessageEnd();
   uint32_t bytes = iprot->getTransport()->readEnd();
 
   if (this->eventHandler_.get() != NULL) {
-    this->eventHandler_->postRead(ctx, "emailalertservice.deactivate_alert", bytes);
+    this->eventHandler_->postRead(ctx, "emailalertservice.changeAlertStatus", bytes);
   }
 
-  emailalertservice_deactivate_alert_result result;
+  emailalertservice_changeAlertStatus_result result;
   try {
-    iface_->deactivate_alert(result.success, args.alert_id);
+    iface_->changeAlertStatus(result.success, args.alert_id, args.alert_status);
     result.__isset.success = true;
   } catch (const std::exception& e) {
     if (this->eventHandler_.get() != NULL) {
-      this->eventHandler_->handlerError(ctx, "emailalertservice.deactivate_alert");
+      this->eventHandler_->handlerError(ctx, "emailalertservice.changeAlertStatus");
     }
 
     ::apache::thrift::TApplicationException x(e.what());
-    oprot->writeMessageBegin("deactivate_alert", ::apache::thrift::protocol::T_EXCEPTION, seqid);
+    oprot->writeMessageBegin("changeAlertStatus", ::apache::thrift::protocol::T_EXCEPTION, seqid);
     x.write(oprot);
     oprot->writeMessageEnd();
     oprot->getTransport()->writeEnd();
@@ -1330,17 +1347,17 @@ void emailalertserviceProcessor::process_deactivate_alert(int32_t seqid, ::apach
   }
 
   if (this->eventHandler_.get() != NULL) {
-    this->eventHandler_->preWrite(ctx, "emailalertservice.deactivate_alert");
+    this->eventHandler_->preWrite(ctx, "emailalertservice.changeAlertStatus");
   }
 
-  oprot->writeMessageBegin("deactivate_alert", ::apache::thrift::protocol::T_REPLY, seqid);
+  oprot->writeMessageBegin("changeAlertStatus", ::apache::thrift::protocol::T_REPLY, seqid);
   result.write(oprot);
   oprot->writeMessageEnd();
   bytes = oprot->getTransport()->writeEnd();
   oprot->getTransport()->flush();
 
   if (this->eventHandler_.get() != NULL) {
-    this->eventHandler_->postWrite(ctx, "emailalertservice.deactivate_alert", bytes);
+    this->eventHandler_->postWrite(ctx, "emailalertservice.changeAlertStatus", bytes);
   }
 }
 
@@ -1604,20 +1621,21 @@ void emailalertserviceConcurrentClient::recv_my_realestate_search(std::vector<st
   } // end while(true)
 }
 
-void emailalertserviceConcurrentClient::deactivate_alert(EmailAlertResult& _return, const std::string& alert_id)
+void emailalertserviceConcurrentClient::changeAlertStatus(EmailAlertResult& _return, const std::string& alert_id, const std::string& alert_status)
 {
-  int32_t seqid = send_deactivate_alert(alert_id);
-  recv_deactivate_alert(_return, seqid);
+  int32_t seqid = send_changeAlertStatus(alert_id, alert_status);
+  recv_changeAlertStatus(_return, seqid);
 }
 
-int32_t emailalertserviceConcurrentClient::send_deactivate_alert(const std::string& alert_id)
+int32_t emailalertserviceConcurrentClient::send_changeAlertStatus(const std::string& alert_id, const std::string& alert_status)
 {
   int32_t cseqid = this->sync_.generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(&this->sync_);
-  oprot_->writeMessageBegin("deactivate_alert", ::apache::thrift::protocol::T_CALL, cseqid);
+  oprot_->writeMessageBegin("changeAlertStatus", ::apache::thrift::protocol::T_CALL, cseqid);
 
-  emailalertservice_deactivate_alert_pargs args;
+  emailalertservice_changeAlertStatus_pargs args;
   args.alert_id = &alert_id;
+  args.alert_status = &alert_status;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -1628,7 +1646,7 @@ int32_t emailalertserviceConcurrentClient::send_deactivate_alert(const std::stri
   return cseqid;
 }
 
-void emailalertserviceConcurrentClient::recv_deactivate_alert(EmailAlertResult& _return, const int32_t seqid)
+void emailalertserviceConcurrentClient::recv_changeAlertStatus(EmailAlertResult& _return, const int32_t seqid)
 {
 
   int32_t rseqid = 0;
@@ -1657,7 +1675,7 @@ void emailalertserviceConcurrentClient::recv_deactivate_alert(EmailAlertResult& 
         iprot_->readMessageEnd();
         iprot_->getTransport()->readEnd();
       }
-      if (fname.compare("deactivate_alert") != 0) {
+      if (fname.compare("changeAlertStatus") != 0) {
         iprot_->skip(::apache::thrift::protocol::T_STRUCT);
         iprot_->readMessageEnd();
         iprot_->getTransport()->readEnd();
@@ -1666,7 +1684,7 @@ void emailalertserviceConcurrentClient::recv_deactivate_alert(EmailAlertResult& 
         using ::apache::thrift::protocol::TProtocolException;
         throw TProtocolException(TProtocolException::INVALID_DATA);
       }
-      emailalertservice_deactivate_alert_presult result;
+      emailalertservice_changeAlertStatus_presult result;
       result.success = &_return;
       result.read(iprot_);
       iprot_->readMessageEnd();
@@ -1678,7 +1696,7 @@ void emailalertserviceConcurrentClient::recv_deactivate_alert(EmailAlertResult& 
         return;
       }
       // in a bad state, don't commit
-      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "deactivate_alert failed: unknown result");
+      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "changeAlertStatus failed: unknown result");
     }
     // seqid != rseqid
     this->sync_.updatePending(fname, mtype, rseqid);

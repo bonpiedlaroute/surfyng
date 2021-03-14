@@ -206,16 +206,21 @@ void HttpRequestHandler::handle_post(http_request message)
         }
         else 
         {
-            if(paths.size() == 1  && paths[0] == "deactivate_alert" )
+            if(paths.size() == 1  && paths[0] == "change_alert_status" )
             {
                 auto query = http::uri::split_query(http::uri::decode(message.relative_uri().query()));
-                auto result =  m_emailalertaccess.deactivate_alert(query);
+                auto result =  m_emailalertaccess.changeAlertStatus(query);
                 if(!result.success)
                 {
                     message.reply(status_codes::BadRequest);
                     return;
                 }
             }
+            else {
+
+                    message.reply(status_codes::BadRequest);
+                    return;
+                }
         }
         
     }

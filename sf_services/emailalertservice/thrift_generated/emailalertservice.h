@@ -24,7 +24,7 @@ class emailalertserviceIf {
   virtual void registerEmailAlert(EmailAlertResult& _return, const std::string& userid, const std::map<std::string, std::string> & parameters) = 0;
   virtual void notifyNewAnnounces(EmailAlertResult& _return, const std::string& city) = 0;
   virtual void my_realestate_search(std::vector<std::map<std::string, std::string> > & _return, const std::string& userid) = 0;
-  virtual void deactivate_alert(EmailAlertResult& _return, const std::string& alert_id) = 0;
+  virtual void changeAlertStatus(EmailAlertResult& _return, const std::string& alert_id, const std::string& alert_status) = 0;
 };
 
 class emailalertserviceIfFactory {
@@ -63,7 +63,7 @@ class emailalertserviceNull : virtual public emailalertserviceIf {
   void my_realestate_search(std::vector<std::map<std::string, std::string> > & /* _return */, const std::string& /* userid */) {
     return;
   }
-  void deactivate_alert(EmailAlertResult& /* _return */, const std::string& /* alert_id */) {
+  void changeAlertStatus(EmailAlertResult& /* _return */, const std::string& /* alert_id */, const std::string& /* alert_status */) {
     return;
   }
 };
@@ -387,37 +387,43 @@ class emailalertservice_my_realestate_search_presult {
 
 };
 
-typedef struct _emailalertservice_deactivate_alert_args__isset {
-  _emailalertservice_deactivate_alert_args__isset() : alert_id(false) {}
+typedef struct _emailalertservice_changeAlertStatus_args__isset {
+  _emailalertservice_changeAlertStatus_args__isset() : alert_id(false), alert_status(false) {}
   bool alert_id :1;
-} _emailalertservice_deactivate_alert_args__isset;
+  bool alert_status :1;
+} _emailalertservice_changeAlertStatus_args__isset;
 
-class emailalertservice_deactivate_alert_args {
+class emailalertservice_changeAlertStatus_args {
  public:
 
-  emailalertservice_deactivate_alert_args(const emailalertservice_deactivate_alert_args&);
-  emailalertservice_deactivate_alert_args& operator=(const emailalertservice_deactivate_alert_args&);
-  emailalertservice_deactivate_alert_args() : alert_id() {
+  emailalertservice_changeAlertStatus_args(const emailalertservice_changeAlertStatus_args&);
+  emailalertservice_changeAlertStatus_args& operator=(const emailalertservice_changeAlertStatus_args&);
+  emailalertservice_changeAlertStatus_args() : alert_id(), alert_status() {
   }
 
-  virtual ~emailalertservice_deactivate_alert_args() throw();
+  virtual ~emailalertservice_changeAlertStatus_args() throw();
   std::string alert_id;
+  std::string alert_status;
 
-  _emailalertservice_deactivate_alert_args__isset __isset;
+  _emailalertservice_changeAlertStatus_args__isset __isset;
 
   void __set_alert_id(const std::string& val);
 
-  bool operator == (const emailalertservice_deactivate_alert_args & rhs) const
+  void __set_alert_status(const std::string& val);
+
+  bool operator == (const emailalertservice_changeAlertStatus_args & rhs) const
   {
     if (!(alert_id == rhs.alert_id))
       return false;
+    if (!(alert_status == rhs.alert_status))
+      return false;
     return true;
   }
-  bool operator != (const emailalertservice_deactivate_alert_args &rhs) const {
+  bool operator != (const emailalertservice_changeAlertStatus_args &rhs) const {
     return !(*this == rhs);
   }
 
-  bool operator < (const emailalertservice_deactivate_alert_args & ) const;
+  bool operator < (const emailalertservice_changeAlertStatus_args & ) const;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
@@ -425,67 +431,68 @@ class emailalertservice_deactivate_alert_args {
 };
 
 
-class emailalertservice_deactivate_alert_pargs {
+class emailalertservice_changeAlertStatus_pargs {
  public:
 
 
-  virtual ~emailalertservice_deactivate_alert_pargs() throw();
+  virtual ~emailalertservice_changeAlertStatus_pargs() throw();
   const std::string* alert_id;
+  const std::string* alert_status;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
 };
 
-typedef struct _emailalertservice_deactivate_alert_result__isset {
-  _emailalertservice_deactivate_alert_result__isset() : success(false) {}
+typedef struct _emailalertservice_changeAlertStatus_result__isset {
+  _emailalertservice_changeAlertStatus_result__isset() : success(false) {}
   bool success :1;
-} _emailalertservice_deactivate_alert_result__isset;
+} _emailalertservice_changeAlertStatus_result__isset;
 
-class emailalertservice_deactivate_alert_result {
+class emailalertservice_changeAlertStatus_result {
  public:
 
-  emailalertservice_deactivate_alert_result(const emailalertservice_deactivate_alert_result&);
-  emailalertservice_deactivate_alert_result& operator=(const emailalertservice_deactivate_alert_result&);
-  emailalertservice_deactivate_alert_result() {
+  emailalertservice_changeAlertStatus_result(const emailalertservice_changeAlertStatus_result&);
+  emailalertservice_changeAlertStatus_result& operator=(const emailalertservice_changeAlertStatus_result&);
+  emailalertservice_changeAlertStatus_result() {
   }
 
-  virtual ~emailalertservice_deactivate_alert_result() throw();
+  virtual ~emailalertservice_changeAlertStatus_result() throw();
   EmailAlertResult success;
 
-  _emailalertservice_deactivate_alert_result__isset __isset;
+  _emailalertservice_changeAlertStatus_result__isset __isset;
 
   void __set_success(const EmailAlertResult& val);
 
-  bool operator == (const emailalertservice_deactivate_alert_result & rhs) const
+  bool operator == (const emailalertservice_changeAlertStatus_result & rhs) const
   {
     if (!(success == rhs.success))
       return false;
     return true;
   }
-  bool operator != (const emailalertservice_deactivate_alert_result &rhs) const {
+  bool operator != (const emailalertservice_changeAlertStatus_result &rhs) const {
     return !(*this == rhs);
   }
 
-  bool operator < (const emailalertservice_deactivate_alert_result & ) const;
+  bool operator < (const emailalertservice_changeAlertStatus_result & ) const;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
 };
 
-typedef struct _emailalertservice_deactivate_alert_presult__isset {
-  _emailalertservice_deactivate_alert_presult__isset() : success(false) {}
+typedef struct _emailalertservice_changeAlertStatus_presult__isset {
+  _emailalertservice_changeAlertStatus_presult__isset() : success(false) {}
   bool success :1;
-} _emailalertservice_deactivate_alert_presult__isset;
+} _emailalertservice_changeAlertStatus_presult__isset;
 
-class emailalertservice_deactivate_alert_presult {
+class emailalertservice_changeAlertStatus_presult {
  public:
 
 
-  virtual ~emailalertservice_deactivate_alert_presult() throw();
+  virtual ~emailalertservice_changeAlertStatus_presult() throw();
   EmailAlertResult* success;
 
-  _emailalertservice_deactivate_alert_presult__isset __isset;
+  _emailalertservice_changeAlertStatus_presult__isset __isset;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
 
@@ -525,9 +532,9 @@ class emailalertserviceClient : virtual public emailalertserviceIf {
   void my_realestate_search(std::vector<std::map<std::string, std::string> > & _return, const std::string& userid);
   void send_my_realestate_search(const std::string& userid);
   void recv_my_realestate_search(std::vector<std::map<std::string, std::string> > & _return);
-  void deactivate_alert(EmailAlertResult& _return, const std::string& alert_id);
-  void send_deactivate_alert(const std::string& alert_id);
-  void recv_deactivate_alert(EmailAlertResult& _return);
+  void changeAlertStatus(EmailAlertResult& _return, const std::string& alert_id, const std::string& alert_status);
+  void send_changeAlertStatus(const std::string& alert_id, const std::string& alert_status);
+  void recv_changeAlertStatus(EmailAlertResult& _return);
  protected:
   boost::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   boost::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -546,14 +553,14 @@ class emailalertserviceProcessor : public ::apache::thrift::TDispatchProcessor {
   void process_registerEmailAlert(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_notifyNewAnnounces(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_my_realestate_search(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
-  void process_deactivate_alert(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_changeAlertStatus(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   emailalertserviceProcessor(boost::shared_ptr<emailalertserviceIf> iface) :
     iface_(iface) {
     processMap_["registerEmailAlert"] = &emailalertserviceProcessor::process_registerEmailAlert;
     processMap_["notifyNewAnnounces"] = &emailalertserviceProcessor::process_notifyNewAnnounces;
     processMap_["my_realestate_search"] = &emailalertserviceProcessor::process_my_realestate_search;
-    processMap_["deactivate_alert"] = &emailalertserviceProcessor::process_deactivate_alert;
+    processMap_["changeAlertStatus"] = &emailalertserviceProcessor::process_changeAlertStatus;
   }
 
   virtual ~emailalertserviceProcessor() {}
@@ -612,13 +619,13 @@ class emailalertserviceMultiface : virtual public emailalertserviceIf {
     return;
   }
 
-  void deactivate_alert(EmailAlertResult& _return, const std::string& alert_id) {
+  void changeAlertStatus(EmailAlertResult& _return, const std::string& alert_id, const std::string& alert_status) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->deactivate_alert(_return, alert_id);
+      ifaces_[i]->changeAlertStatus(_return, alert_id, alert_status);
     }
-    ifaces_[i]->deactivate_alert(_return, alert_id);
+    ifaces_[i]->changeAlertStatus(_return, alert_id, alert_status);
     return;
   }
 
@@ -661,9 +668,9 @@ class emailalertserviceConcurrentClient : virtual public emailalertserviceIf {
   void my_realestate_search(std::vector<std::map<std::string, std::string> > & _return, const std::string& userid);
   int32_t send_my_realestate_search(const std::string& userid);
   void recv_my_realestate_search(std::vector<std::map<std::string, std::string> > & _return, const int32_t seqid);
-  void deactivate_alert(EmailAlertResult& _return, const std::string& alert_id);
-  int32_t send_deactivate_alert(const std::string& alert_id);
-  void recv_deactivate_alert(EmailAlertResult& _return, const int32_t seqid);
+  void changeAlertStatus(EmailAlertResult& _return, const std::string& alert_id, const std::string& alert_status);
+  int32_t send_changeAlertStatus(const std::string& alert_id, const std::string& alert_status);
+  void recv_changeAlertStatus(EmailAlertResult& _return, const int32_t seqid);
  protected:
   boost::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   boost::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

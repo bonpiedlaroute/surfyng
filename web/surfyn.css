@@ -1234,7 +1234,7 @@ padding:5px;
 .sf_my_research_link
 {
   display:flex;align-items:center;justify-content:center;flex-direction:row;width:92%;
-  height:260px;border-radius:6px;border:3px solid #61AEB5;flex-wrap:wrap;margin-bottom:40px;
+  height:230px;border-radius:6px;border:3px solid #61AEB5;flex-wrap:wrap;margin-bottom:20px;
 }
 .sf_my_research_email_alert
 {
@@ -1296,6 +1296,15 @@ padding:5px;
 .sf_alert_text
 {
   color:green;font-size:14px;
+  margin-left: 5px;
+}
+.sf_bell_alert_deactivated_icon
+{
+  color:gray;font-size:24px;margin-right:10px;
+}
+.sf_alert_deactivated_text
+{
+  color:gray;font-size:14px;
   margin-left: 5px;
 }
 .sf_alert_trash
@@ -1960,6 +1969,15 @@ padding:5px;
   .sf_alert_text
   {
     color:green;font-size:13px;
+    margin-left: 5px;
+  }
+  .sf_bell_alert_deactivated_icon
+  {
+    color:gray;font-size:14px;margin-right:2px;
+  }
+  .sf_alert__deactivated_text
+  {
+    color:gray;font-size:13px;
     margin-left: 5px;
   }
   .sf_alert_trash
