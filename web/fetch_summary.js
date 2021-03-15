@@ -144,7 +144,6 @@ function buildurlparams()
 // To prevent re-hydratation
 var puppeteer = document.getElementById('target');
 
-// Reload data only if the ssr has not already load it.
 if (!puppeteer)
 {
   if(window.location.search == "")
@@ -174,43 +173,18 @@ if (!puppeteer)
 
 function buildpage()
 {
-  var summary_json_data = sessionStorage.getItem("summary_json_data");
-  var needtosort = sessionStorage.getItem("needtosort");
-  if(needtosort && summary_json_data)
+  if (puppeteer)
+  {
+    var summary_json_data = puppeteer.getAttribute("data-ad-json");
+  }
+  else
+  {
+    var summary_json_data = "";
+  }
+
+  if(summary_json_data)
   {
     var newdata = JSON.parse(summary_json_data);
-    if(needtosort == "byprice")
-    {
-      newdata.sort(function(lhs, rhs)
-          {
-            return lhs.PRICE - rhs.PRICE;
-          });
-    }
-    else
-    {
-      if(needtosort == "bysurface")
-      {
-        newdata.sort(function(lhs, rhs)
-            {
-              return lhs.SURFACE - rhs.SURFACE;
-            });
-      }
-      else{
-        if( needtosort == "bydate")
-        {
-          newdata.sort(ByTimeStamp);
-        }else {
-          if ( needtosort == "bypricebym2")
-          {
-            newdata.sort(function(lhs, rhs)
-                {
-                  return Math.floor( lhs.PRICE / lhs.SURFACE) - Math.floor( rhs.PRICE / rhs.SURFACE);
-                });
-          }
-        }
-      }
-    }
-
     generate_summary_page(newdata);
   }
   else {
@@ -219,7 +193,7 @@ function buildpage()
     .then(function(data) {
       data.sort(ByTimeStamp);
       generate_summary_page(data);
-      sessionStorage.setItem("summary_json_data", JSON.stringify(data));
+      //sessionStorage.setItem("summary_json_data", JSON.stringify(data));
     })
     .catch(function(error) {
       loadJSON("data/announces_summary.json",
@@ -259,91 +233,100 @@ function addGoogleAds(main_content)
 
 var ismobile   = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
 
-function generate_summary_page(data)
+function generate_summary_page(data, empty=false)
 {
-  var url_parameters = ''
-  if(window.location.search == "")
-    url_parameters = url_params;
+  console.log(empty);
+  if(empty)
+  {
+      // Delete content of main-content element
+      var main_content = document.getElementById("main-content");
+      main_content.innerHTML = "";
+  }
   else
-    url_parameters = window.location.search;
-
-
-  const Params = new URLSearchParams(url_parameters);
-  const searchType = Params.get('search_type');
-  var pagetitle = "";
-  var propertyType_param = Params.get('prop_type');
-  var split_propertyType = propertyType_param.split(",");
-  var first_proptype = true;
-  var propertyType = "";
-  var title = "";
-  var meta_description = "Toutes les annonces"
-
-  if (split_propertyType.indexOf("1") !== -1 || split_propertyType.indexOf("3") !== -1)
   {
-    if(!first_proptype)
-      pagetitle += ", ";
-      else {
-        first_proptype = false;
-      }
-    propertyType = "appartements";
-    meta_description += " d'";
-    pagetitle += "Appartement"
-  }
-  else {
-    meta_description += " de "
-  }
+      var url_parameters = ''
+      if(window.location.search == "")
+        url_parameters = url_params;
+      else
+        url_parameters = window.location.search;
 
-  if (split_propertyType.indexOf("2") !== -1 || split_propertyType.indexOf("4") !== -1)
-  {
-    if(!first_proptype)
-      propertyType += ", ";
-      else {
-        first_proptype = false;
-      }
-    propertyType += "maisons";
-    pagetitle += "Maison"
-  }
-  meta_description+= propertyType;
-  var rooms_text = "";
-  var rooms = Params.get('rooms');
-  if(rooms) {
-    pagetitle += " ";
-    if( rooms == "1") {
-      pagetitle += "studio";
-      rooms_text = " studios";
-    }else {
-        pagetitle += rooms;
-        pagetitle += " pièces"
-        rooms_text = " " + rooms;
-        rooms_text += " pièces";
+
+    const Params = new URLSearchParams(url_parameters);
+    var searchType = Params.get('search_type');
+    var pagetitle = "";
+    var propertyType_param = Params.get('prop_type');
+    var split_propertyType = propertyType_param.split(",");
+    var first_proptype = true;
+    var propertyType = "";
+    var title = "";
+    var meta_description = "Toutes les annonces"
+
+    if (split_propertyType.indexOf("1") !== -1 || split_propertyType.indexOf("3") !== -1)
+    {
+      if(!first_proptype)
+        pagetitle += ", ";
+        else {
+          first_proptype = false;
+        }
+      propertyType = "appartements";
+      meta_description += " d'";
+      pagetitle += "Appartement"
     }
-    meta_description+= rooms_text;
+    else {
+      meta_description += " de "
+    
+    if (split_propertyType.indexOf("2") !== -1 || split_propertyType.indexOf("4") !== -1)
+    {
+      if(!first_proptype)
+        propertyType += ", ";
+        else {
+          first_proptype = false;
+        }
+      propertyType += "maisons";
+      pagetitle += "Maison"
+    }
+    meta_description+= propertyType;
+    var rooms_text = "";
+    var rooms = Params.get('rooms');
+    if(rooms) {
+      pagetitle += " ";
+      if( rooms == "1") {
+        pagetitle += "studio";
+        rooms_text = " studios";
+      }else {
+          pagetitle += rooms;
+          pagetitle += " pièces"
+          rooms_text = " " + rooms;
+          rooms_text += " pièces";
+      }
+      meta_description+= rooms_text;
 
-  }
-  pagetitle += " à ";
-  meta_description += " à ";
-  pagetitle += searchType == 1 ? "vendre ": "louer ";
-  meta_description += searchType == 1 ? "vendre ": "louer ";
-  meta_description += " à ";
+    }
+    pagetitle += " à ";
+    meta_description += " à ";
+    pagetitle += searchType == 1 ? "vendre ": "louer ";
+    meta_description += searchType == 1 ? "vendre ": "louer ";
+    meta_description += " à ";
 
-  var search_city = Params.get('search_city');
-  pagetitle += search_city;
-  meta_description += search_city;
-  var postalcode = getPostalCode(search_city);
-  pagetitle +=" ("+ postalcode + ")";
-  meta_description += " ("+ postalcode + ")";
-  pagetitle += " - Surfyn";
-  meta_description += " actualisées en temps réel, à partir de tous les sites de petites annonces immobilières et d'agences immobilières couvrant la ville de "
-  meta_description += search_city;
-  meta_description += "  - Surfyn";
+    var search_city = Params.get('search_city');
+    pagetitle += search_city;
+    meta_description += search_city;
+    var postalcode = getPostalCode(search_city);
+    pagetitle +=" ("+ postalcode + ")";
+    meta_description += " ("+ postalcode + ")";
+    pagetitle += " - Surfyn";
+    meta_description += " actualisées en temps réel, à partir de tous les sites de petites annonces immobilières et d'agences immobilières couvrant la ville de "
+    meta_description += search_city;
+    meta_description += "  - Surfyn";
 
-  document.title = pagetitle;
+    document.title = pagetitle;
 
-  document.getElementsByTagName('meta')["description"].content = meta_description;
+    document.getElementsByTagName('meta')["description"].content = meta_description;
 
-  var realestate_agencies_city = document.getElementById('realestate_agencies_city');
-  realestate_agencies_city.href = 'agence-immobiliere-'+ search_city.toLowerCase() +'-' + postalcode + '.html';
-  realestate_agencies_city.innerHTML = 'Agences immobilières à ' + search_city + " ("+ postalcode + ")";
+    var realestate_agencies_city = document.getElementById('realestate_agencies_city');
+    realestate_agencies_city.href = 'agence-immobiliere-'+ search_city.toLowerCase() +'-' + postalcode + '.html';
+    realestate_agencies_city.innerHTML = 'Agences immobilières à ' + search_city + " ("+ postalcode + ")";
+}
 
   var announces_found = document.getElementById("nb_announces_found");
   if( data.length == 0)
@@ -351,10 +334,11 @@ function generate_summary_page(data)
     announces_found.innerHTML = "Aucune annonce à ";
     announces_found.innerHTML += search_city;
     announces_found.innerHTML += " ne correspond à vos critères";
-
   }
   else
   {
+    if (!empty)
+    {
         announces_found.innerHTML = data.length
         announces_found.innerHTML += data.length == 1 ? " annonce ": " annonces ";
         announces_found.innerHTML += (split_propertyType.indexOf("1") !== -1 || split_propertyType.indexOf("3") !== -1) ? "d'": "de "
@@ -363,6 +347,8 @@ function generate_summary_page(data)
         announces_found.innerHTML += search_city;
 
         announces_found.innerHTML += " (" +postalcode+")";
+    }
+
         var main_content = document.getElementById("main-content");
         var footer = document.getElementsByTagName('footer')[0];
         for(var i = 0; i < data.length; i++)
@@ -644,9 +630,10 @@ function generate_summary_page(data)
         }
 
   }
-  
-  var forPuppeteer = document.createElement("div");
+
+  var forPuppeteer = createNode("div");
   forPuppeteer.setAttribute("id", "target");
+  forPuppeteer.setAttribute("data-ad-json", JSON.stringify(data));
   forPuppeteer.style.visibility = 'hidden';
   main_content.appendChild(forPuppeteer);
 

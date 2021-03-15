@@ -95,7 +95,7 @@ async function ssr(path) {
 	}
 	else if(path.includes("actualite-immobilier.html"))
 	{
-		// Manage code to avoid loop between express server and nginx
+		url = HOST + '/actualite-immo.html';
 	}
 
 	console.log('url after building: ' + url);

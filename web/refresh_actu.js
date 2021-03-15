@@ -228,6 +228,12 @@ function generate_actu(items)
       addGoogleAds(main_content);
     }
   }
+  
+  var forPuppeteer = createNode("div");
+  forPuppeteer.setAttribute("id", "target");
+  forPuppeteer.setAttribute("data-ad-json", JSON.stringify(data));
+  forPuppeteer.style.visibility = 'hidden';
+  main_content.appendChild(forPuppeteer);
 }
 
 const lesEchosRssUrl = "data/actus/lesechos_immobilier.xml";
@@ -263,7 +269,9 @@ fetch(lesEchosRssUrl)
   .then(data => extract_actu_data(data, "notaires", ""))
   .then(function() {
     AllActuData.sort(function(lhs, rhs) { return new Date(rhs.pubdate) - new Date(lhs.pubdate); } );
-    generate_actu(AllActuData);
+    var puppeteer = document.getElementById('target');
+    if(!puppeteer)
+      generate_actu(AllActuData);
   }).catch(function(error){
     console.log(error);
   });
