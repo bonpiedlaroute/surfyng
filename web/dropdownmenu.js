@@ -55,23 +55,47 @@ window.onclick = function(event) {
   }
 
 }
+var target = document.getElementById("target");
+var data = target ? JSON.parse(target.getAttribute("data-ad-json")) : "";
 
 function sortbyprice()
 {
-  sessionStorage.setItem("needtosort", "byprice");
+  // sessionStorage.setItem("needtosort", "byprice");
+  // Sort data by price
+  data.sort(function(lhs, rhs)
+  {
+    return lhs.PRICE - rhs.PRICE;
+  });
+  generate_summary_page(data, empty=true)
 }
 
 function sortbysurface()
 {
-  sessionStorage.setItem("needtosort", "bysurface");
+  // sessionStorage.setItem("needtosort", "bysurface");
+  // Sort data by surface
+  data.sort(function(lhs, rhs)
+  {
+      return lhs.SURFACE - rhs.SURFACE;
+  });
+  generate_summary_page(data, empty=true)
 }
 
 function sortbydate()
 {
-  sessionStorage.setItem("needtosort", "bydate");
+  // sessionStorage.setItem("needtosort", "bydate");
+  // Sort data by time
+  data.sort(ByTimeStamp);
+  generate_summary_page(data, empty=true)
 }
 
 function sortbypricebym2()
 {
-  sessionStorage.setItem("needtosort", "bypricebym2");
+  // sessionStorage.setItem("needtosort", "bypricebym2");
+  // Sort data by price and surface
+  data.sort(function(lhs, rhs)
+  {
+    return Math.floor( lhs.PRICE / lhs.SURFACE) - Math.floor( rhs.PRICE / rhs.SURFACE);
+  });
+  generate_summary_page(data, empty=true)
 }
+
