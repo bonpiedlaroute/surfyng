@@ -34,7 +34,7 @@ namespace rest_server
       shared_ptr<TProtocol> protocol(new TBinaryProtocol(transport));
       m_client = std::make_shared<house_predictionClient>(protocol);
 
-      //transport->open();
+      transport->open();
    }
 
    void EstimatorAccess::fetchHousePrice(utility::stringstream_t& sstream, const std::map<utility::string_t,  utility::string_t>& query,
