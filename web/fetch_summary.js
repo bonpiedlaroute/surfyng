@@ -86,8 +86,8 @@ function loadJSON(path, success, error) {
   ProcessorBySource.set("efficity", function(param) {SrcProcessor(param, "green", "Efficity"); });
   ProcessorBySource.set("fnaim", function(param) {SrcProcessor(param, "yellow", "Fnaim"); });
 
-  //var url = 'https://surfyn.fr:7878/search/all';
-  var url = 'http://127.0.0.1:7878/search/all';
+  var url = 'https://surfyn.fr:7878/search/all';
+  //var url = 'http://127.0.0.1:7878/search/all';
   var url_params = '?';
 
 function buildurlparams()
@@ -140,9 +140,9 @@ function buildurlparams()
   return true;
 }
 
-// Check if div with id #target is already on the DOM to
+// Check if div with id #prerendered-page is already on the DOM to
 // To prevent re-hydratation
-var puppeteer = document.getElementById('target');
+var puppeteer = document.getElementById('prerendered-page');
 
 if (!puppeteer)
 {
@@ -173,13 +173,10 @@ if (!puppeteer)
 
 function buildpage()
 {
+  var summary_json_data = "";
   if (puppeteer)
   {
-    var summary_json_data = puppeteer.getAttribute("data-ad-json");
-  }
-  else
-  {
-    var summary_json_data = "";
+    summary_json_data = puppeteer.getAttribute("data-ad-json");
   }
 
   if(summary_json_data)
@@ -235,7 +232,7 @@ var ismobile   = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.use
 
 function generate_summary_page(data, empty=false)
 {
-  console.log(empty);
+
   if(empty)
   {
       // Delete content of main-content element
@@ -632,7 +629,7 @@ function generate_summary_page(data, empty=false)
   }
 
   var forPuppeteer = createNode("div");
-  forPuppeteer.setAttribute("id", "target");
+  forPuppeteer.setAttribute("id", "prerendered-page");
   forPuppeteer.setAttribute("data-ad-json", JSON.stringify(data));
   forPuppeteer.style.visibility = 'hidden';
   main_content.appendChild(forPuppeteer);

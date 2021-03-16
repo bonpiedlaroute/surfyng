@@ -28,10 +28,10 @@ function append(parent, el) {
 }
 
 
-//const url = 'https://surfyn.fr:7878/search/ad?id='+ window.location.search.substr(1);
-const url = 'http://127.0.0.1:7878/search/ad?id='+ window.location.search.substr(1);
+const url = 'https://surfyn.fr:7878/search/ad?id='+ window.location.search.substr(1);
+//const url = 'http://127.0.0.1:7878/search/ad?id='+ window.location.search.substr(1);
 
-var puppeter = document.getElementById("target");
+var puppeter = document.getElementById("prerendered-page");
 if(!puppeter)
 {
   fetch(url)
@@ -1056,7 +1056,7 @@ function generate_details_page(data)
   } //end of else if(data.length == 0 )
 
   var forPuppeteer = document.createElement("div");
-  forPuppeteer.setAttribute("id", "target");
+  forPuppeteer.setAttribute("id", "prerendered-page");
   forPuppeteer.style.visibility = 'hidden';
   main_content.appendChild(forPuppeteer);
 

@@ -1,6 +1,14 @@
 import puppeteer from 'puppeteer';
 
-var HOST = "http://localhost"
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+
+var config = require('./config.json');
+
+
+var HOST = "http://";
+HOST += config.host;
+
 var url_params = '?';
 
 async function ssr(path) {
@@ -18,9 +26,10 @@ async function ssr(path) {
 	  return postalCodeByCity[cityname.toUpperCase()];
 	}
 
+
+
 	function build_params(url){
 		var pathname = url.split("/").slice(1);
-
 		var s_city = pathname[3].split("-");
 
 		if(s_city[0].toUpperCase() in postalCodeByCity && getPostalCode(s_city[0]) == s_city[1])
@@ -28,7 +37,6 @@ async function ssr(path) {
 			var city_param = s_city[0][0].toUpperCase();
 			city_param += s_city[0].slice(1);
 			url_params += "search_city=" + city_param;
-			console.log('CITY OK');
 		}
 	  	else {
 	    	throw new Error('Unable to parse CITY');
@@ -36,13 +44,12 @@ async function ssr(path) {
 	  	if(pathname[1] == "achat")
 	  	{
 	    	url_params += "&search_type=1";
-	    	console.log('SEARCH TYPE OK');
+
 	  	}
 	  	else {
 		    if(pathname[1] == "location")
 	    	{
 	      		url_params += "&search_type=2";
-	      		console.log('SEARCH TYPE OK');
 	    	}
 	    	else {
 	      		throw new Error('Unable to parse SEARCH TYPE');
@@ -52,24 +59,21 @@ async function ssr(path) {
 	  	if(pathname[2] == "appartements")
 	  	{
 	    	url_params += "&prop_type=1";
-	    	console.log('PROP TYPE OK');
 	  	}else {
 	    	if(pathname[2] == "maisons")
 	    	{
 	      		url_params += "&prop_type=2";
-	      		console.log('PROP TYPE OK');
 	    	}
 			else if( pathname[2] == "appartements-studios")
 	    	{
 	      		url_params += "&prop_type=1";
 	      		url_params += "&rooms=1";
-	      		console.log('PROP TYPE OK');
 	    	}else
 	    	{
 	      		throw new Error('Unable to parse PROP TYPE');
 	    	}
 	  	}
-	  	console.log('ALL IS OK');
+
 		return true;
 	}
 
@@ -84,10 +88,21 @@ async function ssr(path) {
 
 	if(path.includes("liste-annonces"))
 	{
-		if (build_params(path))
+	  var path_elements = path.split('?');
+		url_params = '?';
+
+		if(path_elements.length > 1)
 		{
-			url = HOST + '/liste_annonces.html' + url_params;
+			 url_params+= path_elements[1];
 		}
+		else
+		{
+			//TODO in case of error, return an error page
+			build_params(path);
+		}
+
+		url = HOST + '/liste_annonces.html' + url_params;
+
 	}
 	else if(path.includes("annonce"))
 	{
@@ -99,12 +114,12 @@ async function ssr(path) {
 	}
 
 	console.log('url after building: ' + url);
-	
+
 	const start =  Date.now();
 
 	const browser = await puppeteer.launch();
 	const page = await browser.newPage();
-	
+
 	page
     .on('console', message =>
       console.log(`${message.type().substr(0, 3).toUpperCase()} ${message.text()}`))
@@ -118,9 +133,9 @@ async function ssr(path) {
     await page.setDefaultTimeout(0);
     try {
 		await page.goto(url);
-		console.log('Waiting for #target');
-		await page.waitForSelector('#target');
-		console.log('#target loaded');
+		console.log('Waiting for #prerendered-page');
+		await page.waitForSelector('#prerendered-page');
+		console.log('#prerendered-page loaded');
     } catch(err) {
     	console.error(err);
     	throw new Error('page.goto/waitForselector time out.');

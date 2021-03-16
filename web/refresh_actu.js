@@ -228,9 +228,9 @@ function generate_actu(items)
       addGoogleAds(main_content);
     }
   }
-  
+
   var forPuppeteer = createNode("div");
-  forPuppeteer.setAttribute("id", "target");
+  forPuppeteer.setAttribute("id", "prerendered-page");
   forPuppeteer.setAttribute("data-ad-json", JSON.stringify(data));
   forPuppeteer.style.visibility = 'hidden';
   main_content.appendChild(forPuppeteer);
@@ -269,7 +269,7 @@ fetch(lesEchosRssUrl)
   .then(data => extract_actu_data(data, "notaires", ""))
   .then(function() {
     AllActuData.sort(function(lhs, rhs) { return new Date(rhs.pubdate) - new Date(lhs.pubdate); } );
-    var puppeteer = document.getElementById('target');
+    var puppeteer = document.getElementById('prerendered-page');
     if(!puppeteer)
       generate_actu(AllActuData);
   }).catch(function(error){
