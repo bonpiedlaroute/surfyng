@@ -271,7 +271,8 @@ function generate_summary_page(data, empty=false)
     }
     else {
       meta_description += " de "
-    
+    }
+
     if (split_propertyType.indexOf("2") !== -1 || split_propertyType.indexOf("4") !== -1)
     {
       if(!first_proptype)
@@ -282,48 +283,51 @@ function generate_summary_page(data, empty=false)
       propertyType += "maisons";
       pagetitle += "Maison"
     }
-    meta_description+= propertyType;
-    var rooms_text = "";
-    var rooms = Params.get('rooms');
-    if(rooms) {
-      pagetitle += " ";
-      if( rooms == "1") {
-        pagetitle += "studio";
-        rooms_text = " studios";
-      }else {
-          pagetitle += rooms;
-          pagetitle += " pièces"
-          rooms_text = " " + rooms;
-          rooms_text += " pièces";
+      meta_description+= propertyType;
+      var rooms_text = "";
+      var rooms = Params.get('rooms');
+      if(rooms)
+      {
+        pagetitle += " ";
+        if( rooms == "1")
+        {
+          pagetitle += "studio";
+          rooms_text = " studios";
+        }else
+        {
+            pagetitle += rooms;
+            pagetitle += " pièces"
+            rooms_text = " " + rooms;
+            rooms_text += " pièces";
+        }
+        meta_description+= rooms_text;
+
       }
-      meta_description+= rooms_text;
+      pagetitle += " à ";
+      meta_description += " à ";
+      pagetitle += searchType == 1 ? "vendre ": "louer ";
+      meta_description += searchType == 1 ? "vendre ": "louer ";
+      meta_description += " à ";
 
-    }
-    pagetitle += " à ";
-    meta_description += " à ";
-    pagetitle += searchType == 1 ? "vendre ": "louer ";
-    meta_description += searchType == 1 ? "vendre ": "louer ";
-    meta_description += " à ";
+      var search_city = Params.get('search_city');
+      pagetitle += search_city;
+      meta_description += search_city;
+      var postalcode = getPostalCode(search_city);
+      pagetitle +=" ("+ postalcode + ")";
+      meta_description += " ("+ postalcode + ")";
+      pagetitle += " - Surfyn";
+      meta_description += " actualisées en temps réel, à partir de tous les sites de petites annonces immobilières et d'agences immobilières couvrant la ville de "
+      meta_description += search_city;
+      meta_description += "  - Surfyn";
 
-    var search_city = Params.get('search_city');
-    pagetitle += search_city;
-    meta_description += search_city;
-    var postalcode = getPostalCode(search_city);
-    pagetitle +=" ("+ postalcode + ")";
-    meta_description += " ("+ postalcode + ")";
-    pagetitle += " - Surfyn";
-    meta_description += " actualisées en temps réel, à partir de tous les sites de petites annonces immobilières et d'agences immobilières couvrant la ville de "
-    meta_description += search_city;
-    meta_description += "  - Surfyn";
+      document.title = pagetitle;
 
-    document.title = pagetitle;
+      document.getElementsByTagName('meta')["description"].content = meta_description;
 
-    document.getElementsByTagName('meta')["description"].content = meta_description;
+      var realestate_agencies_city = document.getElementById('realestate_agencies_city');
+      realestate_agencies_city.href = 'agence-immobiliere-'+ search_city.toLowerCase() +'-' + postalcode + '.html';
+      realestate_agencies_city.innerHTML = 'Agences immobilières à ' + search_city + " ("+ postalcode + ")";
 
-    var realestate_agencies_city = document.getElementById('realestate_agencies_city');
-    realestate_agencies_city.href = 'agence-immobiliere-'+ search_city.toLowerCase() +'-' + postalcode + '.html';
-    realestate_agencies_city.innerHTML = 'Agences immobilières à ' + search_city + " ("+ postalcode + ")";
-}
 
   var announces_found = document.getElementById("nb_announces_found");
   if( data.length == 0)
@@ -346,285 +350,285 @@ function generate_summary_page(data, empty=false)
         announces_found.innerHTML += " (" +postalcode+")";
     }
 
-        var main_content = document.getElementById("main-content");
-        var footer = document.getElementsByTagName('footer')[0];
-        for(var i = 0; i < data.length; i++)
+    var main_content = document.getElementById("main-content");
+    var footer = document.getElementsByTagName('footer')[0];
+    for(var i = 0; i < data.length; i++)
+    {
+
+        var ad_link = createNode("div");
+        ad_link.className = "announce_link";
+        url_path = "/annonce/";
+        url_path += searchType == 1 ? "achat/" : "location/";
+
+        var ad_div = createNode("div");
+        ad_div.className = "row mx-auto announce_frame";
+
+        var ad_container_div = createNode("div");
+        ad_container_div.className = "announce_container";
+
+
+        var ad_image_container_div = createNode("div");
+        ad_image_container_div.className = "announce_image_container";
+
+        var ad_image = createNode("img");
+        ad_image.src = data[i].hasOwnProperty('IMAGE')? data[i].IMAGE: "logo.svg";
+        /* filling alt attribute */
+        var alt = "";
+        alt += data[i].PROPERTY_TYPE + " a ";
+        alt += searchType == 1 ? "vendre " : "louer ";
+        alt += data[i].CITY ;
+        if(data[i].hasOwnProperty('ROOMS'))
         {
+         alt += " - " + data[i].ROOMS;
+         alt += " pièce(s)";
+        }
 
-            var ad_link = createNode("div");
-            ad_link.className = "announce_link";
-            url_path = "/annonce/";
-            url_path += searchType == 1 ? "achat/" : "location/";
+        if(data[i].hasOwnProperty('SURFACE'))
+        {
+         alt += " - " + data[i].SURFACE;
+         alt += " m2";
+        }
+        alt += " - Surfyn";
+        ad_image.alt = alt;
+        /*end filling alt attribute */
+        ad_image.className = "announce_image";
 
-            var ad_div = createNode("div");
-            ad_div.className = "row mx-auto announce_frame";
+        ad_image_container_div.appendChild(ad_image);
 
-            var ad_container_div = createNode("div");
-            ad_container_div.className = "announce_container";
+        var ad_summary_container_div = createNode("div");
+        ad_summary_container_div.className = "announce_summary_container";
 
+        var ad_summary_desc_div1 = createNode("div");
+        ad_summary_desc_div1.className = "announce_summary_desc";
 
-            var ad_image_container_div = createNode("div");
-            ad_image_container_div.className = "announce_image_container";
+        var ad_summary_details_h2 = createNode("h2");
+        ad_summary_details_h2.className = "announce_summary_details";
+        ad_summary_details_h2.innerHTML = data[i].PROPERTY_TYPE;
+        ad_summary_details_h2.innerHTML += "<br/>";
 
-            var ad_image = createNode("img");
-            ad_image.src = data[i].hasOwnProperty('IMAGE')? data[i].IMAGE: "logo.svg";
-            /* filling alt attribute */
-            var alt = "";
-            alt += data[i].PROPERTY_TYPE + " a ";
-            alt += searchType == 1 ? "vendre " : "louer ";
-            alt += data[i].CITY ;
-            if(data[i].hasOwnProperty('ROOMS'))
-            {
-             alt += " - " + data[i].ROOMS;
-             alt += " pièce(s)";
-            }
+        url_path += data[i].PROPERTY_TYPE.toLowerCase();
+        if(data[i].hasOwnProperty('SURFACE'))
+        {
+         ad_summary_details_h2.innerHTML += data[i].SURFACE;
+         ad_summary_details_h2.innerHTML += " m<sup>2";
+        }
 
-            if(data[i].hasOwnProperty('SURFACE'))
-            {
-             alt += " - " + data[i].SURFACE;
-             alt += " m2";
-            }
-            alt += " - Surfyn";
-            ad_image.alt = alt;
-            /*end filling alt attribute */
-            ad_image.className = "announce_image";
+        if(data[i].hasOwnProperty('ROOMS'))
+        {
+         ad_summary_details_h2.innerHTML += " - ";
+         ad_summary_details_h2.innerHTML += data[i].ROOMS;
+         ad_summary_details_h2.innerHTML += " pièce(s)";
 
-            ad_image_container_div.appendChild(ad_image);
+         if(data[i].ROOMS == "1")
+         url_path += "-studios/";
+         else {
+           url_path += "-" + data[i].ROOMS + "-pieces/";
+         }
+        }
 
-            var ad_summary_container_div = createNode("div");
-            ad_summary_container_div.className = "announce_summary_container";
+        ad_summary_desc_div1.appendChild(ad_summary_details_h2);
 
-            var ad_summary_desc_div1 = createNode("div");
-            ad_summary_desc_div1.className = "announce_summary_desc";
+        var ad_summary_history = createNode("a");
+        ad_summary_history.className = "announce_summary_history";
+        ad_summary_history.innerHTML = "il y'a ";
 
-            var ad_summary_details_h2 = createNode("h2");
-            ad_summary_details_h2.className = "announce_summary_details";
-            ad_summary_details_h2.innerHTML = data[i].PROPERTY_TYPE;
-            ad_summary_details_h2.innerHTML += "<br/>";
+        var firstDate;
+        if(data[i].hasOwnProperty('FIRST_TIMESTAMP'))
+        {
+          firstDate = new Date(data[i].FIRST_TIMESTAMP);
+        }
+        else {
+          firstDate = new Date(data[i].TIMESTAMP);
+        }
+        var currentDate = new Date();
 
-            url_path += data[i].PROPERTY_TYPE.toLowerCase();
-            if(data[i].hasOwnProperty('SURFACE'))
-            {
-             ad_summary_details_h2.innerHTML += data[i].SURFACE;
-             ad_summary_details_h2.innerHTML += " m<sup>2";
-            }
+        var elapsedTime = (currentDate - firstDate)/(1000*60*60);
 
-            if(data[i].hasOwnProperty('ROOMS'))
-            {
-             ad_summary_details_h2.innerHTML += " - ";
-             ad_summary_details_h2.innerHTML += data[i].ROOMS;
-             ad_summary_details_h2.innerHTML += " pièce(s)";
-
-             if(data[i].ROOMS == "1")
-             url_path += "-studios/";
-             else {
-               url_path += "-" + data[i].ROOMS + "-pieces/";
-             }
-            }
-
-            ad_summary_desc_div1.appendChild(ad_summary_details_h2);
-
-            var ad_summary_history = createNode("a");
-            ad_summary_history.className = "announce_summary_history";
-            ad_summary_history.innerHTML = "il y'a ";
-
-            var firstDate;
-            if(data[i].hasOwnProperty('FIRST_TIMESTAMP'))
-            {
-              firstDate = new Date(data[i].FIRST_TIMESTAMP);
-            }
-            else {
-              firstDate = new Date(data[i].TIMESTAMP);
-            }
-            var currentDate = new Date();
-
-            var elapsedTime = (currentDate - firstDate)/(1000*60*60);
-
-            if( elapsedTime < 24 )
-            {
-              ad_summary_history.innerHTML+= String(Math.floor(elapsedTime));
-              ad_summary_history.innerHTML+="h";
-            }
-            else {
-                     var elapsedTimeInDays = Math.floor(elapsedTime / 24);
-                     if(elapsedTimeInDays < 31)
-                     {
-                       ad_summary_history.innerHTML+= String(elapsedTimeInDays);
-                       if(elapsedTimeInDays == 1)
-                        ad_summary_history.innerHTML+=" jour";
-                       else
-                        ad_summary_history.innerHTML+=" jours";
-                     }
-                     else
-                     {
-                       var elapsedTimeInMonths = Math.floor(elapsedTime / (24*30) );
-                       ad_summary_history.innerHTML+= String(elapsedTimeInMonths);
-                       ad_summary_history.innerHTML+=" mois";
-                     }
-
+        if( elapsedTime < 24 )
+        {
+          ad_summary_history.innerHTML+= String(Math.floor(elapsedTime));
+          ad_summary_history.innerHTML+="h";
+        }
+        else {
+                 var elapsedTimeInDays = Math.floor(elapsedTime / 24);
+                 if(elapsedTimeInDays < 31)
+                 {
+                   ad_summary_history.innerHTML+= String(elapsedTimeInDays);
+                   if(elapsedTimeInDays == 1)
+                    ad_summary_history.innerHTML+=" jour";
+                   else
+                    ad_summary_history.innerHTML+=" jours";
+                 }
+                 else
+                 {
+                   var elapsedTimeInMonths = Math.floor(elapsedTime / (24*30) );
+                   ad_summary_history.innerHTML+= String(elapsedTimeInMonths);
+                   ad_summary_history.innerHTML+=" mois";
                  }
 
-            ad_summary_desc_div1.appendChild(ad_summary_history);
+             }
 
-            ad_summary_container_div.appendChild(ad_summary_desc_div1);
+        ad_summary_desc_div1.appendChild(ad_summary_history);
 
-            var ad_summary_desc_div2 = createNode("div");
-            ad_summary_desc_div2.className = "announce_summary_desc";
+        ad_summary_container_div.appendChild(ad_summary_desc_div1);
 
-            var ad_summary_city_container_div = createNode("div");
-            ad_summary_city_container_div.className ="announce_summary_city_container";
+        var ad_summary_desc_div2 = createNode("div");
+        ad_summary_desc_div2.className = "announce_summary_desc";
 
-            var ad_icon = createNode("i");
-            ad_icon.className = "fas fa-map-marker-alt announce_summary_icon";
-            ad_summary_city_container_div.appendChild(ad_icon);
+        var ad_summary_city_container_div = createNode("div");
+        ad_summary_city_container_div.className ="announce_summary_city_container";
 
-            var ad_summary_city_p = createNode("p");
-            ad_summary_city_p.className = "announce_summary_city";
-            ad_summary_city_p.innerHTML = "<strong>" + data[i].CITY[0].toUpperCase() + data[i].CITY.slice(1) + "</strong>";
-            ad_summary_city_container_div.appendChild(ad_summary_city_p);
-            url_path += data[i].CITY;
-            url_path += "-" + getPostalCode(data[i].CITY);
-            var ad_price_p = createNode("p");
-            ad_price_p.style.float = "right";
-            ad_price_p.style.color = "#4c94bc";
-            ad_price_p.style.margin = "0";
-            ad_price_p.innerHTML = "<strong>" + formatPrice(String(data[i].PRICE)) + " €" + "</strong>";
-            ad_summary_city_container_div.appendChild(ad_price_p);
-            ad_summary_desc_div2.appendChild(ad_summary_city_container_div);
+        var ad_icon = createNode("i");
+        ad_icon.className = "fas fa-map-marker-alt announce_summary_icon";
+        ad_summary_city_container_div.appendChild(ad_icon);
 
-            var ad_summary_postalcode_container_div = createNode("div");
-            ad_summary_postalcode_container_div.className ="announce_summary_city_container";
+        var ad_summary_city_p = createNode("p");
+        ad_summary_city_p.className = "announce_summary_city";
+        ad_summary_city_p.innerHTML = "<strong>" + data[i].CITY[0].toUpperCase() + data[i].CITY.slice(1) + "</strong>";
+        ad_summary_city_container_div.appendChild(ad_summary_city_p);
+        url_path += data[i].CITY;
+        url_path += "-" + getPostalCode(data[i].CITY);
+        var ad_price_p = createNode("p");
+        ad_price_p.style.float = "right";
+        ad_price_p.style.color = "#4c94bc";
+        ad_price_p.style.margin = "0";
+        ad_price_p.innerHTML = "<strong>" + formatPrice(String(data[i].PRICE)) + " €" + "</strong>";
+        ad_summary_city_container_div.appendChild(ad_price_p);
+        ad_summary_desc_div2.appendChild(ad_summary_city_container_div);
 
-            var ad_summary_postalcode_p = createNode("p");
-            ad_summary_postalcode_p.style.float = "left";
-            ad_summary_postalcode_p.style.color = "#4c94bc";
-            ad_summary_postalcode_p.style.margin = "0 0 0 30px";
-            ad_summary_postalcode_p.style.fontSize = "14px";
-            ad_summary_postalcode_p.innerHTML = "(" + getPostalCode(data[i].CITY) + ")";
-            ad_summary_postalcode_container_div.appendChild(ad_summary_postalcode_p);
+        var ad_summary_postalcode_container_div = createNode("div");
+        ad_summary_postalcode_container_div.className ="announce_summary_city_container";
+
+        var ad_summary_postalcode_p = createNode("p");
+        ad_summary_postalcode_p.style.float = "left";
+        ad_summary_postalcode_p.style.color = "#4c94bc";
+        ad_summary_postalcode_p.style.margin = "0 0 0 30px";
+        ad_summary_postalcode_p.style.fontSize = "14px";
+        ad_summary_postalcode_p.innerHTML = "(" + getPostalCode(data[i].CITY) + ")";
+        ad_summary_postalcode_container_div.appendChild(ad_summary_postalcode_p);
 
 
-            var ad_price_bym2_p = createNode("p");
-            ad_price_bym2_p.style.float = "right";
-            ad_price_bym2_p.style.color = "#4c94bc";
-            ad_price_bym2_p.style.margin = "0";
-            ad_price_bym2_p.style.fontSize = "14px";
-            var price_bym2 = Math.floor(data[i].PRICE / data[i].SURFACE);
-            ad_price_bym2_p.innerHTML =  formatPrice(String(price_bym2)) + " €/m<sup>2</sup>";
-            ad_summary_postalcode_container_div.appendChild(ad_price_bym2_p);
+        var ad_price_bym2_p = createNode("p");
+        ad_price_bym2_p.style.float = "right";
+        ad_price_bym2_p.style.color = "#4c94bc";
+        ad_price_bym2_p.style.margin = "0";
+        ad_price_bym2_p.style.fontSize = "14px";
+        var price_bym2 = Math.floor(data[i].PRICE / data[i].SURFACE);
+        ad_price_bym2_p.innerHTML =  formatPrice(String(price_bym2)) + " €/m<sup>2</sup>";
+        ad_summary_postalcode_container_div.appendChild(ad_price_bym2_p);
 
-            ad_summary_desc_div2.appendChild(ad_summary_postalcode_container_div);
+        ad_summary_desc_div2.appendChild(ad_summary_postalcode_container_div);
 
-            ad_summary_container_div.appendChild(ad_summary_desc_div2);
+        ad_summary_container_div.appendChild(ad_summary_desc_div2);
 
-            var ad_source_frame_div = createNode("div");
-            ad_source_frame_div.className = "ad_summary_src";
+        var ad_source_frame_div = createNode("div");
+        ad_source_frame_div.className = "ad_summary_src";
 
-            var ad_source_div = createNode("div");
-            ad_source_div.className = "ad_summary_src_text_cont";
+        var ad_source_div = createNode("div");
+        ad_source_div.className = "ad_summary_src_text_cont";
 
-            var ad_sum_src_text = createNode("p");
-            ad_sum_src_text.className = "ad_summary_src_text";
-            ad_sum_src_text.innerHTML = "Ce bien apparaît sur:";
-            ad_source_div.appendChild(ad_sum_src_text);
+        var ad_sum_src_text = createNode("p");
+        ad_sum_src_text.className = "ad_summary_src_text";
+        ad_sum_src_text.innerHTML = "Ce bien apparaît sur:";
+        ad_source_div.appendChild(ad_sum_src_text);
 
-            ad_source_frame_div.appendChild(ad_source_div);
+        ad_source_frame_div.appendChild(ad_source_div);
 
-            var added_src =
-            {
-            seloger:false,
-            logicimmo:false,
-            leboncoin: false,
-            bienici: false,
-            laforet:false,
-            orpi:false,
-            stephaneplazaimo:false,
-            foncia:false,
-            century21:false,
-            guyhoquet:false,
-            arthurimmo:false,
-            eraimmo:false,
-            pap:false,
-            iadfrance:false,
-            paruvendu:false,
-            avendrealouer:false,
-            nestenn:false,
-            agenceprincipale:false,
-            lefigaroimmobilier:false,
-            etreproprio:false,
-            efficity:false,
-            fnaim:false
-            }
-            var ad_sum_src_provider_cont = createNode("div");
-            ad_sum_src_provider_cont.className = "ad_summary_src_provider_cont";
-            var count_added_src = 0;
-            for(var j = 0; j < data[i].SOURCES.length; j++)
-            {
-              if(added_src[data[i].SOURCES[j]] == false )
-              {
-                if(!ismobile || count_added_src < 3)
-                {
-                  var ad_sum_src_provider = createNode("div");
-                  ad_sum_src_provider.className = "ad_summary_src_provider";
-
-                  if( ProcessorBySource.has(data[i].SOURCES[j]))
-                  {
-                    var func = ProcessorBySource.get(data[i].SOURCES[j])
-                    func(ad_sum_src_provider);
-                  }
-
-                  ad_sum_src_provider_cont.appendChild(ad_sum_src_provider);
-                  added_src[data[i].SOURCES[j]] = true;
-                }
-
-                count_added_src++;
-              }
-            }
-            if( ismobile && count_added_src > 3)
+        var added_src =
+        {
+        seloger:false,
+        logicimmo:false,
+        leboncoin: false,
+        bienici: false,
+        laforet:false,
+        orpi:false,
+        stephaneplazaimo:false,
+        foncia:false,
+        century21:false,
+        guyhoquet:false,
+        arthurimmo:false,
+        eraimmo:false,
+        pap:false,
+        iadfrance:false,
+        paruvendu:false,
+        avendrealouer:false,
+        nestenn:false,
+        agenceprincipale:false,
+        lefigaroimmobilier:false,
+        etreproprio:false,
+        efficity:false,
+        fnaim:false
+        }
+        var ad_sum_src_provider_cont = createNode("div");
+        ad_sum_src_provider_cont.className = "ad_summary_src_provider_cont";
+        var count_added_src = 0;
+        for(var j = 0; j < data[i].SOURCES.length; j++)
+        {
+          if(added_src[data[i].SOURCES[j]] == false )
+          {
+            if(!ismobile || count_added_src < 3)
             {
               var ad_sum_src_provider = createNode("div");
               ad_sum_src_provider.className = "ad_summary_src_provider";
 
-              ad_sum_src_provider.style.border = "2px solid #4c94bc";
-              ad_sum_src_provider.style.width = "15%";
-              var ad_sum_src_provider_text = createNode("div");
-              ad_sum_src_provider_text.className = "ad_summary_src_provider_text";
-              ad_sum_src_provider_text.style.color ="#4c94bc";
-              ad_sum_src_provider_text.innerHTML ="...";
-              ad_sum_src_provider.appendChild(ad_sum_src_provider_text);
+              if( ProcessorBySource.has(data[i].SOURCES[j]))
+              {
+                var func = ProcessorBySource.get(data[i].SOURCES[j])
+                func(ad_sum_src_provider);
+              }
 
               ad_sum_src_provider_cont.appendChild(ad_sum_src_provider);
+              added_src[data[i].SOURCES[j]] = true;
             }
 
-            ad_source_frame_div.appendChild(ad_sum_src_provider_cont);
-
-            ad_summary_container_div.appendChild(ad_source_frame_div);
-
-            ad_container_div.appendChild(ad_image_container_div);
-            ad_container_div.appendChild(ad_summary_container_div);
-
-            ad_div.appendChild(ad_container_div);
-
-            ad_link.setAttribute("onclick", "document.location='" + url_path + "?" + data[i].ID + "'") ;
-            ad_link.style.cursor = "pointer";
-
-            ad_link.appendChild(ad_div);
-
-            main_content.appendChild(ad_link);
-
-            var line_div = createNode("div");
-            line_div.className = "sf_line_results row mx-auto";
-            main_content.appendChild(line_div);
-
-
-            /* adding google adsense */
-            if( (i+1)%5 == 0)
-            {
-              addGoogleAds(main_content);
-            }
-
-
+            count_added_src++;
+          }
         }
+        if( ismobile && count_added_src > 3)
+        {
+          var ad_sum_src_provider = createNode("div");
+          ad_sum_src_provider.className = "ad_summary_src_provider";
+
+          ad_sum_src_provider.style.border = "2px solid #4c94bc";
+          ad_sum_src_provider.style.width = "15%";
+          var ad_sum_src_provider_text = createNode("div");
+          ad_sum_src_provider_text.className = "ad_summary_src_provider_text";
+          ad_sum_src_provider_text.style.color ="#4c94bc";
+          ad_sum_src_provider_text.innerHTML ="...";
+          ad_sum_src_provider.appendChild(ad_sum_src_provider_text);
+
+          ad_sum_src_provider_cont.appendChild(ad_sum_src_provider);
+        }
+
+        ad_source_frame_div.appendChild(ad_sum_src_provider_cont);
+
+        ad_summary_container_div.appendChild(ad_source_frame_div);
+
+        ad_container_div.appendChild(ad_image_container_div);
+        ad_container_div.appendChild(ad_summary_container_div);
+
+        ad_div.appendChild(ad_container_div);
+
+        ad_link.setAttribute("onclick", "document.location='" + url_path + "?" + data[i].ID + "'") ;
+        ad_link.style.cursor = "pointer";
+
+        ad_link.appendChild(ad_div);
+
+        main_content.appendChild(ad_link);
+
+        var line_div = createNode("div");
+        line_div.className = "sf_line_results row mx-auto";
+        main_content.appendChild(line_div);
+
+
+        /* adding google adsense */
+        if( (i+1)%5 == 0)
+        {
+          addGoogleAds(main_content);
+        }
+
+
+    }
 
   }
 
@@ -645,11 +649,12 @@ function generate_summary_page(data, empty=false)
   var youtube_icon = document.getElementById("youtube-icon");
   youtube_icon.style.color = "white";
 
+ }
 }
 
 function gotosearchcriteria()
 {
-  var url_parameters = ''
+  var url_parameters = '';
   if(window.location.search == "")
     url_parameters = url_params;
   else
