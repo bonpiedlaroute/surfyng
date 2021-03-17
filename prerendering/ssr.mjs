@@ -147,7 +147,14 @@ async function ssr(path) {
 	const ttRenderMs = Date.now() - start;
 	console.log(`Headless rendered page in: ${ttRenderMs}ms`);
 
-
+   var kill  = require('tree-kill');
+   process.on('exit', (code) => {
+   kill(child.pid, 'SIGTERM', function(err){
+       kill(child.pid, 'SIGKILL', function(err){
+         process.kill(-child.pid);
+         });
+      });
+   });
 	return {html, ttRenderMs};
 }
 
