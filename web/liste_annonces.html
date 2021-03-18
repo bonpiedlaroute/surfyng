@@ -27,10 +27,11 @@
       gtag('config', 'UA-140583317-1');
     </script>
 
+
   </head>
 
     <body style="background-color:rgb(191, 229, 245);">
-      <header>
+      <header id="header-content">
           <div style="height:60px;background-color:#222545;" class="row mx-auto">
             <div style="display:flex;align-items:center;justify-content: space-evenly;flex-direction:row; height:60px;width:100%">
               <div style="height:60px;" class="header_title_left_box">
@@ -481,6 +482,8 @@
            });
            console.log("end of initialization");
            firebase.auth().onAuthStateChanged(checkUserStatus);
+
+
            console.log("end of onload");
 
 

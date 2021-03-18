@@ -1055,10 +1055,11 @@ function generate_details_page(data)
 
   } //end of else if(data.length == 0 )
 
+  var header_content = document.getElementById("header-content");
   var forPuppeteer = document.createElement("div");
   forPuppeteer.setAttribute("id", "prerendered-page");
   forPuppeteer.style.visibility = 'hidden';
-  main_content.appendChild(forPuppeteer);
+  header_content.appendChild(forPuppeteer);
 
   var facebook_icon = document.getElementById("facebook-icon");
   facebook_icon.style.color = "white";

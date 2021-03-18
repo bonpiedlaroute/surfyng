@@ -30,7 +30,7 @@
   </head>
 
     <body style="background-color:rgb(191, 229, 245);" >
-          <header>
+          <header id="header-content">
           <div style="height:60px;background-color:#222545;" class="row mx-auto">
             <div style="display:flex;align-items:center;justify-content: space-evenly;flex-direction:row; height:60px;width:100%">
               <div style="height:60px;"  class="header_title_left_box">
@@ -90,7 +90,11 @@
              data-ad-client="ca-pub-3950735685733517"
              data-ad-slot="2808340986"></ins>
             <script>
-             (adsbygoogle = window.adsbygoogle || []).push({});
+             var isPageAlreadyRendered = document.getElementById("header-content");
+             if(isPageAlreadyRendered)
+             {
+               (adsbygoogle = window.adsbygoogle || []).push({});
+             }
             </script>
           </div>
         </div>

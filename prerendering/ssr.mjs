@@ -11,7 +11,7 @@ HOST += config.host;
 
 var url_params = '?';
 
-async function ssr(path) {
+async function ssr(path, browserWSEndpoint) {
 
 	// Formatting url for request
 	var postalCodeByCity = [];
@@ -117,7 +117,8 @@ async function ssr(path) {
 
 	const start =  Date.now();
 
-	const browser = await puppeteer.launch();
+	//const browser = await puppeteer.launch();
+   const browser = await puppeteer.connect({browserWSEndpoint});
 	const page = await browser.newPage();
 
 	page
@@ -142,7 +143,8 @@ async function ssr(path) {
     }
 
 	const html = await page.content();
-	await browser.close();
+	//await browser.close();
+   await page.close();
 
 	const ttRenderMs = Date.now() - start;
 	console.log(`Headless rendered page in: ${ttRenderMs}ms`);

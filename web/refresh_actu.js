@@ -27,7 +27,7 @@ function addGoogleAds(main_content)
   actu_immo_container.append(ins);
 
   var script = createNode("script");
-  script.innerHTML = "(adsbygoogle = window.adsbygoogle || []).push({})";
+  script.innerHTML = "var isPageAlreadyRendered = document.getElementById(\"prerendered-page\"); if(isPageAlreadyRendered) {(adsbygoogle = window.adsbygoogle || []).push({});}";
   actu_immo_container.append(script);
 
   container.append(actu_immo_container);
@@ -108,7 +108,7 @@ function extract_actu_data(data, actu_source, image_url)
       }
     }
     else {
-
+2,9
       actuitem.pubdate = lastdate;
     }
 
@@ -229,11 +229,12 @@ function generate_actu(items)
     }
   }
 
+  var header_content = document.getElementById("header-content");
   var forPuppeteer = createNode("div");
   forPuppeteer.setAttribute("id", "prerendered-page");
   forPuppeteer.setAttribute("data-ad-json", JSON.stringify(data));
   forPuppeteer.style.visibility = 'hidden';
-  main_content.appendChild(forPuppeteer);
+  header_content.appendChild(forPuppeteer);
 }
 
 const lesEchosRssUrl = "data/actus/lesechos_immobilier.xml";

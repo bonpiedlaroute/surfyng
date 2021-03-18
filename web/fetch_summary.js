@@ -202,7 +202,7 @@ function buildpage()
 
 function addGoogleAds(main_content)
 {
-  var ad_link = createNode("a");
+  var ad_link = createNode("div");
   ad_link.className = "announce_link";
 
   var ins = createNode("ins");
@@ -215,7 +215,8 @@ function addGoogleAds(main_content)
 
   ad_link.append(ins);
   var script = createNode("script");
-  script.innerHTML = "(adsbygoogle = window.adsbygoogle || []).push({})";
+  script.type ="text/javascript"
+  script.innerHTML = "var isPageAlreadyRendered = document.getElementById(\"prerendered-page\"); if(isPageAlreadyRendered) {(adsbygoogle = window.adsbygoogle || []).push({});}";
 
   ad_link.append(script);
 
@@ -632,11 +633,12 @@ function generate_summary_page(data, empty=false)
 
   }
 
+  var header_content = document.getElementById("header-content");
   var forPuppeteer = createNode("div");
   forPuppeteer.setAttribute("id", "prerendered-page");
   forPuppeteer.setAttribute("data-ad-json", JSON.stringify(data));
   forPuppeteer.style.visibility = 'hidden';
-  main_content.appendChild(forPuppeteer);
+  header_content.appendChild(forPuppeteer);
 
   var facebook_icon = document.getElementById("facebook-icon");
   facebook_icon.style.color = "white";

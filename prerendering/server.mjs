@@ -1,14 +1,25 @@
 import express from 'express';
+import puppeteer from 'puppeteer'
 import ssr from './ssr.mjs';
 
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 
+let browserWSEndpoint = null;
 const app = express();
 
 app.get('/*', async (request, response, next) => {
 
-	const {html, ttRenderMs} =  await ssr(request.originalUrl);
+   if (!browserWSEndpoint) 
+   {
+     const browser = await puppeteer.launch({
+    headless: true,
+    args: ['--single-process', '--no-zygote', '--no-sandbox']
+  });
+     browserWSEndpoint = await browser.wsEndpoint();
+   }
+
+	const {html, ttRenderMs} =  await ssr(request.originalUrl, browserWSEndpoint);
 
 	console.log('Successful ssr, time to render: ' + ttRenderMs);
 
