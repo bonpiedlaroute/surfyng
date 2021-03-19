@@ -755,6 +755,48 @@
     </div>
   </div>
   <!-- End Modal password reset content-->
+
+  <!-- Modal RGPD -->
+  <div id="rgpd" class="modal fade" role="dialog">
+    <!-- <script src="login.js"> </script> -->
+    <div class="modal-dialog modal-lg" style="height:30%;">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="sf_modal_frame">
+            <div style="width:20%; margin-bottom: 20px">
+              <img src="logo.png" class="rounded-circle img-fluid" alt="Surfyn" />
+            </div>
+            <div class="d-flex flex-column">
+              <p style="text-align: justify;">
+                Votre expérience utilisateur étant au coeur de nos priorités chez Surfyn, nous ne cessons de mettre tout en oeuvre pour l'améliorer, et ainsi être plus proche de vous. C'est pourquoi nous utilisons des cookies dans notre intérêt à tous afin d'améliorer votre experience utilisateur.
+                <strong>Surfyn ne peut fonctionner sans l'utilisation de ces cookies</strong>. Surfyn stockera des cookies sur votre terminal pour les services suivants:
+                <ul>
+                  <li>
+                    <strong>Google Analytics</strong>: Pour la mesure d'audience sur la plateforme Surfyn, afin d'optimiser les fonctionnalités actuelles et futures.
+                  </li>
+                  <li>
+                    <strong>Cookies internes</strong>: Pour le bon fonctionnement de la plateforme Surfyn.
+                  </li>
+                </ul>
+              </p>
+              <p>
+                En cliquant sur <strong>Accepter</strong> vous autorisez Surfyn à stocker des cookies sur votre terminal.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer justify-content-center">
+          <div class="sf_modal_box_width sf_modal_connect_button" data-dismiss="modal" onclick="accept_rgpd()">
+            <a class="sf_modal_connect_button_text">Accepter</a>
+          </div>
+        </div>
+      </div>
+      <!-- End Modal content-->
+    </div>
+  </div>
+<!-- End Modal RGPD -->
 </footer>
 
     <!-- Bootstrap core JavaScript
@@ -769,7 +811,43 @@
     <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-analytics.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-auth.js"></script>
+    <script type="text/javascript">
+    function setCookie(cname, cvalue, exdays) {
+      var d = new Date();
+      d.setTime(d.getTime() + (exdays*24*60*60*1000));
+      var expires = "expires="+ d.toUTCString();
+      document.cookie = cname + "=" + cvalue + ";" + "samesite=strict;" + expires + ";path=/";
+      console.log(cname + "=" + cvalue + ";" + "samesite=strict;" + expires + ";path=/");
+    }
 
+    function checkCookie(name) {
+        var cookie, c;
+        if (document.cookie.split(';').some(function(item) {
+            return item.trim().indexOf(name+'=') == 0
+        })) {
+            return true;
+        }
+        else
+        {
+          return false;
+        }
+    }
+
+    $(window).on('load', function() {
+        var is_rgpd = checkCookie("rgpd");
+          if(!is_rgpd)
+          {
+              $('#rgpd').modal('show');
+          }
+    })
+    </script>
+
+    <script type="text/javascript">
+      function accept_rgpd(){
+        setCookie("rgpd", "true", 365);
+      }
+    </script>
+  
     <script>
        window.onload = function() {
 
