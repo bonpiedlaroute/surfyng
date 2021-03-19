@@ -329,7 +329,7 @@ function generate_summary_page(data, empty=false)
       realestate_agencies_city.href = 'agence-immobiliere-'+ search_city.toLowerCase() +'-' + postalcode + '.html';
       realestate_agencies_city.innerHTML = 'Agences immobilières à ' + search_city + " ("+ postalcode + ")";
 
-
+  }
   var announces_found = document.getElementById("nb_announces_found");
   if( data.length == 0)
   {
@@ -651,7 +651,7 @@ function generate_summary_page(data, empty=false)
   var youtube_icon = document.getElementById("youtube-icon");
   youtube_icon.style.color = "white";
 
- }
+
 }
 
 function gotosearchcriteria()
