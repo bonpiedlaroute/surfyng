@@ -55,7 +55,7 @@ window.onclick = function(event) {
   }
 
 }
-var target = document.getElementById("target");
+var target = document.getElementById("prerendered-page");
 var data = target ? JSON.parse(target.getAttribute("data-ad-json")) : "";
 
 function sortbyprice()
@@ -98,4 +98,3 @@ function sortbypricebym2()
   });
   generate_summary_page(data, empty=true)
 }
-
