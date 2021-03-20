@@ -3,3 +3,6 @@
 *boost/
 .vscode/
 images_*/
+node_modules/
+*actus/
+

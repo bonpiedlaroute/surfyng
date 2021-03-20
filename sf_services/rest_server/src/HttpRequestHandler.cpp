@@ -18,10 +18,12 @@ namespace rest_server
 {
 
 HttpRequestHandler::HttpRequestHandler(utility::string_t url, http_listener_config conf, const std::string& dbaccess_host, int dbaccess_port,
-                                       const std::string& estimator_host, int estimator_port):m_listener(url, conf),
+                                       const std::string& estimator_host, int estimator_port, const std::string& emailalert_host, int emailalert_port)
+                                       :m_listener(url, conf),
                                              m_dbaccess(dbaccess_host, dbaccess_port),
                                              m_estimatoraccess(estimator_host, estimator_port),
-                                             m_geoLocalService(std::make_shared<surfyn::utils::GeoLocal>("../../../bot/data/correspondance_codeinsee_codepostal_iledefrance.csv"))
+                                             m_geoLocalService(std::make_shared<surfyn::utils::GeoLocal>("../../../bot/data/correspondance_codeinsee_codepostal_iledefrance.csv")),
+                                             m_emailalertaccess(emailalert_host, emailalert_port)
 {
     m_listener.support(methods::GET, [this](http_request message) { handle_get(message);});
     m_listener.support(methods::PUT, [this](http_request message) { handle_put(message);});
@@ -103,17 +105,26 @@ void HttpRequestHandler::handle_get(http_request message)
                 }
                 else
                 {
-                    std::string error = "Unknown requested service: ";
-                    for( auto valuepath : paths)
+                    if(paths.size() == 1  && paths[0] == "my_realestate_search" )
                     {
-                        error += valuepath;
-                        error +="/";
-                    }
-                    Log::getInstance()->error(error);
-                    message.reply(status_codes::NotFound, "resource not found!");
-                    return;
+                        auto query = http::uri::split_query(http::uri::decode(message.relative_uri().query()));
+                        m_emailalertaccess.my_realestate_search(sstream, query);
+                        
+                    }else
+                    {
+                        std::string error = "Unknown requested service: ";
+                        for( auto valuepath : paths)
+                        {
+                            error += valuepath;
+                            error +="/";
+                        }
+                        Log::getInstance()->error(error);
+                        message.reply(status_codes::NotFound, "resource not found!");
+                        return;
 
+                    }
                 }
+                
            }
            
        }
@@ -183,8 +194,35 @@ void HttpRequestHandler::handle_post(http_request message)
     }
     else 
     {
-        message.reply(status_codes::NotFound,"resource not found!");
-        return;
+        if(paths.size() == 1  && paths[0] == "registeremailalert" )
+        {
+            auto query = http::uri::split_query(http::uri::decode(message.relative_uri().query()));
+            auto result =  m_emailalertaccess.registerEmailAlert(query);
+            if(!result.success)
+            {
+                message.reply(status_codes::BadRequest);
+                return;
+            }
+        }
+        else 
+        {
+            if(paths.size() == 1  && paths[0] == "change_alert_status" )
+            {
+                auto query = http::uri::split_query(http::uri::decode(message.relative_uri().query()));
+                auto result =  m_emailalertaccess.changeAlertStatus(query);
+                if(!result.success)
+                {
+                    message.reply(status_codes::BadRequest);
+                    return;
+                }
+            }
+            else {
+
+                    message.reply(status_codes::BadRequest);
+                    return;
+                }
+        }
+        
     }
 
     http_response response (status_codes::OK);

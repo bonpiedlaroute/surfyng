@@ -5,9 +5,37 @@ function createNode(element) {
 function append(parent, el) {
   return parent.append(el);
 }
+function addGoogleAds(main_content)
+{
+  var container = createNode("div");
+  container.style.display = "block";
+  container.style.width ="100%";
+  container.style.marginTop = "10px";
 
+  var actu_immo_container = createNode("div");
+  actu_immo_container.className = "sf_actu_immo_gads_container";
+
+
+  var ins = createNode("ins");
+  ins.className = "adsbygoogle"
+  ins.style.display ="block";
+  ins.setAttribute('data-ad-format', "fluid");
+  ins.setAttribute('data-ad-layout-key', "-fb+5w+4e-db+86");
+  ins.setAttribute('data-ad-client', "ca-pub-3950735685733517");
+  ins.setAttribute('data-ad-slot', "2808340986");
+
+  actu_immo_container.append(ins);
+
+  var script = createNode("script");
+  script.innerHTML = "var isPageAlreadyRendered = document.getElementById(\"prerendered-page\"); if(isPageAlreadyRendered) {(adsbygoogle = window.adsbygoogle || []).push({});}";
+  actu_immo_container.append(script);
+
+  container.append(actu_immo_container);
+  main_content.append(container);
+}
 const maxItemsPerSource = 10;
-
+var logo_url = {"lesechos":"data/lesechos.svg", "notaires":"https://www.notaires.fr/sites/all/themes/custom/notaires_v2/assets/img/Notaires_de_France.png",
+                "bfmimmo":"https://www.lavieimmo.com/refonte/img/logos/LVI.svg"};
 var AllActuData = [];
 
 function extract_actu_data(data, actu_source, image_url)
@@ -22,7 +50,14 @@ function extract_actu_data(data, actu_source, image_url)
 
     if(actu_source == "lesechos" || actu_source == "bfmimmo" || actu_source == "notaires")
     {
-      actuitem.img = items[i].querySelector("enclosure").getAttribute('url');
+      var img_enclosure = items[i].querySelector("enclosure");
+      if(img_enclosure)
+      {
+        actuitem.img = img_enclosure.getAttribute('url');
+      }
+      else {
+        actuitem.img = logo_url[actu_source];
+      }
     }
     else if( actu_source == "capital")
     {
@@ -73,7 +108,7 @@ function extract_actu_data(data, actu_source, image_url)
       }
     }
     else {
-
+2,9
       actuitem.pubdate = lastdate;
     }
 
@@ -187,7 +222,19 @@ function generate_actu(items)
     actu_link.append(actu_immo_container);
 
     main_content.append(actu_link);
+
+    if( (i+1)%5 == 0)
+    {
+      addGoogleAds(main_content);
+    }
   }
+
+  var header_content = document.getElementById("header-content");
+  var forPuppeteer = createNode("div");
+  forPuppeteer.setAttribute("id", "prerendered-page");
+  forPuppeteer.setAttribute("data-ad-json", JSON.stringify(data));
+  forPuppeteer.style.visibility = 'hidden';
+  header_content.appendChild(forPuppeteer);
 }
 
 const lesEchosRssUrl = "data/actus/lesechos_immobilier.xml";
@@ -223,7 +270,9 @@ fetch(lesEchosRssUrl)
   .then(data => extract_actu_data(data, "notaires", ""))
   .then(function() {
     AllActuData.sort(function(lhs, rhs) { return new Date(rhs.pubdate) - new Date(lhs.pubdate); } );
-    generate_actu(AllActuData);
+    var puppeteer = document.getElementById('prerendered-page');
+    if(!puppeteer)
+      generate_actu(AllActuData);
   }).catch(function(error){
     console.log(error);
   });
