@@ -24,9 +24,13 @@ border-radius:8px;
 
 .deposit_button
 {
-  height: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 26%;
   border-radius: 5px;
+  margin-top: 50px;
+  padding-top: 20px;
 }
 
 .deposit_text
@@ -603,6 +607,17 @@ width:100%;
   background-size: cover;
   background-position:left;
 }
+
+.deposit_title
+{
+  width :40%;
+  height: 140px;
+  background-image:url('map.svg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position:left;
+}
+
 .estimate_place_left
 {
   width:15%;height:25px;
@@ -712,7 +727,7 @@ margin-left:10%;
   padding-left: 15px;
   width: 100%;
   border-radius: 5px;
-  border: 2px solid #61AEB5;
+  /*border: 2px solid #61AEB5;*/
 }
 
 .sf_description_decoration
@@ -1441,12 +1456,6 @@ padding:5px;
   border-radius:8px;
   }
 
-  .deposit_button
-  {
-    height: 30px;
-    width: 88%;
-    border-radius: 5px;
-  }
 
   .estimate_icon_box
   {
@@ -1706,6 +1715,17 @@ padding:5px;
     background-size: cover;
     background-position:left;
   }
+
+  .deposit_title
+  {
+    width :100%;
+    height: 140px;
+    background-image:url('map.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position:left;
+  }
+
   .estimate_place_left
   {
     width:5%;height:25px;
