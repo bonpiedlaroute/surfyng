@@ -30,7 +30,6 @@ $(function() {
 				$("#imagePreview2").css("background-image", "url("+this.result+")");
 				$("#imagePreview2").css("background-color", "");
 				$("#icon2").css("display", "none");
-				$("#span2").css("display", "none");
 			}
 		}
 	});
@@ -48,7 +47,23 @@ $(function() {
 				$("#imagePreview3").css("background-image", "url("+this.result+")");
 				$("#imagePreview3").css("background-color", "");
 				$("#icon3").css("display", "none");
-				$("#span3").css("display", "none");
+			}
+		}
+	});
+
+	$('#uploadImage4').on("change", function()
+	{
+		var files = !!this.files ? this.files : [];
+		if (!files.length || !window.FileReader) return;
+
+		if (/^image/.test(files[0].type)){
+			var reader = new FileReader();
+			reader.readAsDataURL(files[0]);
+
+			reader.onloadend = function(){
+				$("#imagePreview4").css("background-image", "url("+this.result+")");
+				$("#imagePreview4").css("background-color", "");
+				$("#icon4").css("display", "none");
 			}
 		}
 	});
@@ -78,4 +93,11 @@ $("#imagePreview3").click(function() {
 });
 $("#icon3").click(function() {
 	$("#uploadImage3").click();
+});
+
+$("#imagePreview4").click(function() {
+	$("#uploadImage4").click();
+});
+$("#icon4").click(function() {
+	$("#uploadImage4").click();
 });

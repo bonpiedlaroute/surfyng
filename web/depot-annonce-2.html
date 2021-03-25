@@ -66,12 +66,13 @@
 
     <div style="height:80px; display:flex; justify-content:center;align-items:center;text-align: center;flex-direction:column; width:100%;" >
       <h1 class="header_title_estimation" > Dépot d'annonce gratuit </h1>
-      <h2 class="header_subtitle_estimation">Profiter d'une audience de plusieurs milliers de personnes</h2>
+      <h2 class="header_subtitle_estimation">Profiter d'une plus large audience</h2>
     </div>
   </header>
   <main>
     <div class="sf_line row mx-auto">
   <a style="font-size:18px; color:black;" class="mx-auto">Description de l'annonce <span style="color: #53617c">*</span></a>
+  <div > <a id="description_error_msg"></a></div>
 </div>
 <div class="row pt-2 pb-2" style="justify-content: center">
   <div class="col-md-4">
@@ -79,7 +80,7 @@
         <div class=""> -->
   
     <textarea class="form-control sf_description_decoration" placeholder="Description détaillée du bien"
-        name="description" id ="estimate_city">
+        name="description" id ="deposit_description">
     </textarea>
     </div>
 </div>
@@ -89,7 +90,7 @@
 
 <!-- Announce category -->
 <div class="sf_line row mx-auto" style="align-items: center; justify-content: center">
-  <a style="font-size:18px; color:black;">3 photos <span style="color: #53617c">*</span></a>
+  <a style="font-size:18px; color:black;">4 photos <span style="color: #53617c">*</span></a>
 </div>
 <div class="d-flex" style="align-items: center; flex-direction: column;">
   <div class="row pt-3 pb-3" style="align-items: center; justify-content: center;"> 
@@ -111,6 +112,12 @@
       <i id="icon3" class="fa fa-camera property_type_icon" aria-hidden="true"></i>
     </div>
     <input id="uploadImage3" type="file" name="image" class="img upload">
+
+    <!-- Image 4 -->
+    <div id=imagePreview4 class="preview m-2 d-flex" style="flex-direction: column; align-items: center;background-color: #bfe5f9; justify-content: center">
+      <i id="icon4" class="fa fa-camera property_type_icon" aria-hidden="true"></i>
+    </div>
+    <input id="uploadImage4" type="file" name="image" class="img upload">
   </div>
 
   <!-- Options -->
@@ -174,13 +181,14 @@
 </div>
 
 </div>
-<a style="position:fixed; bottom:10px; right: 20px; z-index:20;" id="validate" href="#">
+<a style="position:fixed; bottom:10px; right: 20px; z-index:20; cursor: pointer;" id="validate" onclick="validate_second_step()">
   <i class="fas fa-arrow-circle-right" style="font-size: 50px !important; color:green; " ></i>
 </a>
 </main>
 <footer>
 </footer>
 
+<script src="announce_deposit.js"></script>
 <script src="estimate_house_price.js"></script>
 <script src="autocomplete.js"></script>
 <script src="dropdownmenu.js"></script>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="Déposer votre annonce gratuitement sur Surfyn et profiter d'une audience de plusieurs milliers de personnes en France">
+  <meta name="description" content="Déposer votre annonce gratuitement sur Surfyn et profiter d'une très large audience en France">
   <meta name="author" content="">
 
   <title> Dépot d'annonce gratuite - Surfyn</title>
@@ -15,7 +15,7 @@
   <link href="surfyn.css" rel="stylesheet">
   <link href="autocomplete.css" rel="stylesheet">
   <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-140583317-1"></script>
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=UA-140583317-1"></script> -->
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
@@ -66,24 +66,25 @@
 
     <div style="height:80px; display:flex; justify-content:center;align-items:center;text-align: center;flex-direction:column; width:100%;" >
       <h1 class="header_title_estimation" > Dépot d'annonce gratuit </h1>
-      <h2 class="header_subtitle_estimation">Profiter d'une audience de plusieurs milliers de personnes</h2>
+      <h2 class="header_subtitle_estimation">Profiter d'une plus large audience</h2>
     </div>
   </header>
   <main>
     <div class="sf_line row mx-auto">
-  <a style="font-size:18px; color:black;" class="mx-auto">Titre de votre annonce <span style="color: #53617c">*</span></a>
+    <a style="font-size:18px; color:black;" class="mx-auto">Titre de votre annonce <span style="color: #53617c">*</span></a>
+    
 </div>
    <div style="height:210px;" class="row mx-auto">
-    <div class="estimate_place mx-auto d-block ">
-      <div style="width:100%;height:140px;display:flex; justify-content:center;align-items:center;flex-direction:row;">
+    <div class="deposit_title mx-auto">
+      <div style="width:100%;height:180px;display:flex; justify-content:center;align-items:center;flex-direction:row;">
         <div class="estimate_place_left"></div>
         <div class="estimate_city">
          <div class="autocomplete" style="width:100%;">
-          <input class="form-control sf_title_decoration" type="text" placeholder="Titre détaillé décrivant votre bien"
-          name="title" id ="estimate_city">
+          <input class="form-control sf_title_decoration" type="search" placeholder="Titre détaillé décrivant votre bien"
+          name="title" id ="title_deposit" onblur="checkInputs(1)">
         </input>
       </div>
-      <!-- <div class ="invalid-feedback" id="addr_error_msg"></div> -->
+      <div > <a id="title_error_message"></a></div>
       <div class="feedback_box good_feedback" style="width:100%;" id="city_check_msg">
         <a style="color:#61AEB5;font-weight:bold" id="msg_type">Info</a>
         <a id="feedback_msg"> : Uniquement les biens du département des <strong>hauts-de-seine</strong> pour l'instant &#128515;</a>
@@ -98,9 +99,9 @@
 <div class="sf_line row mx-auto" style="align-items: center; justify-content: center">
   <a style="font-size:18px; color:black;">Catégorie <span style="color: #53617c">*</span></a>
 </div>
-<div style="height:150px;" class="row mx-auto">
+<div style="height:150px; display: flex; justify-content: center" class="row mx-auto">
   <div style = " display: flex; align-items: center;flex-direction:row;width:100%;justify-content: space-evenly;flex-wrap:wrap;">
-    <div class="empty_property_type" id="loft">
+    <div class="empty_property_type">
 
     </div>
     <div class="property_type_box" id="sell" style="height: 80px">
@@ -113,22 +114,22 @@
       </div>
     </div>
 
-    <div class = "empty_property_type" id="office">
+    <div class = "empty_property_type">
 
     </div>
 
 
   </div>
-  <div > <a id="prop_type_error_msg"></a></div>
+  <div > <a id="category_error_message"></a></div>
 </div>
 
 <!-- Type of property -->
 <div class="sf_line row mx-auto" style="align-items: center; justify-content: center">
   <a style="font-size:18px; color:black;">Type de bien <span style="color: #53617c">*</span></a>
 </div>
-<div style="height:150px;" class="row mx-auto">
+<div style="height:150px; display: flex; justify-content: center" class="row mx-auto">
   <div style = " display: flex; align-items: center;flex-direction:row;width:100%;justify-content: space-evenly;flex-wrap:wrap;">
-    <div class="empty_property_type" id="loft">
+    <div class="empty_property_type">
     </div>
 
     <div class="property_type_box" id="loft">
@@ -162,36 +163,36 @@
       </div>
     </div>
 
-    <div class = "empty_property_type" id="office">
+    <div class = "empty_property_type">
 
     </div>
 
 
   </div>
-  <div > <a id="prop_type_error_msg"></a></div>
+  <div > <a id="prop_type_error_message"></a></div>
 </div>
 
 <!-- Area-->
 <div class="sf_line row mx-auto" style="align-items: center; justify-content: center">
   <a style="font-size:18px; color:black;">Superficie <span style="color: #53617c">*</span></a>
 </div>
-<div style="height:120px; display:flex;flex-direction:row;justify-content:flex-end;" class="row mx-auto">
+<div style="height:120px; display:flex; justify-content:center;" class="row mx-auto">
   <div style="display:flex; align-items:center;flex-direction:row;width:100%;justify-content:center;flex-wrap:wrap;">
-    <div style="display: flex; align-items: center;">
-      <div style="display:flex; align-items: center; flex-direction: row; justify-content: center;width:60%;height:100%;">
-        <input class="form-control" type="search" placeholder="Surface" style="width:80%;border-radius:5px;" id="carrez_area_value" onblur="checkArea()"> </input>
+    <div style="display: flex; align-items: center; justify-content: center;">
+      <div style="display:flex; align-items: center;  justify-content: center; width:70%;">
+        <input class="form-control" type="search" placeholder="Surface" style="width:80%;border-radius:5px;" id="surface_deposit" onblur="checkInputs(2)" onkeypress="return allowOnlyNumber(event)"> </input>
       </div>
-      <div style="display:flex;width:40%;height:100%; align-items: center; justify-content: flex-start;">
+      
         <span style="color: #94cbe3; font-weight: bold">m²</span>
-      </div>
+      
     </div>
   </div>
-  <div > <a id="area_error_msg"></a></div>
+  <div > <a id="area_error_message"></a></div>
 </div>
 <div class="sf_line row mx-auto">
   <a style="font-size:18px; color:black;" class="mx-auto">Nombre de pièces <span style="color: #53617c">*</span></a>
 </div>
-<div style="height:150px;" class="row mx-auto">
+<div style="height:150px; display: flex; justify-content: center" class="row mx-auto">
   <div style ="display: flex; align-items: center;flex-direction:row;width:100%;justify-content: space-evenly;flex-wrap:wrap;">
     <div class="sf_rooms no_select">
       <a style="color:#61AEB5;font-size:18px;">1</a>
@@ -219,35 +220,34 @@
     </div>
 
   </div>
-  <div > <a id="rooms_error_msg"></a></div>
+  <div > <a id="rooms_error_message"></a></div>
 
 </div>
 <div class="sf_line row mx-auto">
   <a style="font-size:18px; color:black;" class="mx-auto">Prix <span style="color: #53617c">*</span></a>
 </div>
-<div style="height:120px; display:flex;flex-direction:row;justify-content:flex-end;" class="row mx-auto">
+<div style="height:120px; display:flex; justify-content:center;" class="row mx-auto">
   <div style="display:flex; align-items:center;flex-direction:row;width:100%;justify-content:center;flex-wrap:wrap;">
-    <div style="display: flex; align-items: center;">
-      <div style="display:flex; align-items: center; flex-direction: row; justify-content: center;width:60%;height:100%;">
-        <input class="form-control" type="search" placeholder="Montant" style="width:80%;border-radius:5px;" id="carrez_area_value" onblur="checkArea()"> </input>
+    <div style="display: flex; align-items: center; justify-content: center;">
+      <div style="display:flex; align-items: center;  justify-content: center; width:70%;">
+        <input class="form-control" type="search" placeholder="Montant" style="width:80%; border-radius:5px;" id="price_deposit" onblur="checkInputs(3)" onkeypress="return allowOnlyNumber(event)"> </input>
       </div>
-      <div style="display:flex;width:40%;height:100%; align-items: center; justify-content: flex-start;">
-        <span style="color: #94cbe3; font-weight: bold">€</span>
-      </div>
+      <span style="color: #94cbe3; font-weight: bold">€</span>
     </div>
   </div>
-  <div > <a id="price_error_msg"></a></div>
+  <div > <a id="price_error_message"></a></div>
 </div>
 
 </div>
-<a style="position:fixed; bottom:10px; right: 20px; z-index:20;" id="validate" href="#">
+<a style="position:fixed; bottom:10px; right: 20px; z-index:20; cursor: pointer;" id="validate" onclick="validate_first_step()">
   <i class="fas fa-arrow-circle-right" style="font-size: 50px !important; color:green; " ></i>
 </a>
 </main>
 <footer>
 </footer>
 
-<script src="estimate_house_price.js"></script>
+<script src="announce_deposit.js"></script>
+<!-- <script src="estimate_house_price.js"></script> -->
 <script src="autocomplete.js"></script>
 <script src="dropdownmenu.js"></script>
     <!-- Bootstrap core JavaScript
@@ -256,5 +256,5 @@
       <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
       <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
-    </body>
-    </html>
+</body>
+</html>
