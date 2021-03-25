@@ -140,6 +140,7 @@ function generate_actu(items)
     img.style.borderRadius = "8px";
 
     img.src = items[i].img;
+    img.alt = items[i].title;
 
     actu_immo_image_container.append(img);
 
