@@ -5,10 +5,25 @@ var eventdown = mobile ? "touchstart" : "mousedown";
 var eventmove = mobile ? "touchmove" : "mousemove";
 var eventup = mobile ? "touchend" : "mouseup";
 
+// var url = 'https://surfyn.fr:7878/announcedeposit';
+var url = "http://localhost:7878/announcedeposit";
+
+var urlParams = "?";
+var imagesData = new FormData();
+
 function isEmpty(str) {
     return (!str || 0 === str.length);
 }
 
+function isConnectedUser()
+{
+  return sessionStorage["user_id"];
+}
+
+function backHome()
+{
+	window.location.href = "/";
+}
 
 // First page
 
@@ -42,70 +57,168 @@ var area_error = document.getElementById("area_error_message");
 var rooms_error = document.getElementById("rooms_error_message");
 var price_error = document.getElementById("price_error_message");
 
-var descritpion_error = document.getElementById("descritpion_error_message");
+var description_error = document.getElementById("description_error_message");
+var images_error = document.getElementById("images_error_msg");
 
 function validate_first_step()
 {	
 	var prop_result = isPropertyTypeSelected();
 	var rooms_result = isOneRoomsSelected();
 
- 	if(checkInputs(input=0))
+	if(isConnectedUser())
 	{
-	 	if((isSelectedSearch[searchType.sell] && !isSelectedSearch[searchType.rent]) || (!isSelectedSearch[searchType.sell] && isSelectedSearch[searchType.rent]))
-	 	{
-	 		if(rooms_result[0])
-	 		{
-	 			if(prop_result[0])
-	 			{
-	 				rooms_error.innerHTML = ""
-	 				rooms_error.style.color = "";
-	 				rooms_error.style.fontsize = "";
+		if(checkInputs(input=0))
+		{
+		 	if((isSelectedSearch[searchType.sell] && !isSelectedSearch[searchType.rent]) || (!isSelectedSearch[searchType.sell] && isSelectedSearch[searchType.rent]))
+		 	{
+		 		if(rooms_result[0])
+		 		{
+		 			if(prop_result[0])
+		 			{
+		 				rooms_error.innerHTML = ""
+		 				rooms_error.style.color = "";
+		 				rooms_error.style.fontsize = "";
 
-	 				prop_error.innerHTML = "";
-	 				prop_error.style.color = "";
-	 				prop_error.style.fontsize = "";
+		 				prop_error.innerHTML = "";
+		 				prop_error.style.color = "";
+		 				prop_error.style.fontsize = "";
 
-	 				sessionStorage.setItem("title", titleInput.value);
-	 				sessionStorage.setItem("search_type", isSelectedSearch[searchType.sell] ? divSell.id: divRent.id);
-	 				sessionStorage.setItem("prop_type", prop_result[1].id);
-	 				sessionStorage.setItem("area", areaInput.value);
-	 				sessionStorage.setItem("rooms", rooms_result[1]);
-	 				sessionStorage.setItem("price", priceInput.value);
+		 				sessionStorage.setItem("title", titleInput.value);
+		 				sessionStorage.setItem("search_type", isSelectedSearch[searchType.sell] ? divSell.id: divRent.id);
+		 				sessionStorage.setItem("prop_type", prop_result[1].id);
+		 				sessionStorage.setItem("area", areaInput.value);
+		 				sessionStorage.setItem("rooms", rooms_result[1]);
+		 				sessionStorage.setItem("price", priceInput.value);
 
-	 				window.location.href = "depot-annonce-2.html";
-	 			}
-	 			else
-	 			{
-	 				prop_error.innerHTML = "* Vous devez sélectionner le type de votre bien.";
- 					prop_error.style.color = "red";
- 					prop_error.style.fontsize = "12px";
- 					return;
-	 			}
+		 				window.location.href = "depot-annonce-2.html";
+		 			}
+		 			else
+		 			{
+		 				prop_error.innerHTML = "* Vous devez sélectionner le type de votre bien.";
+	 					prop_error.style.color = "red";
+	 					prop_error.style.fontsize = "12px";
+	 					return;
+		 			}
 
-	 		}
-	 		else
-	 		{
-	 			rooms_error.innerHTML = "* Vous devez renseigner le nombre de pièces de votre bien."
-				rooms_error.style.color = "red";
- 				rooms_error.style.fontsize = "12px";
- 				return;
-	 		}
-	 	}
-	 	else
-	 	{
-	 		search_error.innerHTML = "* Vous devez sélectionner la catégorie de votre bien.";
-			search_error.style.color = "red";
-			search_error.style.fontsize = "12px";
-			return;
-	 	}
+		 		}
+		 		else
+		 		{
+		 			rooms_error.innerHTML = "* Vous devez renseigner le nombre de pièces de votre bien."
+					rooms_error.style.color = "red";
+	 				rooms_error.style.fontsize = "12px";
+	 				return;
+		 		}
+		 	}
+		 	else
+		 	{
+		 		search_error.innerHTML = "* Vous devez sélectionner la catégorie de votre bien.";
+				search_error.style.color = "red";
+				search_error.style.fontsize = "12px";
+				return;
+		 	}
+		}
 	}
+ 	else
+ 	{
+		$("#login").modal(
+      	{
+        	focus: true,
+        	show:true
+      	});
+ 	}
 
 	 
 }
 
 function validate_second_step()
 {
-	return;
+
+	if(isConnectedUser())
+	{
+		if(checkDescription())
+		{
+			if(isAllImagesSet())
+			{
+				sessionStorage.setItem("description", descriptionInput.value)
+				
+				if(buildParams())
+				{
+					url += urlParams;
+					console.log(url);
+					fetch(url, {
+						method: "POST",
+						data: imagesData
+					})
+					.then(function(response){
+						showSuccessAnnounceDeposit();
+					})
+					.catch(function(error){
+						console.log('error');
+					});
+				}
+			}
+			else
+			{
+				images_error.innerHTML = "* Vous devez sélectionner 4 images pour décrire votre bien.";
+				images_error.style.color = "red";
+				images_error.style.fontsize = "12px";
+			}
+		}
+		else
+		{
+			description_error.innerHTML = "* Vous devez renseigner une description pour votre bien.";
+			description_error.style.color = "red";
+			description_error.style.fontsize = "12px";
+		}
+	}
+	else
+	{
+		$("#login").modal(
+      	{
+        	focus: true,
+        	show:true
+      	});
+	}
+}
+
+function buildParams()
+{
+	if(sessionStorage.getItem("title"))
+		urlParams += "title=" + sessionStorage.getItem("title");
+	else 
+		return false;
+
+	if(sessionStorage.getItem("search_type"))
+		urlParams += "&search_type=" + (searchType[sessionStorage.getItem("search_type")] + 1);
+	else 
+		return false;
+
+	if(sessionStorage.getItem("prop_type"))
+		urlParams += "&prop_type=" + propertyType[sessionStorage.getItem("prop_type")];
+	else
+		return false;
+
+	if(sessionStorage.getItem("area"))
+		urlParams += "&area=" + sessionStorage.getItem("area");
+	else 
+		return false;
+
+	if(sessionStorage.getItem("rooms"))
+		urlParams += "&rooms=" + sessionStorage.getItem("rooms");
+	else
+		return false;
+
+	if(sessionStorage.getItem("price"))
+		urlParams += "&price=" + sessionStorage.getItem("price");
+	else
+		return false;
+
+	if(sessionStorage.getItem("user_id"))
+		urlParams += "&user_id=" + sessionStorage.getItem("user_id");
+	else
+		return false;
+
+	return true;
 }
 
 function handle_errors()
@@ -193,7 +306,7 @@ var divOffice = document.getElementById("office");
 var propertyType = Object.freeze({
 	"loft": 0, 
 	"house": 1,
-	"appart": 2,
+	"apart": 2,
 	"office": 3
 });
 
@@ -231,9 +344,9 @@ function handleEventDownHouse(event)
 			divLoft.style.border = "";
 		}
 
-		if(isSelected[propertyType.appart])
+		if(isSelected[propertyType.apart])
 		{
-			isSelected[propertyType.appart] = false;
+			isSelected[propertyType.apart] = false;
 			divAppart.style.transform = "scale(0.85)";
 			divAppart.style.border = "";
 		}
@@ -249,15 +362,15 @@ function handleEventDownHouse(event)
 
 function handleEventDownAppart(event)
 {
-	if(isSelected[propertyType.appart])
+	if(isSelected[propertyType.apart])
 	{
-		isSelected[propertyType.appart] = false;
+		isSelected[propertyType.apart] = false;
 		divAppart.style.transform = "scale(0.85)";
 		divAppart.style.border = "";
 	}
 	else
 	{
-		isSelected[propertyType.appart] = true;
+		isSelected[propertyType.apart] = true;
 		divAppart.style.transform = "scale(1)";
 		divAppart.style.border = "solid 3px #222545";
 		
@@ -306,9 +419,9 @@ function handleEventDownLoft(event)
 		prop_error.style.color = "";
 		prop_error.style.fontsize = "";
 
-		if(isSelected[propertyType.appart])
+		if(isSelected[propertyType.apart])
 		{
-			isSelected[propertyType.appart] = false;
+			isSelected[propertyType.apart] = false;
 			divAppart.style.transform = "scale(0.85)";
 			divAppart.style.border = "";
 		}
@@ -347,9 +460,9 @@ function handleEventDownOffice(event)
 		prop_error.style.color = "";
 		prop_error.style.fontsize = "";
 		
-		if(isSelected[propertyType.appart])
+		if(isSelected[propertyType.apart])
 		{
-			isSelected[propertyType.appart] = false;
+			isSelected[propertyType.apart] = false;
 			divAppart.style.transform = "scale(0.85)";
 			divAppart.style.border = "";
 		}
@@ -457,7 +570,6 @@ function checkInputs(input=0)
 		area_error.innerHTML = "";
 		area_error.style.color = "";
 		area_error.style.fontsize = "";
-		validate.href = "javascript:void(0)";
 	}
 
 	if((isEmpty(priceInput.value) && input == 3) || (isEmpty(priceInput.value) && input == 0))
@@ -510,3 +622,70 @@ function allowOnlyNumber(e)
 	else 
 		return false;
 }
+
+// Functions to manage second step form
+
+function checkDescription()
+{
+	if(isEmpty(descriptionInput.value))
+	{
+		description_error.innerHTML = "* Vous devez renseigner une description de votre bien.";
+		description_error.style.color = "red";
+		description_error.style.fontsize = "12px";
+		validate.href = "javascript:void(0)";
+		return false;
+
+	}
+	else
+	{
+		description_error.innerHTML = "";
+		description_error.style.color = "";
+		description_error.style.fontsize = "";
+	}
+
+	return true;
+}
+
+// Handle images
+var imageInput1 = document.getElementById("uploadImage1");
+var imageInput2 = document.getElementById("uploadImage2");
+var imageInput3 = document.getElementById("uploadImage3");
+var imageInput4 = document.getElementById("uploadImage4");
+
+var images = [false, false, false, false];
+
+function validateAndUpload(input)
+{
+	var url = window.URL || window.webkitURL;
+	var file = input.files[0];
+
+	if(file)
+	{
+		var image = new Image();
+
+		image.onload = function(){
+			images[input.id.slice(-1) - 1] = true;
+		};
+		image.onerror = function(){
+			alert("Invalid image");
+		};
+
+		image.src = URL.createObjectURL(file);
+		sessionStorage.setItem('image'+input.id.slice(-1), image);
+		imagesData.append('image'+input.id.slice(-1), file);
+	}
+}
+
+function isAllImagesSet()
+{
+	for(i = 0; i < images.length; i++)
+	{
+		if(!images[i])
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+

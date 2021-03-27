@@ -238,6 +238,19 @@
   <div > <a id="price_error_message"></a></div>
 </div>
 
+<div class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="connecting" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <p>Veuillez retournez à la page d'acceuil pour vous connecter</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="backHome()">Ok</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 </div>
 <a style="position:fixed; bottom:10px; right: 20px; z-index:20; cursor: pointer;" id="validate" onclick="validate_first_step()">
   <i class="fas fa-arrow-circle-right" style="font-size: 50px !important; color:green; " ></i>
@@ -245,16 +258,26 @@
 </main>
 <footer>
 </footer>
-
-<script src="announce_deposit.js"></script>
-<!-- <script src="estimate_house_price.js"></script> -->
-<script src="autocomplete.js"></script>
-<script src="dropdownmenu.js"></script>
     <!-- Bootstrap core JavaScript
       ================================================== -->
       <!-- Placed at the end of the document so the pages load faster -->
       <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
       <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+      <script src="announce_deposit.js"></script>
+      <script src="autocomplete.js"></script>
+      <script src="dropdownmenu.js"></script>
+      <script>
+        window.onload = function(){
+          if(!isConnectedUser())
+          {
+            $("#login").modal(
+              {
+                focus: true,
+                show:true
+              });
+          }
+        }
+      </script>
 </body>
 </html>

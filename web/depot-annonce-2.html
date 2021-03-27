@@ -72,17 +72,15 @@
   <main>
     <div class="sf_line row mx-auto">
   <a style="font-size:18px; color:black;" class="mx-auto">Description de l'annonce <span style="color: #53617c">*</span></a>
-  <div > <a id="description_error_msg"></a></div>
 </div>
 <div class="row pt-2 pb-2" style="justify-content: center">
   <div class="col-md-4">
         <!-- <div class="estimate_place_left"></div>
         <div class=""> -->
   
-    <textarea class="form-control sf_description_decoration" placeholder="Description détaillée du bien"
-        name="description" id ="deposit_description">
-    </textarea>
-    </div>
+    <textarea class="form-control sf_description_decoration" placeholder="Description détaillée du bien" name="description" id="deposit_description" maxlength="300" onblur="checkDescription()"></textarea>
+    <div > <a id="description_error_message"></a></div>
+  </div>
 </div>
 </div>
 
@@ -99,27 +97,27 @@
       <i id="icon1" class="fa fa-camera property_type_icon" aria-hidden="true"></i>
       <span id="span1">Ajouter des photos</span>
     </div>
-    <input id="uploadImage1" type="file" name="image" class="img upload">
+    <input id="uploadImage1" type="file" name="image" class="img upload" accept="image/*" onchange="validateAndUpload(this)">
 
     <!-- Image 2 -->
     <div id=imagePreview2 class="preview m-2 d-flex" style="flex-direction: column; align-items: center;background-color: #bfe5f9; justify-content: center">
       <i id="icon2" class="fa fa-camera property_type_icon" aria-hidden="true"></i>
     </div>
-    <input id="uploadImage2" type="file" name="image" class="img upload">
+    <input id="uploadImage2" type="file" name="image" class="img upload" accept="image/*" onchange="validateAndUpload(this)">
 
     <!-- Image 3 -->
     <div id=imagePreview3 class="preview m-2 d-flex" style="flex-direction: column; align-items: center;background-color: #bfe5f9; justify-content: center">
       <i id="icon3" class="fa fa-camera property_type_icon" aria-hidden="true"></i>
     </div>
-    <input id="uploadImage3" type="file" name="image" class="img upload">
+    <input id="uploadImage3" type="file" name="image" class="img upload" accept="image/*" onchange="validateAndUpload(this)">
 
     <!-- Image 4 -->
     <div id=imagePreview4 class="preview m-2 d-flex" style="flex-direction: column; align-items: center;background-color: #bfe5f9; justify-content: center">
       <i id="icon4" class="fa fa-camera property_type_icon" aria-hidden="true"></i>
     </div>
-    <input id="uploadImage4" type="file" name="image" class="img upload">
+    <input id="uploadImage4" type="file" name="image" class="img upload" accept="image/*" onchange="validateAndUpload(this)">
   </div>
-
+  <div > <a id="images_error_msg"></a></div>
   <!-- Options -->
   <div class="col-md-6 mb-3" style="background-color: #bfe5f9;">    
       <label class="switch">
@@ -180,6 +178,19 @@
   <div > <a id="area_error_msg"></a></div>
 </div>
 
+<div class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="connecting" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <p>Veuillez retournez à la page d'acceuil pour vous connecter</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="backHome()">Ok</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 </div>
 <a style="position:fixed; bottom:10px; right: 20px; z-index:20; cursor: pointer;" id="validate" onclick="validate_second_step()">
   <i class="fas fa-arrow-circle-right" style="font-size: 50px !important; color:green; " ></i>
@@ -187,18 +198,28 @@
 </main>
 <footer>
 </footer>
-
-<script src="announce_deposit.js"></script>
-<script src="estimate_house_price.js"></script>
-<script src="autocomplete.js"></script>
-<script src="dropdownmenu.js"></script>
-
     <!-- Bootstrap core JavaScript
       ================================================== -->
       <!-- Placed at the end of the document so the pages load faster -->
       <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
       <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+      
+      <script src="announce_deposit.js"></script>
+      <script src="autocomplete.js"></script>
+      <script src="dropdownmenu.js"></script>
       <script src="upload.js"></script>
+      <script>
+        window.onload = function(){
+          if(!isConnectedUser())
+          {
+            $("#login").modal(
+              {
+                focus: true,
+                show:true
+              });
+          }
+        }
+      </script>
     </body>
     </html>
