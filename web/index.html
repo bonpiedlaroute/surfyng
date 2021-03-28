@@ -812,44 +812,25 @@
     <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-analytics.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-auth.js"></script>
     <script type="text/javascript">
-    function setCookie(cname, cvalue, exdays) {
-      var d = new Date();
-      d.setTime(d.getTime() + (exdays*24*60*60*1000));
-      var expires = "expires="+ d.toUTCString();
-      document.cookie = cname + "=" + cvalue + ";" + "samesite=strict;" + expires + ";path=/";
-      console.log(cname + "=" + cvalue + ";" + "samesite=strict;" + expires + ";path=/");
-    }
-
-    function checkCookie(name) {
-        var cookie, c;
-        if (document.cookie.split(';').some(function(item) {
-            return item.trim().indexOf(name+'=') == 0
-        })) {
-            return true;
-        }
-        else
-        {
-          return false;
-        }
-    }
-
-    $(window).on('load', function() {
-        var is_rgpd = checkCookie("rgpd");
-          if(!is_rgpd)
-          {
-              $('#rgpd').modal('show');
-          }
+     $(window).on('load', function() {
+        
     })
     </script>
 
     <script type="text/javascript">
       function accept_rgpd(){
-        setCookie("rgpd", "true", 365);
+        localStorage.setItem('rgpd', true);
       }
     </script>
   
     <script>
        window.onload = function() {
+          // Handle rgpd
+          var is_rgpd = localStorage.getItem('rgpd');
+          if(!is_rgpd)
+          {
+              $('#rgpd').modal('show');
+          }
 
            console.log("we have firebase apps");
            // Initialize Firebase
