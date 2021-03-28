@@ -36,17 +36,6 @@ HttpRequestHandler::~HttpRequestHandler()
 
 }
 
-void HttpRequestHandler::handle_error(pplx::task<void>& t)
-{
-    try
-    {
-        t.get();
-    }
-    catch(...)
-    {
-        // Ignore the error, Log it if a logger is available
-    }
-}
 
 
 //
@@ -55,7 +44,7 @@ void HttpRequestHandler::handle_error(pplx::task<void>& t)
 void HttpRequestHandler::handle_get(http_request message)
 {
     //ucout <<  message.to_string() << std::endl;
-   Log::getInstance()->info(std::string(message.to_string()));
+   //Log::getInstance()->info(std::string(message.to_string()));
 
     auto paths = http::uri::split_path(http::uri::decode(message.relative_uri().path()));
 
@@ -119,7 +108,10 @@ void HttpRequestHandler::handle_get(http_request message)
                             error +="/";
                         }
                         Log::getInstance()->error(error);
-                        message.reply(status_codes::NotFound, "resource not found!");
+                        http_response response (status_codes::NotFound);
+                        response.headers().add(U("Access-Control-Allow-Origin"), U("*"));
+                        message.reply(response);
+                        
                         return;
 
                     }
@@ -138,16 +130,7 @@ void HttpRequestHandler::handle_get(http_request message)
     http_response response (status_codes::OK);
     response.headers().add(U("Access-Control-Allow-Origin"), U("*"));
     response.set_body(concurrency::streams::bytestream::open_istream(std::move(body_text)),length, _XPLATSTR("application/json"));
-    message.reply(response)
-     .then([](pplx::task<void> t)
-     {
-        try{
-           t.get();
-        }
-        catch(...){
-           //
-        }
-     });
+    message.reply(response);
 
     return;
 
@@ -159,7 +142,7 @@ void HttpRequestHandler::handle_get(http_request message)
 void HttpRequestHandler::handle_post(http_request message)
 {
     
-   Log::getInstance()->info(std::string(message.to_string()));
+    Log::getInstance()->info(std::string(message.to_string()));
 
     auto paths = http::uri::split_path(http::uri::decode(message.relative_uri().path()));
 
@@ -188,7 +171,9 @@ void HttpRequestHandler::handle_post(http_request message)
 
         if( !emailAccess.sendToSurfyn(sender_email, subject, msg) )
         {
-            message.reply(status_codes::ServiceUnavailable,"ServiceUnavailable");
+            http_response response (status_codes::ServiceUnavailable);
+            response.headers().add(U("Access-Control-Allow-Origin"), U("*"));
+            message.reply(response);
             return;
         }
     }
@@ -200,7 +185,9 @@ void HttpRequestHandler::handle_post(http_request message)
             auto result =  m_emailalertaccess.registerEmailAlert(query);
             if(!result.success)
             {
-                message.reply(status_codes::BadRequest);
+                http_response response (status_codes::BadRequest);
+                response.headers().add(U("Access-Control-Allow-Origin"), U("*"));
+                message.reply(response);
                 return;
             }
         }
@@ -212,13 +199,16 @@ void HttpRequestHandler::handle_post(http_request message)
                 auto result =  m_emailalertaccess.changeAlertStatus(query);
                 if(!result.success)
                 {
-                    message.reply(status_codes::BadRequest);
+                    http_response response (status_codes::BadRequest);
+                    response.headers().add(U("Access-Control-Allow-Origin"), U("*"));
+                    message.reply(response);
                     return;
                 }
             }
             else {
-
-                    message.reply(status_codes::BadRequest);
+                    http_response response (status_codes::BadRequest);
+                    response.headers().add(U("Access-Control-Allow-Origin"), U("*"));
+                    message.reply(response);
                     return;
                 }
         }
@@ -227,16 +217,7 @@ void HttpRequestHandler::handle_post(http_request message)
 
     http_response response (status_codes::OK);
     response.headers().add(U("Access-Control-Allow-Origin"), U("*"));
-    message.reply(response)
-     .then([](pplx::task<void> t)
-     {
-        try{
-           t.get();
-        }
-        catch(...){
-           //
-        }
-     });
+    message.reply(response);
     return ;
 };
 
@@ -245,10 +226,12 @@ void HttpRequestHandler::handle_post(http_request message)
 //
 void HttpRequestHandler::handle_delete(http_request message)
 {
-    ucout <<  message.to_string() << std::endl;
+    //ucout <<  message.to_string() << std::endl;
+    Log::getInstance()->info(std::string(message.to_string()));
 
-
-    message.reply(status_codes::OK,"OK");
+    http_response response (status_codes::OK);
+    response.headers().add(U("Access-Control-Allow-Origin"), U("*"));
+    message.reply(response);
     return;
 };
 
@@ -258,9 +241,12 @@ void HttpRequestHandler::handle_delete(http_request message)
 //
 void HttpRequestHandler::handle_put(http_request message)
 {
-    ucout <<  message.to_string() << std::endl;
+    //ucout <<  message.to_string() << std::endl;
+    Log::getInstance()->info(std::string(message.to_string()));
 
-    message.reply(status_codes::OK, "OK");
+    http_response response (status_codes::OK);
+    response.headers().add(U("Access-Control-Allow-Origin"), U("*"));
+    message.reply(response);
     return;
 };
 

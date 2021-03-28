@@ -41,7 +41,6 @@ namespace rest_server
            void handle_put(http_request message);
            void handle_post(http_request message);
            void handle_delete(http_request message);
-           void handle_error(pplx::task<void>& t);
            http_listener m_listener;
            DBaccess m_dbaccess;
            EstimatorAccess m_estimatoraccess;
