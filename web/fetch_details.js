@@ -89,7 +89,6 @@ function generate_details_page(data)
       ad_link.style.display = "block";
       ad_link.href = data[i].ANNOUNCE_LINK;
       ad_link.target = "_blank";
-      ad_link.rel = "nofollow";
 
       var det_ad_image_container_div = createNode("div");
       det_ad_image_container_div.className = "det_ad_image_container";

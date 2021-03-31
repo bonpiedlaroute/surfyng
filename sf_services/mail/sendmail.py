@@ -23,6 +23,10 @@ from datetime import datetime
 import configparser
 import os
 import smtplib
+from email.mime.text import MIMEText
+from email.header import Header
+from email.utils import formataddr
+
 
 
 
@@ -42,23 +46,29 @@ class SendMailHandler(Iface):
       logging.info("start sending email to Surfyn")
       smtp_host_port = self.smtp_host + ':' + self.smtp_port
       smtp_server = smtplib.SMTP(smtp_host_port) 
-      smtp_server.starttls()
       logging.info("log in to smtp server")
       smtp_server.login(self.from_addr, self.password)
 
       msg_to_send = 'De la part de :' + sender_email + '\n\n '+ msg
 
-      message = 'Subject: {}\n\n{}'.format("Contact depuis surfyn.fr: " + subject, msg_to_send) 
-      logging.info("sending msg :\n\n"+message)
+      msg1 = MIMEText(msg_to_send, _charset='utf-8')
+      msg1['Subject'] = "Contact depuis surfyn.fr: " + subject
+      msg1['From'] = formataddr((str(Header('Surfyn', 'utf-8')), self.from_addr))
+      msg1['To'] = self.to_addrs 
+      logging.info("sending msg :\n\n"+msg_to_send)
       recipients = self.to_addrs.split(",")
-      smtp_server.sendmail(self.from_addr, recipients, message)
+      smtp_server.sendmail(self.from_addr, recipients, msg1.as_string())
 
       new_recipients = []
       new_recipients.append(sender_email)
       new_subject = "Merci d'avoir contacté Surfyn"
       new_msg = "Bonjour\n nous avons bien reçu votre message, nous allons revenir vers vous dans les meilleurs délais\n\n  A bientôt\nL'équipe Surfyn"
-      new_message = 'Subject: {}\n\n{}'.format(new_subject, new_msg)
-      smtp_server.sendmail(self.from_addr, new_recipients, new_message)
+      msg2 = MIMEText(new_msg, _charset='utf-8')
+      msg2['Subject'] = new_subject
+      msg2['From'] = formataddr((str(Header('Surfyn', 'utf-8')), self.from_addr))
+      msg2['To'] = sender_email 
+
+      smtp_server.sendmail(self.from_addr, new_recipients, msg2.as_string())
 
 
 

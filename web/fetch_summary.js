@@ -575,7 +575,7 @@ function generate_summary_page(data, empty=false)
         {
           if(added_src[data[i].SOURCES[j]] == false )
           {
-            if(!ismobile || count_added_src < 3)
+            if(count_added_src < 3)
             {
               var ad_sum_src_provider = createNode("div");
               ad_sum_src_provider.className = "ad_summary_src_provider";
@@ -593,7 +593,7 @@ function generate_summary_page(data, empty=false)
             count_added_src++;
           }
         }
-        if( ismobile && count_added_src > 3)
+        if( count_added_src > 3)
         {
           var ad_sum_src_provider = createNode("div");
           ad_sum_src_provider.className = "ad_summary_src_provider";

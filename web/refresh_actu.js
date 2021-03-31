@@ -127,7 +127,6 @@ function generate_actu(items)
     var actu_link  = createNode("a");
     actu_link.href = items[i].link;
     actu_link.target = "_blank";
-    actu_link.rel = "nofollow";
 
     var actu_immo_container = createNode("div");
     actu_immo_container.className = "row mx-auto sf_actu_immo_container";
@@ -141,6 +140,7 @@ function generate_actu(items)
     img.style.borderRadius = "8px";
 
     img.src = items[i].img;
+    img.alt = items[i].title;
 
     actu_immo_image_container.append(img);
 
