@@ -8,8 +8,29 @@ var eventup = mobile ? "touchend" : "mouseup";
 // var url = 'https://surfyn.fr:7878/announcedeposit';
 var url = "http://localhost:7878/announcedeposit";
 
-var urlParams = "?";
-var imagesData = new FormData();
+// var urlParams = "?";
+var data = {};
+
+if (!firebase.apps.length)
+{
+	 var firebaseConfig = {
+	   apiKey: "AIzaSyAWjNYovhM8IDUWL_ZGZ9jnb4i14dLQSe4",
+	   authDomain: "surfyn.firebaseapp.com",
+	   databaseURL: "https://surfyn.firebaseio.com",
+	   projectId: "surfyn",
+	   storageBucket: "surfyn.appspot.com",
+	   messagingSenderId: "1080663386908",
+	   appId: "1:1080663386908:web:d0c38731a4d55de5dea8d9",
+	   measurementId: "G-7X8E11EEFD"
+	 };
+	 console.log("firebase initialization");
+	 firebase.initializeApp(firebaseConfig);
+}
+
+// Storage instance
+var storage = firebase.storage();
+// Storage reference
+var storageRef = storage.ref();
 
 function isEmpty(str) {
     return (!str || 0 === str.length);
@@ -140,14 +161,14 @@ function validate_second_step()
 			if(isAllImagesSet())
 			{
 				sessionStorage.setItem("description", descriptionInput.value)
+				data["description"] = descriptionInput.value;
 				
 				if(buildParams())
 				{
-					url += urlParams;
 					console.log(url);
 					fetch(url, {
 						method: "POST",
-						data: imagesData
+						data: data
 					})
 					.then(function(response){
 						showSuccessAnnounceDeposit();
@@ -184,37 +205,37 @@ function validate_second_step()
 function buildParams()
 {
 	if(sessionStorage.getItem("title"))
-		urlParams += "title=" + sessionStorage.getItem("title");
+		data["title"] = sessionStorage.getItem("title");
 	else 
 		return false;
 
 	if(sessionStorage.getItem("search_type"))
-		urlParams += "&search_type=" + (searchType[sessionStorage.getItem("search_type")] + 1);
+		data["search_type"] = searchType[sessionStorage.getItem("search_type")] + 1;
 	else 
 		return false;
 
 	if(sessionStorage.getItem("prop_type"))
-		urlParams += "&prop_type=" + propertyType[sessionStorage.getItem("prop_type")];
+		data["prop_type"] = propertyType[sessionStorage.getItem("prop_type")];
 	else
 		return false;
 
 	if(sessionStorage.getItem("area"))
-		urlParams += "&area=" + sessionStorage.getItem("area");
+		data["area"] = sessionStorage.getItem("area");
 	else 
 		return false;
 
 	if(sessionStorage.getItem("rooms"))
-		urlParams += "&rooms=" + sessionStorage.getItem("rooms");
+		data["rooms"] = sessionStorage.getItem("rooms");
 	else
 		return false;
 
 	if(sessionStorage.getItem("price"))
-		urlParams += "&price=" + sessionStorage.getItem("price");
+		data["price"] = sessionStorage.getItem("price");
 	else
 		return false;
 
 	if(sessionStorage.getItem("user_id"))
-		urlParams += "&user_id=" + sessionStorage.getItem("user_id");
+		data["user_id"] = sessionStorage.getItem("user_id");
 	else
 		return false;
 
@@ -672,7 +693,45 @@ function validateAndUpload(input)
 
 		image.src = URL.createObjectURL(file);
 		sessionStorage.setItem('image'+input.id.slice(-1), image);
-		imagesData.append('image'+input.id.slice(-1), file);
+		// imagesData.append('image'+input.id.slice(-1), file);
+
+		// Upload image on Cloud Storage Bucket
+		var uploadTask = storageRef.child('deposit_images/' + file.name).put(file);
+
+		// Listen for error and completion of the upload
+		uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
+
+			(snapshot) => {
+				// var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+				switch(snapshot.state) {
+					case firebase.storage.TaskEvent.PAUSED:
+						console.log('Upload is Paused');
+						break;
+					case firebase.storage.TaskEvent.RUNNING:
+						console.log('Upload is running')
+						break;
+				}
+			},
+
+			(error) => {
+				switch(error.code) {
+					case 'storage/unauthorized':
+						console.log('Error: Upload unauthorized');
+					case 'storage/canceled':
+						console.log('Error: Upload canceled');
+					case 'storage/unknow':
+						console.log('Error: ' + error.serverResponse);
+				}
+			},
+
+			() => {
+				// Upload completed successfully
+				uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+					console.log('File available at', downloadURL);
+					data['image'+input.id.slice(-1)] = downloadURL;
+				});
+			}
+		);
 	}
 }
 
