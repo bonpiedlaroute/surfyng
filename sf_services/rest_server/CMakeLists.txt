@@ -21,6 +21,7 @@ add_executable(rest_server
   src/EstimatorAccess.cpp
   src/SendEmailAccess.cpp
   src/EmailAlertAccess.cpp
+  src/DepositAccess.cpp
   ../../sf_services/dynamodb_access/thrift_generated/dynamodb_access_constants.cpp
   ../../sf_services/dynamodb_access/thrift_generated/dynamodb_access_types.cpp
   ../../sf_services/dynamodb_access/thrift_generated/dynamodb_access.cpp
@@ -33,6 +34,9 @@ add_executable(rest_server
   ../../sf_services/emailalertservice/thrift_generated/emailalertservice.cpp
   ../../sf_services/emailalertservice/thrift_generated/emailalertservice_constants.cpp
   ../../sf_services/emailalertservice/thrift_generated/emailalertservice_types.cpp
+  ../../sf_services/deposit/thrift_generated/deposit_service.cpp
+  ../../sf_services/deposit/thrift_generated/depositservice_constants.cpp
+  ../../sf_services/deposit/thrift_generated/depositservice_types.cpp
   )
 
 target_link_libraries(rest_server boost_system crypto ssl cpprest ${SF_UTILS_LIB} thrift)

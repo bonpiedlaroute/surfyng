@@ -16,11 +16,11 @@ from thrift.transport import TTransport
 
 
 class Iface(object):
-    def annouce_deposit(self, user_id, parameters):
+    def announce_deposit(self, user_id, data):
         """
         Parameters:
          - user_id
-         - parameters
+         - data
         """
         pass
 
@@ -40,25 +40,25 @@ class Client(Iface):
             self._oprot = oprot
         self._seqid = 0
 
-    def annouce_deposit(self, user_id, parameters):
+    def announce_deposit(self, user_id, data):
         """
         Parameters:
          - user_id
-         - parameters
+         - data
         """
-        self.send_annouce_deposit(user_id, parameters)
-        return self.recv_annouce_deposit()
+        self.send_announce_deposit(user_id, data)
+        return self.recv_announce_deposit()
 
-    def send_annouce_deposit(self, user_id, parameters):
-        self._oprot.writeMessageBegin('annouce_deposit', TMessageType.CALL, self._seqid)
-        args = annouce_deposit_args()
+    def send_announce_deposit(self, user_id, data):
+        self._oprot.writeMessageBegin('announce_deposit', TMessageType.CALL, self._seqid)
+        args = announce_deposit_args()
         args.user_id = user_id
-        args.parameters = parameters
+        args.data = data
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
 
-    def recv_annouce_deposit(self):
+    def recv_announce_deposit(self):
         iprot = self._iprot
         (fname, mtype, rseqid) = iprot.readMessageBegin()
         if mtype == TMessageType.EXCEPTION:
@@ -66,12 +66,12 @@ class Client(Iface):
             x.read(iprot)
             iprot.readMessageEnd()
             raise x
-        result = annouce_deposit_result()
+        result = announce_deposit_result()
         result.read(iprot)
         iprot.readMessageEnd()
         if result.success is not None:
             return result.success
-        raise TApplicationException(TApplicationException.MISSING_RESULT, "annouce_deposit failed: unknown result")
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "announce_deposit failed: unknown result")
 
     def delete_announce(self, user_id, announce_id):
         """
@@ -111,7 +111,7 @@ class Processor(Iface, TProcessor):
     def __init__(self, handler):
         self._handler = handler
         self._processMap = {}
-        self._processMap["annouce_deposit"] = Processor.process_annouce_deposit
+        self._processMap["announce_deposit"] = Processor.process_announce_deposit
         self._processMap["delete_announce"] = Processor.process_delete_announce
 
     def process(self, iprot, oprot):
@@ -129,13 +129,13 @@ class Processor(Iface, TProcessor):
             self._processMap[name](self, seqid, iprot, oprot)
         return True
 
-    def process_annouce_deposit(self, seqid, iprot, oprot):
-        args = annouce_deposit_args()
+    def process_announce_deposit(self, seqid, iprot, oprot):
+        args = announce_deposit_args()
         args.read(iprot)
         iprot.readMessageEnd()
-        result = annouce_deposit_result()
+        result = announce_deposit_result()
         try:
-            result.success = self._handler.annouce_deposit(args.user_id, args.parameters)
+            result.success = self._handler.announce_deposit(args.user_id, args.data)
             msg_type = TMessageType.REPLY
         except (TTransport.TTransportException, KeyboardInterrupt, SystemExit):
             raise
@@ -143,7 +143,7 @@ class Processor(Iface, TProcessor):
             msg_type = TMessageType.EXCEPTION
             logging.exception(ex)
             result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
-        oprot.writeMessageBegin("annouce_deposit", msg_type, seqid)
+        oprot.writeMessageBegin("announce_deposit", msg_type, seqid)
         result.write(oprot)
         oprot.writeMessageEnd()
         oprot.trans.flush()
@@ -170,22 +170,22 @@ class Processor(Iface, TProcessor):
 # HELPER FUNCTIONS AND STRUCTURES
 
 
-class annouce_deposit_args(object):
+class announce_deposit_args(object):
     """
     Attributes:
      - user_id
-     - parameters
+     - data
     """
 
     thrift_spec = (
         None,  # 0
         (1, TType.STRING, 'user_id', 'UTF8', None, ),  # 1
-        (2, TType.MAP, 'parameters', (TType.STRING, 'UTF8', TType.STRING, 'UTF8', False), None, ),  # 2
+        (2, TType.STRING, 'data', 'UTF8', None, ),  # 2
     )
 
-    def __init__(self, user_id=None, parameters=None,):
+    def __init__(self, user_id=None, data=None,):
         self.user_id = user_id
-        self.parameters = parameters
+        self.data = data
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -202,14 +202,8 @@ class annouce_deposit_args(object):
                 else:
                     iprot.skip(ftype)
             elif fid == 2:
-                if ftype == TType.MAP:
-                    self.parameters = {}
-                    (_ktype1, _vtype2, _size0) = iprot.readMapBegin()
-                    for _i4 in range(_size0):
-                        _key5 = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
-                        _val6 = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
-                        self.parameters[_key5] = _val6
-                    iprot.readMapEnd()
+                if ftype == TType.STRING:
+                    self.data = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
             else:
@@ -221,18 +215,14 @@ class annouce_deposit_args(object):
         if oprot._fast_encode is not None and self.thrift_spec is not None:
             oprot.trans.write(oprot._fast_encode(self, (self.__class__, self.thrift_spec)))
             return
-        oprot.writeStructBegin('annouce_deposit_args')
+        oprot.writeStructBegin('announce_deposit_args')
         if self.user_id is not None:
             oprot.writeFieldBegin('user_id', TType.STRING, 1)
             oprot.writeString(self.user_id.encode('utf-8') if sys.version_info[0] == 2 else self.user_id)
             oprot.writeFieldEnd()
-        if self.parameters is not None:
-            oprot.writeFieldBegin('parameters', TType.MAP, 2)
-            oprot.writeMapBegin(TType.STRING, TType.STRING, len(self.parameters))
-            for kiter7, viter8 in self.parameters.items():
-                oprot.writeString(kiter7.encode('utf-8') if sys.version_info[0] == 2 else kiter7)
-                oprot.writeString(viter8.encode('utf-8') if sys.version_info[0] == 2 else viter8)
-            oprot.writeMapEnd()
+        if self.data is not None:
+            oprot.writeFieldBegin('data', TType.STRING, 2)
+            oprot.writeString(self.data.encode('utf-8') if sys.version_info[0] == 2 else self.data)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -252,7 +242,7 @@ class annouce_deposit_args(object):
         return not (self == other)
 
 
-class annouce_deposit_result(object):
+class announce_deposit_result(object):
     """
     Attributes:
      - success
@@ -289,7 +279,7 @@ class annouce_deposit_result(object):
         if oprot._fast_encode is not None and self.thrift_spec is not None:
             oprot.trans.write(oprot._fast_encode(self, (self.__class__, self.thrift_spec)))
             return
-        oprot.writeStructBegin('annouce_deposit_result')
+        oprot.writeStructBegin('announce_deposit_result')
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.STRUCT, 0)
             self.success.write(oprot)

@@ -1,4 +1,5 @@
 var mobile   = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
+var dataParams = {};
 
 
 var eventdown = mobile ? "touchstart" : "mousedown";
@@ -8,8 +9,6 @@ var eventup = mobile ? "touchend" : "mouseup";
 // var url = 'https://surfyn.fr:7878/announcedeposit';
 var url = "http://localhost:7878/announcedeposit";
 
-// var urlParams = "?";
-var data = {};
 
 if (!firebase.apps.length)
 {
@@ -111,7 +110,7 @@ function validate_first_step()
 		 				sessionStorage.setItem("rooms", rooms_result[1]);
 		 				sessionStorage.setItem("price", priceInput.value);
 
-		 				window.location.href = "depot-annonce-2.html";
+		 				window.location.href = "validation-depot-annonce.html";
 		 			}
 		 			else
 		 			{
@@ -161,20 +160,25 @@ function validate_second_step()
 			if(isAllImagesSet())
 			{
 				sessionStorage.setItem("description", descriptionInput.value)
-				data["description"] = descriptionInput.value;
-				
+				dataParams["description"] = descriptionInput.value;
+				console.log(dataParams);
 				if(buildParams())
 				{
 					console.log(url);
 					fetch(url, {
 						method: "POST",
-						data: data
+						body: JSON.stringify(dataParams),
+						headers: {
+							"Content-Type": "application/json;charset=UTF-8"
+						},
+						referrer:"same-origin",
+						mode: "no-cors"
 					})
 					.then(function(response){
 						showSuccessAnnounceDeposit();
 					})
 					.catch(function(error){
-						console.log('error');
+						console.log(error);
 					});
 				}
 			}
@@ -205,37 +209,37 @@ function validate_second_step()
 function buildParams()
 {
 	if(sessionStorage.getItem("title"))
-		data["title"] = sessionStorage.getItem("title");
+		dataParams["title"] = sessionStorage.getItem("title");
 	else 
 		return false;
 
 	if(sessionStorage.getItem("search_type"))
-		data["search_type"] = searchType[sessionStorage.getItem("search_type")] + 1;
+		dataParams["search_type"] = searchType[sessionStorage.getItem("search_type")] + 1;
 	else 
 		return false;
 
 	if(sessionStorage.getItem("prop_type"))
-		data["prop_type"] = propertyType[sessionStorage.getItem("prop_type")];
+		dataParams["prop_type"] = propertyType[sessionStorage.getItem("prop_type")];
 	else
 		return false;
 
 	if(sessionStorage.getItem("area"))
-		data["area"] = sessionStorage.getItem("area");
+		dataParams["area"] = sessionStorage.getItem("area");
 	else 
 		return false;
 
 	if(sessionStorage.getItem("rooms"))
-		data["rooms"] = sessionStorage.getItem("rooms");
+		dataParams["rooms"] = sessionStorage.getItem("rooms");
 	else
 		return false;
 
 	if(sessionStorage.getItem("price"))
-		data["price"] = sessionStorage.getItem("price");
+		dataParams["price"] = sessionStorage.getItem("price");
 	else
 		return false;
 
 	if(sessionStorage.getItem("user_id"))
-		data["user_id"] = sessionStorage.getItem("user_id");
+		dataParams["user_id"] = sessionStorage.getItem("user_id");
 	else
 		return false;
 
@@ -696,7 +700,7 @@ function validateAndUpload(input)
 		// imagesData.append('image'+input.id.slice(-1), file);
 
 		// Upload image on Cloud Storage Bucket
-		var uploadTask = storageRef.child('deposit_images/' + file.name).put(file);
+		var uploadTask = storageRef.child('deposit/puteaux/' + file.name).put(file);
 
 		// Listen for error and completion of the upload
 		uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
@@ -728,7 +732,7 @@ function validateAndUpload(input)
 				// Upload completed successfully
 				uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
 					console.log('File available at', downloadURL);
-					data['image'+input.id.slice(-1)] = downloadURL;
+					dataParams['image'+input.id.slice(-1)] = downloadURL;
 				});
 			}
 		);

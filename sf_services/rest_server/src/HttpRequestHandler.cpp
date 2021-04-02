@@ -11,6 +11,7 @@
 #include <iostream>
 #include <memory>
 #include "SendEmailAccess.h"
+#include "DepositAccess.h"
 
 using Log = surfyn::utils::Logger;
 
@@ -20,7 +21,7 @@ namespace rest_server
 {
 
 HttpRequestHandler::HttpRequestHandler(utility::string_t url, http_listener_config conf, const std::string& dbaccess_host, int dbaccess_port,
-                                       const std::string& estimator_host, int estimator_port, const std::string& emailalert_host, int emailalert_port)
+                                       const std::string& estimator_host, int estimator_port, const std::string& emailalert_host, int emailalert_port, const std::string& deposit_host, int deposit_port)
                                        :m_listener(url, conf),
                                              m_dbaccess_host(dbaccess_host),
                                              m_dbaccess_port(dbaccess_port),
@@ -28,7 +29,10 @@ HttpRequestHandler::HttpRequestHandler(utility::string_t url, http_listener_conf
                                              m_estimator_port(estimator_port),
                                              m_geoLocalService(std::make_shared<surfyn::utils::GeoLocal>("../../../bot/data/correspondance_codeinsee_codepostal_iledefrance.csv")),
                                              m_emailalert_host(emailalert_host),
-                                             m_emailalert_port(emailalert_port)
+                                             m_emailalert_port(emailalert_port),
+                                             m_deposit_host(deposit_host), 
+                                             m_deposit_port(deposit_port)
+
 {
     m_listener.support(methods::GET, [this](http_request message) { handle_get(message);});
     m_listener.support(methods::PUT, [this](http_request message) { handle_put(message);});
@@ -45,6 +49,8 @@ HttpRequestHandler::HttpRequestHandler(utility::string_t url, http_listener_conf
     m_http_post_services.insert(std::make_pair("/registeremailalert", [this](http_request& message){handle_registeremailalert(message);}));
     m_http_post_services.insert(std::make_pair("/change_alert_status", [this](http_request& message){handle_change_alert_status(message);}));
     m_http_post_services.insert(std::make_pair("/accountcreation", [this](http_request& message){handle_accountcreation(message);}));
+    m_http_post_services.insert(std::make_pair("/announcedeposit", [this](http_request& message){handle_announce_deposit(message);}));
+    m_http_post_services.insert(std::make_pair("/delete_announce", [this](http_request& message){handle_delete_announce(message);}));
 }
 HttpRequestHandler::~HttpRequestHandler()
 {
@@ -260,6 +266,46 @@ void HttpRequestHandler::handle_accountcreation(http_request& message)
     send_ok_response(message);
 
 }
+
+void HttpRequestHandler::handle_announce_deposit(http_request& message)
+{
+    auto query = http::uri::split_query(http::uri::decode(message.relative_uri().query()));
+    message.extract_json(true)
+    .then([=](pplx::task<json::value> data_raw)
+    {
+        try
+        {
+            auto const & data = data_raw.get();
+            std::string user_id = data.at(U("user_id")).as_string();
+            auto result = std::make_shared<DepositAccess>(m_deposit_host, m_deposit_port)->announce_deposit(user_id, data.serialize());
+            
+            if(!result.success)
+            {
+                http_response response (status_codes::BadRequest);
+                response.headers().add(U("Access-Control-Allow-Origin"), U("*"));
+                message.reply(response);
+                return;
+            }
+        }
+        catch(http_exception const & e)
+        {
+            Log::getInstance()->info(e.what());
+        }
+    })
+    .wait();
+    send_ok_response(message);
+}
+void HttpRequestHandler::handle_delete_announce(http_request& message)
+{
+    auto query = http::uri::split_query(http::uri::decode(message.relative_uri().query()));
+    auto result =  std::make_shared<DepositAccess>(m_deposit_host, m_deposit_port)->delete_announce(query);
+    if(!result.success)
+    {
+        send_badrequest_response(message);
+        return;
+    }
+    send_ok_response(message);
+}
 //
 // A POST request
 //
@@ -274,7 +320,7 @@ void HttpRequestHandler::handle_post(http_request message)
     {
         iter->second(message);
     }
-    else 
+    else
     {
         std::string error = "Unknown requested service: ";
         error += service;
@@ -284,7 +330,7 @@ void HttpRequestHandler::handle_post(http_request message)
         response.headers().add(U("Access-Control-Allow-Origin"), U("*"));
         message.reply(response);
     }
-};
+}
 
 //
 // A DELETE request
