@@ -12,6 +12,7 @@
 #include "EstimatorAccess.h"
 #include "sf_services/sf_utils/inc/Geolocal.h"
 #include "EmailAlertAccess.h"
+#include "DepositAccess.h"
 
 using namespace web;
 using namespace http;
@@ -28,7 +29,8 @@ namespace rest_server
            HttpRequestHandler(utility::string_t url, http_listener_config conf,
                               const std::string& dbaccess_host, int dbaccess_port,
                               const std::string& estimator_host, int estimator_port,
-                              const std::string& emailalert_host, int emailalert_port);
+                              const std::string& emailalert_host, int emailalert_port,
+                              const std::string& deposit_host, int deposit_port);
            virtual ~HttpRequestHandler();
 
            pplx::task<void>open(){return m_listener.open();}
@@ -46,6 +48,7 @@ namespace rest_server
            EstimatorAccess m_estimatoraccess;
            std::shared_ptr<surfyn::utils::GeoLocal> m_geoLocalService;
            EmailAlertAccess m_emailalertaccess;
+           DepositAccess m_depositaccess;
 
    };
 }

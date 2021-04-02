@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include "SendEmailAccess.h"
+#include "DepositAccess.h"
 
 using Log = surfyn::utils::Logger;
 
@@ -18,12 +19,13 @@ namespace rest_server
 {
 
 HttpRequestHandler::HttpRequestHandler(utility::string_t url, http_listener_config conf, const std::string& dbaccess_host, int dbaccess_port,
-                                       const std::string& estimator_host, int estimator_port, const std::string& emailalert_host, int emailalert_port)
+                                       const std::string& estimator_host, int estimator_port, const std::string& emailalert_host, int emailalert_port, const std::string& deposit_host, int deposit_port)
                                        :m_listener(url, conf),
                                              m_dbaccess(dbaccess_host, dbaccess_port),
                                              m_estimatoraccess(estimator_host, estimator_port),
                                              m_geoLocalService(std::make_shared<surfyn::utils::GeoLocal>("../../../bot/data/correspondance_codeinsee_codepostal_iledefrance.csv")),
-                                             m_emailalertaccess(emailalert_host, emailalert_port)
+                                             m_emailalertaccess(emailalert_host, emailalert_port),
+                                             m_depositaccess(deposit_host, deposit_port)
 {
     m_listener.support(methods::GET, [this](http_request message) { handle_get(message);});
     m_listener.support(methods::PUT, [this](http_request message) { handle_put(message);});
@@ -177,6 +179,27 @@ void HttpRequestHandler::handle_post(http_request message)
             return;
         }
     }
+    else if(paths.size() == 1 && paths[0] == "announcedeposit")
+    {
+        auto query = http::uri::split_query(http::uri::decode(message.relative_uri().query()));
+        message.extract_utf8string()
+            .then([=](std::string data)
+            {
+    
+                auto data_json = json::value::parse(data);
+                std::string user_id = data_json.at(U("user_id")).as_string();
+                Log::getInstance()->info("User id: " + data_json.at(U("user_id")).as_string());
+                auto result = m_depositaccess.announce_deposit(user_id, data);
+                if(!result.success)
+                {
+                    http_response response (status_codes::BadRequest);
+                    response.headers().add(U("Access-Control-Allow-Origin"), U("*"));
+                    message.reply(response);
+                    return;
+                }
+            });
+        Log::getInstance()->info("Announce deposit est available");
+    }
     else 
     {
         if(paths.size() == 1  && paths[0] == "registeremailalert" )
@@ -214,7 +237,6 @@ void HttpRequestHandler::handle_post(http_request message)
         }
         
     }
-
     http_response response (status_codes::OK);
     response.headers().add(U("Access-Control-Allow-Origin"), U("*"));
     message.reply(response);
