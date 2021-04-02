@@ -397,7 +397,13 @@
     <script>
     function initFocus()
     {
+
         window.focus();
+        if(document.referrer.includes("liste-annonces"))
+        {
+          sessionStorage.setItem("scrollX", "0");
+          sessionStorage.setItem("scrollY", "0");
+        }
         //get scroll position in session storage and go to that scroll position
         setTimeout(function() {window.scrollTo(parseInt(sessionStorage.getItem("scrollX"), 10),
          parseInt(sessionStorage.getItem("scrollY"), 10)) ;}, 100);

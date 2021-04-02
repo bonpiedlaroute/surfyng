@@ -83,7 +83,7 @@ function generate_details_page(data)
       det_ad_container_div.className = "det_ad_container";
 
       if(i%2 != 0 )
-      det_ad_container_div.style.marginLeft = ismobile ? "15px" : "70px";
+      det_ad_container_div.style.marginLeft ="20px";
 
       var ad_link = createNode("a");
       ad_link.style.display = "block";

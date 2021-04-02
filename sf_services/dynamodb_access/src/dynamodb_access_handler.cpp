@@ -84,7 +84,9 @@ dynamodb_accessHandler::dynamodb_accessHandler(const std::string& config_filenam
    config.readRateLimiter = limiter;
    config.writeRateLimiter = limiter;
    config.httpLibOverride = Aws::Http::TransferLibType::DEFAULT_CLIENT;
-   config.executor = Aws::MakeShared<Aws::Utils::Threading::PooledThreadExecutor>(allocation_tag.c_str(), 10);
+   int pooledThreadSize = ddb_conf.getIntValue("pooled_thread_size");
+   Log::getInstance()->info( "PooledThreadSize : " + std::to_string(pooledThreadSize));
+   config.executor = Aws::MakeShared<Aws::Utils::Threading::PooledThreadExecutor>(allocation_tag.c_str(),pooledThreadSize );
    config.region = ddb_conf.getStringValue("region").c_str();
    config.retryStrategy = Aws::MakeShared<Aws::Client::DefaultRetryStrategy>(allocation_tag.c_str(), ddb_conf.getLongValue("max_retry")/*maxRetry*/, ddb_conf.getLongValue("scale_factor")/*Interval factor between retry (exp backoff), first retry wait 1ms, second retry wait 2ms*/);
 
