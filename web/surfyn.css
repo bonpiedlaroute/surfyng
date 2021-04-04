@@ -1319,6 +1319,7 @@ padding:5px;
 {
   display:flex;flex-direction:column;background-color:white;width:60%;border-radius: 10px;
   height:100%;
+  justify-content: center;
 }
 .sf_generic_infos_desc_header
 {
@@ -1563,6 +1564,7 @@ padding:5px;
   {
     display:flex;flex-direction:column;background-color:white;width:95%;border-radius: 10px;
     height:100%;
+    justify-content: center;
   }
   .sf_generic_infos_desc_header_text
   {

@@ -69,11 +69,12 @@ function enrichRelatedInfos(cityname, isForSale, isFlat)
         generic_infos_desc_text1.innerHTML = isForSale? "Achat ": "Location ";
         generic_infos_desc_text1.innerHTML += isFlat? " appartement ": " maison ";
         generic_infos_desc_text1.innerHTML += key.toLowerCase();
-        generic_infos_desc_text1.href = "liste-annonces/";
-        generic_infos_desc_text1.href += isForSale? "achat/":"location/";
-        generic_infos_desc_text1.href += isFlat? "appartements/":"maisons/";
-        generic_infos_desc_text1.href += key.toLowerCase();
-        generic_infos_desc_text1.href += "-" + getPostalCode(key);
+        var ad_link = "/liste-annonces/";
+        ad_link += isForSale? "achat/":"location/";
+        ad_link += isFlat? "appartements/":"maisons/";
+        ad_link += key.toLowerCase();
+        ad_link += "-" + getPostalCode(key);
+        generic_infos_desc_text1.href = ad_link;
         var generic_infos_desc_text_icon = createNode("i");
         generic_infos_desc_text_icon.className = "fas fa-chevron-right sf_generic_infos_desc_text_icon";
         generic_infos_desc_text1.appendChild(generic_infos_desc_text_icon);
@@ -118,7 +119,7 @@ function enrichRelatedInfos(cityname, isForSale, isFlat)
     var generic_infos_desc_text4 = createNode("a");
     generic_infos_desc_text4.className = "sf_generic_infos_desc_text";
     generic_infos_desc_text4.innerHTML = "Actualité immobilière";
-    generic_infos_desc_text4.href = "actualite-immobilier.html";
+    generic_infos_desc_text4.href = "/actualite-immobilier.html";
     generic_infos_desc_text_icon = createNode("i");
     generic_infos_desc_text_icon.className = "fas fa-chevron-right sf_generic_infos_desc_text_icon";
     generic_infos_desc_text4.appendChild(generic_infos_desc_text_icon);
