@@ -471,8 +471,10 @@ function buildpage()
       //sessionStorage.setItem("summary_json_data", JSON.stringify(data));
     })
     .catch(function(error) {
-      loadJSON("data/announces_summary.json",
+      /*loadJSON("data/announces_summary.json",
       function (data) { generate_summary_page(JSON.parse(data.response));}, function(err) {console.log(err);})
+      */
+      window.location="erreur.html";
       console.log(error);
     });
   }
