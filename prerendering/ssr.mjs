@@ -70,6 +70,18 @@ async function ssr(path, browserWSEndpoint) {
 	      		url_params += "&rooms=1";
 	    	}else
 	    	{
+					var propertyTypeDetails = pathname[2].split("-");
+		      if(propertyTypeDetails.length == 3 && propertyTypeDetails[0] ==  "appartements" && propertyTypeDetails[2] == "pieces")
+		      {
+		        url_params += "&prop_type=1";
+		        url_params += "&rooms=" + propertyTypeDetails[1];
+		      }
+		      else if(propertyTypeDetails.length == 3 && propertyTypeDetails[0] ==  "maisons" && propertyTypeDetails[2] == "pieces" )
+		      {
+		        url_params += "&prop_type=2";
+		        url_params += "&rooms=" + propertyTypeDetails[1];
+		      }
+		      else
 	      		throw new Error('Unable to parse PROP TYPE');
 	    	}
 	  	}

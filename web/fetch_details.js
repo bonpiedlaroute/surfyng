@@ -27,6 +27,113 @@ function append(parent, el) {
   return parent.appendChild(el);
 }
 
+function enrichRelatedInfos(cityname, isForSale, isFlat)
+{
+  var othersrelatedinfos_div = document.getElementById("othersrelatedinfos");
+
+  if(othersrelatedinfos_div)
+  {
+    var line_div = createNode("div");
+    line_div.className = "sf_line_results row mx-auto";
+    othersrelatedinfos_div.appendChild(line_div);
+
+    var generic_infos_box_div1 = createNode("div");
+    generic_infos_box_div1.className = "sf_generic_infos_box";
+    generic_infos_box_div1.style.height ="180px";
+
+    var generic_infos_container_div1 = createNode("div");
+    generic_infos_container_div1.className = "sf_generic_infos_container";
+
+    var generic_infos_desc_header1 = createNode("div");
+    generic_infos_desc_header1.className = "sf_generic_infos_desc_header";
+    var generic_infos_desc_header_text1 = createNode("h2");
+    generic_infos_desc_header_text1.className = "sf_generic_infos_desc_header_text";
+    generic_infos_desc_header_text1.innerHTML = isForSale? "Vente ": "Location ";
+    generic_infos_desc_header_text1.innerHTML += isFlat? " appartement ": " maison ";
+    generic_infos_desc_header_text1.innerHTML += " à proximité de ";
+    generic_infos_desc_header_text1.innerHTML += cityname;
+    generic_infos_desc_header_text1.innerHTML += " (" + getPostalCode(cityname) + ")";
+    generic_infos_desc_header1.appendChild(generic_infos_desc_header_text1);
+
+    generic_infos_container_div1.appendChild(generic_infos_desc_header1);
+
+
+    for(var key in postalCodeByCity)
+    {
+      if( key != cityname.toUpperCase())
+      {
+        var generic_infos_desc_1 = createNode("div");
+        generic_infos_desc_1.className = "sf_generic_infos_desc";
+        var generic_infos_desc_text1 = createNode("a");
+        generic_infos_desc_text1.className = "sf_generic_infos_desc_text";
+        generic_infos_desc_text1.innerHTML = isForSale? "Achat ": "Location ";
+        generic_infos_desc_text1.innerHTML += isFlat? " appartement ": " maison ";
+        generic_infos_desc_text1.innerHTML += key.toLowerCase();
+        var ad_link = "/liste-annonces/";
+        ad_link += isForSale? "achat/":"location/";
+        ad_link += isFlat? "appartements/":"maisons/";
+        ad_link += key.toLowerCase();
+        ad_link += "-" + getPostalCode(key);
+        generic_infos_desc_text1.href = ad_link;
+        var generic_infos_desc_text_icon = createNode("i");
+        generic_infos_desc_text_icon.className = "fas fa-chevron-right sf_generic_infos_desc_text_icon";
+        generic_infos_desc_text1.appendChild(generic_infos_desc_text_icon);
+
+        generic_infos_desc_1.appendChild(generic_infos_desc_text1);
+
+        generic_infos_container_div1.appendChild(generic_infos_desc_1);
+      }
+    }
+    generic_infos_box_div1.appendChild(generic_infos_container_div1);
+    othersrelatedinfos_div.appendChild(generic_infos_box_div1);
+
+    var generic_infos_box_div3 = createNode("div");
+    generic_infos_box_div3.style.height = "80px";
+    generic_infos_box_div3.className = "sf_generic_infos_box";
+    var generic_infos_container_div3 = createNode("div");
+    generic_infos_container_div3.className = "sf_generic_infos_container";
+
+    if(isForSale)
+    {
+      var generic_infos_desc_3 = createNode("div");
+      generic_infos_desc_3.className = "sf_generic_infos_desc";
+      var generic_infos_desc_text3 = createNode("a");
+      generic_infos_desc_text3.className = "sf_generic_infos_desc_text";
+      generic_infos_desc_text3.innerHTML = "Prix des dernières ventes ";
+      generic_infos_desc_text3.innerHTML += isFlat ? "d'appartements à ": "de maisons à ";
+      generic_infos_desc_text3.innerHTML += cityname;
+
+      generic_infos_desc_text3.href = "https://app.dvf.etalab.gouv.fr/";
+      generic_infos_desc_text3.target = "_blank";
+      generic_infos_desc_text_icon = createNode("i");
+      generic_infos_desc_text_icon.className = "fas fa-chevron-right sf_generic_infos_desc_text_icon";
+      generic_infos_desc_text3.appendChild(generic_infos_desc_text_icon);
+
+      generic_infos_desc_3.appendChild(generic_infos_desc_text3);
+
+      generic_infos_container_div3.appendChild(generic_infos_desc_3);
+    }
+
+    var generic_infos_desc_4 = createNode("div");
+    generic_infos_desc_4.className = "sf_generic_infos_desc";
+    var generic_infos_desc_text4 = createNode("a");
+    generic_infos_desc_text4.className = "sf_generic_infos_desc_text";
+    generic_infos_desc_text4.innerHTML = "Actualité immobilière";
+    generic_infos_desc_text4.href = "/actualite-immobilier.html";
+    generic_infos_desc_text_icon = createNode("i");
+    generic_infos_desc_text_icon.className = "fas fa-chevron-right sf_generic_infos_desc_text_icon";
+    generic_infos_desc_text4.appendChild(generic_infos_desc_text_icon);
+
+    generic_infos_desc_4.appendChild(generic_infos_desc_text4);
+
+    generic_infos_container_div3.appendChild(generic_infos_desc_4);
+
+    generic_infos_box_div3.appendChild(generic_infos_container_div3);
+    othersrelatedinfos_div.appendChild(generic_infos_box_div3);
+
+  }
+
+}
 
 const url = 'https://surfyn.fr:7878/search/ad?id='+ window.location.search.substr(1);
 //const url = 'http://127.0.0.1:7878/search/ad?id='+ window.location.search.substr(1);
@@ -42,8 +149,8 @@ if(!puppeter)
 
   })
   .catch(function(error) {
-
     console.log(error);
+    window.location="erreur.html";
   });
 }
 
@@ -83,7 +190,7 @@ function generate_details_page(data)
       det_ad_container_div.className = "det_ad_container";
 
       if(i%2 != 0 )
-      det_ad_container_div.style.marginLeft = ismobile ? "15px" : "70px";
+      det_ad_container_div.style.marginLeft ="20px";
 
       var ad_link = createNode("a");
       ad_link.style.display = "block";
@@ -883,10 +990,11 @@ function generate_details_page(data)
       pagetitle += data[0].SEARCH_TYPE == "For sale"? "vendre ":"louer ";
       isForSale = data[0].SEARCH_TYPE == "For sale";
     }
-    var postalcode = ""
+    var postalcode = "";
+    var cityname = "";
     if( data[0].hasOwnProperty('CITY'))
     {
-      var cityname = data[0].CITY[0].toUpperCase() + data[0].CITY.slice(1);
+      cityname = data[0].CITY[0].toUpperCase() + data[0].CITY.slice(1);
       nb_similar.innerHTML += cityname;
       postalcode = getPostalCode(cityname);
       nb_similar.innerHTML += " (" + postalcode + ")";
@@ -1051,7 +1159,7 @@ function generate_details_page(data)
     sf_visit_file_link_frame.className = "sf_estimate_link_frame";
     sf_visit_file_link_frame.appendChild(sf_visit_file_link);
 
-
+    enrichRelatedInfos(cityname, isForSale, isFlat);
   } //end of else if(data.length == 0 )
 
   var header_content = document.getElementById("header-content");
@@ -1059,6 +1167,8 @@ function generate_details_page(data)
   forPuppeteer.setAttribute("id", "prerendered-page");
   forPuppeteer.style.visibility = 'hidden';
   header_content.appendChild(forPuppeteer);
+
+
 
   var facebook_icon = document.getElementById("facebook-icon");
   facebook_icon.style.color = "white";

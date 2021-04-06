@@ -244,6 +244,10 @@ std::string searchTypeValue = "";
       value.fieldtype = Type::type::STRING;
       attributestoget[id_first_timestamp] = value;
 
+      value.fieldtype = Type::type::STRING;
+      attributestoget[id_adtextdescription] = value;
+      
+
       bool scanend = false;
 
 

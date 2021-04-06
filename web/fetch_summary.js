@@ -19,6 +19,272 @@ function loadJSON(path, success, error) {
     xobj.send(null);
  }
 
+function populateOthersRelatedInfos(main_content, search_city, searchType, propertyType)
+{
+  if(propertyType == "appartements" || propertyType == "maisons")
+  {
+    var line_div = createNode("div");
+    line_div.className = "sf_line_results row mx-auto";
+    main_content.appendChild(line_div);
+
+    var others_similar_ad_title = "";
+    var others_ad_title_1 = "Autres types de biens immobiliers à";
+    var realestate_city_infos_title = "Immobilier à ";
+
+    var others_ad_text_1 = "";
+    var others_ad_link_1 = "/liste-annonces/";
+    var others_similar_ad_text = {
+      "others_similar_ad_text_1": "",
+      "others_similar_ad_text_2" : "",
+      "others_similar_ad_text_3" : "",
+      "others_similar_ad_text_4" : "",
+      "others_similar_ad_text_5" : "" };
+
+    var realestate_city_infos_text_1 = "Les agences immobilières à ";
+    var realestate_city_infos_text_2 = "Prix du m<sup>2</sup> à ";
+    var realestate_city_infos_text_3 = "Conseils pour votre projet ";
+
+    var others_similar_ad_link = {
+      "others_similar_ad_link_1" : "/liste-annonces/",
+      "others_similar_ad_link_2" : "/liste-annonces/",
+      "others_similar_ad_link_3" : "/liste-annonces/",
+      "others_similar_ad_link_4" : "/liste-annonces/",
+      "others_similar_ad_link_5" : "/liste-annonces/"
+    };
+
+    if(searchType == "1" )
+    {
+      if(propertyType == "appartements")
+      {
+        others_similar_ad_title += "Achat appartement " ;
+        others_similar_ad_text["others_similar_ad_text_1"] += "Achat studio à ";
+        others_similar_ad_text["others_similar_ad_text_2"] += "Achat appartement 2 pièces à ";
+        others_similar_ad_text["others_similar_ad_text_3"] += "Achat appartement 3 pièces à ";
+        others_similar_ad_text["others_similar_ad_text_4"] += "Achat appartement 4 pièces à ";
+        others_similar_ad_text["others_similar_ad_text_5"] += "Achat appartement 5 pièces à ";
+
+        others_ad_text_1 += "Vente maison ";
+        others_ad_link_1 += "achat/maisons/";
+
+        others_similar_ad_link["others_similar_ad_link_1"] += "achat/appartements-studios/";
+        others_similar_ad_link["others_similar_ad_link_2"] += "achat/appartements-2-pieces/";
+        others_similar_ad_link["others_similar_ad_link_3"] += "achat/appartements-3-pieces/";
+        others_similar_ad_link["others_similar_ad_link_4"] += "achat/appartements-4-pieces/";
+        others_similar_ad_link["others_similar_ad_link_5"] += "achat/appartements-5-pieces/";
+
+      }
+      else
+      {
+        others_similar_ad_title += "Achat maison " ;
+        others_similar_ad_text["others_similar_ad_text_1"] += "Achat maison 3 pièces à ";
+        others_similar_ad_text["others_similar_ad_text_2"] += "Achat maison 4 pièces à ";
+        others_similar_ad_text["others_similar_ad_text_3"] += "Achat maison 5 pièces à ";
+
+        others_ad_text_1 += "Vente appartement ";
+        others_ad_link_1 += "achat/appartements/";
+
+        others_similar_ad_link["others_similar_ad_link_1"] += "achat/maisons-3-pieces/";
+        others_similar_ad_link["others_similar_ad_link_2"] += "achat/maisons-4-pieces/";
+        others_similar_ad_link["others_similar_ad_link_3"] += "achat/maisons-5-pieces/";
+      }
+      others_ad_title_1 += " vendre à ";
+      realestate_city_infos_text_3 += "d'achat immobilier";
+    }
+    else
+    {
+      if(propertyType == "appartements")
+      {
+        others_similar_ad_title += "Location appartement " ;
+        others_similar_ad_text["others_similar_ad_text_1"] += "Location studio à ";
+        others_similar_ad_text["others_similar_ad_text_2"] += "Location appartement 2 pièces à ";
+        others_similar_ad_text["others_similar_ad_text_3"] += "Location appartement 3 pièces à ";
+        others_similar_ad_text["others_similar_ad_text_4"] += "Location appartement 4 pièces à ";
+        others_similar_ad_text["others_similar_ad_text_5"] += "Location appartement 5 pièces à ";
+
+        others_ad_text_1 += "Location maison ";
+        others_ad_link_1 += "location/maisons/";
+
+        others_similar_ad_link["others_similar_ad_link_1"] += "location/appartements-studios/";
+        others_similar_ad_link["others_similar_ad_link_2"] += "location/appartements-2-pieces/";
+        others_similar_ad_link["others_similar_ad_link_3"] += "location/appartements-3-pieces/";
+        others_similar_ad_link["others_similar_ad_link_4"] += "location/appartements-4-pieces/";
+        others_similar_ad_link["others_similar_ad_link_5"] += "location/appartements-5-pieces/";
+      }
+      else
+      {
+        others_similar_ad_title += "Location maison " ;
+        others_similar_ad_text["others_similar_ad_text_1"] += "Location maison 3 pièces à ";
+        others_similar_ad_text["others_similar_ad_text_2"] += "Location maison 4 pièces à ";
+        others_similar_ad_text["others_similar_ad_text_3"] += "Location maison 5 pièces à ";
+
+        others_ad_text_1 += "Location appartement ";
+        others_ad_link_1 += "location/appartements/";
+
+        others_similar_ad_link["others_similar_ad_link_1"] += "location/maisons-3-pieces/";
+        others_similar_ad_link["others_similar_ad_link_2"] += "location/maisons-4-pieces/";
+        others_similar_ad_link["others_similar_ad_link_3"] += "location/maisons-5-pieces/";
+      }
+      realestate_city_infos_text_3 += "de location immobilière";
+    }
+    others_similar_ad_title += search_city ;
+    others_ad_title_1 += search_city;
+    others_similar_ad_text["others_similar_ad_text_1"] += search_city;
+    others_similar_ad_text["others_similar_ad_text_2"] += search_city;
+    others_similar_ad_text["others_similar_ad_text_3"] += search_city;
+    others_similar_ad_text["others_similar_ad_text_4"] += search_city;
+    others_similar_ad_text["others_similar_ad_text_5"] += search_city;
+
+    others_ad_text_1 += search_city;
+
+    others_similar_ad_link["others_similar_ad_link_1"] += search_city.toLowerCase() + '-' + getPostalCode(search_city) ;
+    others_similar_ad_link["others_similar_ad_link_2"] += search_city.toLowerCase() + '-' + getPostalCode(search_city) ;
+    others_similar_ad_link["others_similar_ad_link_3"] += search_city.toLowerCase() + '-' + getPostalCode(search_city) ;
+    others_similar_ad_link["others_similar_ad_link_4"] += search_city.toLowerCase() + '-' + getPostalCode(search_city) ;
+    others_similar_ad_link["others_similar_ad_link_5"] += search_city.toLowerCase() + '-' + getPostalCode(search_city) ;
+
+    others_ad_link_1 += search_city.toLowerCase() + '-' + getPostalCode(search_city);
+    realestate_city_infos_title += search_city;
+
+    realestate_city_infos_text_1 += search_city;
+    realestate_city_infos_text_2 += search_city + ": estimer son bien";
+
+    var generic_infos_box_div1 = createNode("div");
+    generic_infos_box_div1.className = "sf_generic_infos_box";
+    generic_infos_box_div1.style.height ="220px";
+
+    var generic_infos_container_div1 = createNode("div");
+    generic_infos_container_div1.className = "sf_generic_infos_container";
+
+    var generic_infos_desc_header1 = createNode("div");
+    generic_infos_desc_header1.className = "sf_generic_infos_desc_header";
+    var generic_infos_desc_header_text1 = createNode("h2");
+    generic_infos_desc_header_text1.className = "sf_generic_infos_desc_header_text";
+    generic_infos_desc_header_text1.innerHTML = others_similar_ad_title;
+    generic_infos_desc_header1.appendChild(generic_infos_desc_header_text1);
+
+    generic_infos_container_div1.appendChild(generic_infos_desc_header1);
+
+    var length = propertyType == "appartements" ? 5 : 3;
+
+    for(var i = 0 ; i < length;i++)
+    {
+      var generic_infos_desc_1 = createNode("div");
+      generic_infos_desc_1.className = "sf_generic_infos_desc";
+      var generic_infos_desc_text1 = createNode("a");
+      generic_infos_desc_text1.className = "sf_generic_infos_desc_text";
+      generic_infos_desc_text1.innerHTML = others_similar_ad_text["others_similar_ad_text_"+ String(i+1)];
+      generic_infos_desc_text1.href = others_similar_ad_link["others_similar_ad_link_" + String(i+1)];
+      var generic_infos_desc_text_icon = createNode("i");
+      generic_infos_desc_text_icon.className = "fas fa-chevron-right sf_generic_infos_desc_text_icon";
+      generic_infos_desc_text1.appendChild(generic_infos_desc_text_icon);
+
+      generic_infos_desc_1.appendChild(generic_infos_desc_text1);
+
+      generic_infos_container_div1.appendChild(generic_infos_desc_1);
+    }
+
+
+
+    generic_infos_box_div1.appendChild(generic_infos_container_div1);
+    main_content.appendChild(generic_infos_box_div1);
+
+    var generic_infos_box_div2 = createNode("div");
+    generic_infos_box_div2.style.height = "100px";
+    generic_infos_box_div2.className = "sf_generic_infos_box";
+    var generic_infos_container_div2 = createNode("div");
+    generic_infos_container_div2.className = "sf_generic_infos_container";
+    var generic_infos_desc_header2 = createNode("div");
+    generic_infos_desc_header2.className = "sf_generic_infos_desc_header";
+    var generic_infos_desc_header_text2 = createNode("h2");
+    generic_infos_desc_header_text2.className = "sf_generic_infos_desc_header_text";
+    generic_infos_desc_header_text2.innerHTML = others_ad_title_1;
+    generic_infos_desc_header2.appendChild(generic_infos_desc_header_text2);
+
+    generic_infos_container_div2.appendChild(generic_infos_desc_header2);
+
+    var generic_infos_desc_2 = createNode("div");
+    generic_infos_desc_2.className = "sf_generic_infos_desc";
+    var generic_infos_desc_text2 = createNode("a");
+    generic_infos_desc_text2.className = "sf_generic_infos_desc_text";
+    generic_infos_desc_text2.innerHTML = others_ad_text_1;
+    generic_infos_desc_text2.href = others_ad_link_1;
+    generic_infos_desc_text_icon = createNode("i");
+    generic_infos_desc_text_icon.className = "fas fa-chevron-right sf_generic_infos_desc_text_icon";
+    generic_infos_desc_text2.appendChild(generic_infos_desc_text_icon);
+
+    generic_infos_desc_2.appendChild(generic_infos_desc_text2);
+
+    generic_infos_container_div2.appendChild(generic_infos_desc_2);
+
+    generic_infos_box_div2.appendChild(generic_infos_container_div2);
+    main_content.appendChild(generic_infos_box_div2);
+
+
+    var generic_infos_box_div3 = createNode("div");
+    generic_infos_box_div3.style.height = "160px";
+    generic_infos_box_div3.className = "sf_generic_infos_box";
+    var generic_infos_container_div3 = createNode("div");
+    generic_infos_container_div3.className = "sf_generic_infos_container";
+    var generic_infos_desc_header3 = createNode("div");
+    generic_infos_desc_header3.className = "sf_generic_infos_desc_header";
+    var generic_infos_desc_header_text3 = createNode("h2");
+    generic_infos_desc_header_text3.className = "sf_generic_infos_desc_header_text";
+    generic_infos_desc_header_text3.innerHTML = realestate_city_infos_title;
+    generic_infos_desc_header3.appendChild(generic_infos_desc_header_text3);
+
+    generic_infos_container_div3.appendChild(generic_infos_desc_header3);
+
+    var generic_infos_desc_3 = createNode("div");
+    generic_infos_desc_3.className = "sf_generic_infos_desc";
+    var generic_infos_desc_text3 = createNode("a");
+    generic_infos_desc_text3.className = "sf_generic_infos_desc_text";
+    generic_infos_desc_text3.innerHTML = realestate_city_infos_text_1;
+    var postalcode = getPostalCode(search_city);
+    generic_infos_desc_text3.href = "agence-immobiliere-" + search_city.toLowerCase() + "-" + postalcode + ".html";
+    generic_infos_desc_text_icon = createNode("i");
+    generic_infos_desc_text_icon.className = "fas fa-chevron-right sf_generic_infos_desc_text_icon";
+    generic_infos_desc_text3.appendChild(generic_infos_desc_text_icon);
+
+    generic_infos_desc_3.appendChild(generic_infos_desc_text3);
+
+    generic_infos_container_div3.appendChild(generic_infos_desc_3);
+
+    if(searchType == "1" && postalcode.slice(0,2) == "92")
+    {
+      var generic_infos_desc_4 = createNode("div");
+      generic_infos_desc_4.className = "sf_generic_infos_desc";
+      var generic_infos_desc_text4 = createNode("a");
+      generic_infos_desc_text4.className = "sf_generic_infos_desc_text";
+      generic_infos_desc_text4.innerHTML = realestate_city_infos_text_2;
+      generic_infos_desc_text4.href = "estimation-immobiliere-en-ligne.html";
+      generic_infos_desc_text_icon = createNode("i");
+      generic_infos_desc_text_icon.className = "fas fa-chevron-right sf_generic_infos_desc_text_icon";
+      generic_infos_desc_text4.appendChild(generic_infos_desc_text_icon);
+
+      generic_infos_desc_4.appendChild(generic_infos_desc_text4);
+
+      generic_infos_container_div3.appendChild(generic_infos_desc_4);
+    }
+
+    var generic_infos_desc_5 = createNode("div");
+    generic_infos_desc_5.className = "sf_generic_infos_desc";
+    var generic_infos_desc_text5 = createNode("a");
+    generic_infos_desc_text5.className = "sf_generic_infos_desc_text";
+    generic_infos_desc_text5.innerHTML = realestate_city_infos_text_3;
+    generic_infos_desc_text5.href = "conseil-immobilier.html";
+    generic_infos_desc_text_icon = createNode("i");
+    generic_infos_desc_text_icon.className = "fas fa-chevron-right sf_generic_infos_desc_text_icon";
+    generic_infos_desc_text5.appendChild(generic_infos_desc_text_icon);
+
+    generic_infos_desc_5.appendChild(generic_infos_desc_text5);
+
+    generic_infos_container_div3.appendChild(generic_infos_desc_5);
+
+    generic_infos_box_div3.appendChild(generic_infos_container_div3);
+    main_content.appendChild(generic_infos_box_div3);
+
+  }
+}
   function createNode(element) {
       return document.createElement(element);
   }
@@ -133,7 +399,19 @@ function buildurlparams()
       url_params += "&rooms=1";
     }else
     {
-      return false;
+      var propertyTypeDetails = pathname[2].split("-");
+      if(propertyTypeDetails.length == 3 && propertyTypeDetails[0] ==  "appartements" && propertyTypeDetails[2] == "pieces")
+      {
+        url_params += "&prop_type=1";
+        url_params += "&rooms=" + propertyTypeDetails[1];
+      }
+      else if(propertyTypeDetails.length == 3 && propertyTypeDetails[0] ==  "maisons" && propertyTypeDetails[2] == "pieces" )
+      {
+        url_params += "&prop_type=2";
+        url_params += "&rooms=" + propertyTypeDetails[1];
+      }
+      else
+        return false;
     }
   }
 
@@ -193,8 +471,10 @@ function buildpage()
       //sessionStorage.setItem("summary_json_data", JSON.stringify(data));
     })
     .catch(function(error) {
-      loadJSON("data/announces_summary.json",
+      /*loadJSON("data/announces_summary.json",
       function (data) { generate_summary_page(JSON.parse(data.response));}, function(err) {console.log(err);})
+      */
+      window.location="erreur.html";
       console.log(error);
     });
   }
@@ -530,6 +810,16 @@ function generate_summary_page(data, empty=false)
 
         ad_summary_container_div.appendChild(ad_summary_desc_div2);
 
+        var ad_summary_desc_div3 = createNode("div");
+        ad_summary_desc_div3.className = "announce_summary_desc";
+        var ad_summary_desc_span3 = createNode("span");
+        ad_summary_desc_span3.className = "sf_announce_summary_desc_text";
+        if( data[i].hasOwnProperty('AD_TEXT_DESCRIPTION'))
+        ad_summary_desc_span3.innerHTML = data[i].AD_TEXT_DESCRIPTION.slice(0,100);
+        ad_summary_desc_div3.appendChild(ad_summary_desc_span3);
+
+        ad_summary_container_div.appendChild(ad_summary_desc_div3);
+
         var ad_source_frame_div = createNode("div");
         ad_source_frame_div.className = "ad_summary_src";
 
@@ -636,10 +926,13 @@ function generate_summary_page(data, empty=false)
           addGoogleAds(main_content);
         }
 
-
     }
 
   }
+
+  /* set other related infos */
+  populateOthersRelatedInfos(main_content, search_city, searchType, propertyType);
+
 
   var header_content = document.getElementById("header-content");
   var forPuppeteer = createNode("div");
