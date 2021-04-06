@@ -17,11 +17,10 @@ from thrift.server import TServer
 
 from firebase_admin import credentials, auth
 
-from dynamodb_access.ttypes import Type, ValueType, KeyValue
+from thrift_generated.dynamodb_access.ttypes import Type, ValueType, KeyValue
 
 from hash_id import *
 
-import os
 import json
 import logging
 import datetime
@@ -53,7 +52,7 @@ class DepositServiceHandler(Iface):
 		self.transport.open()
 
 	def annouce_deposit(self, user_id, data):
-		logging.info(f'Deposit announce of user {user_id}')
+		logging.info('Deposit announce of user {}'.format(user_id))
 
 		user = auth.get_user(user_id)
 		deposit_id = user_id + user.email + datetime.datetime.utcnow().isoformat()
@@ -155,11 +154,11 @@ class DepositServiceHandler(Iface):
 
 		if result.success:
 			return_value.success = True
-			logging.info(f'Successful put announce {ID} in table {self.deposit_tablename}')
+			logging.info('Successful put announce {} in table {}'.format(ID, self.deposit_tablename))
 		else:
 			return_value.success = False
 			return_value.error = result.error
-			logging.error(f'Fail to put announce {ID} in table {self.deposit_tablename}')
+			logging.error('Fail to put announce {} in table {}'.format(ID, self.deposit_tablename))
 
 		return return_value
 
@@ -168,7 +167,7 @@ if __name__ == '__main__':
 	firebase_admin.initialize_app(app)
 
 	now = datetime.datetime.now()
-	log_filename = f"deposit_{now.strftime('%Y-%m-%d-%H-%M-%S')}.log"
+	log_filename = "deposit_{}.log".format(now.strftime('%Y-%m-%d-%H-%M-%S'))
 	logging.basicConfig(filename=log_filename, level=logging.INFO, format='%(asctime)s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
 	logging.info('Starting deposit server')
