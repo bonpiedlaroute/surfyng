@@ -621,6 +621,11 @@ width:100%;
   background-position:left;
 }
 
+.deposit_city
+{
+  width: 40%;
+  height: 140px;
+}
 .estimate_place_left
 {
   width:15%;height:25px;
@@ -1551,7 +1556,18 @@ padding:5px;
   border-radius:8px;
   }
 
+  .deposit_button
+  {
+    height: 120px;
+    width: 88%;
+    border-radius: 8px;
+  }
 
+  .deposit_city
+  {
+    height: 140px;
+    width: 88%;
+  }
   .estimate_icon_box
   {
     height:100px;

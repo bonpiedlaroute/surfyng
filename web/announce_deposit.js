@@ -72,13 +72,16 @@ var imageInput1 = document.getElementById("uploadImage4");
 // Error fields
 var title_error = document.getElementById("title_error_message");
 var search_error = document.getElementById("category_error_message");
+var city_error=  document.getElementById("city_error_message");
 var prop_error = document.getElementById("prop_type_error_message");
 var area_error = document.getElementById("area_error_message");
 var rooms_error = document.getElementById("rooms_error_message");
 var price_error = document.getElementById("price_error_message");
 
 var description_error = document.getElementById("description_error_message");
-var images_error = document.getElementById("images_error_msg");
+var address_error = document.getElementById("address_error_message");
+var phone_error = document.getElementById("phone_error_message");
+var images_error = document.getElementById("images_error_message");
 
 function validate_first_step()
 {	
@@ -109,8 +112,9 @@ function validate_first_step()
 		 				sessionStorage.setItem("area", areaInput.value);
 		 				sessionStorage.setItem("rooms", rooms_result[1]);
 		 				sessionStorage.setItem("price", priceInput.value);
+		 				sessionStorage.setItem("city", cityInput.value);
 
-		 				window.location.href = "validation-depot-annonce.html";
+		 				window.location.href = "valider-deposer-une-annonce.html";
 		 			}
 		 			else
 		 			{
@@ -155,45 +159,51 @@ function validate_second_step()
 
 	if(isConnectedUser())
 	{
-		if(checkDescription())
+		if(checkAddress())
 		{
-			if(isAllImagesSet())
+			if(checkDescription())
 			{
-				sessionStorage.setItem("description", descriptionInput.value)
-				dataParams["description"] = descriptionInput.value;
-				console.log(dataParams);
-				if(buildParams())
+				if(isAllImagesSet())
 				{
-					console.log(url);
-					fetch(url, {
-						method: "POST",
-						body: JSON.stringify(dataParams),
-						headers: {
-							"Content-Type": "application/json;charset=UTF-8"
-						},
-						referrer:"same-origin",
-						mode: "no-cors"
-					})
-					.then(function(response){
-						showSuccessAnnounceDeposit();
-					})
-					.catch(function(error){
-						console.log(error);
-					});
+					if(checkPhone())
+					{
+						sessionStorage.setItem("address", addressInput.value);
+						sessionStorage.setItem("description", descriptionInput.value)
+						if(isEmpty(phoneInput.value) === true)
+							sessionStorage.setItem("phone", phoneInput.value);
+							dataParams["phone"] = phoneInput.value;
+
+						dataParams["address"] = addressInput.value;
+						dataParams["description"] = descriptionInput.value;
+						console.log(dataParams);
+						if(buildParams())
+						{
+							console.log(url);
+							fetch(url, {
+								method: "POST",
+								body: JSON.stringify(dataParams),
+								headers: {
+									"Content-Type": "application/json;charset=UTF-8"
+								},
+								referrer:"same-origin",
+								mode: "no-cors"
+							})
+							.then(function(response){
+								showSuccessAnnounceDeposit();
+							})
+							.catch(function(error){
+								console.log(error);
+							});
+						}
+					}
+				}
+				else
+				{
+					images_error.innerHTML = "* Vous devez sélectionner 4 images pour décrire votre bien.";
+					images_error.style.color = "red";
+					images_error.style.fontsize = "12px";
 				}
 			}
-			else
-			{
-				images_error.innerHTML = "* Vous devez sélectionner 4 images pour décrire votre bien.";
-				images_error.style.color = "red";
-				images_error.style.fontsize = "12px";
-			}
-		}
-		else
-		{
-			description_error.innerHTML = "* Vous devez renseigner une description pour votre bien.";
-			description_error.style.color = "red";
-			description_error.style.fontsize = "12px";
 		}
 	}
 	else
@@ -562,55 +572,102 @@ for(i = 0; i < rooms.length; i++)
 var areaInput = document.getElementById("surface_deposit");
 var priceInput = document.getElementById("price_deposit");
 var titleInput = document.getElementById("title_deposit");
+var cityInput = document.getElementById("city_deposit");
+var addressInput = document.getElementById("address_deposit");
+var phoneInput = document.getElementById("phone_deposit");
 
 var validate = document.getElementById("validate");
 
 function checkInputs(input=0)
 {
-	if((isEmpty(titleInput.value) && input == 1) || (isEmpty(titleInput.value) && input == 0))
+	if(titleInput)
 	{
-		title_error.innerHTML = "* Vous devez renseigner un titre pour votre annonce.";
-		title_error.style.color = "red";
-		title_error.style.fontsize = "12px";
-		validate.href = "javascript:void(0)";
-		return false;
+		if((isEmpty(titleInput.value) && input == 1) || (isEmpty(titleInput.value) && input == 0))
+		{
+			title_error.innerHTML = "* Vous devez renseigner un titre pour votre annonce.";
+			title_error.style.color = "red";
+			title_error.style.fontsize = "12px";
+			validate.href = "javascript:void(0)";
+			return false;
+		}
+		else
+		{
+			title_error.innerHTML = "";
+			title_error.style.color = "";
+			title_error.style.fontsize = "";
+		}	
 	}
-	else
+	
+	if(areaInput)
 	{
-		title_error.innerHTML = "";
-		title_error.style.color = "";
-		title_error.style.fontsize = "";
+		if((isEmpty(areaInput.value) && input == 2) || (isEmpty(areaInput.value) && input == 0))
+		{
+			area_error.innerHTML = "* Vous devez renseigner la surface de votre bien.";
+			area_error.style.color = "red";
+			area_error.style.fontsize = "12px";
+			validate.href = "javascript:void(0)";
+			return false;
+		}
+		else
+		{
+			area_error.innerHTML = "";
+			area_error.style.color = "";
+			area_error.style.fontsize = "";
+		}
 	}
-
-	if((isEmpty(areaInput.value) && input == 2) || (isEmpty(areaInput.value) && input == 0))
+	
+	if(priceInput)
 	{
-		area_error.innerHTML = "* Vous devez renseigner la surface de votre bien.";
-		area_error.style.color = "red";
-		area_error.style.fontsize = "12px";
-		validate.href = "javascript:void(0)";
-		return false;
+		if((isEmpty(priceInput.value) && input == 3) || (isEmpty(priceInput.value) && input == 0))
+		{
+			price_error.innerHTML = "* Vous devez renseigner le prix de votre bien.";
+			price_error.style.color = "red";
+			price_error.style.fontsize = "12px";
+			validate.href = "javascript:void(0)";
+			return false;
+		}
+		else
+		{
+			price_error.innerHTML = "";
+			price_error.style.color = "";
+			price_error.style.fontsize = "";
+		}
 	}
-	else
+	
+	if(cityInput)
 	{
-		area_error.innerHTML = "";
-		area_error.style.color = "";
-		area_error.style.fontsize = "";
+		if((isEmpty(cityInput.value) && input == 4) || (isEmpty(cityInput.value) && input == 0))
+		{
+			city_error.innerHTML = "* Vous devez renseigner la ville de votre bien.";
+			city_error.style.color = "red";
+			city_error.style.fontsize = "12px";
+			validate.href = "javascript:void(0)";
+			return false;
+		}
+		else
+		{
+			if(cities.includes(cityInput.value.toUpperCase()))
+			{
+				city_error.innerHTML = "";
+				city_error.style.color = "";
+				city_error.style.fontsize = "";
+			}
+			else
+			{
+				if(input == 4)
+				{
+					city_error.innerHTML = "* Vous devez renseigner une ville du département des haut-de-seine.";
+					city_error.style.color = "red";
+					city_error.style.fontsize = "12px";
+					validate.href = "javascript:void(0)";
+					return false;	
+				}
+				
+			}
+			
+		}	
 	}
-
-	if((isEmpty(priceInput.value) && input == 3) || (isEmpty(priceInput.value) && input == 0))
-	{
-		price_error.innerHTML = "* Vous devez renseigner le prix de votre bien.";
-		price_error.style.color = "red";
-		price_error.style.fontsize = "12px";
-		validate.href = "javascript:void(0)";
-		return false;
-	}
-	else
-	{
-		price_error.innerHTML = "";
-		price_error.style.color = "";
-		price_error.style.fontsize = "";
-	}
+	
 
 	return true;
 }
@@ -650,6 +707,27 @@ function allowOnlyNumber(e)
 
 // Functions to manage second step form
 
+function checkAddress()
+{
+	if(isEmpty(addressInput.value))
+	{
+		address_error.innerHTML = "* Vous devez renseigner l'adresse de votre bien."
+		address_error.style.color = "red";
+		address_error.style.fontsize = "12px";
+		validate.href = "javascript:void(0)";
+		return false;
+	}
+	else
+	{
+		address_error.innerHTML = "";
+		address_error.style.color = "";
+		address_error.style.fontsize = "";
+	}
+
+	return true;
+}
+
+
 function checkDescription()
 {
 	if(isEmpty(descriptionInput.value))
@@ -666,6 +744,26 @@ function checkDescription()
 		description_error.innerHTML = "";
 		description_error.style.color = "";
 		description_error.style.fontsize = "";
+	}
+
+	return true;
+}
+
+function checkPhone()
+{
+	if(isEmpty(phoneInput.value) === false && phoneInput.value.length < 10)
+	{
+		phone_error.innerHTML = "* Vous devez renseigner un numéro de téléphone français."
+		phone_error.style.color = "red";
+		phone_error.style.fontsize = "12px";
+		validate.href = "javascript:void(0)";
+		return false;
+	}
+	else
+	{
+		phone_error.innerHTML = "";
+		phone_error.style.color = "";
+		phone_error.style.fontsize = "";
 	}
 
 	return true;
@@ -743,11 +841,14 @@ function isAllImagesSet()
 {
 	for(i = 0; i < images.length; i++)
 	{
-		if(!images[i])
+		if(images[i] === false)
 		{
 			return false;
 		}
 	}
+	images_error.innerHTML = "";
+	images_error.style.color = "";
+	images_error.style.fontsize = "";
 	return true;
 }
 

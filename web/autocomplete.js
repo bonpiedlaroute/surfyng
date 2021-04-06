@@ -107,8 +107,13 @@ var input_estimate_city = document.getElementById("estimate_city");
 
 var input_search_city = document.getElementById("search_city");
 
+var input_deposit_city = document.getElementById("city_deposit");
+
 if(input_estimate_city)
   autocomplete(input_estimate_city, cities);
 
 if(input_search_city)
   autocomplete(input_search_city, available_cities);
+
+if(input_deposit_city)
+  autocomplete(input_deposit_city, cities);

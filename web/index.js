@@ -59,7 +59,7 @@ function goToDeposit()
     var user_id = sessionStorage.getItem("user_id");
     if(user_id)
     {
-      window.location.href = "depot-annonce.html";
+      window.location.href = "deposer-une-annonce.html";
     }
     else
     {
