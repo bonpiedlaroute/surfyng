@@ -88,7 +88,7 @@ function enrichRelatedInfos(cityname, isForSale, isFlat)
     othersrelatedinfos_div.appendChild(generic_infos_box_div1);
 
     var generic_infos_box_div3 = createNode("div");
-    generic_infos_box_div3.style.height = "80px";
+    generic_infos_box_div3.style.height = "100px";
     generic_infos_box_div3.className = "sf_generic_infos_box";
     var generic_infos_container_div3 = createNode("div");
     generic_infos_container_div3.className = "sf_generic_infos_container";
@@ -113,6 +113,21 @@ function enrichRelatedInfos(cityname, isForSale, isFlat)
 
       generic_infos_container_div3.appendChild(generic_infos_desc_3);
     }
+
+    var generic_infos_desc_5 = createNode("div");
+    generic_infos_desc_5.className = "sf_generic_infos_desc";
+    var generic_infos_desc_text5 = createNode("a");
+    generic_infos_desc_text5.className = "sf_generic_infos_desc_text";
+    generic_infos_desc_text5.innerHTML = "Trouvez les déménageurs autour de ";
+    generic_infos_desc_text5.innerHTML += cityname;
+    generic_infos_desc_text5.href = "/demenageur.html";
+    generic_infos_desc_text_icon = createNode("i");
+    generic_infos_desc_text_icon.className = "fas fa-chevron-right sf_generic_infos_desc_text_icon";
+    generic_infos_desc_text5.appendChild(generic_infos_desc_text_icon);
+
+    generic_infos_desc_5.appendChild(generic_infos_desc_text5);
+
+    generic_infos_container_div3.appendChild(generic_infos_desc_5);
 
     var generic_infos_desc_4 = createNode("div");
     generic_infos_desc_4.className = "sf_generic_infos_desc";
