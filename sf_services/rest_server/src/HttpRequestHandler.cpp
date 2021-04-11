@@ -8,6 +8,7 @@
 #include "sf_services/sf_utils/inc/Logger.h"
 
 #include <iostream>
+#include <memory>
 #include "SendEmailAccess.h"
 
 using Log = surfyn::utils::Logger;
@@ -20,10 +21,13 @@ namespace rest_server
 HttpRequestHandler::HttpRequestHandler(utility::string_t url, http_listener_config conf, const std::string& dbaccess_host, int dbaccess_port,
                                        const std::string& estimator_host, int estimator_port, const std::string& emailalert_host, int emailalert_port)
                                        :m_listener(url, conf),
-                                             m_dbaccess(dbaccess_host, dbaccess_port),
-                                             m_estimatoraccess(estimator_host, estimator_port),
+                                             m_dbaccess_host(dbaccess_host),
+                                             m_dbaccess_port(dbaccess_port),
+                                             m_estimator_host(estimator_host),
+                                             m_estimator_port(estimator_port),
                                              m_geoLocalService(std::make_shared<surfyn::utils::GeoLocal>("../../../bot/data/correspondance_codeinsee_codepostal_iledefrance.csv")),
-                                             m_emailalertaccess(emailalert_host, emailalert_port)
+                                             m_emailalert_host(emailalert_host),
+                                             m_emailalert_port(emailalert_port)
 {
     m_listener.support(methods::GET, [this](http_request message) { handle_get(message);});
     m_listener.support(methods::PUT, [this](http_request message) { handle_put(message);});
@@ -53,14 +57,15 @@ void HttpRequestHandler::handle_get(http_request message)
     if( paths.size() == 2  && paths[0] == "search" && paths[1] == "all")
     {
        auto query = http::uri::split_query(http::uri::decode(message.relative_uri().query()));
-       m_dbaccess.fetchSummary(sstream, query);
+
+       std::make_shared<DBaccess>(m_dbaccess_host, m_dbaccess_port)->fetchSummary(sstream, query);
     }
     else
     {
        if(paths.size() == 2  && paths[0] == "search" && paths[1] == "ad")
        {
           auto query = http::uri::split_query(http::uri::decode(message.relative_uri().query()));
-          m_dbaccess.fetchDetails(sstream, query, m_geoLocalService);
+          std::make_shared<DBaccess>(m_dbaccess_host, m_dbaccess_port)->fetchDetails(sstream, query, m_geoLocalService);
        }
        else
        {
@@ -81,24 +86,23 @@ void HttpRequestHandler::handle_get(http_request message)
                 
                 
                 
-                m_dbaccess.fetchHighAndLowPriceByM2(inseecode, isFlat, highpricebym2, lowpricebym2);
+                std::make_shared<DBaccess>(m_dbaccess_host, m_dbaccess_port)->fetchHighAndLowPriceByM2(inseecode, isFlat, highpricebym2, lowpricebym2);
             }
-            m_estimatoraccess.fetchHousePrice(sstream, query,  isFlat, highpricebym2, lowpricebym2);
+            std::make_shared<EstimatorAccess>(m_estimator_host, m_estimator_port)->fetchHousePrice(sstream, query,  isFlat, highpricebym2, lowpricebym2);
 
            }else 
            {
                 if(paths.size() == 1  && paths[0] == "city_info")
                 {
                     auto query = http::uri::split_query(http::uri::decode(message.relative_uri().query()));
-                    m_dbaccess.fetchCityInfo(sstream, query, m_geoLocalService);
+                    std::make_shared<DBaccess>(m_dbaccess_host, m_dbaccess_port)->fetchCityInfo(sstream, query, m_geoLocalService);
                 }
                 else
                 {
                     if(paths.size() == 1  && paths[0] == "my_realestate_search" )
                     {
                         auto query = http::uri::split_query(http::uri::decode(message.relative_uri().query()));
-                        m_emailalertaccess.my_realestate_search(sstream, query);
-                        
+                        std::make_shared<EmailAlertAccess>(m_emailalert_host, m_emailalert_port)->my_realestate_search(sstream, query);
                     }else
                     {
                         std::string error = "Unknown requested service: ";
@@ -123,7 +127,6 @@ void HttpRequestHandler::handle_get(http_request message)
 
     }
 
-    //std::cout << sstream.str() << "\n";
     auto body_text = utility::conversions::to_utf8string(sstream.str());
     auto length = body_text.size();
 
@@ -182,7 +185,7 @@ void HttpRequestHandler::handle_post(http_request message)
         if(paths.size() == 1  && paths[0] == "registeremailalert" )
         {
             auto query = http::uri::split_query(http::uri::decode(message.relative_uri().query()));
-            auto result =  m_emailalertaccess.registerEmailAlert(query);
+            auto result =  std::make_shared<EmailAlertAccess>(m_emailalert_host, m_emailalert_port)->registerEmailAlert(query);
             if(!result.success)
             {
                 http_response response (status_codes::BadRequest);
@@ -196,7 +199,7 @@ void HttpRequestHandler::handle_post(http_request message)
             if(paths.size() == 1  && paths[0] == "change_alert_status" )
             {
                 auto query = http::uri::split_query(http::uri::decode(message.relative_uri().query()));
-                auto result =  m_emailalertaccess.changeAlertStatus(query);
+                auto result =  std::make_shared<EmailAlertAccess>(m_emailalert_host, m_emailalert_port)->changeAlertStatus(query);
                 if(!result.success)
                 {
                     http_response response (status_codes::BadRequest);

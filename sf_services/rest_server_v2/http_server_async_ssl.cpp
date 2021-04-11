@@ -170,9 +170,80 @@ handle_request(
 
     // Attempt to open the file
     beast::error_code ec;
-    http::file_body::value_type body;
-    body.open(path.c_str(), beast::file_mode::scan, ec);
-
+    http::string_body::value_type body;
+    const char* s_data = "[\n\
+{\n\
+\"ID\":\"1\",\n\
+\"PRICE\":\"99045\",\n\
+\"SURFACE\":\"19.61\",\n\
+\"CONSTRUCTION_YEAR\":\"1985\",\n\
+\"TIME_TO_PUBLICTRANSPORT\":\"7mn\",\n\
+\"BEDS\":\"1\",\n\
+\"CITY\":\"colombes\",\n\
+\"PROPERTY_TYPE\":\"studio\",\n\
+\"ROOMS\":\"1\",\n\
+\"TYPE_OF_HEATING\":\"electrique\",\n\
+\"CELLARS\":\"0\"\n\
+}\n\
+,\n\
+{\n\
+\"ID\":\"2\",\n\
+\"PRICE\":\"99045\",\n\
+\"SURFACE\":\"19.61\",\n\
+\"CONSTRUCTION_YEAR\":\"1985\",\n\
+\"TIME_TO_PUBLICTRANSPORT\":\"7mn\",\n\
+\"BEDS\":\"1\",\n\
+\"CITY\":\"colombes\",\n\
+\"PROPERTY_TYPE\":\"studio\",\n\
+\"ROOMS\":\"1\",\n\
+\"TYPE_OF_HEATING\":\"electrique\",\n\
+\"CELLARS\":\"0\"\n\
+}\n\
+,\n\
+{\n\
+\"ID\":\"3\",\n\
+\"PRICE\":\"100000\",\n\
+\"SURFACE\":\"15\",\n\
+\"CONSTRUCTION_YEAR\":\"1960\",\n\
+\"TIME_TO_PUBLICTRANSPORT\":\"2mn\",\n\
+\"BEDS\":\"2\",\n\
+\"CITY\":\"colombes\",\n\
+\"PROPERTY_TYPE\":\"studio\",\n\
+\"ROOMS\":\"3\",\n\
+\"TYPE_OF_HEATING\":\"electrique\",\n\
+\"CELLARS\":\"0\"\n\
+}\n\
+,\n\
+{\n\
+\"ID\":\"4\",\n\
+\"PRICE\":\"100000\",\n\
+\"SURFACE\":\"25\",\n\
+\"CONSTRUCTION_YEAR\":\"1948\",\n\
+\"TIME_TO_PUBLICTRANSPORT\":\"5mn\",\n\
+\"BEDS\":\"1\",\n\
+\"CITY\":\"colombes\",\n\
+\"PROPERTY_TYPE\":\"appartement\",\n\
+\"ROOMS\":\"2\",\n\
+\"TYPE_OF_HEATING\":\"gaz\",\n\
+\"CELLARS\":\"0\"\n\
+}\n\
+,\n\
+{\n\
+\"ID\":\"5\",\n\
+\"PRICE\":\"99045\",\n\
+\"SURFACE\":\"25\",\n\
+\"CONSTRUCTION_YEAR\":\"1950\",\n\
+\"TIME_TO_PUBLICTRANSPORT\":\"10mn\",\n\
+\"BEDS\":\"1\",\n\
+\"CITY\":\"colombes\",\n\
+\"PROPERTY_TYPE\":\"appartement\",\n\
+\"ROOMS\":\"3\",\n\
+\"TYPE_OF_HEATING\":\"gaz\",\n\
+\"CELLARS\":\"0\"\n\
+}\n\
+]\n";
+    //body.open(path.c_str(), beast::file_mode::scan, ec);
+     body = s_data;
     // Handle the case where the file doesn't exist
     if(ec == beast::errc::no_such_file_or_directory)
         return send(not_found(req.target()));
@@ -196,12 +267,13 @@ handle_request(
     }
 
     // Respond to GET request
-    http::response<http::file_body> res{
+    http::response<http::string_body> res{
         std::piecewise_construct,
         std::make_tuple(std::move(body)),
         std::make_tuple(http::status::ok, req.version())};
     res.set(http::field::server, BOOST_BEAST_VERSION_STRING);
-    res.set(http::field::content_type, mime_type(path));
+    res.set(http::field::content_type, "application/json");
+    res.set(http::field::access_control_allow_origin, "*");
     res.content_length(size);
     res.keep_alive(req.keep_alive());
     return send(std::move(res));
