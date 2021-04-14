@@ -34,30 +34,20 @@ sessionStorage.setItem("summary_json_data", "");
 const Params = new URLSearchParams(window.location.search);
 const searchType = Params.get('search_type');
 
+
 if( searchType == "1")
 {
   values[inputType.priceMin] = 50000;
   values[inputType.priceMax] = 4000000;
   valuePriceMin.innerHTML = "50 K€";
   valuePriceMax.innerHTML = "4000 K€";
-  if( pathname.length > 1 && pathname[1] == "recherche")
-  {
-    document.title = "Votre projet d'achat immobilier - Surfyn";
-    search_criteria_title.innerHTML += " d'achat immobilier";
-    document.getElementsByTagName('meta')["description"].content = "Décrivez nous votre projet d'achat immobilier";
-  }
+
 }
 else {
   values[inputType.priceMin] = 100;
   values[inputType.priceMax] = 4000;
   valuePriceMin.innerHTML = "100 €";
   valuePriceMax.innerHTML = "4000 €";
-  if( pathname.length > 1 && pathname[1] == "recherche")
-  {
-    document.title = "Votre projet de location immobilière - Surfyn";
-    search_criteria_title.innerHTML += " de location immobilière";
-    document.getElementsByTagName('meta')["description"].content = "Décrivez nous votre projet de location immobilière";
-  }
 }
 values[inputType.areaMin] = 10;
 values[inputType.areaMax] = 400;

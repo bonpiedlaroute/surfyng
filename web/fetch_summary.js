@@ -474,7 +474,7 @@ function buildpage()
       /*loadJSON("data/announces_summary.json",
       function (data) { generate_summary_page(JSON.parse(data.response));}, function(err) {console.log(err);})
       */
-      window.location="erreur.html";
+      //window.location="erreur.html";
       console.log(error);
     });
   }
@@ -537,6 +537,7 @@ function generate_summary_page(data, empty=false)
     var first_proptype = true;
     var propertyType = "";
     var title = "";
+    var isFlat = false;
     var meta_description = "Toutes les annonces"
 
     if (split_propertyType.indexOf("1") !== -1 || split_propertyType.indexOf("3") !== -1)
@@ -548,7 +549,8 @@ function generate_summary_page(data, empty=false)
         }
       propertyType = "appartements";
       meta_description += " d'";
-      pagetitle += "Appartement"
+      pagetitle += "Appartement";
+      isFlat = true;
     }
     else {
       meta_description += " de "
@@ -562,7 +564,8 @@ function generate_summary_page(data, empty=false)
           first_proptype = false;
         }
       propertyType += "maisons";
-      pagetitle += "Maison"
+      pagetitle += "Maison";
+      isFlat = false;
     }
       meta_description+= propertyType;
       var rooms_text = "";
@@ -598,7 +601,12 @@ function generate_summary_page(data, empty=false)
       meta_description += " ("+ postalcode + ")";
       pagetitle += " - Surfyn";
       meta_description += " actualisées en temps réel, à partir de tous les sites de petites annonces immobilières et d'agences immobilières couvrant la ville de "
-      meta_description += search_city;
+      meta_description += search_city + ".";
+      meta_description += isFlat? " Appartements":" Maisons";
+      meta_description += searchType == 2 ? " meublés ou non meublés": "";
+      meta_description += " dans " + getNeighborhoodByCity(search_city) + ".";
+      meta_description += isFlat ? "Studio, T2, T3 avec ascenseur, avec balcon, avec parking, avec terrasse, avec cave":
+      "Maisons avec parking, avec garage, avec sous-sol total"
       meta_description += "  - Surfyn";
 
       document.title = pagetitle;
@@ -951,7 +959,10 @@ function gotosearchcriteria()
 {
   var url_parameters = '';
   if(window.location.search == "")
+  {
+    buildurlparams();
     url_parameters = url_params;
+  }
   else
     url_parameters = window.location.search;
 

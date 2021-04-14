@@ -165,7 +165,7 @@ if(!puppeter)
   })
   .catch(function(error) {
     console.log(error);
-    window.location="erreur.html";
+    //window.location="erreur.html";
   });
 }
 
@@ -1098,10 +1098,13 @@ function generate_details_page(data)
         console.log(error);
       });
     }
+    document.getElementsByTagName('meta')["description"].content = pagetitle;
+    if(data[0].hasOwnProperty('AD_TEXT_DESCRIPTION'))
+      document.getElementsByTagName('meta')["description"].content += ". " + data[0].AD_TEXT_DESCRIPTION.slice(0,150);
     pagetitle += " - Surfyn"
 
     document.title = pagetitle;
-    document.getElementsByTagName('meta')["description"].content = pagetitle;
+
 
     if(postalcode != "" && isForSale)
     {

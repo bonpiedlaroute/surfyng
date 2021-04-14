@@ -97,6 +97,7 @@ async function ssr(path, browserWSEndpoint) {
 
 	var url = HOST +  path;
 	console.log('url before building:' + url);
+	var needToSetCanonicalUrl = false;
 
 	if(path.includes("liste-annonces"))
 	{
@@ -111,6 +112,7 @@ async function ssr(path, browserWSEndpoint) {
 		{
 			//TODO in case of error, return an error page
 			build_params(path);
+			needToSetCanonicalUrl = true;
 		}
 
 		url = HOST + '/liste_annonces.html' + url_params;
@@ -148,6 +150,15 @@ async function ssr(path, browserWSEndpoint) {
 		await page.goto(url);
 		console.log('Waiting for #prerendered-page');
 		await page.waitForSelector('#prerendered-page');
+		if(needToSetCanonicalUrl)
+		{
+
+			await page.evaluate((path) => {
+			var rel_link = document.getElementById("canonical_url");
+			rel_link.rel = "canonical";
+			rel_link.href = path;
+		}, path);
+		}
 		console.log('#prerendered-page loaded');
     } catch(err) {
     	console.error(err);

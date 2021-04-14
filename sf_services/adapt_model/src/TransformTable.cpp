@@ -218,6 +218,14 @@ namespace surfyn
       CHECK_SIMILAR_ANNOUNCE_ATTRIBUTE_AS_STRING(RealEstateSearchType, RealEstateSearchType);
       return true;
    }
+   static void RemoveUnwantedCharacterInJson(std::string& text)
+   {
+      std::replace(text.begin(), text.end(),'\n', ' ');
+      std::replace(text.begin(), text.end(),'\t', ' ');
+      std::replace(text.begin(), text.end(),'\"', ' ');
+      std::replace(text.begin(), text.end(),'\r', ' ');
+      std::replace(text.begin(), text.end(),'\\', ' ');
+   }
 
    DataFormater::DataFormater()
    {
@@ -539,10 +547,7 @@ namespace surfyn
       if(document.HasMember("body"))
       {
          std::string description = document["body"].GetString();
-         std::replace(description.begin(), description.end(), '\t', ' ');
-         std::replace(description.begin(), description.end(), '\n', ' ');
-         std::replace(description.begin(), description.end(), '\r', ' ');
-         boost::erase_all(description, "\"");
+         RemoveUnwantedCharacterInJson(description);
          realEstate->setDescription(RealEstateTextDescription, description);
       }
       realEstate->setDescription(SOURCE_LOGO, "data/lbc0.svg");
@@ -705,10 +710,7 @@ namespace surfyn
       if(document.HasMember("description"))
       {
          std::string desc = document["description"].GetString();
-         std::replace(desc.begin(), desc.end(),'\n', ' ');
-         std::replace(desc.begin(), desc.end(),'\t', ' ');
-         std::replace(desc.begin(), desc.end(),'\"', ' ');
-         std::replace(desc.begin(), desc.end(),'\r', ' ');
+         RemoveUnwantedCharacterInJson(desc);
          realEstate->setDescription(RealEstateTextDescription, desc);
       }
 
@@ -854,10 +856,7 @@ void DataFormater::ReadLaForetJSON(const std::string& json, classifier::RealEsta
    if(document.HasMember("description"))
    {
       std::string desc = document["description"].GetString();
-      std::replace(desc.begin(), desc.end(),'\n', ' ');
-      std::replace(desc.begin(), desc.end(),'\t', ' ');
-      std::replace(desc.begin(), desc.end(),'\"', ' ');
-      std::replace(desc.begin(), desc.end(),'\r', ' ');
+      RemoveUnwantedCharacterInJson(desc);
       realEstate->setDescription(RealEstateTextDescription, desc);
    }
 
@@ -981,10 +980,7 @@ void DataFormater::ReadOrpiJSON(const std::string& json, classifier::RealEstateA
    if(document.HasMember("longAd"))
    {
       std::string desc = document["longAd"].GetString();
-      std::replace(desc.begin(), desc.end(),'\n', ' ');
-      std::replace(desc.begin(), desc.end(),'\t', ' ');
-      std::replace(desc.begin(), desc.end(),'\"', ' ');
-      std::replace(desc.begin(), desc.end(),'\r', ' ');
+      RemoveUnwantedCharacterInJson(desc);
       realEstate->setDescription(RealEstateTextDescription, desc);
    }
    /*if (document.HasMember("heatingNature") && document["heatingNature"].IsString())
@@ -1131,10 +1127,7 @@ void DataFormater::ReadStephanePlazaImoJSON(const std::string& json, classifier:
       if(document.HasMember("description"))
       {
          std::string desc = document["description"].GetString();
-         std::replace(desc.begin(), desc.end(),'\n', ' ');
-         std::replace(desc.begin(), desc.end(),'\t', ' ');
-         std::replace(desc.begin(), desc.end(),'\"', ' ');
-         std::replace(desc.begin(), desc.end(),'\r', ' ');
+         RemoveUnwantedCharacterInJson(desc);
          realEstate->setDescription(RealEstateTextDescription, desc);
       }
       
@@ -1256,10 +1249,7 @@ void DataFormater::ReadFonciaJSON(const std::string& json, classifier::RealEstat
    if(document.HasMember(RealEstateTextDescription))
    {
       std::string desc = document[RealEstateTextDescription].GetString();
-      std::replace(desc.begin(), desc.end(),'\n', ' ');
-      std::replace(desc.begin(), desc.end(),'\t', ' ');
-      std::replace(desc.begin(), desc.end(),'\"', ' ');
-      std::replace(desc.begin(), desc.end(),'\r', ' ');
+      RemoveUnwantedCharacterInJson(desc);
 
       realEstate->setDescription(RealEstateTextDescription, desc);
    }
@@ -1412,10 +1402,7 @@ void DataFormater::ReadCentury21JSON(const std::string& json, classifier::RealEs
    if(document.HasMember(RealEstateTextDescription))
    {
       std::string desc = document[RealEstateTextDescription].GetString();
-      std::replace(desc.begin(), desc.end(),'\n', ' ');
-      std::replace(desc.begin(), desc.end(),'\t', ' ');
-      std::replace(desc.begin(), desc.end(),'\"', ' ');
-      std::replace(desc.begin(), desc.end(),'\r', ' ');
+      RemoveUnwantedCharacterInJson(desc);
 
       PopulateValuesExtractFromDescription(desc, realEstate);
       realEstate->setDescription(RealEstateTextDescription, desc);
@@ -1536,10 +1523,7 @@ void DataFormater::ReadArthurImmoJSON(const std::string& json, classifier::RealE
    if(document.HasMember(RealEstateTextDescription))
    {
       std::string desc = document[RealEstateTextDescription].GetString();
-      std::replace(desc.begin(), desc.end(),'\n', ' ');
-      std::replace(desc.begin(), desc.end(),'\t', ' ');
-      std::replace(desc.begin(), desc.end(),'\"', ' ');
-      std::replace(desc.begin(), desc.end(),'\r', ' ');
+      RemoveUnwantedCharacterInJson(desc);
 
       realEstate->setDescription(RealEstateTextDescription, desc);
    }
@@ -1613,10 +1597,7 @@ void DataFormater::ReadEraImmoJSON(const std::string& json, classifier::RealEsta
    if(document.HasMember(RealEstateTextDescription))
    {
       std::string desc = document[RealEstateTextDescription].GetString();
-      std::replace(desc.begin(), desc.end(),'\n', ' ');
-      std::replace(desc.begin(), desc.end(),'\t', ' ');
-      std::replace(desc.begin(), desc.end(),'\"', ' ');
-      std::replace(desc.begin(), desc.end(),'\r', ' ');
+      RemoveUnwantedCharacterInJson(desc);
 
       PopulateValuesExtractFromDescription(desc, realEstate);
       realEstate->setDescription(RealEstateTextDescription, desc);
@@ -1675,10 +1656,7 @@ void DataFormater::ReadPapJSON(const std::string& json, classifier::RealEstateAd
    if(document.HasMember(RealEstateTextDescription))
    {
       std::string desc = document[RealEstateTextDescription].GetString();
-      std::replace(desc.begin(), desc.end(),'\n', ' ');
-      std::replace(desc.begin(), desc.end(),'\t', ' ');
-      std::replace(desc.begin(), desc.end(),'\"', ' ');
-      std::replace(desc.begin(), desc.end(),'\r', ' ');
+      RemoveUnwantedCharacterInJson(desc);
       realEstate->setDescription(RealEstateTextDescription, desc);
    }
 
@@ -1768,11 +1746,7 @@ void DataFormater::ReadIadFranceJSON(const std::string& json, classifier::RealEs
    if(document.HasMember(RealEstateTextDescription))
    {
       std::string desc = document[RealEstateTextDescription].GetString();
-      std::replace(desc.begin(), desc.end(),'\n', ' ');
-      std::replace(desc.begin(), desc.end(),'\t', ' ');
-      std::replace(desc.begin(), desc.end(),'\"', ' ');
-      std::replace(desc.begin(), desc.end(),'\r', ' ');
-
+      RemoveUnwantedCharacterInJson(desc);
       PopulateValuesExtractFromDescription(desc, realEstate);
       realEstate->setDescription(RealEstateTextDescription, desc);
    }
@@ -1855,10 +1829,7 @@ void DataFormater::ReadParuVenduJSON(const std::string& json, classifier::RealEs
    if(document.HasMember(RealEstateTextDescription))
    {
       std::string desc = document[RealEstateTextDescription].GetString();
-      std::replace(desc.begin(), desc.end(),'\n', ' ');
-      std::replace(desc.begin(), desc.end(),'\t', ' ');
-      std::replace(desc.begin(), desc.end(),'\"', ' ');
-      std::replace(desc.begin(), desc.end(),'\r', ' ');
+      RemoveUnwantedCharacterInJson(desc);
       realEstate->setDescription(RealEstateTextDescription, desc);
    }
 
@@ -1950,9 +1921,7 @@ void DataFormater::ReadAvendreAlouerJSON(const std::string& json, classifier::Re
    if(document.HasMember(RealEstateTextDescription))
    {
       std::string desc = document[RealEstateTextDescription].GetString();
-      std::replace(desc.begin(), desc.end(),'\n', ' ');
-      std::replace(desc.begin(), desc.end(),'\t', ' ');
-      std::replace(desc.begin(), desc.end(),'\"', ' ');
+      RemoveUnwantedCharacterInJson(desc);
       realEstate->setDescription(RealEstateTextDescription, desc);
    }
    realEstate->setDescription(SOURCE_LOGO, "data/avendrealouer.png");
@@ -2027,10 +1996,7 @@ void DataFormater::ReadNestennJSON(const std::string& json, classifier::RealEsta
    if(document.HasMember(RealEstateTextDescription))
    {
       std::string desc = document[RealEstateTextDescription].GetString();
-      std::replace(desc.begin(), desc.end(),'\n', ' ');
-      std::replace(desc.begin(), desc.end(),'\t', ' ');
-      std::replace(desc.begin(), desc.end(),'\"', ' ');
-      std::replace(desc.begin(), desc.end(),'\r', ' ');
+      RemoveUnwantedCharacterInJson(desc);
 
       realEstate->setDescription(RealEstateTextDescription, desc);
    }
@@ -2116,10 +2082,7 @@ void DataFormater::ReadAgencePrincipaleJSON(const std::string& json, classifier:
    if(document.HasMember(RealEstateTextDescription))
    {
       std::string desc = document[RealEstateTextDescription].GetString();
-      std::replace(desc.begin(), desc.end(),'\n', ' ');
-      std::replace(desc.begin(), desc.end(),'\t', ' ');
-      std::replace(desc.begin(), desc.end(),'\"', ' ');
-      std::replace(desc.begin(), desc.end(),'\r', ' ');
+      RemoveUnwantedCharacterInJson(desc);
 
       realEstate->setDescription(RealEstateTextDescription, desc);
    }
@@ -2196,10 +2159,7 @@ void DataFormater::ReadLeFigaroImmobilierJSON(const std::string& json, classifie
    if(document.HasMember(RealEstateTextDescription))
    {
       std::string desc = document[RealEstateTextDescription].GetString();
-      std::replace(desc.begin(), desc.end(),'\n', ' ');
-      std::replace(desc.begin(), desc.end(),'\t', ' ');
-      std::replace(desc.begin(), desc.end(),'\"', ' ');
-      std::replace(desc.begin(), desc.end(),'\r', ' ');
+      RemoveUnwantedCharacterInJson(desc);
       realEstate->setDescription(RealEstateTextDescription, desc);
    }
    realEstate->setDescription(SOURCE_LOGO, "data/figaroimmo.png");
@@ -2243,10 +2203,7 @@ void DataFormater::ReadEtreProprioJSON(const std::string& json, classifier::Real
    if(document.HasMember(RealEstateTextDescription))
    {
       std::string desc = document[RealEstateTextDescription].GetString();
-      std::replace(desc.begin(), desc.end(),'\n', ' ');
-      std::replace(desc.begin(), desc.end(),'\t', ' ');
-      std::replace(desc.begin(), desc.end(),'\"', ' ');
-      std::replace(desc.begin(), desc.end(),'\r', ' ');
+      RemoveUnwantedCharacterInJson(desc);
 
       PopulateValuesExtractFromDescription(desc, realEstate);
 
@@ -2323,10 +2280,7 @@ void DataFormater::ReadEfficityJSON(const std::string& json, classifier::RealEst
    if(document.HasMember(RealEstateTextDescription))
    {
       std::string desc = document[RealEstateTextDescription].GetString();
-      std::replace(desc.begin(), desc.end(),'\n', ' ');
-      std::replace(desc.begin(), desc.end(),'\t', ' ');
-      std::replace(desc.begin(), desc.end(),'\"', ' ');
-      std::replace(desc.begin(), desc.end(),'\r', ' ');
+      RemoveUnwantedCharacterInJson(desc);
 
       PopulateValuesExtractFromDescription(desc, realEstate);
 
@@ -2428,9 +2382,7 @@ void DataFormater::ReadFnaimJSON(const std::string& json, classifier::RealEstate
    if(document.HasMember(RealEstateTextDescription))
    {
       std::string desc = document[RealEstateTextDescription].GetString();
-      std::replace(desc.begin(), desc.end(),'\n', ' ');
-      std::replace(desc.begin(), desc.end(),'\t', ' ');
-      std::replace(desc.begin(), desc.end(),'\"', ' ');
+      RemoveUnwantedCharacterInJson(desc);
       realEstate->setDescription(RealEstateTextDescription, desc);
    }
    realEstate->setDescription(SOURCE_LOGO, "data/fnaim.svg");
