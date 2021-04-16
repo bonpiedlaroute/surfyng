@@ -644,17 +644,13 @@ function generate_summary_page(data, empty=false)
     for(var i = 0; i < data.length; i++)
     {
 
-        var ad_link = createNode("div");
+        var ad_link = createNode("a");
         ad_link.className = "announce_link";
         url_path = "/annonce/";
         url_path += searchType == 1 ? "achat/" : "location/";
 
         var ad_div = createNode("div");
         ad_div.className = "row mx-auto announce_frame";
-
-        var ad_container_div = createNode("div");
-        ad_container_div.className = "announce_container";
-
 
         var ad_image_container_div = createNode("div");
         ad_image_container_div.className = "announce_image_container";
@@ -717,7 +713,7 @@ function generate_summary_page(data, empty=false)
 
         ad_summary_desc_div1.appendChild(ad_summary_details_h2);
 
-        var ad_summary_history = createNode("a");
+        var ad_summary_history = createNode("span");
         ad_summary_history.className = "announce_summary_history";
         ad_summary_history.innerHTML = "il y'a ";
 
@@ -771,13 +767,13 @@ function generate_summary_page(data, empty=false)
         ad_icon.className = "fas fa-map-marker-alt announce_summary_icon";
         ad_summary_city_container_div.appendChild(ad_icon);
 
-        var ad_summary_city_p = createNode("p");
+        var ad_summary_city_p = createNode("span");
         ad_summary_city_p.className = "announce_summary_city";
         ad_summary_city_p.innerHTML = "<strong>" + data[i].CITY[0].toUpperCase() + data[i].CITY.slice(1) + "</strong>";
         ad_summary_city_container_div.appendChild(ad_summary_city_p);
         url_path += data[i].CITY;
         url_path += "-" + getPostalCode(data[i].CITY);
-        var ad_price_p = createNode("p");
+        var ad_price_p = createNode("span");
         ad_price_p.style.float = "right";
         ad_price_p.style.color = "#4c94bc";
         ad_price_p.style.margin = "0";
@@ -788,7 +784,7 @@ function generate_summary_page(data, empty=false)
         var ad_summary_postalcode_container_div = createNode("div");
         ad_summary_postalcode_container_div.className ="announce_summary_city_container";
 
-        var ad_summary_postalcode_p = createNode("p");
+        var ad_summary_postalcode_p = createNode("span");
         ad_summary_postalcode_p.style.float = "left";
         ad_summary_postalcode_p.style.color = "#4c94bc";
         ad_summary_postalcode_p.style.margin = "0 0 0 30px";
@@ -797,7 +793,7 @@ function generate_summary_page(data, empty=false)
         ad_summary_postalcode_container_div.appendChild(ad_summary_postalcode_p);
 
 
-        var ad_price_bym2_p = createNode("p");
+        var ad_price_bym2_p = createNode("span");
         ad_price_bym2_p.style.float = "right";
         ad_price_bym2_p.style.color = "#4c94bc";
         ad_price_bym2_p.style.margin = "0";
@@ -826,7 +822,7 @@ function generate_summary_page(data, empty=false)
         var ad_source_div = createNode("div");
         ad_source_div.className = "ad_summary_src_text_cont";
 
-        var ad_sum_src_text = createNode("p");
+        var ad_sum_src_text = createNode("span");
         ad_sum_src_text.className = "ad_summary_src_text";
         ad_sum_src_text.innerHTML = "Ce bien apparaît sur:";
         ad_source_div.appendChild(ad_sum_src_text);
@@ -903,13 +899,12 @@ function generate_summary_page(data, empty=false)
 
         ad_summary_container_div.appendChild(ad_source_frame_div);
 
-        ad_container_div.appendChild(ad_image_container_div);
-        ad_container_div.appendChild(ad_summary_container_div);
+        ad_div.appendChild(ad_image_container_div);
+        ad_div.appendChild(ad_summary_container_div);
 
-        ad_div.appendChild(ad_container_div);
+        ad_link.appendChild(ad_div);
 
-        ad_link.setAttribute("onclick", "document.location='" + url_path + "?" + data[i].ID + "'") ;
-        ad_link.style.cursor = "pointer";
+        ad_link.setAttribute("href", url_path + "?" + data[i].ID) ;
 
         ad_link.appendChild(ad_div);
 

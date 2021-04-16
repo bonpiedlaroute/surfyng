@@ -302,11 +302,12 @@
                   <div class="sf_modal_box_width sf_modal_connect_button"  onclick="subscribe_to_surfyn()">
                     <a class="sf_modal_connect_button_text">Créer mon compte</a>
                   </div>
-                  <div id="passwd-restriction" class="sf_modal_box_width" style="height: 150px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align-center;">
+                  <div id="passwd-restriction" class="sf_modal_box_width" style="height: 150px;display:flex;flex-direction:column;justify-content:center;align-items:center;">
                     <div >
                       <a style="font-size:18px;">Votre mot de passe doit contenir:</a>
                     </div>
                     <div >
+                      <ul>
                       <li id="letter" style="color:red;font-size:16px;">Une lettre <b>miniscule</b></li>
 
                       <li id="capital" style="color:red;font-size:16px;">Une lettre <b>majuscule</b></li>
@@ -316,11 +317,14 @@
 
 
                       <li id="length" style="color:red;font-size:16px;">Un minimum de <b>8 caractères</b></li>
+                    </ul>
                     </div>
                   </div>
                   <div id="passwd-match" style="display:none;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
                     <a style="font-size:18px;">Les deux mots de passes doivent être:</a>
+                    <ul>
                     <li id="same-passwd" style="color:red;font-size:16px;"><b>Identiques</b></li>
+                  </ul>
                   </div>
 
                 </div>
