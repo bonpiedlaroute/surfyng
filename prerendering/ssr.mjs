@@ -118,9 +118,10 @@ async function ssr(path, browserWSEndpoint) {
 		url = HOST + '/liste_annonces.html' + url_params;
 
 	}
-	else if(path.includes("annonce"))
+	else if(path.includes("/annonce/"))
 	{
 		url = build_params_detail(path);
+		needToSetCanonicalUrl = true;
 	}
 	else if(path.includes("actualite-immobilier.html"))
 	{
