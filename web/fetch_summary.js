@@ -928,13 +928,16 @@ function generate_summary_page(data, empty=false)
   /* set other related infos */
   populateOthersRelatedInfos(main_content, search_city, searchType, propertyType);
 
+  if (!puppeteer)
+  {
+    var header_content = document.getElementById("header-content");
+    var forPuppeteer = createNode("div");
+    forPuppeteer.setAttribute("id", "prerendered-page");
+    forPuppeteer.setAttribute("data-ad-json", JSON.stringify(data));
+    forPuppeteer.style.visibility = 'hidden';
+    header_content.appendChild(forPuppeteer);
+  }
 
-  var header_content = document.getElementById("header-content");
-  var forPuppeteer = createNode("div");
-  forPuppeteer.setAttribute("id", "prerendered-page");
-  forPuppeteer.setAttribute("data-ad-json", JSON.stringify(data));
-  forPuppeteer.style.visibility = 'hidden';
-  header_content.appendChild(forPuppeteer);
 
   var facebook_icon = document.getElementById("facebook-icon");
   facebook_icon.style.color = "white";
