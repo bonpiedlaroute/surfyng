@@ -66,7 +66,9 @@ function sortbyprice()
   {
     return lhs.PRICE - rhs.PRICE;
   });
-  generate_summary_page(data, empty=true)
+  current_page = 1;
+  changePage(1);
+  generate_summary_page(data, empty=true);
 }
 
 function sortbysurface()
@@ -77,7 +79,9 @@ function sortbysurface()
   {
       return lhs.SURFACE - rhs.SURFACE;
   });
-  generate_summary_page(data, empty=true)
+  current_page = 1;
+  changePage(1);
+  generate_summary_page(data, empty=true);
 }
 
 function sortbydate()
@@ -85,7 +89,9 @@ function sortbydate()
   // sessionStorage.setItem("needtosort", "bydate");
   // Sort data by time
   data.sort(ByTimeStamp);
-  generate_summary_page(data, empty=true)
+  current_page = 1;
+  changePage(1);
+  generate_summary_page(data, empty=true);
 }
 
 function sortbypricebym2()
@@ -96,5 +102,7 @@ function sortbypricebym2()
   {
     return Math.floor( lhs.PRICE / lhs.SURFACE) - Math.floor( rhs.PRICE / rhs.SURFACE);
   });
-  generate_summary_page(data, empty=true)
+  current_page = 1;
+  changePage(1);
+  generate_summary_page(data, empty=true);
 }

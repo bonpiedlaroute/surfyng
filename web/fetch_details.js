@@ -1178,9 +1178,12 @@ function generate_details_page(data)
     sf_visit_file_link_frame.appendChild(sf_visit_file_link);
 
     enrichRelatedInfos(cityname, isForSale, isFlat);
+
   } //end of else if(data.length == 0 )
 
   var header_content = document.getElementById("header-content");
+
+
   var forPuppeteer = document.createElement("div");
   forPuppeteer.setAttribute("id", "prerendered-page");
   forPuppeteer.style.visibility = 'hidden';
