@@ -1016,6 +1016,11 @@ function generate_details_page(data)
       pagetitle += cityname;
       pagetitle += " (" + postalcode + ")";
 
+      pagetitle += " " + String(data[0].SURFACE);
+      pagetitle += " m2 ";
+      pagetitle += String(data[0].PRICE);
+      pagetitle += " €";
+
       if(isForSale)
       {
         if( data[0].hasOwnProperty('MEDIAN_PRICE_BY_M2') )
