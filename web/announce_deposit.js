@@ -781,14 +781,12 @@ function validateAndUpload(input)
 {
 	var url = window.URL || window.webkitURL;
 	var file = input.files[0];
+	var progress_text = document.getElementById("progress");
 
 	if(file)
 	{
 		var image = new Image();
 
-		image.onload = function(){
-			images[input.id.slice(-1) - 1] = true;
-		};
 		image.onerror = function(){
 			alert("Invalid image");
 		};
@@ -799,12 +797,27 @@ function validateAndUpload(input)
 
 		// Upload image on Cloud Storage Bucket
 		var uploadTask = storageRef.child('deposit/puteaux/' + file.name).put(file);
-
+		
+		var index = input.id.slice(-1);
+		console.log(index);
 		// Listen for error and completion of the upload
 		uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
 
 			(snapshot) => {
-				// var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+				var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+				// console.log('Upload is ' + progress + '% done.');
+				if(progress == 100)
+				{	
+					
+					images[index-1] = true;
+					
+					$("#overlay-" + index).css("display", "none");
+					$("#imageOK" + index).css("display", "block");
+					setTimeout(function(){
+						$("#imageOK" + index).css("display", "none");
+					}, 3000);
+
+				}
 				switch(snapshot.state) {
 					case firebase.storage.TaskEvent.PAUSED:
 						console.log('Upload is Paused');
@@ -851,5 +864,3 @@ function isAllImagesSet()
 	images_error.style.fontsize = "";
 	return true;
 }
-
-

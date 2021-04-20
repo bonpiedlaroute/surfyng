@@ -114,27 +114,47 @@
 <div class="d-flex" style="align-items: center; flex-direction: column;">
   <div class="row pt-3 pb-3" style="align-items: center; justify-content: center;"> 
     <!-- Image 1 -->
-    <div id=imagePreview1 class="preview m-2 d-flex" style="flex-direction: column; align-items: center;background-color: #bfe5f9; justify-content: center">
+    <div id="imagePreview1" class="sf_preview m-2 d-flex">
+      <div id="overlay-1"  class="sf_overlay">
+        <img id="loading-1" src="loading.gif" alt="loading">
+      </div>
+
       <i id="icon1" class="fa fa-camera property_type_icon" aria-hidden="true"></i>
       <span id="span1">Ajouter des photos</span>
+      <i id="imageOK1" class="fa fa-check property_type_icon center" style="display: none; color: green;" aria-hidden="true"></i>
     </div>
     <input id="uploadImage1" type="file" name="image" class="img upload" accept="image/*" onchange="validateAndUpload(this)">
 
     <!-- Image 2 -->
-    <div id=imagePreview2 class="preview m-2 d-flex" style="flex-direction: column; align-items: center;background-color: #bfe5f9; justify-content: center">
+    <div id="imagePreview2" class="sf_preview m-2 d-flex">
+      <div id="overlay-2"  class="sf_overlay">
+        <img id="loading-2" src="loading.gif" alt="loading">
+      </div>
+
       <i id="icon2" class="fa fa-camera property_type_icon" aria-hidden="true"></i>
+      <i id="imageOK2" class="fa fa-check property_type_icon center" style="display: none; color: green;" aria-hidden="true"></i>
     </div>
     <input id="uploadImage2" type="file" name="image" class="img upload" accept="image/*" onchange="validateAndUpload(this)">
 
     <!-- Image 3 -->
-    <div id=imagePreview3 class="preview m-2 d-flex" style="flex-direction: column; align-items: center;background-color: #bfe5f9; justify-content: center">
+    <div id="imagePreview3" class="sf_preview m-2 d-flex">
+      <div id="overlay-3"  class="sf_overlay">
+        <img id="loading-3" src="loading.gif" alt="loading">
+      </div>
+
       <i id="icon3" class="fa fa-camera property_type_icon" aria-hidden="true"></i>
+      <i id="imageOK3" class="fa fa-check property_type_icon center" style="display: none; color: green;" aria-hidden="true"></i>
     </div>
     <input id="uploadImage3" type="file" name="image" class="img upload" accept="image/*" onchange="validateAndUpload(this)">
 
     <!-- Image 4 -->
-    <div id=imagePreview4 class="preview m-2 d-flex" style="flex-direction: column; align-items: center;background-color: #bfe5f9; justify-content: center">
+    <div id="imagePreview4" class="sf_preview m-2 d-flex">
+      <div id="overlay-4"  class="sf_overlay">
+        <img id="loading-4" src="loading.gif" alt="loading">
+      </div>
+
       <i id="icon4" class="fa fa-camera property_type_icon" aria-hidden="true"></i>
+      <i id="imageOK4" class="fa fa-check property_type_icon center" style="display: none; color: green;" aria-hidden="true"></i>
     </div>
     <input id="uploadImage4" type="file" name="image" class="img upload" accept="image/*" onchange="validateAndUpload(this)">
   </div>
