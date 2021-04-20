@@ -4,13 +4,14 @@
 
    author(s): Noel Tchidjo
 */
-#ifndef INC_DBACCESS_H_
-#define INC_DBACCESS_H_
+#ifndef INC_DBACCESS
+#define INC_DBACCESS
 #include "stdafx.h"
+#include <bits/stdint-intn.h>
 #include <map>
 #include "sf_services/dynamodb_access/thrift_generated/dynamodb_access.h"
 #include <memory>
-#include <set>
+#include <unordered_set>
 #include "sf_services/sf_utils/inc/Geolocal.h"
 
 namespace surfyn
@@ -34,14 +35,14 @@ private:
    static void fillFilterExprAndExprValue(std::stringstream &filterexpression, std::map<std::string, ValueType> &expressionValue,
                                       const std::string &param, const std::string& paramvalue, const std::string & value,
                                       const std::string& Operator);
-   static bool isAlreadyProvided(const std::map<std::string, std::string>& table_entry, const std::set<int64_t>& adprovided);
-   static void updateProvidedAd(const std::map<std::string, std::string>& table_entry,  std::set<int64_t>& adprovided);
-   static void buildJsonString(utility::stringstream_t& sstream, std::vector<std::pair<int, bool>>& announcesIds,
-                                            std::unordered_map<int64_t, std::map<std::string, std::string> >& results);
+   static bool isAlreadyProvided(const std::string& id, const std::unordered_set<std::string>& adprovided);
+   static void updateProvidedAd(const std::string& dup,  std::unordered_set<std::string>& adprovided);
+   static void buildJsonString(utility::stringstream_t& sstream,
+                                            std::vector<std::map<std::string, std::string>>& results);
 };
 
 }
 }
 
 
-#endif /* INC_DBACCESS_H_ */
+#endif /* INC_DBACCESS */

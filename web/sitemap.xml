@@ -13,22 +13,6 @@
 
    <url>
 
-      <loc>https://surfyn.fr/recherche/achat/immobilier?search_type=1</loc>
-
-      <changefreq>weekly</changefreq>
-
-   </url>
-
-   <url>
-
-      <loc>https://surfyn.fr/recherche/location/immobilier?search_type=2</loc>
-
-      <changefreq>weekly</changefreq>
-
-   </url>
-
-   <url>
-
       <loc>https://surfyn.fr/liste-annonces/achat/appartements/houilles-78800</loc>
 
       <changefreq>daily</changefreq>

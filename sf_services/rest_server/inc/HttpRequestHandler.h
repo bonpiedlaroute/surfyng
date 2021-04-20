@@ -4,8 +4,8 @@
 
    author(s): Noel Tchidjo
 */
-#ifndef _HTTP_REQUEST_HANDLER_
-#define _HTTP_REQUEST_HANDLER_
+#ifndef INC_HTTPREQUESTHANDLER
+#define INC_HTTPREQUESTHANDLER
 #include <iostream>
 #include "stdafx.h"
 #include "DBaccess.h"
@@ -44,18 +44,24 @@ namespace rest_server
            void handle_post(http_request message);
            void handle_delete(http_request message);
            http_listener m_listener;
-           DBaccess m_dbaccess;
-           EstimatorAccess m_estimatoraccess;
+           std::string m_dbaccess_host;
+           int m_dbaccess_port;
+           std::string m_estimator_host;
+           int m_estimator_port;
+           std::string m_emailalert_host;
+           int m_emailalert_port;
            std::shared_ptr<surfyn::utils::GeoLocal> m_geoLocalService;
-           EmailAlertAccess m_emailalertaccess;
-           DepositAccess m_depositaccess;
 
+           DepositAccess m_depositaccess;
+           /*DBaccess m_dbaccess;
+           EstimatorAccess m_estimatoraccess;
+           EmailAlertAccess m_emailalertaccess;*/
    };
 }
 }
 
 
 
-#endif // _HTTP_REQUEST_HANDLER_
+#endif /* INC_HTTPREQUESTHANDLER */
 
 

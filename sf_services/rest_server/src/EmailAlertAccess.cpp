@@ -29,13 +29,7 @@ using boost::shared_ptr;
 namespace surfyn
 {
 namespace rest_server
-{/*
-   EmailAlertResult registerEmailAlert(1: string userid, 2: map<string, string> parameters),
-   EmailAlertResult notifyNewAnnounces(1: string city),
-   list<map<string, string>> my_realestate_search(1: string userid),
-   EmailAlertResult  deactivate_alert(1: string alert_id)
-   EmailAlertResult  delete_alert(1: string alert_id) 
-*/
+{
    EmailAlertAccess::EmailAlertAccess(const std::string& host, int port)
    {
       shared_ptr<TTransport> socket(new TSocket(host, port));

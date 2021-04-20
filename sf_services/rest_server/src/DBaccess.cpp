@@ -8,6 +8,7 @@
 
 
 
+#include <bits/stdint-uintn.h>
 #include <sstream>
 #include <thrift/protocol/TBinaryProtocol.h>
 #include <thrift/transport/TSocket.h>
@@ -98,38 +99,21 @@ std::string searchTypeValue = "";
       exprValue.fieldtype = (param == "PRICE" || param == "SURFACE" || param == "ROOMS") ? Type::type::NUMBER : Type::type::STRING;
       expressionValue[paramvalue] = exprValue;
    }
-   bool DBaccess::isAlreadyProvided(const std::map<std::string, std::string>& table_entry, const std::set<int64_t>& adprovided)
+   bool DBaccess::isAlreadyProvided(const std::string& id, const std::unordered_set<std::string>& adprovided)
    {
-      const auto iter = table_entry.find(id_field);
-      if(iter!= table_entry.end())
-      {
-         return adprovided.find(atol((iter->second).c_str())) != adprovided.end();
-      }
-      return false;
+      const auto iter = adprovided.find(id);
+
+      return iter != adprovided.end() ;
    }
-   void DBaccess::updateProvidedAd(const std::map<std::string, std::string>& table_entry,  std::set<int64_t>& adprovided)
+   void DBaccess::updateProvidedAd(const std::string& dup,  std::unordered_set<std::string>& adprovided)
    {
-      /* insert the ID of the ad */
-      const auto iter = table_entry.find(id_field);
-      if(iter!= table_entry.end())
+      std::vector<std::string> duplicates;
+      boost::split(duplicates, dup, [](char c) { return c == ','; });
+
+      for(auto item : duplicates)
       {
-         adprovided.insert(atol((iter->second).c_str()));
+         adprovided.insert(item);
       }
-
-      /* insert the duplicate id */
-      const auto iter_dup = table_entry.find(id_duplicates);
-      if(iter_dup!= table_entry.end())
-      {
-         std::vector<std::string> duplicates;
-         surfyn::utils::split(iter_dup->second, ",", duplicates);
-
-         for(auto item : duplicates)
-         {
-            adprovided.insert(atol(item.c_str()));
-         }
-      }
-
-
    }
 
    void DBaccess::fetchSummary(utility::stringstream_t& sstream, const std::map<utility::string_t,  utility::string_t>& query )
@@ -254,8 +238,8 @@ std::string searchTypeValue = "";
       // search anounces on summary table
       // and construct a json string
 
-      std::unordered_map<int64_t, std::map<std::string, std::string> >  results;
-      std::vector<std::pair<int, bool>> announcesIds;
+      std::vector<std::map<std::string, std::string> >  results;
+
       do
       {
          ScanReqResult scanReturn;
@@ -333,7 +317,7 @@ std::string searchTypeValue = "";
             filterExpression << "PROPERTY_TYPE";
             filterExpression << " in (";
             std::vector<std::string> output;
-            surfyn::utils::split((iter->second).c_str(), ",", output);
+            boost::split(output, iter->second, [](char c) { return c == ','; });
             for(auto iter_value = output.begin();iter_value != output.end(); ++iter_value)
             {
                if( iter_value != output.begin() )
@@ -380,101 +364,83 @@ std::string searchTypeValue = "";
 
          Log::getInstance()->info(logstream.str());
 
-         for(auto table_entry_iter = scanReturn.values.begin(); table_entry_iter != scanReturn.values.end();++table_entry_iter)
-         {
-            int64_t id;
-            /* find the ID of the ad */
-            const auto iter = (*table_entry_iter).find(id_field);
-            if(iter!= (*table_entry_iter).end())
-            {
-               id = atol((iter->second).c_str());
-            }
-
-            bool duplicate = false;
-            /* find if there is duplicate ad for this one */
-            const auto iter_dup = (*table_entry_iter).find(id_duplicates);
-            if(iter_dup != (*table_entry_iter).end())
-            {
-               duplicate = !iter_dup->second.empty();
-            }
-
-            announcesIds.emplace_back(std::make_pair(id, duplicate));
-            results[id] = *table_entry_iter;
-         }
+         results.reserve(results.size() + scanReturn.values.size());
+         results.insert(results.end(), scanReturn.values.begin(), scanReturn.values.end());
 
          scanend = scanReturn.scanend;
       }while(!scanend);
 
-      buildJsonString(sstream, announcesIds, results);
+      buildJsonString(sstream, results);
    }
 
-   void DBaccess::buildJsonString(utility::stringstream_t& sstream, std::vector<std::pair<int, bool>>& announcesIds,
-                                  std::unordered_map<int64_t, std::map<std::string, std::string> >& results)
+   void DBaccess::buildJsonString(utility::stringstream_t& sstream,
+                                  std::vector<std::map<std::string, std::string> >& results)
    {
       sstream << U("[\n");
-      std::stable_partition(announcesIds.begin(), announcesIds.end(), [](std::pair<int, bool>& value)
-                            {
-                              return value.second;
-                            });
-      std::set<int64_t> adProvided;
+
+      std::unordered_set<std::string> adProvided;
       bool firsttime = true;
 
-      for(auto iter_announcesId = announcesIds.begin(); iter_announcesId != announcesIds.end();++iter_announcesId)
+      for(auto announce : results)
       {
-         auto iter_results = results.find(iter_announcesId->first);
-         if( iter_results != results.end())
+         auto iter_id = announce.find(id_field);
+         if(iter_id == announce.end())
+            continue;
+         if(isAlreadyProvided(iter_id->second, adProvided))
+            continue;
+         else 
          {
-            const auto& table_entry = iter_results->second;
+            adProvided.insert(iter_id->second);
+         }
+         if(firsttime)
+         {
+            firsttime = false;
+         }
+         else
+         {
+            sstream << U(",\n");
+         }
+         sstream << U("{\n");
+         for(auto attribute_iter = announce.begin(); attribute_iter != announce.end(); ++attribute_iter)
+         {
 
-            if(isAlreadyProvided(table_entry, adProvided))
-                  continue;
-            if(firsttime)
+            if(attribute_iter != announce.begin() )
             {
-               firsttime = false;
+               sstream << ",\n";
+            }
+
+            if(attribute_iter->first !=  "SOURCES")
+            {
+               sstream << "\"";
+               sstream << attribute_iter->first;
+               sstream << "\":\"";
+               sstream << attribute_iter->second;
+               sstream << "\"";
+
+               if(attribute_iter->first == "DUPLICATES")
+               {
+                  updateProvidedAd(attribute_iter->second, adProvided);
+               }
             }
             else
             {
-               sstream << U(",\n");
-            }
-            sstream << U("{\n");
-            for(auto attribute_iter = table_entry.begin(); attribute_iter != table_entry.end(); ++attribute_iter)
-            {
-
-               if(attribute_iter != table_entry.begin() )
+               sstream <<  U("\"SOURCES\": [\n");
+               std::vector<std::string> sources;
+               boost::split(sources, attribute_iter->second, [](char c) { return c == ','; });
+               for(auto item_iter = sources.begin(); item_iter != sources.end(); ++item_iter)
                {
-                  sstream << ",\n";
-               }
-
-               if(attribute_iter->first !=  "SOURCES")
-               {
-                  sstream << "\"";
-                  sstream << attribute_iter->first;
-                  sstream << "\":\"";
-                  sstream << attribute_iter->second;
-                  sstream << "\"";
-               }
-               else
-               {
-                  sstream <<  U("\"SOURCES\": [\n");
-                  std::vector<std::string> sources;
-                  surfyn::utils::split(attribute_iter->second, ",", sources);
-                  for(auto item_iter = sources.begin(); item_iter != sources.end(); ++item_iter)
+                  if(item_iter != sources.begin())
                   {
-                     if(item_iter != sources.begin())
-                     {
-                        sstream << U(",\n");
-                     }
-                     sstream << U("\"");
-                     sstream << U(*item_iter);
-                     sstream << U("\"");
+                     sstream << U(",\n");
                   }
-                  sstream << U("]");
+                  sstream << U("\"");
+                  sstream << U(*item_iter);
+                  sstream << U("\"");
                }
-
+               sstream << U("]");
             }
-            sstream << U("\n}");
-            updateProvidedAd(table_entry, adProvided);
          }
+         sstream << U("\n}");
       }
       sstream << U("\n]\n");
    }
@@ -665,7 +631,7 @@ std::string searchTypeValue = "";
       if( iter_duplicate_ad != _return.values.end())
       {
          std::vector<std::string> duplicates;
-         surfyn::utils::split(iter_duplicate_ad->second, ",", duplicates);
+         boost::split(duplicates, iter_duplicate_ad->second, [](char c) { return c == ','; } );
 
          for(auto item : duplicates)
          {

@@ -88,7 +88,7 @@ function enrichRelatedInfos(cityname, isForSale, isFlat)
     othersrelatedinfos_div.appendChild(generic_infos_box_div1);
 
     var generic_infos_box_div3 = createNode("div");
-    generic_infos_box_div3.style.height = "80px";
+    generic_infos_box_div3.style.height = "100px";
     generic_infos_box_div3.className = "sf_generic_infos_box";
     var generic_infos_container_div3 = createNode("div");
     generic_infos_container_div3.className = "sf_generic_infos_container";
@@ -113,6 +113,21 @@ function enrichRelatedInfos(cityname, isForSale, isFlat)
 
       generic_infos_container_div3.appendChild(generic_infos_desc_3);
     }
+
+    var generic_infos_desc_5 = createNode("div");
+    generic_infos_desc_5.className = "sf_generic_infos_desc";
+    var generic_infos_desc_text5 = createNode("a");
+    generic_infos_desc_text5.className = "sf_generic_infos_desc_text";
+    generic_infos_desc_text5.innerHTML = "Trouvez les déménageurs autour de ";
+    generic_infos_desc_text5.innerHTML += cityname;
+    generic_infos_desc_text5.href = "/demenageur.html";
+    generic_infos_desc_text_icon = createNode("i");
+    generic_infos_desc_text_icon.className = "fas fa-chevron-right sf_generic_infos_desc_text_icon";
+    generic_infos_desc_text5.appendChild(generic_infos_desc_text_icon);
+
+    generic_infos_desc_5.appendChild(generic_infos_desc_text5);
+
+    generic_infos_container_div3.appendChild(generic_infos_desc_5);
 
     var generic_infos_desc_4 = createNode("div");
     generic_infos_desc_4.className = "sf_generic_infos_desc";
@@ -150,7 +165,7 @@ if(!puppeter)
   })
   .catch(function(error) {
     console.log(error);
-    window.location="erreur.html";
+    //window.location="erreur.html";
   });
 }
 
@@ -1001,6 +1016,11 @@ function generate_details_page(data)
       pagetitle += cityname;
       pagetitle += " (" + postalcode + ")";
 
+      pagetitle += " " + String(data[0].SURFACE);
+      pagetitle += " m2 ";
+      pagetitle += String(data[0].PRICE);
+      pagetitle += " €";
+
       if(isForSale)
       {
         if( data[0].hasOwnProperty('MEDIAN_PRICE_BY_M2') )
@@ -1083,10 +1103,13 @@ function generate_details_page(data)
         console.log(error);
       });
     }
+    document.getElementsByTagName('meta')["description"].content = pagetitle;
+    if(data[0].hasOwnProperty('AD_TEXT_DESCRIPTION'))
+      document.getElementsByTagName('meta')["description"].content += ". " + data[0].AD_TEXT_DESCRIPTION.slice(0,150);
     pagetitle += " - Surfyn"
 
     document.title = pagetitle;
-    document.getElementsByTagName('meta')["description"].content = pagetitle;
+
 
     if(postalcode != "" && isForSale)
     {
@@ -1160,9 +1183,12 @@ function generate_details_page(data)
     sf_visit_file_link_frame.appendChild(sf_visit_file_link);
 
     enrichRelatedInfos(cityname, isForSale, isFlat);
+
   } //end of else if(data.length == 0 )
 
   var header_content = document.getElementById("header-content");
+
+
   var forPuppeteer = document.createElement("div");
   forPuppeteer.setAttribute("id", "prerendered-page");
   forPuppeteer.style.visibility = 'hidden';
