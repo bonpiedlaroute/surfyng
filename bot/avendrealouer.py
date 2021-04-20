@@ -158,7 +158,7 @@ class AvendreAlouerSpider(scrapy.Spider):
          data['AD_TEXT_DESCRIPTION'] = ad_text_description[0]
 
       # get images
-      images = response.xpath('//div[contains(@id, "react_")]/div[2]/div[2]/div[1]/div[2]/div/div[*]/div/div/img/@src').extract()
+      images = response.xpath('//div[contains(@id, "react_")]/div[*]/div[2]/div[1]/div[2]/div/div[*]/div/div/img/@src').extract()
       image_count = 1
       img_cnt = 0
       for img in images:

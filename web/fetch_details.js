@@ -165,7 +165,7 @@ if(!puppeter)
   })
   .catch(function(error) {
     console.log(error);
-    window.location="erreur.html";
+    //window.location="erreur.html";
   });
 }
 
@@ -1016,6 +1016,11 @@ function generate_details_page(data)
       pagetitle += cityname;
       pagetitle += " (" + postalcode + ")";
 
+      pagetitle += " " + String(data[0].SURFACE);
+      pagetitle += " m2 ";
+      pagetitle += String(data[0].PRICE);
+      pagetitle += " €";
+
       if(isForSale)
       {
         if( data[0].hasOwnProperty('MEDIAN_PRICE_BY_M2') )
@@ -1098,10 +1103,13 @@ function generate_details_page(data)
         console.log(error);
       });
     }
+    document.getElementsByTagName('meta')["description"].content = pagetitle;
+    if(data[0].hasOwnProperty('AD_TEXT_DESCRIPTION'))
+      document.getElementsByTagName('meta')["description"].content += ". " + data[0].AD_TEXT_DESCRIPTION.slice(0,150);
     pagetitle += " - Surfyn"
 
     document.title = pagetitle;
-    document.getElementsByTagName('meta')["description"].content = pagetitle;
+
 
     if(postalcode != "" && isForSale)
     {
@@ -1175,9 +1183,12 @@ function generate_details_page(data)
     sf_visit_file_link_frame.appendChild(sf_visit_file_link);
 
     enrichRelatedInfos(cityname, isForSale, isFlat);
+
   } //end of else if(data.length == 0 )
 
   var header_content = document.getElementById("header-content");
+
+
   var forPuppeteer = document.createElement("div");
   forPuppeteer.setAttribute("id", "prerendered-page");
   forPuppeteer.style.visibility = 'hidden';

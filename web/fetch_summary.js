@@ -19,13 +19,14 @@ function loadJSON(path, success, error) {
     xobj.send(null);
  }
 
-function populateOthersRelatedInfos(main_content, search_city, searchType, propertyType)
+function populateOthersRelatedInfos(search_city, searchType, propertyType)
 {
+  var related_ad = document.getElementById("related-ad");
   if(propertyType == "appartements" || propertyType == "maisons")
   {
     var line_div = createNode("div");
     line_div.className = "sf_line_results row mx-auto";
-    main_content.appendChild(line_div);
+    related_ad.appendChild(line_div);
 
     var others_similar_ad_title = "";
     var others_ad_title_1 = "Autres types de biens immobiliers à";
@@ -186,7 +187,7 @@ function populateOthersRelatedInfos(main_content, search_city, searchType, prope
 
 
     generic_infos_box_div1.appendChild(generic_infos_container_div1);
-    main_content.appendChild(generic_infos_box_div1);
+    related_ad.appendChild(generic_infos_box_div1);
 
     var generic_infos_box_div2 = createNode("div");
     generic_infos_box_div2.style.height = "100px";
@@ -217,7 +218,7 @@ function populateOthersRelatedInfos(main_content, search_city, searchType, prope
     generic_infos_container_div2.appendChild(generic_infos_desc_2);
 
     generic_infos_box_div2.appendChild(generic_infos_container_div2);
-    main_content.appendChild(generic_infos_box_div2);
+    related_ad.appendChild(generic_infos_box_div2);
 
 
     var generic_infos_box_div3 = createNode("div");
@@ -281,7 +282,7 @@ function populateOthersRelatedInfos(main_content, search_city, searchType, prope
     generic_infos_container_div3.appendChild(generic_infos_desc_5);
 
     generic_infos_box_div3.appendChild(generic_infos_container_div3);
-    main_content.appendChild(generic_infos_box_div3);
+    related_ad.appendChild(generic_infos_box_div3);
 
   }
 }
@@ -351,6 +352,9 @@ function populateOthersRelatedInfos(main_content, search_city, searchType, prope
   ProcessorBySource.set("etreproprio", function(param) { SrcProcessor(param, "green", "Etrepropr"); });
   ProcessorBySource.set("efficity", function(param) {SrcProcessor(param, "green", "Efficity"); });
   ProcessorBySource.set("fnaim", function(param) {SrcProcessor(param, "yellow", "Fnaim"); });
+
+  var current_page = 1;
+  var records_per_page = 50;
 
   var url = 'https://surfyn.fr:7878/search/all';
   //var url = 'http://127.0.0.1:7878/search/all';
@@ -474,13 +478,13 @@ function buildpage()
       /*loadJSON("data/announces_summary.json",
       function (data) { generate_summary_page(JSON.parse(data.response));}, function(err) {console.log(err);})
       */
-      window.location="erreur.html";
+      //window.location="erreur.html";
       console.log(error);
     });
   }
 }
 
-function addGoogleAds(main_content)
+function addGoogleAds(ad_content)
 {
   var ad_link = createNode("div");
   ad_link.className = "announce_link";
@@ -500,11 +504,11 @@ function addGoogleAds(main_content)
 
   ad_link.append(script);
 
-  main_content.append(ad_link);
+  ad_content.append(ad_link);
 
   var separator = createNode("div");
   separator.className = "sf_line_results row mx-auto";
-  main_content.append(separator);
+  ad_content.append(separator);
 }
 
 
@@ -517,8 +521,8 @@ function generate_summary_page(data, empty=false)
   if(empty)
   {
       // Delete content of main-content element
-      var main_content = document.getElementById("main-content");
-      main_content.innerHTML = "";
+      var ad_content = document.getElementById("ad-content");
+      ad_content.innerHTML = "";
   }
   else
   {
@@ -537,6 +541,7 @@ function generate_summary_page(data, empty=false)
     var first_proptype = true;
     var propertyType = "";
     var title = "";
+    var isFlat = false;
     var meta_description = "Toutes les annonces"
 
     if (split_propertyType.indexOf("1") !== -1 || split_propertyType.indexOf("3") !== -1)
@@ -548,7 +553,8 @@ function generate_summary_page(data, empty=false)
         }
       propertyType = "appartements";
       meta_description += " d'";
-      pagetitle += "Appartement"
+      pagetitle += "Appartement";
+      isFlat = true;
     }
     else {
       meta_description += " de "
@@ -562,7 +568,8 @@ function generate_summary_page(data, empty=false)
           first_proptype = false;
         }
       propertyType += "maisons";
-      pagetitle += "Maison"
+      pagetitle += "Maison";
+      isFlat = false;
     }
       meta_description+= propertyType;
       var rooms_text = "";
@@ -598,7 +605,12 @@ function generate_summary_page(data, empty=false)
       meta_description += " ("+ postalcode + ")";
       pagetitle += " - Surfyn";
       meta_description += " actualisées en temps réel, à partir de tous les sites de petites annonces immobilières et d'agences immobilières couvrant la ville de "
-      meta_description += search_city;
+      meta_description += search_city + ".";
+      meta_description += isFlat? " Appartements":" Maisons";
+      meta_description += searchType == 2 ? " meublés ou non meublés": "";
+      meta_description += " dans " + getNeighborhoodByCity(search_city) + ".";
+      meta_description += isFlat ? "Studio, T2, T3 avec ascenseur, avec balcon, avec parking, avec terrasse, avec cave":
+      "Maisons avec parking, avec garage, avec sous-sol total"
       meta_description += "  - Surfyn";
 
       document.title = pagetitle;
@@ -631,22 +643,21 @@ function generate_summary_page(data, empty=false)
         announces_found.innerHTML += " (" +postalcode+")";
     }
 
-    var main_content = document.getElementById("main-content");
+    var ad_content = document.getElementById("ad-content");
     var footer = document.getElementsByTagName('footer')[0];
-    for(var i = 0; i < data.length; i++)
+    //for(var i = 0; i < data.length; i++)
+    var min_index = (current_page-1) * records_per_page;
+    var max_index = (current_page * records_per_page);
+    for (var i = min_index; i < max_index && i < data.length; i++)
     {
 
-        var ad_link = createNode("div");
+        var ad_link = createNode("a");
         ad_link.className = "announce_link";
         url_path = "/annonce/";
         url_path += searchType == 1 ? "achat/" : "location/";
 
         var ad_div = createNode("div");
         ad_div.className = "row mx-auto announce_frame";
-
-        var ad_container_div = createNode("div");
-        ad_container_div.className = "announce_container";
-
 
         var ad_image_container_div = createNode("div");
         ad_image_container_div.className = "announce_image_container";
@@ -709,7 +720,7 @@ function generate_summary_page(data, empty=false)
 
         ad_summary_desc_div1.appendChild(ad_summary_details_h2);
 
-        var ad_summary_history = createNode("a");
+        var ad_summary_history = createNode("span");
         ad_summary_history.className = "announce_summary_history";
         ad_summary_history.innerHTML = "il y'a ";
 
@@ -763,13 +774,13 @@ function generate_summary_page(data, empty=false)
         ad_icon.className = "fas fa-map-marker-alt announce_summary_icon";
         ad_summary_city_container_div.appendChild(ad_icon);
 
-        var ad_summary_city_p = createNode("p");
+        var ad_summary_city_p = createNode("span");
         ad_summary_city_p.className = "announce_summary_city";
         ad_summary_city_p.innerHTML = "<strong>" + data[i].CITY[0].toUpperCase() + data[i].CITY.slice(1) + "</strong>";
         ad_summary_city_container_div.appendChild(ad_summary_city_p);
         url_path += data[i].CITY;
         url_path += "-" + getPostalCode(data[i].CITY);
-        var ad_price_p = createNode("p");
+        var ad_price_p = createNode("span");
         ad_price_p.style.float = "right";
         ad_price_p.style.color = "#4c94bc";
         ad_price_p.style.margin = "0";
@@ -780,7 +791,7 @@ function generate_summary_page(data, empty=false)
         var ad_summary_postalcode_container_div = createNode("div");
         ad_summary_postalcode_container_div.className ="announce_summary_city_container";
 
-        var ad_summary_postalcode_p = createNode("p");
+        var ad_summary_postalcode_p = createNode("span");
         ad_summary_postalcode_p.style.float = "left";
         ad_summary_postalcode_p.style.color = "#4c94bc";
         ad_summary_postalcode_p.style.margin = "0 0 0 30px";
@@ -789,7 +800,7 @@ function generate_summary_page(data, empty=false)
         ad_summary_postalcode_container_div.appendChild(ad_summary_postalcode_p);
 
 
-        var ad_price_bym2_p = createNode("p");
+        var ad_price_bym2_p = createNode("span");
         ad_price_bym2_p.style.float = "right";
         ad_price_bym2_p.style.color = "#4c94bc";
         ad_price_bym2_p.style.margin = "0";
@@ -818,7 +829,7 @@ function generate_summary_page(data, empty=false)
         var ad_source_div = createNode("div");
         ad_source_div.className = "ad_summary_src_text_cont";
 
-        var ad_sum_src_text = createNode("p");
+        var ad_sum_src_text = createNode("span");
         ad_sum_src_text.className = "ad_summary_src_text";
         ad_sum_src_text.innerHTML = "Ce bien apparaît sur:";
         ad_source_div.appendChild(ad_sum_src_text);
@@ -895,43 +906,112 @@ function generate_summary_page(data, empty=false)
 
         ad_summary_container_div.appendChild(ad_source_frame_div);
 
-        ad_container_div.appendChild(ad_image_container_div);
-        ad_container_div.appendChild(ad_summary_container_div);
-
-        ad_div.appendChild(ad_container_div);
-
-        ad_link.setAttribute("onclick", "document.location='" + url_path + "?" + data[i].ID + "'") ;
-        ad_link.style.cursor = "pointer";
+        ad_div.appendChild(ad_image_container_div);
+        ad_div.appendChild(ad_summary_container_div);
 
         ad_link.appendChild(ad_div);
 
-        main_content.appendChild(ad_link);
+        ad_link.setAttribute("href", url_path + "?" + data[i].ID) ;
+
+        ad_link.appendChild(ad_div);
+
+        ad_content.appendChild(ad_link);
 
         var line_div = createNode("div");
         line_div.className = "sf_line_results row mx-auto";
-        main_content.appendChild(line_div);
+        ad_content.appendChild(line_div);
 
 
         /* adding google adsense */
         if( (i+1)%5 == 0)
         {
-          addGoogleAds(main_content);
+          addGoogleAds(ad_content);
         }
 
     }
 
   }
 
-  /* set other related infos */
-  populateOthersRelatedInfos(main_content, search_city, searchType, propertyType);
+
+  if (!puppeteer)
+  {
+    /* set pagination */
+    var pagination_box = createNode("div");
+    pagination_box.className = "sf_pagination_box";
+
+    var range_pagination_container = createNode("div");
+    range_pagination_container.className = "sf_pagination_container";
+    var range_pagination = createNode("a");
+    range_pagination.id = "range-pagination";
+    var min_page = (current_page-1) * records_per_page + 1;
+    var max_page = Math.min((current_page * records_per_page),  data.length);
+    range_pagination.innerHTML = min_page + " - " + max_page;
+    range_pagination_container.appendChild(range_pagination);
+    pagination_box.appendChild(range_pagination_container);
+
+    var pagination_container = createNode("div");
+    pagination_container.className = "sf_pagination_container";
+
+    var prevpage_line = createNode("a");
+    prevpage_line.href ="javascript:prevPage()";
+    prevpage_line.id = "btn_prev";
+    prevpage_line.className ="generic_infos_desc_text";
+    var prevpage_icon = createNode("i");
+    prevpage_icon.className = "fas fa-chevron-left sf_generic_infos_desc_text_icon";
+    prevpage_line.appendChild(prevpage_icon);
+    prevpage_line.innerHTML = " page précédente";
+    if (current_page == 1) {
+        prevpage_line.style.visibility = "hidden";
+    } else {
+        prevpage_line.style.visibility = "visible";
+    }
+    pagination_container.appendChild(prevpage_line);
+
+    var nextpage_line = createNode("a");
+    nextpage_line.href ="javascript:nextPage()";
+    nextpage_line.id = "btn_next";
+    nextpage_line.className ="generic_infos_desc_text";
+    nextpage_line.style.marginLeft = "15px";
+    var nextpage_icon = createNode("i");
+    nextpage_icon.className = "fas fa-chevron-right sf_generic_infos_desc_text_icon";
+    nextpage_line.appendChild(prevpage_icon);
+    nextpage_line.innerHTML = " page suivante";
+    var number_of_pages = Math.ceil(data.length / records_per_page);
+    if (current_page == number_of_pages) {
+        nextpage_line.style.visibility = "hidden";
+    } else {
+        nextpage_line.style.visibility = "visible";
+    }
+
+    pagination_container.appendChild(nextpage_line);
+
+    var page_line = createNode("a");
+    page_line.style.marginLeft = "15px";
+    page_line.innerHTML = "page: ";
+    var nbpage_line = createNode("span");
+    nbpage_line.id = "list_page";
 
 
-  var header_content = document.getElementById("header-content");
-  var forPuppeteer = createNode("div");
-  forPuppeteer.setAttribute("id", "prerendered-page");
-  forPuppeteer.setAttribute("data-ad-json", JSON.stringify(data));
-  forPuppeteer.style.visibility = 'hidden';
-  header_content.appendChild(forPuppeteer);
+    nbpage_line.innerHTML = current_page + "/" + number_of_pages;
+
+    page_line.appendChild(nbpage_line);
+    pagination_container.appendChild(page_line);
+
+    pagination_box.appendChild(pagination_container);
+    var ad_pagination = document.getElementById("ad-pagination");
+    ad_pagination.appendChild(pagination_box);
+
+    /* set other related infos */
+    populateOthersRelatedInfos(search_city, searchType, propertyType);
+
+    var header_content = document.getElementById("header-content");
+    var forPuppeteer = createNode("div");
+    forPuppeteer.setAttribute("id", "prerendered-page");
+    forPuppeteer.setAttribute("data-ad-json", JSON.stringify(data));
+    forPuppeteer.style.visibility = 'hidden';
+    header_content.appendChild(forPuppeteer);
+  }
+
 
   var facebook_icon = document.getElementById("facebook-icon");
   facebook_icon.style.color = "white";
@@ -951,7 +1031,10 @@ function gotosearchcriteria()
 {
   var url_parameters = '';
   if(window.location.search == "")
+  {
+    buildurlparams();
     url_parameters = url_params;
+  }
   else
     url_parameters = window.location.search;
 
