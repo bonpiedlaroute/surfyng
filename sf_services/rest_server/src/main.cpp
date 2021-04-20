@@ -4,6 +4,7 @@
 
    author(s): Noel Tchidjo
 */
+#define BOOST_SYSTEM_NO_DEPRECATED
 #include <iostream>
 
 #include "HttpRequestHandler.h"
