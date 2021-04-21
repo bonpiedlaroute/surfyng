@@ -535,25 +535,28 @@ function generate_summary_page(data, empty=false)
 
     const Params = new URLSearchParams(url_parameters);
     var searchType = Params.get('search_type');
-    var pagetitle = "";
     var propertyType_param = Params.get('prop_type');
     var split_propertyType = propertyType_param.split(",");
     var first_proptype = true;
     var propertyType = "";
     var title = "";
     var isFlat = false;
-    var meta_description = "Toutes les annonces"
+    var meta_description = "Toutes les annonces ";
+    if( data.length >1 )
+    meta_description = String(data.length) +  " annonces "
+    else {
+      if(data.length == 1)
+      meta_description = "1 annonce ";
+    }
 
     if (split_propertyType.indexOf("1") !== -1 || split_propertyType.indexOf("3") !== -1)
     {
-      if(!first_proptype)
-        pagetitle += ", ";
-        else {
+      if(first_proptype)
           first_proptype = false;
-        }
+
       propertyType = "appartements";
       meta_description += " d'";
-      pagetitle += "Appartement";
+
       isFlat = true;
     }
     else {
@@ -568,7 +571,6 @@ function generate_summary_page(data, empty=false)
           first_proptype = false;
         }
       propertyType += "maisons";
-      pagetitle += "Maison";
       isFlat = false;
     }
       meta_description+= propertyType;
@@ -576,44 +578,38 @@ function generate_summary_page(data, empty=false)
       var rooms = Params.get('rooms');
       if(rooms)
       {
-        pagetitle += " ";
         if( rooms == "1")
         {
-          pagetitle += "studio";
           rooms_text = " studios";
         }else
         {
-            pagetitle += rooms;
-            pagetitle += " pièces"
             rooms_text = " " + rooms;
             rooms_text += " pièces";
         }
         meta_description+= rooms_text;
 
       }
-      pagetitle += " à ";
       meta_description += " à ";
-      pagetitle += searchType == 1 ? "vendre ": "louer ";
+
       meta_description += searchType == 1 ? "vendre ": "louer ";
       meta_description += " à ";
 
       var search_city = Params.get('search_city');
-      pagetitle += search_city;
+
       meta_description += search_city;
       var postalcode = getPostalCode(search_city);
-      pagetitle +=" ("+ postalcode + ")";
+
       meta_description += " ("+ postalcode + ")";
-      pagetitle += " - Surfyn";
+
       meta_description += " actualisées en temps réel, à partir de tous les sites de petites annonces immobilières et d'agences immobilières couvrant la ville de "
       meta_description += search_city + ".";
-      meta_description += isFlat? " Appartements":" Maisons";
+      meta_description += searchType == 1? "Vente ": "Location ";
+      meta_description += isFlat? "appartements":"maisons";
       meta_description += searchType == 2 ? " meublés ou non meublés": "";
       meta_description += " dans " + getNeighborhoodByCity(search_city) + ".";
-      meta_description += isFlat ? "Studio, T2, T3 avec ascenseur, avec balcon, avec parking, avec terrasse, avec cave":
-      "Maisons avec parking, avec garage, avec sous-sol total"
+      meta_description += isFlat ? "Studio/F1, T2/F2, T3/F3, T4/F4, T5/F5 avec ascenseur, avec balcon, avec parking, avec terrasse, avec cave":
+      "Maisons avec parking, avec garage, avec jardin, avec sous-sol total"
       meta_description += "  - Surfyn";
-
-      document.title = pagetitle;
 
       document.getElementsByTagName('meta')["description"].content = meta_description;
 
@@ -628,6 +624,8 @@ function generate_summary_page(data, empty=false)
     announces_found.innerHTML = "Aucune annonce à ";
     announces_found.innerHTML += search_city;
     announces_found.innerHTML += " ne correspond à vos critères";
+    document.title = announces_found.innerHTML;
+    document.title +=" - Surfyn";
   }
   else
   {
@@ -641,6 +639,8 @@ function generate_summary_page(data, empty=false)
         announces_found.innerHTML += search_city;
 
         announces_found.innerHTML += " (" +postalcode+")";
+        document.title = announces_found.innerHTML;
+        document.title +=" - Surfyn";
     }
 
     var ad_content = document.getElementById("ad-content");
