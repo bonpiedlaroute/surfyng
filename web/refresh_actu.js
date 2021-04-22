@@ -347,7 +347,7 @@ if(!puppeteer)
       pagination_container.appendChild(page_line);
 
       pagination_box.appendChild(pagination_container);
-      var news_pagination = document.getElementById("related-news");
+      var news_pagination = document.getElementById("news-pagination");
       news_pagination.appendChild(pagination_box);
     }).catch(function(error){
       console.log(error);
