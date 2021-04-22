@@ -103,14 +103,20 @@ function extract_actu_data(data, actu_source, image_url)
     var lastdate = new Date().setDate(today.getDate()-30)
     if( pubDate !== null )
     {
-      if( new Date(lastdate) < new Date(pubDate.innerHTML))
-      actuitem.pubdate= pubDate.innerHTML;
-      else {
-        continue;
+      if(today < new Date(pubDate.innerHTML))
+      {
+        actuitem.pubdate= lastdate;
+      }
+      else
+      {
+        if( new Date(lastdate) < new Date(pubDate.innerHTML))
+        actuitem.pubdate= pubDate.innerHTML;
+        else {
+          continue;
+        }
       }
     }
     else {
-2,9
       actuitem.pubdate = lastdate;
     }
 

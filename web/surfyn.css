@@ -1109,9 +1109,14 @@ margin-left:10%;
  }
 .sf_realestate_agencies_text
 {
-   margin-left:10px;font-size:12px;
+   margin-left:10px;font-size:14px;
 }
 
+.sf_realestate_agencies_name
+{
+  color:#787878 !important;
+  font-size:16px;
+}
 .sf_technology_frame
 {
   display:flex;
@@ -2076,6 +2081,16 @@ padding:5px;
   .sf_pagination_container
   {
     display:flex;justify-content:center;align-items:center;height:100%;width:95%;background-color:white;
+  }
+  .sf_realestate_agencies_text
+  {
+     margin-left:10px;font-size:12px;
+  }
+
+  .sf_realestate_agencies_name
+  {
+    color:#787878 !important;
+    font-size:13px;
   }
 } /* end of @media (max-width:1024px)  */
 

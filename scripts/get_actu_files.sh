@@ -14,5 +14,7 @@ sed -i 's/<\/a>//g' *.xml
 sed -i 's/<\/p>//g' *.xml
 sed -i 's/<\/strong>//g' *.xml
 sed -i 's/<strong>//g' *.xml
+sed -i -e 's/&lt;p&gt;//g' *
+sed -i -e 's/&lt;\/p&gt;//g' *
 sudo mkdir -p /var/www/html/data/actus/
 sudo mv *.xml /var/www/html/data/actus/
