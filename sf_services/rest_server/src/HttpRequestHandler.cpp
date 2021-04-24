@@ -29,7 +29,8 @@ HttpRequestHandler::HttpRequestHandler(utility::string_t url, http_listener_conf
                                              m_geoLocalService(std::make_shared<surfyn::utils::GeoLocal>("../../../bot/data/correspondance_codeinsee_codepostal_iledefrance.csv")),
                                              m_emailalert_host(emailalert_host),
                                              m_emailalert_port(emailalert_port),
-                                             m_depositaccess(deposit_host, deposit_port)
+                                             m_deposit_host(deposit_host),
+                                             m_deposit_port(deposit_port)
 {
     m_listener.support(methods::GET, [this](http_request message) { handle_get(message);});
     m_listener.support(methods::PUT, [this](http_request message) { handle_put(message);});
@@ -185,23 +186,30 @@ void HttpRequestHandler::handle_post(http_request message)
     else if(paths.size() == 1 && paths[0] == "announcedeposit")
     {
         auto query = http::uri::split_query(http::uri::decode(message.relative_uri().query()));
-        message.extract_utf8string()
-            .then([=](std::string data)
+        message
+            .extract_json(true)
+            .then([=](pplx::task<json::value> data_raw)
             {
-    
-                auto data_json = json::value::parse(data);
-                std::string user_id = data_json.at(U("user_id")).as_string();
-                Log::getInstance()->info("User id: " + data_json.at(U("user_id")).as_string());
-                auto result = m_depositaccess.announce_deposit(user_id, data);
-                if(!result.success)
+                try
                 {
-                    http_response response (status_codes::BadRequest);
-                    response.headers().add(U("Access-Control-Allow-Origin"), U("*"));
-                    message.reply(response);
-                    return;
+                    auto const & data = data_raw.get();
+                    std::string user_id = data.at(U("user_id")).as_string();
+                    auto result = std::make_shared<DepositAccess>(m_deposit_host, m_deposit_port)->announce_deposit(user_id, data.serialize());
+                    
+                    if(!result.success)
+                    {
+                        http_response response (status_codes::BadRequest);
+                        response.headers().add(U("Access-Control-Allow-Origin"), U("*"));
+                        message.reply(response);
+                        return;
+                    }
                 }
-            });
-        Log::getInstance()->info("Announce deposit est available");
+                catch(http_exception const & e)
+                {
+                    Log::getInstance()->info(e.what());
+                }
+            })
+            .wait();
     }
     else 
     {

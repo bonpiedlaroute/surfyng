@@ -34,12 +34,11 @@ namespace surfyn
 			shared_ptr<TProtocol> protocol(new TBinaryProtocol(transport));
 			m_client = std::make_shared<deposit_serviceClient>(protocol);
 
-			// transport->open();
+			transport->open();
 		}
 
 		DepositResult DepositAccess::announce_deposit(const std::string user_id, std::string data)
 		{
-			Log::getInstance()->info("Deposit announce");
 			auto data_json = json::value::parse(data);
 			DepositResult _return;
 
@@ -50,9 +49,19 @@ namespace surfyn
 				_return.error = "No user_id found";
 				return _return;
 			}
+			
+			std::string userid = data_json.at(U("user_id")).as_string();			
+			
+			try
+			{
+				m_client->announce_deposit(_return, userid, data);
+			}
+			catch(const std::exception& e)
+			{
+				std::cerr << e.what() << '\n';
+				Log::getInstance()->info(e.what());
+			}
 
-			std::string userid = data_json.at(U("user_id")).as_string();
-			m_client->announce_deposit(_return, userid, data);
 			if(_return.success)
 			{
 				Log::getInstance()->info("Successully deposit announce for user [" + std::string(user_id) + "]");

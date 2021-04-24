@@ -50,9 +50,11 @@ namespace rest_server
            int m_estimator_port;
            std::string m_emailalert_host;
            int m_emailalert_port;
+           std::string m_deposit_host;
+           int m_deposit_port;
            std::shared_ptr<surfyn::utils::GeoLocal> m_geoLocalService;
 
-           DepositAccess m_depositaccess;
+        //    DepositAccess m_depositaccess;
            /*DBaccess m_dbaccess;
            EstimatorAccess m_estimatoraccess;
            EmailAlertAccess m_emailalertaccess;*/
