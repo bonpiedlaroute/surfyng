@@ -73,13 +73,13 @@ namespace rest_server
            int m_estimator_port;
            std::string m_emailalert_host;
            int m_emailalert_port;
-           std::shared_ptr<surfyn::utils::GeoLocal> m_geoLocalService;
            std::string m_deposit_host;
            int m_deposit_port;
-
+           std::shared_ptr<surfyn::utils::GeoLocal> m_geoLocalService;
 
           std::unordered_map<std::string, std::function<void(http_request& message)>> m_http_get_services;
           std::unordered_map<std::string, std::function<void(http_request& message)>> m_http_post_services;
+
    };
 }
 }

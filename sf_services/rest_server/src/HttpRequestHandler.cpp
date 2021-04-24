@@ -33,6 +33,7 @@ HttpRequestHandler::HttpRequestHandler(utility::string_t url, http_listener_conf
                                              m_deposit_host(deposit_host), 
                                              m_deposit_port(deposit_port)
 
+
 {
     m_listener.support(methods::GET, [this](http_request message) { handle_get(message);});
     m_listener.support(methods::PUT, [this](http_request message) { handle_put(message);});
@@ -261,6 +262,7 @@ void HttpRequestHandler::handle_accountcreation(http_request& message)
     {
         send_serviceunavailable_response(message);
         return;
+
     }
 
     send_ok_response(message);

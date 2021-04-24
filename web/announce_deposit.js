@@ -182,9 +182,6 @@ function validate_second_step()
 							fetch(url, {
 								method: "POST",
 								body: JSON.stringify(dataParams),
-								headers: {
-									"Content-Type": "application/json;charset=UTF-8"
-								},
 								referrer:"same-origin",
 								mode: "no-cors"
 							})
@@ -214,6 +211,12 @@ function validate_second_step()
         	show:true
       	});
 	}
+}
+
+function showSuccessAnnounceDeposit()
+{
+	alert("Annonce enregistrer avec succès");
+	backHome();
 }
 
 function buildParams()
@@ -247,6 +250,9 @@ function buildParams()
 		dataParams["price"] = sessionStorage.getItem("price");
 	else
 		return false;
+
+	if(sessionStorage.getItem("city"))
+		dataParams["city"] = sessionStorage.getItem("city");
 
 	if(sessionStorage.getItem("user_id"))
 		dataParams["user_id"] = sessionStorage.getItem("user_id");
