@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="Content-Security-Policy" content="frame-src *;">
-    <meta name="description" content="Découvrez toutes les annonces immobilières à partir d'une seule plateforme: Appartements, Maisons en vente et en location actualisées
+    <meta name="description" content="Découvrez toutes les annonces immobilières à partir d'une seule plateforme. Agrégateur annonce immobilière: Appartements, Maisons en vente, en location ou colocation actualisées
     en temps réel de tous les sites de petites annonces immobilières et d'agences immobilières en France. Estimation immobilière rapide, gratuite et en ligne de votre bien immobilier.">
     <meta name="author" content="Surfyn">
 
@@ -44,9 +44,14 @@
           <div class="sf_dropdown">
 
             <div class="param_icon_box_width" style="display:flex;height:43px;justify-content:flex-end;flex-direction:row;align-items:center;">
-              <div style="cursor:pointer;width:32px;height:32px;display:none;margin-top:10px;" id="login_connected_box" >
-                <div class="sf_login_connected_icon" onclick="show_login_menu()">
+              <div style="width:32px;height:32px;display:block;margin-top:10px;"  >
+                <div class="sf_login_connected_icon" onclick="show_login_menu()" id="user_connected_box">
                   <a class="sf_user_display_name" id="user_display_name">
+                  </a>
+                </div>
+                <div class="sf_login_not_connected_icon" id="user_not_connected_box">
+                  <a data-toggle="modal" data-target="#login" style="color:white;cursor:pointer;margin-left:10px;">
+                  <i class="far fa-user-circle" style="color:white;font-size:25px;" ></i>
                   </a>
                 </div>
               </div>
@@ -58,7 +63,7 @@
             </div>
             <div id="filter_parameter" class="parameter_content">
               <a href="/" > Accueil </a>
-              <a data-toggle="modal" data-target="#login" style="color: #61AEB5;cursor:pointer;">Se connecter</a>
+              <a data-toggle="modal" data-target="#login" style="color: #61AEB5;cursor:pointer;">Mon compte</a>
               <a href="/recherche/achat/immobilier?search_type=1" > Acheter un bien </a>
               <a href="/recherche/location/immobilier?search_type=2" > Louer un bien </a>
               <a href="estimation-immobiliere-en-ligne.html" > Estimer un bien </a>
@@ -441,11 +446,11 @@
   <div class="contact_info" style="display:flex;flex-direction:row; justify-content:center;">
     <a href="partenaires.html" style="color:white;cursor:pointer;margin-left:10px;"> Nos partenaires</a>
     <a data-toggle="modal" data-target="#login" style="color:white;cursor:pointer;margin-left:10px;">
-    <i class="far fa-user-circle" style="color:white;"></i> Se connecter
+    <i class="far fa-user-circle" style="color:white;"></i> Mon compte
     </a>
   </div>
     <div class="contact_info" style="display:flex;flex-direction:row; justify-content:center;">
-	   <!--span style="color:white"><b><a href="/login">Se connecter</a></b></span><br/-->
+
 
       <div style ="margin-left:10px;">
       <a href="https://www.facebook.com/surfyn.fr/">
@@ -540,7 +545,23 @@
         </div>
       </div>
       <!-- end Modal sendemail-result -->
+      <!-- Modal generic message result -->
+      <div id="generic-box-message-result" class="modal fade" role="dialog">
+        <div class="modal-dialog" style="height:10%;">
 
+          <!-- Modal content-->
+          <div class="modal-content" style="height:100%;">
+            <div class="modal-body" style="height:100%;padding:0px;">
+
+              <div class="alert alert-success" role="alert" style="height:100%;text-align:center;">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+              <strong id="generic-message-result"></strong></div>
+            </div>
+          </div>
+          <!-- End Modal content -->
+        </div>
+      </div>
+      <!-- end Modal generic message-result-->
       <!-- Modal login -->
       <div id="login" class="modal fade" role="dialog">
         <!-- <script src="login.js"> </script> -->
@@ -602,14 +623,6 @@
 
                     </div>
                   </div>
-                  <!-- <div class="sf_modal_box_width sf_modal_login_foreign_auth_frame" onclick="location.href='#';" >
-                    <div class="sf_modal_login_foreign_auth_box">
-                      <i class="fab fa-twitter" style="color:#55acee;font-size:20px;width:20px;height:20px;"></i>
-
-                      <a class="sf_modal_login_foreign_auth_text"> Se connecter avec Twitter </a>
-
-                      </div>
-                    </div> -->
                 </div>
 
           </div>
@@ -771,13 +784,11 @@
     <script src="index.js"></script>
     <script src="dropdownmenu.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-analytics.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-auth.js"></script>
 
     <script>
        window.onload = function() {
 
-           console.log("we have firebase apps");
            // Initialize Firebase
            if (!firebase.apps.length)
            {
@@ -791,7 +802,6 @@
                appId: "1:1080663386908:web:d0c38731a4d55de5dea8d9",
                measurementId: "G-7X8E11EEFD"
              };
-             console.log("firebase initialization");
              firebase.initializeApp(firebaseConfig);
            }
            firebase.auth().getRedirectResult().then(function(result) {
@@ -809,20 +819,22 @@
                mot_de_passe.value = "";
 
                var user = result.user;
+               var user_not_connected_box = document.getElementById("user_not_connected_box");
+               var user_connected_box = document.getElementById("user_connected_box");
                if(user)
                {
                    showSuccessConnexionMessage();
-                   var login_connected_box = document.getElementById("login_connected_box");
-                   login_connected_box.style.display = "block";
+
                    var user_display_name = document.getElementById("user_display_name");
                    user_display_name.innerHTML = user.displayName.slice(0,1).toUpperCase();
-                   console.log("successful login");
-                   console.log("token : ");
-                   console.log(token);
+
                    console.log(user.displayName);
 
                    sessionStorage.setItem("user_id", user.uid);
                    sessionStorage.setItem("user_display_name", user_display_name.innerHTML);
+
+                   user_connected_box.style.display = 'flex';
+                   user_not_connected_box.style.display = 'none';
 
                    user.updateProfile({
                     displayName: user.displayName
@@ -833,10 +845,6 @@
                     console.log(error);
                   });
 
-               }
-               else {
-                   sessionStorage.setItem("user_id", "");
-                   sessionStorage.setItem("user_display_name", "");
                }
              }).catch(function(error)
              {
@@ -851,11 +859,9 @@
                console.log(error);
                // ...
              });
-             console.log("end of initialization");
+
              firebase.auth().onAuthStateChanged(checkUserStatus);
-             console.log("end of onload");
-
-
+             updateUserStatus();
        }
     </script>
   </body>
