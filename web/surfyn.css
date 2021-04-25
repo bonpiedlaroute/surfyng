@@ -1,2287 +1,2376 @@
-.home_logo
-{
-height:400px;
-margin-top:-50px;
-margin-bottom:-50px;
+.home_logo {
+    height: 400px;
+    margin-top: -50px;
+    margin-bottom: -50px;
 }
 
-.search_type_button
-{
-height:140px;
-width:10%;
-border-radius:8px;
-}
-.desc_title
-{
-  font-size:25px;
-}
-.estimate_button
-{
-height:140px;
-width:26%;
-border-radius:8px;
+.search_type_button {
+    height: 140px;
+    width: 10%;
+    border-radius: 8px;
 }
 
-.deposit_button
-{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 26%;
-  border-radius: 5px;
-  margin-top: 50px;
-  padding-top: 20px;
+.desc_title {
+    font-size: 25px;
 }
 
-.deposit_text
-{
-  font-size: 18px;
-  font-weight: bold;
-}
-.estimate_settings
-{
-/*background-color: #bfe5f5;*/
-background-color:#4C8E99;
-}
-.estimate_icon
-{
-  background-image:url('data/estimer_1.png');
-}
-.estimate_icon_box
-{
-  height:120px;
-  width:60%;
-  border-radius:98%;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position:center;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-.estimate_header
-{
-  display:flex;
-  justify-content: center;
-  align-items: center;
-  height:90px;
-  width: 100%;
-}
-.estimate_footer
-{
-  height:50px;
-  width: 100%;
-  text-align:center;
-}
-a:hover{ text-decoration: none; }
-.search_type_header
-{
-  display:flex;
-  justify-content: center;
-  align-items: center;
-  height:90px;
-  width: 100%;
-}
-.search_type_icon
-{
-  height:100px;
-  width:100%;
-  border-radius:98%;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position:center;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-.buy_icon
-{
-  background-image:url('home_buy.svg');
-}
-.rent_icon
-{
-  background-image:url('home_rent.svg');
-}
-.search_type_footer
-{
-  height:50px;
-  width: 100%;
-  text-align:center;
-}
-.search_type_text
-{
-  font-size:25px;
-  font-weight:bold;
+.estimate_button {
+    height: 140px;
+    width: 26%;
+    border-radius: 8px;
 }
 
-.buy_settings
-{
-  background-color:#4C8E99;
-}
-.rent_settings
-{
-  /*background-color:#61AEB5;*/
-  background-color:#4C8E99;
-  margin-left:100px;
-}
-
-.sf_search_block
-{
-  width :500px;
-  height: 140px;
-  background-image:url('map.svg');
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position:left;
+.deposit_button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 26%;
+    border-radius: 5px;
+    margin-top: 50px;
+    padding-top: 20px;
 }
 
-.sf_input_block
-{
-  margin : 0 auto;
-  width:260px;
-  margin-top:20px;
+.deposit_text {
+    font-size: 18px;
+    font-weight: bold;
 }
 
-.sf_search_icon
-{
-  position:absolute;
-  padding: 10px;
-  pointer-events:none;
+.estimate_settings {
+    /*background-color: #bfe5f5;*/
+    background-color: #4C8E99;
 }
 
-.sf_line
-{
-  height:27px;
-  background-color:#F2F2F2;
+.estimate_icon {
+    background-image: url('data/estimer_1.png');
 }
 
-.sf_line_results
-{
-  height:10px;
-}
-.sf_range_slider
-{
-  display:flex;
-  align-items:center;
-  justify-content: center;
-  flex-direction:row;
-  width:100%;
-  height:75px;
+.estimate_icon_box {
+    height: 120px;
+    width: 60%;
+    border-radius: 98%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.sf_range_slider_input
-{
-  height:75px;
-  border-radius:98%;
-  border:solid 5px #61AEB5;
-  flex-grow:0;
-  z-index:3;
-  background:white;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  cursor:pointer;
-}
-.sf_range_slider_track
-{
-  background:#61AEB5;
-  height:20px;
-  border:solid 1px #61AEB5;
-  flex-grow:0;
-  z-index:1;
-}
-.sf_range_slider_track_unset_zone
-{
-  background:#A9A9A9;
-  height:20px;
-  border:solid 1px #A9A9A9;
-  flex-grow:0;
-  z-index:2;
-  width: 3%;
-  position : absolute;
-}
-.sf_range_slider_unset_left_zone
-{
-  left:5.4%;
-}
-.sf_range_slider_unset_right_zone
-{
-  right:5.4%;
-}
-.sf_slider_min
-{
-  /* transform: translateX(10px); */
-  position: absolute;
-  left:5%;
-  width:5%;
-}
-.sf_slider_track_width
-{
-  width:85%;
-}
-.sf_slider_max
-{
-  width:5%;
-  /* transform: translateX(-10px); */
-  position : absolute;
-  right: 5%;
-}
-.icon_arrow_left
-{
-  font-size: 30px;
-}
-.header_title
-{
-  font-size:30px;
-  color:#61AEB5;
+.estimate_header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90px;
+    width: 100%;
 }
 
-.header_title_estimation
-{
-  font-size:26px;
-  color:#61AEB5;
+.estimate_footer {
+    height: 50px;
+    width: 100%;
+    text-align: center;
 }
 
-.header_subtitle_estimation
-{
-  font-size:14px;
-  color:#61AEB5;
+a:hover {
+    text-decoration: none;
 }
-.sf_slider_annotation
-{
-  width:100%;
-  height:20px;
-  margin-top:30px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+
+.search_type_header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90px;
+    width: 100%;
 }
-.sf_slider_label
-{
-  display:flex;
-  align-items:center;
-  justify-content:center;
+
+.search_type_icon {
+    height: 100px;
+    width: 100%;
+    border-radius: 98%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.buy_icon {
+    background-image: url('home_buy.svg');
+}
+
+.rent_icon {
+    background-image: url('home_rent.svg');
+}
+
+.search_type_footer {
+    height: 50px;
+    width: 100%;
+    text-align: center;
+}
+
+.search_type_text {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.buy_settings {
+    background-color: #4C8E99;
+}
+
+.rent_settings {
+    /*background-color:#61AEB5;*/
+    background-color: #4C8E99;
+    margin-left: 100px;
+}
+
+.sf_search_block {
+    width: 500px;
+    height: 140px;
+    background-image: url('map.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: left;
+}
+
+.sf_input_block {
+    margin: 0 auto;
+    width: 260px;
+    margin-top: 20px;
+}
+
+.sf_search_icon {
+    position: absolute;
+    padding: 10px;
+    pointer-events: none;
+}
+
+.sf_line {
+    height: 27px;
+    background-color: #F2F2F2;
+}
+
+.sf_line_results {
+    height: 10px;
+}
+
+.sf_range_slider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    width: 100%;
+    height: 75px;
+}
+
+.sf_range_slider_input {
+    height: 75px;
+    border-radius: 98%;
+    border: solid 5px #61AEB5;
+    flex-grow: 0;
+    z-index: 3;
+    background: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.sf_range_slider_track {
+    background: #61AEB5;
+    height: 20px;
+    border: solid 1px #61AEB5;
+    flex-grow: 0;
+    z-index: 1;
+}
+
+.sf_range_slider_track_unset_zone {
+    background: #A9A9A9;
+    height: 20px;
+    border: solid 1px #A9A9A9;
+    flex-grow: 0;
+    z-index: 2;
+    width: 3%;
+    position: absolute;
+}
+
+.sf_range_slider_unset_left_zone {
+    left: 5.4%;
+}
+
+.sf_range_slider_unset_right_zone {
+    right: 5.4%;
+}
+
+.sf_slider_min {
+    /* transform: translateX(10px); */
+    position: absolute;
+    left: 5%;
+    width: 5%;
+}
+
+.sf_slider_track_width {
+    width: 85%;
+}
+
+.sf_slider_max {
+    width: 5%;
+    /* transform: translateX(-10px); */
+    position: absolute;
+    right: 5%;
+}
+
+.icon_arrow_left {
+    font-size: 30px;
+}
+
+.header_title {
+    font-size: 30px;
+    color: #61AEB5;
+}
+
+.header_title_estimation {
+    font-size: 26px;
+    color: #61AEB5;
+}
+
+.header_subtitle_estimation {
+    font-size: 14px;
+    color: #61AEB5;
+}
+
+.sf_slider_annotation {
+    width: 100%;
+    height: 20px;
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sf_slider_label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .no_select {
-  -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-     -khtml-user-select: none; /* Konqueror HTML */
-       -moz-user-select: none; /* Firefox */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently
+    -webkit-touch-callout: none;
+    /* iOS Safari */
+    -webkit-user-select: none;
+    /* Safari */
+    -khtml-user-select: none;
+    /* Konqueror HTML */
+    -moz-user-select: none;
+    /* Firefox */
+    -ms-user-select: none;
+    /* Internet Explorer/Edge */
+    user-select: none;
+    /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
 }
 
-.property_type_box
-{
-  width:15%;
-  height:120px;
-  border-radius:6px;
-  display: flex;
-  transform:scale(0.85);
-  flex-direction:column;
-  align-items: center;
-  justify-content: space-evenly;
-  flex-wrap:wrap;
-  background-color:#bfe5f5;
-  cursor:pointer;
+.property_type_box {
+    width: 15%;
+    height: 120px;
+    border-radius: 6px;
+    display: flex;
+    transform: scale(0.85);
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    background-color: #bfe5f5;
+    cursor: pointer;
 }
-.property_type_icon_box
-{
-  width:100%;
-  height: 70px;
-  align-self: center;
-  display:flex;
-  align-items: center;
-  justify-content: space-evenly;
+
+.property_type_icon_box {
+    width: 100%;
+    height: 70px;
+    align-self: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
 }
-.property_type_icon
-{
-  align-self: center;
-  font-size: 50px !important;
-  color:#222545;
+
+.property_type_icon {
+    align-self: center;
+    font-size: 50px !important;
+    color: #222545;
 }
-.property_type_text_box
-{
-  width:100%;
-  height: 30px;
-  align-self: center;
-  text-align: center;
+
+.property_type_text_box {
+    width: 100%;
+    height: 30px;
+    align-self: center;
+    text-align: center;
 }
-.property_type_text
-{
-  font-weight:bold;
-  font-size:20px;
+
+.property_type_text {
+    font-weight: bold;
+    font-size: 20px;
 }
+
+
 /* results page styles */
-.announce_link
-{
-  display:block;
-  width:45%;
-  margin:auto;
-}
-.announce_frame
-{
-  height: 270px;
-  border: 3px solid white;
-  border-radius: 10px;
-  width: 100%;
-  background-color: white;
-  box-shadow: 2px 2px #aaa;
-  display:flex;
-  align-items:center;
-  justify-content: center;
-  flex-direction:row;
-}
-.announce_container
-{
-display:flex;
-align-items:center;
-justify-content: center;
-flex-direction:row;
-height:100%;
-width:100%;
+
+.announce_link {
+    display: block;
+    width: 45%;
+    margin: auto;
 }
 
-.announce_image_container
-{
-  height:90%;
-  width:30%;
-  border-radius:8px;
+.announce_frame {
+    height: 270px;
+    border: 3px solid white;
+    border-radius: 10px;
+    width: 100%;
+    background-color: white;
+    box-shadow: 2px 2px #aaa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
 }
 
-.announce_image
-{
-  border-radius:8px;
-  height:100%;
-  width:100%;
-}
-.announce_summary_container
-{
-  height:90%;
-  width:60%;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content: space-evenly;
-  margin-left:20px;
-}
-.announce_summary_desc
-{
-  height:60px;
-  width:100%;
-}
-.announce_summary_desc_logo
-{
-  height:60px;
-  width:100%;
-}
-.announce_summary_details
-{
-  color:#787878;
-  font-size: 16px;
-  float:left;
-}
-.announce_summary_refresh_time
-{
-  color:#bdbdbd;
-  margin-right:5px;
-  font-size: 16px;
-  float: right;
-}
-.announce_summary_icon
-{
-  font-size: 30px;
-  color:#4c94bc;
-  float:left;
-}
-.announce_summary_city
-{
-  margin: 0 0 0 5px;
-  float:left;
-  color:#4c94bc;
-}
-.announce_summary_city_container
-{
-  height:30px;
-  width:100%;
-}
-.announce_source_logo
-{
-  border-radius:90%;
-  max-height:100%;
-  max-width:100%;
-  border:solid 3px white;
-  background-color: white;
+.announce_container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
 }
 
-.det_container
-{
-  display:flex;
-  align-items:center;
-  justify-content: center;
-  flex-direction:row;
-  width:100%;
-  padding-top:10px;
-  padding-bottom:10px;
-}
-.det_ad_container
-{
-  height:880px;
-  width:20%;
-  background-color:#FFFFFF;
-  box-shadow: 3px 3px #aaaaaa;
-}
-.det_ad_image_container
-{
-  height:200px;
-  width:100%;
-  display:flex;
-  justify-content:space-evenly;
-}
-.det_ad_image_frame
-{
-  height:185px;
-  border-radius:5px;
-  width:90%;
-  margin-top:10px;
-  display:flex;
-  position:relative;
-  justify-content: center;
-}
-.det_ad_image
-{
-  height:100%;
-  width:100%;
-  border-radius:5px;
-}
-.det_ad_image_icon_container
-{
-  align-self: flex-end;
-  position:absolute;
-  right:5px;
-}
-.det_ad_image_icon
-{
-  color:white;
-  align-self: flex-end;
-  margin-left: 4px;
-}
-.det_ad_desc_container
-{
-  height:293px;
-  width:100%;
-  display:flex;
-  flex-direction:row;
-  justify-content:space-evenly;
-  flex-wrap:wrap;
-  padding-top:2px;
-}
-.det_ad_desc_shape
-{
-  height:70px;
-  width:30%;
-  border-radius:5px;
-  flex-direction:column;
-}
-.det_ad_desc_border
-{
-  border:3px solid #4C8E99;
-}
-.det_ad_desc_center
-{
-  display:flex;
-  align-items:center;
-  justify-content: center;
-}
-.det_ad_ticker
-{
-  width:100%;height:15px;
-}
-.det_ad_ticker_icon
-{
-  align-self: center;
-  font-size: 15px !important;
-  margin-top:2px;
-}
-.det_ad_span_box
-{
-  width:100%;height:55px; text-align:center;display:flex;justify-content:center;align-items:center;
-}
-.det_ad_logo_container
-{
-  height:55px;
-  width:100%;
-  position:relative;
-}
-.det_ad_logo_frame
-{
-  position:absolute;
-  height:100%;
-  width:100%;
-}
-.det_ad_logo
-{
-  max-height:100%;
-  max-width:100%;
-  display:block;
-  margin : 0 auto;
-}
-.header_title_left_box
-{
-  width: 20%;
-}
-.header_title_center_box
-{
-  width: 70%;
+.announce_image_container {
+    height: 90%;
+    width: 30%;
+    border-radius: 8px;
 }
 
-.header_title_right_box
-{
-  width: 20%;
-}
-.det_header_title
-{
-  font-size:20px;
-  color:#61AEB5;
-}
-.det_median_price_text
-{
-  font-size:16px;
-  color:black;
-}
-.det_notary_fees_frame
-{
-  height:40px;
-  width:100%;
-  display:flex;
-  flex-direction:row;
-  justify-content:center;
-  align-items:center;
-}
-.det_notary_fees_box
-{
-  width:100%;
-  height:20px;
-  background-color: #F2F2F2;
-  text-align:center;
-}
-.det_notary_fees_text
-{
-  margin:auto;
-  font-size:12px;
-  color:black;
-}
-.det_median_price_box
-{
-  height:40px;
-  display:flex;
-  justify-content: center;
-  text-align:center;
-  align-items:center;
-  margin-top:10px;
+.announce_image {
+    border-radius: 8px;
+    height: 100%;
+    width: 100%;
 }
 
-.contact_info
-{
-  text-align:center;
-  width:100%;
-  height:30px;
+.announce_summary_container {
+    height: 90%;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    margin-left: 20px;
 }
 
-.social_media
-{
-  text-align:center;
-  width:100%;
-  height:30px;
-  bottom:5px;
-  display:flex;
-  flex-direction:row;
-  justify-content:center;
-  margin-top:40px;
-}
-.estimate_place
-{
-  width :30%;
-  height: 140px;
-  background-image:url('map.svg');
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position:left;
+.announce_summary_desc {
+    height: 60px;
+    width: 100%;
 }
 
-.deposit_title
-{
-  width :40%;
-  height: 140px;
-  background-image:url('map.svg');
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position:left;
+.announce_summary_desc_logo {
+    height: 60px;
+    width: 100%;
 }
 
-.deposit_city
-{
-  width: 40%;
-  height: 140px;
-}
-.estimate_place_left
-{
-  width:15%;height:25px;
-}
-.estimate_place_right
-{
-  width:13%;height:25px;
-}
-.estimate_road_number
-{
-  width:16%;
-}
-.estimate_place_space
-{
-  width:4%;height:40px;
-}
-.estimate_road
-{
-  width:52%;
-}
-.estimate_city
-{
-  width:72%;
-}
-.empty_property_type
-{
-  width:15%;
-  height:120px;
-  border-radius:6px;
-  transform:scale(0.85);
-}
-.estimate_area
-{
-  width:15%;height:90px;border-radius:6px;display:flex;background-color:#bfe5f5;
-}
-.estimate_area_ground
-{
-margin-left:10%;
+.announce_summary_details {
+    color: #787878;
+    font-size: 16px;
+    float: left;
 }
 
-.estimate_results
-{
-  display:flex; align-items: center; justify-content: center; flex-direction:column;width:100%; height:500px;
-}
-.estimate_results_text
-{
-  display:flex;align-items: center; justify-content: center;text-align:center;width:50%;height:250px;
-}
-.estimate_results_text_size
-{
-  font-size:38px;
-}
-.estimate_results_price
-{
-  display:flex;align-items: center; justify-content: center; flex-direction:column;width:50%;height:250px;
-}
-.estimate_results_price_text
-{
-  display:flex;align-items: center; justify-content: center;text-align:center;width:50%; height:70px; background-color:#61AEB5;
-}
-.estimate_results_price_text_size
-{
-  font-size:30px;
-}
-.estimate_results_expl
-{
-  display:flex;align-items: center; justify-content: center;text-align:center;position:relative; top:73px; width:100%;height:30px;
+.announce_summary_refresh_time {
+    color: #bdbdbd;
+    margin-right: 5px;
+    font-size: 16px;
+    float: right;
 }
 
-.estimate_results_expl_size
-{
-  font-size:15px;
-}
-.estimate_results_footer
-{
-  display:flex;
-  align-items:center;
-  /*justify-content: space-evenly;*/
-  flex-wrap:wrap;
-}
-.estimate_results_footer_image
-{
-  /*position:absolute;*/
-  /*top:560px;*/
-  width:33%;
-  /*bottom:0;*/
-  height:calc(100vh - 560px);
-  background-image:url('data/city.png');background-repeat: no-repeat;background-size: cover;
-  background-position:center;
-}
-.estimate_results_footer_image_last
-{
-  /*position:absolute;*/
-  /*top:560px;*/
-  width:34%;
-  /*bottom:0;*/
-  height:calc(100vh - 560px);
-  background-image:url('data/city.png');background-repeat: no-repeat;background-size: cover;
-  background-position:center;
-}
-.sf_form_decoration
-{
-  padding-left:15px;width:100%;border-radius:20px; border: 2px solid #61AEB5;
+.announce_summary_icon {
+    font-size: 30px;
+    color: #4c94bc;
+    float: left;
 }
 
-.sf_title_decoration{
-  padding-left: 15px;
-  width: 100%;
-  border-radius: 5px;
-  /*border: 2px solid #61AEB5;*/
+.announce_summary_city {
+    margin: 0 0 0 5px;
+    float: left;
+    color: #4c94bc;
 }
 
-.sf_description_decoration
-{
-  width: 100%;
-  height: 100px;
-  border-radius: 5px;
-  border: 2px solid "light-gray";
-  resize: none;
+.announce_summary_city_container {
+    height: 30px;
+    width: 100%;
 }
 
-.sf_preview
-{
-  position: relative;
-  width: 180px;
-  height: 180px;
-  background-position: center center;
-  background-size: cover;
-  background-color: #bfe5f9;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  border-radius: 10px;
-  border: 2px dashed rgba(0, 0, 0, .3);
+.announce_source_logo {
+    border-radius: 90%;
+    max-height: 100%;
+    max-width: 100%;
+    border: solid 3px white;
+    background-color: white;
 }
 
-.sf_overlay
-{
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #A9A9A9;
-  border-radius: 10px;
-  opacity: 0.5;
+.det_container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
-.upload
-{
+.det_ad_container {
+    height: 880px;
+    width: 20%;
+    background-color: #FFFFFF;
+    box-shadow: 3px 3px #aaaaaa;
+}
+
+.det_ad_image_container {
+    height: 200px;
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.det_ad_image_frame {
+    height: 185px;
+    border-radius: 5px;
+    width: 90%;
+    margin-top: 10px;
+    display: flex;
+    position: relative;
+    justify-content: center;
+}
+
+.det_ad_image {
+    height: 100%;
+    width: 100%;
+    border-radius: 5px;
+}
+
+.det_ad_image_icon_container {
+    align-self: flex-end;
+    position: absolute;
+    right: 5px;
+}
+
+.det_ad_image_icon {
+    color: white;
+    align-self: flex-end;
+    margin-left: 4px;
+}
+
+.det_ad_desc_container {
+    height: 293px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    padding-top: 2px;
+}
+
+.det_ad_desc_shape {
+    height: 70px;
+    width: 30%;
+    border-radius: 5px;
+    flex-direction: column;
+}
+
+.det_ad_desc_border {
+    border: 3px solid #4C8E99;
+}
+
+.det_ad_desc_center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.det_ad_ticker {
+    width: 100%;
+    height: 15px;
+}
+
+.det_ad_ticker_icon {
+    align-self: center;
+    font-size: 15px !important;
+    margin-top: 2px;
+}
+
+.det_ad_span_box {
+    width: 100%;
+    height: 55px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.det_ad_logo_container {
+    height: 55px;
+    width: 100%;
+    position: relative;
+}
+
+.det_ad_logo_frame {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
+.det_ad_logo {
+    max-height: 100%;
+    max-width: 100%;
+    display: block;
+    margin: 0 auto;
+}
+
+.header_title_left_box {
+    width: 20%;
+}
+
+.header_title_center_box {
+    width: 70%;
+}
+
+.header_title_right_box {
+    width: 20%;
+}
+
+.det_header_title {
+    font-size: 20px;
+    color: #61AEB5;
+}
+
+.det_median_price_text {
+    font-size: 16px;
+    color: black;
+}
+
+.det_notary_fees_frame {
+    height: 40px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.det_notary_fees_box {
+    width: 100%;
+    height: 20px;
+    background-color: #F2F2F2;
+    text-align: center;
+}
+
+.det_notary_fees_text {
+    margin: auto;
+    font-size: 12px;
+    color: black;
+}
+
+.det_median_price_box {
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.contact_info {
+    text-align: center;
+    width: 100%;
+    height: 30px;
+}
+
+.social_media {
+    text-align: center;
+    width: 100%;
+    height: 30px;
+    bottom: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.estimate_place {
+    width: 30%;
+    height: 140px;
+    background-image: url('map.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: left;
+}
+
+.deposit_title {
+    width: 40%;
+    height: 140px;
+    background-image: url('map.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: left;
+}
+
+.deposit_city {
+    width: 40%;
+    height: 140px;
+}
+
+.estimate_place_left {
+    width: 15%;
+    height: 25px;
+}
+
+.estimate_place_right {
+    width: 13%;
+    height: 25px;
+}
+
+.estimate_road_number {
+    width: 16%;
+}
+
+.estimate_place_space {
+    width: 4%;
+    height: 40px;
+}
+
+.estimate_road {
+    width: 52%;
+}
+
+.estimate_city {
+    width: 72%;
+}
+
+.empty_property_type {
+    width: 15%;
+    height: 120px;
+    border-radius: 6px;
+    transform: scale(0.85);
+}
+
+.estimate_area {
+    width: 15%;
+    height: 90px;
+    border-radius: 6px;
+    display: flex;
+    background-color: #bfe5f5;
+}
+
+.estimate_area_ground {
+    margin-left: 10%;
+}
+
+.estimate_results {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    height: 500px;
+}
+
+.estimate_results_text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 50%;
+    height: 250px;
+}
+
+.estimate_results_text_size {
+    font-size: 38px;
+}
+
+.estimate_results_price {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 50%;
+    height: 250px;
+}
+
+.estimate_results_price_text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 50%;
+    height: 70px;
+    background-color: #61AEB5;
+}
+
+.estimate_results_price_text_size {
+    font-size: 30px;
+}
+
+.estimate_results_expl {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    top: 73px;
+    width: 100%;
+    height: 30px;
+}
+
+.estimate_results_expl_size {
+    font-size: 15px;
+}
+
+.estimate_results_footer {
+    display: flex;
+    align-items: center;
+    /*justify-content: space-evenly;*/
+    flex-wrap: wrap;
+}
+
+.estimate_results_footer_image {
+    /*position:absolute;*/
+    /*top:560px;*/
+    width: 33%;
+    /*bottom:0;*/
+    height: calc(100vh - 560px);
+    background-image: url('data/city.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+.estimate_results_footer_image_last {
+    /*position:absolute;*/
+    /*top:560px;*/
+    width: 34%;
+    /*bottom:0;*/
+    height: calc(100vh - 560px);
+    background-image: url('data/city.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+.sf_form_decoration {
+    padding-left: 15px;
+    width: 100%;
+    border-radius: 20px;
+    border: 2px solid #61AEB5;
+}
+
+.sf_title_decoration {
+    padding-left: 15px;
+    width: 100%;
+    border-radius: 5px;
+    /*border: 2px solid #61AEB5;*/
+}
+
+.sf_description_decoration {
+    width: 100%;
+    height: 100px;
+    border-radius: 5px;
+    border: 2px solid "light-gray";
+    resize: none;
+}
+
+.sf_preview {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    background-position: center center;
+    background-size: cover;
+    background-color: #bfe5f9;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 10px;
+    border: 2px dashed rgba(0, 0, 0, .3);
+}
+
+.sf_overlay {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #A9A9A9;
+    border-radius: 10px;
+    opacity: 0.5;
+}
+
+.upload {
     display: none;
 }
 
+
 /* Switch button*/
- /* The switch - the box around the slider */
+
+
+/* The switch - the box around the slider */
+
 .switch {
-  position: relative;
-  display: inline-block;
-  width: 52px;
-  height: 26px;
+    position: relative;
+    display: inline-block;
+    width: 52px;
+    height: 26px;
 }
+
 
 /* Hide default HTML checkbox */
+
 .switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
+    opacity: 0;
+    width: 0;
+    height: 0;
 }
 
+
 /* The slider */
+
 .slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
 }
 
 .slider:before {
-  position: absolute;
-  content: "";
-  height: 20px;
-  width: 20px;
-  left: 3px;
-  bottom: 3px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
 }
 
-input:checked + .slider {
-  background-color: #3dc4eb;
+input:checked+.slider {
+    background-color: #3dc4eb;
 }
 
-input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
+input:focus+.slider {
+    box-shadow: 0 0 1px #2196F3;
 }
 
-input:checked + .slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(24px);
-  transform: translateX(24px);
+input:checked+.slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(24px);
+    transform: translateX(24px);
 }
+
 
 /* Rounded sliders */
+
 .slider.round {
-  border-radius: 34px;
+    border-radius: 34px;
 }
 
 .slider.round:before {
-  border-radius: 50%;
-} 
-
-
-.sf_title_decorationsf_form_error
-{
-  padding-left:15px;width:100%;border-radius:20px; border: 1px solid red;
-}
-.sf_rooms
-{
-  width:10%;height:40px;border-radius:6px;display:flex;transform:scale(0.85);flex-direction:row;align-items:center;justify-content:space-evenly;flex-wrap:wrap;background-color:#bfe5f5;cursor:pointer;
-}
-.sf_bedrooms
-{
-  width:10%;height:40px;border-radius:6px;display:flex;transform:scale(0.85);flex-direction:row;align-items:center;justify-content:space-evenly;flex-wrap:wrap;background-color:#bfe5f5;cursor:pointer;
-}
-.sf_parking
-{
-  width:15%;height:40px;border-radius:6px;display:flex;transform:scale(0.85);flex-direction:row;align-items:center;justify-content:space-evenly;flex-wrap:wrap;background-color:#bfe5f5;cursor:pointer;
-}
-.ad_summary_src
-{
-  height:60px;width:100%;
-}
-.ad_summary_src_text_cont
-{
-  height:40%; width:100%;
-}
-.ad_summary_src_text
-{
-  font-size:15px;color : gray;
-}
-.ad_summary_src_provider_cont
-{
-  height:60%; width:100%;display:flex;align-items:center;
-}
-.ad_summary_src_provider{
-  height:70%; width:15%; border-radius:10px;text-align:center;margin-left:2px;
-}
-.ad_summary_src_provider_text
-{
-  font-size:12px;font-weight:bold;
-}
-.feedback_box
-{
-  border-radius:5px;background-color:#F2F2F2;margin-top:10px; width:250px;padding-left:5px;
-}
-.good_feedback
-{
-  border:1px solid lightgray;
-}
-.bad_feedback
-{
-  border:1px solid red;
-}
-.sf_dropdown
-{
-  position:relative;
-  display: inline-block;
-}
-.sf_dropdown_link
-{
-
-}
-.param_icon_box_width
-{
-  width:220px;
+    border-radius: 50%;
 }
 
-.parameter_content
-{
-  display: none;
-  position: absolute;
-  background-color: white;
-  min-width: 220px;
-  z-index: 2;
-  border: 2px solid #bfe5f5;
-}
-.parameter_content a {
-  color: #61AEB5 !important;
-  padding: 8px 12px;
-  text-decoration: none;
-  display: block;
-  cursor:pointer;
-}
-.parameter_content a:hover
-{
-  background-color:rgb(245, 247, 250);
-}
-
-.show_parameter_content
-{
-  display:block;
-}
-
-.sf_ad_direct_links_frame
-{
-  display:flex;
-  width:100%;
-  height:200px;
-  justify-content:center;
-  margin-bottom:20px;
-}
-.sf_ad_direct_links_container
-{
-  display:flex;
-  flex-direction:column;
-  border-radius: 10px;
-  width:40%;
-  height:100%;
-  background-color:#1D203B;
-}
-.sf_ad_direct_links_container_title
-{
-  height:50px;
-  width:100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align:center;
-}
-.sf_ad_direct_links_title
-{
-  color:white;
-  text-align:center;
-  font-size:20px;
-}
-.sf_ad_direct_links_element
-{
-  height:30px;
-  width:100%;
-  padding-left:10px;
-  display: flex;
-  align-items: center;
-}
-.sf_ad_direct_link
-{
-  color:white;
-  text-align:left;
-  text-decoration:none;
-  font-size:16px;
-  color:#9E9EA0 !important;
-}
-.sf_ad_direct_link_icon
-{
-  font-size: 12px !important;
-  color:#9E9EA0;
-}
-.sf_estimate_link_frame
-{
-  width:100%;height:40px;
-  display:flex;
-  justify-content:center;
-  flex-direction:row;
-  margin-top:40px;
-}
-.sf_estimate_link
-{
-  display:block;
-  width:15%;
-}
-.sf_visit_file_link
-{
-  display:block;
-  width:20%;
-}
-.sf_estimate_link_container
-{
-  width:100%;
-  background-color:#222545;
-  display:flex;
-  justify-content:center;
-  text-align:center;
-  align-items:center;
-  height:40px;
-}
-.sf_estimate_link_icon
-{
-  font-size: 20px !important;
-  color:white;
-}
-.sf_estimate_link_text
-{
-  margin-left:10px;
-  color:#61AEB5;
-}
-.sf_city_description_text_color
-{
-  color:#61AEB5 !important;
-}
-.sf_city_description_container
-{
-  display:none;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-  flex-direction:column;
-  margin-top:30px;
-}
-.sf_city_description_frame
-{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-  flex-direction:column;
-  border:1px solid #61AEB5;
-  width:70%;
-  height:950px;
-  background-color:white;
-}
-.sf_city_description_box
-{
-  width:100%;height:220px;
-  text-align:center;
-  display:flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-.sf_city_description_text_box
-{
-  display:flex;
-  align-items:center;
-  width:100%;
-  height:150px;
-  text-align:center;
-}
-.sf_city_description_text_header_box
-{
-  height:70px;
-  width:100%;
-  display:flex;
-  align-items:center;
-  text-align:center;
-}
-
-.sf_city_description_text_header
-{
-  color:#61AEB5;
-  font-size:20px;
-  margin: auto;
-}
-
-
-.sf_city_description_details_container
-{
-  display:flex;
-  justify-content: center;
-  align-items:center;
-  flex-direction:column;
-  width:100%;
-  height:680px;
-}
-.sf_city_description_details_element
-{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  flex-direction:row;
-  width:100%;
-  height:85px;
-}
-.sf_city_description_details_icon_box
-{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  width:10%;
-  height:82px;
-  border-radius: 8px;
-}
-.sf_city_description_details_icon_size
-{
-  font-size:30px;
-}
-.sf_city_description_details_element_text
-{
-  width:85%;
-  height:82px;
-  display:flex;
-  align-items:center;
-  justify-content: center;
-  padding:3px;
-}
-.announce_summary_history
-{
-  float:right;
-  color: #787878 !important;
-  font-size: 14px;
-}
-.announce_text_description_frame
-{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-  height:280px;
-  width:100%;
-}
-.announce_text_description_header
-{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:20px;
-  width:100%;
-  text-align:center;
-}
-.announce_text_description_header_text
-{
-  font-size:12px;
-  margin:auto;
-  color:black !important;
-  padding:3px;
-}
-.announce_text_description_container
- {
-   display:flex;
-   justify-content:center;
-   align-items:center;
-   height:260px;
-   width:100%;
- }
- .sf_modal_box_width
- {
-   width: 65%;
- }
- .sf_modal_title_box
- {
-   text-align:center;margin-bottom:20px;
- }
- .sf_modal_title_text
- {
-   color:#61AEB5!important;font-weight:bold;font-size:20px;
- }
- .sf_modal_frame
- {
-   display:flex;
-   width:100%;
-   justify-content:center;
-   align-items:center;
-   flex-direction:column;
-   background-color:white;
-   border-radius:8px;
- }
- .sf_modal_input
- {
-   display:flex;
-   justify-content:center;
-   align-items:center;
-   flex-direction:column;
- }
- .sf_modal_connect_button
- {
-   display:flex;
-   justify-content:center;
-   align-items:center;
-   text-align:center;
-   background-color:#4C8E99;
-   height:35px;
-   border-radius:8px;
-   margin-bottom:15px;
-   cursor:pointer;
- }
- .sf_modal_connect_button_text
- {
-   color:white !important;font-size:20px;
- }
-
- .sf_realestate_agencies_frame
- {
-   height: 150px;
-   border: 3px solid white;
-   width: 45%;
-   background-color: white;
-   box-shadow: 2px 2px #aaa;
-   display:flex;
-   align-items:center;
-   justify-content: center;
-   flex-direction:row;
-   margin-top:30px;
- }
- .sf_realestate_agencies_logo
- {
-   display:flex;
-   align-items:center;
-   justify-content: center;
-   height:130px;
-   width:30%;
-   border-radius:8px;
- }
- .sf_realestate_agencies_container
- {
-   height:130px;
-   width:60%;
-   display:flex;
-   flex-direction:column;
-   align-items:center;
-   justify-content: space-evenly;
-   margin-left:20px;
- }
- .sf_realestate_agencies_box
- {
-   width:100%;
-   height:30px;
-   display:flex;
-   align-items:center;
- }
- .sf_realestate_agencies_icon
- {
-   color:#4c94bc;font-size:20px;
- }
-.sf_realestate_agencies_text
-{
-   margin-left:10px;font-size:12px;
-}
-
-.sf_technology_frame
-{
-  display:flex;
-  justify-content:center;
-  height:910px;
-  width:100%;
-  margin-bottom: 20px;
-}
-.sf_technology_container
-{
-  display:flex;
-  justify-content:center;
-  flex-direction:column;
-  height:100%;
-  width:40%;
-  background-color:white;
-}
-.sf_technology_image_container
-{
-  display:flex;
-  justify-content:center;
-  height:400px;
-  width:100%;
-}
-.sf_technology_text_container
-{
-  display:flex;
-  justify-content:center;
-  height:510px;
-  width:100%;
-  flex-direction:column;
-}
-.sf_technology_text_header_container
-{
-  display:flex;
-  justify-content:center;
-  align-items: center;
-  height:40px;
-  width:100%;
-}
-.sf_technology_functionality
-{
-  display:flex;
-  justify-content:center;
-  height:470px;
-  width:100%;
-  flex-direction:column;
-}
-.sf_technology_subtitle
-{
-  width:100%;
-  height:35px;
-  padding:3px;
-}
-.sf_technology_assist
-{
-  width:100%;
-  height:265px;
-  padding:2px;
-}
-.sf_technology_estimate
-{
-  width:100%;
-  height:135px;
-  padding:2px;
-}
-.sf_home_page_actu_frame
-{
-  display:none;
-  width:100%;
-  height:880px;
-  justify-content:center;
-  margin-bottom:20px;
-}
-.sf_home_page_actu_link_container
-{
-display:flex;
-justify-content:center;
-align-items: center;
-width:100%;
-height:200px;
-background-color:white;
-margin-bottom:10px;
-flex-direction:column;
-border-radius:8px;
-padding:5px;
-}
-.sf_home_page_actu_title_box
-{
-  width:100%;
-  height:30px;
-}
-.sf_home_page_actu_source_box
-{
-  width:100%;
-  height:20px;
-  display:flex;
-  align-items: center;
-}
-.sf_home_page_actu_text_box
-{
-  width:100%;
-  height:100px;
-}
-.sf_technology_text_size
-{
-  font-size:16px;
-}
-.sf_my_research_title_box
-{
-  display:flex;width:100%;height:50px;align-items:center;
-}
-.sf_my_research_title_text
-{
-  font-size:24px;color: #61AEB5;
-  margin-left: 10px;
-}
-
-.sf_my_research_frame
-{
-  display:flex;align-items: center;justify-content: center;width:100%;height:360px;margin-bottom:30px;
-}
-
-.sf_my_research_link
-{
-  display:flex;align-items:center;justify-content:center;flex-direction:row;width:92%;
-  height:230px;border-radius:6px;border:3px solid #61AEB5;flex-wrap:wrap;margin-bottom:20px;
-}
-.sf_my_research_email_alert
-{
-  display:flex;align-items:center;justify-content:center;width:95%;height:30px;border-radius:5px;
-}
-
-.sf_my_research_text
-{
-  color: #61AEB5;font-weight:bold;font-size:16px;
-}
-.sf_my_research_small_box
-{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:45%;
-  height:40px;
-  border-radius:5px;
-  border:1px solid #61AEB5;
-}
-
-.sf_my_research_large_box
-{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:85%;
-  height:50px;
-  border-radius:5px;
-  border:1px solid #61AEB5;
-}
-.sf_my_research_city_box
-{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:85%;
-  height:40px;
-  border-radius:5px;
-}
-
-.sf_my_research_container
-{
-  display:flex;justify-content:center;
-   flex-direction:column;width:17%; height:100%;margin-left:70px;align-items:center;box-shadow:3px 3px #aaaaaa;border:1px solid #aaaaaa;
-}
-.sf_my_research_infos
-{
-  display:flex;
-  flex-direction:row;
-  width:84%;
-  height:40px;
-  justify-content: space-evenly;
-}
-.sf_bell_alert_icon
-{
-  color:green;font-size:24px;margin-right:10px;
-}
-.sf_alert_text
-{
-  color:green;font-size:14px;
-  margin-left: 5px;
-}
-.sf_bell_alert_deactivated_icon
-{
-  color:gray;font-size:24px;margin-right:10px;
-}
-.sf_alert_deactivated_text
-{
-  color:gray;font-size:14px;
-  margin-left: 5px;
-}
-.sf_alert_trash
-{
-  color:red;font-size:24px;
-}
-.sf_generic_infos_box
-{
-  display:flex;width:100%;justify-content:center;margin-bottom:20px;
-}
-.sf_generic_infos_container
-{
-  display:flex;flex-direction:column;background-color:white;width:60%;border-radius: 10px;
-  height:100%;
-  justify-content: center;
-}
-.sf_generic_infos_desc_header
-{
-  width:100%;display:flex;justify-content:center;align-items:center;text-align:center;
-  height:50px;
-}
-.sf_generic_infos_desc
-{
-  display:flex;width:100%;align-items:center;padding-left:10px;
-  height:30px;
-}
-.sf_generic_infos_desc_header_text
-{
-  color: #787878;font-size:20px;
-}
-.sf_generic_infos_desc_text
-{
-  color: rgb(76, 148, 188);font-size:16px;text-decoration:none;
-}
-.sf_generic_infos_desc_text:hover
-{
-  color:rgb(76, 148, 188);
-}
-.sf_generic_infos_desc_text_icon
-{
-  color: rgb(76, 148, 188);
-  font-size: 12px !important;
-  margin-left: 3px;
-}
-.sf_announce_summary_desc_text
-{
-  font-size:14px;color: #787878;
-}
-.sf_pagination_box
-{
-  display:flex;justify-content: center;height:60px;width:100%;margin-top:20px;margin-bottom:20px;
-  flex-direction: column;
-  align-items: center;
-}
-.sf_pagination_container
-{
-  display:flex;justify-content:center;align-items:center;height:50%;width:40%;background-color:white;
-}
-@media (max-width:1024px) {
-  .search_type_text
-  {
-    font-size:22px;
-    font-weight:bold;
-  }
-  .desc_title
-  {
-    font-size:22px;
-  }
-  .estimate_button
-  {
-  height:120px;
-  width:88%;
-  border-radius:8px;
-  }
-
-  .deposit_button
-  {
-    height: 120px;
-    width: 88%;
-    border-radius: 8px;
-  }
-
-  .deposit_city
-  {
-    height: 140px;
-    width: 88%;
-  }
-  .estimate_icon_box
-  {
-    height:100px;
-    width:60%;
-    border-radius:98%;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position:center;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-  }
-  .estimate_header
-  {
-    display:flex;
-    justify-content: center;
-    align-items: center;
-    height:70px;
+.sf_title_decorationsf_form_error {
+    padding-left: 15px;
     width: 100%;
-  }
-  .estimate_footer
-  {
-    height:40px;
-    width: 100%;
-    text-align:center;
-  }
+    border-radius: 20px;
+    border: 1px solid red;
+}
 
-  .sf_slider_min
-  {
-    /*transform: translateX(10px);
-    width:20%;*/
-    position: absolute;
-    left:5%;
-    width:20%;
-  }
-  .sf_slider_track_width
-  {
-    /*width:80%;*/
-    width:85%;
-  }
-  .sf_slider_max
-  {
-    /*transform: translateX(-10px);
-    width:20%;*/
-    width:20%;
-    /* transform: translateX(-10px); */
-    position : absolute;
-    right: 5%;
-  }
-
-  .header_title
-  {
-    font-size:18px;
-    color:#61AEB5;
-  }
-  .header_title_estimation
-  {
-    font-size:18px;
-    color:#61AEB5;
-  }
-  .header_subtitle_estimation
-  {
-    font-size:12px;
-    color:#61AEB5;
-  }
-  .icon_arrow_left
-  {
-    font-size: 25px;
-  }
-  .property_type_box
-  {
-    width:22%;
-    height:120px;
-    border-radius:6px;
+.sf_rooms {
+    width: 10%;
+    height: 40px;
+    border-radius: 6px;
     display: flex;
-    transform:scale(0.85);
-    flex-direction:column;
+    transform: scale(0.85);
+    flex-direction: row;
     align-items: center;
     justify-content: space-evenly;
-    flex-wrap:wrap;
-    background-color:#bfe5f5;
-    cursor:pointer;
-  }
-  .property_type_text
-  {
-    font-weight:bold;
-    font-size:20px;
-  }
-  .header_title_left_box
-  {
-    width: 20%;
-  }
-  .header_title_center_box
-  {
-    width: 70%;
-  }
+    flex-wrap: wrap;
+    background-color: #bfe5f5;
+    cursor: pointer;
+}
 
-  .header_title_right_box
-  {
-    width: 20%;
-  }
-
-  .announce_link
-  {
-    display:block;
-    width:100%;
-    margin:auto;
-  }
-  .announce_frame
-  {
-    height: 230px;
-    border: 3px solid white;
-    border-radius: 10px;
-    width: 100%;
-    background-color: white;
-    box-shadow: 2px 2px #aaa;
-    display:flex;
-    align-items:center;
-    justify-content: center;
-    flex-direction:row;
-  }
-  .announce_container
-  {
-  display:flex;
-  align-items:center;
-  justify-content: center;
-  flex-direction:row;
-  height:100%;
-  width:100%;
-  }
-  .announce_image_container
-  {
-    height:100%;
-    width:40%;
-    border-radius:8px;
-    display:flex;
-    justify-content: center;
-  }
-  .announce_summary_container
-  {
-    height:100%;
-    width:55%;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
+.sf_bedrooms {
+    width: 10%;
+    height: 40px;
+    border-radius: 6px;
+    display: flex;
+    transform: scale(0.85);
+    flex-direction: row;
+    align-items: center;
     justify-content: space-evenly;
-    margin-left:10px;
-  }
-  .announce_summary_details
-  {
-    color:#787878;
-    font-size: 14px;
-    float:left;
-  }
-  .announce_summary_refresh_time
-  {
-    color:#bdbdbd;
-    margin-right:5px;
-    font-size: 14px;
-    float: right;
-  }
-  .det_header_title
-  {
-    font-size:16px;
-    color:#61AEB5;
-  }
-  .det_median_price_text
-  {
-    font-size:13px;
-    color:black;
-  }
-  .det_ad_container
-  {
-    height:925px;
-    width:50%;
-    background-color:#FFFFFF;
-    box-shadow: 3px 3px #aaaaaa;
-  }
-  .announce_summary_desc
-  {
-    height:55px;
-    width:100%;
-    padding-top:0px;
-    line-height:17px;
-  }
-  .sf_announce_summary_desc_text
-  {
-    font-size:11px;color: #787878;
-  }
-  .announce_summary_city_container
-  {
-    height:25px;
-    width:100%;
-  }
-  .sf_generic_infos_container
-  {
-    display:flex;flex-direction:column;background-color:white;width:95%;border-radius: 10px;
-    height:100%;
-    justify-content: center;
-  }
-  .sf_generic_infos_desc_header_text
-  {
-    color: #787878;font-size:16px;
-  }
-  .sf_generic_infos_desc_text
-  {
-    color: rgb(76, 148, 188);font-size:15px;text-decoration:none;
-  }
-  .announce_summary_icon
-  {
-    font-size: 20px;
-    color:#4c94bc;
-    float:left;
-  }
-  .det_ad_image_container
-  {
-    height:165px;
-    width:100%;
-    display:flex;
-    justify-content:space-evenly;
-  }
-  .det_ad_image_frame
-  {
-    height:150px;
-    border-radius:5px;
-    width:90%;
-    margin-top:10px;
-    display:flex;
-    position:relative;
-    justify-content: center;
-  }
-  .det_ad_desc_container
-  {
-    height:250px;
-    width:100%;
-    display:flex;
-    flex-direction:row;
-    justify-content:space-evenly;
-    flex-wrap:wrap;
-    padding-top:2px;
-  }
-  .det_ad_logo_container
-  {
-    height:50px;
-    width:100%;
-    position:relative;
-  }
-  .det_ad_desc_border
-  {
-    border:1px solid #4C8E99;
-  }
-  .det_ad_desc_shape
-  {
-    height:61px;
-    width:32%;
-    border-radius:5px;
-  }
-  .search_type_button
-  {
-    height:140px;
-    width:40%;
-    border-radius:8px;
-  }
+    flex-wrap: wrap;
+    background-color: #bfe5f5;
+    cursor: pointer;
+}
 
-  .rent_settings
-  {
-    /*background-color:#61AEB5;*/
-    background-color:#4C8E99;
-    margin-left:30px;
-  }
+.sf_parking {
+    width: 15%;
+    height: 40px;
+    border-radius: 6px;
+    display: flex;
+    transform: scale(0.85);
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    background-color: #bfe5f5;
+    cursor: pointer;
+}
 
-  .estimate_place
-  {
-    width :100%;
-    height: 140px;
-    background-image:url('map.svg');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position:left;
-  }
+.sf_tab {
+    tab-size: 4;
+}
 
-  .deposit_title
-  {
-    width :100%;
-    height: 140px;
-    background-image:url('map.svg');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position:left;
-  }
+.ad_summary_src {
+    height: 60px;
+    width: 100%;
+}
 
-  .estimate_place_left
-  {
-    width:5%;height:25px;
-  }
-  .estimate_place_right
-  {
-    width:3%;height:25px;
-  }
-  .estimate_road_number
-  {
-    width:21%;
-  }
-  .estimate_road
-  {
-    width:67%;
-  }
-  .estimate_city
-  {
-    width:92%;
-  }
-  .empty_property_type
-  {
-    width:0%;
-    height:0px;
+.ad_summary_src_text_cont {
+    height: 40%;
+    width: 100%;
+}
 
-  }
-  .estimate_area
-  {
-    width:40%;height:90px;border-radius:6px;display:flex;background-color:#bfe5f5;
-  }
-  .estimate_area_ground
-  {
-  margin-left:5%;
-  }
-  .estimate_results_footer_image
-  {
-    width:100%;
-    height:calc(100vh - 560px);
-    background-image:url('data/city.png');background-repeat: no-repeat;background-size: cover;
-    background-position:center;
-  }
-  .estimate_results_text
-  {
-    display:flex;align-items: center; justify-content: center;text-align:center;width:100%;height:250px;
-  }
-  .estimate_results_text_size
-  {
-    font-size:30px;
-  }
-  .estimate_results_price
-  {
-    display:flex;align-items: center; justify-content: center; flex-direction:column;width:100%;height:250px;
-  }
-  .estimate_results_price_text
-  {
-    display:flex;align-items: center; justify-content: center;text-align:center;width:80%; height:70px; background-color:#61AEB5;
-  }
-  .estimate_results_expl_size
-  {
-    font-size:13px;
-  }
-  .ad_summary_src_provider{
-    height:70%; width:32%; border-radius:10px;text-align:center;margin-left:2px;
-  }
-  .sf_ad_direct_links_container
-  {
-    display:flex;
-    flex-direction:column;
+.ad_summary_src_text {
+    font-size: 15px;
+    color: gray;
+}
+
+.ad_summary_src_provider_cont {
+    height: 60%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.ad_summary_src_provider {
+    height: 70%;
+    width: 15%;
     border-radius: 10px;
-    width:92%;
-    height:100%;
-    background-color:#1D203B;
-  }
-  .sf_ad_direct_links_title
-  {
-    color:white;
-    text-align:center;
-    font-size:18px;
-  }
-  .sf_estimate_link
-  {
-    display:block;
-    width:50%;
-  }
-  .sf_visit_file_link
-  {
-    display:block;
-    width:80%;
-  }
-  .sf_estimate_link_frame
-  {
-    width:100%;height:40px;
-    display:flex;
-    justify-content:center;
-    flex-direction:row;
-    margin-top:20px;
-  }
-  .social_media
-  {
-    text-align:center;
-    width:100%;
-    height:30px;
-    bottom:5px;
-    display:flex;
-    flex-direction:row;
-    justify-content:center;
-    margin-top:20px;
-  }
-  .det_notary_fees_text
-  {
-    margin:auto;
-    font-size:11px;
-    color:black;
-  }
-  .sf_city_description_frame
-  {
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    text-align:center;
-    flex-direction:column;
-    border:1px solid #61AEB5;
-    width:95%;
-    height:1240px;
-    background-color:white;
-  }
-  .sf_city_description_box
-  {
-    width:100%;height:320px;
-    text-align:center;
-    display:flex;
+    text-align: center;
+    margin-left: 2px;
+}
+
+.ad_summary_src_provider_text {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.feedback_box {
+    border-radius: 5px;
+    background-color: #F2F2F2;
+    margin-top: 10px;
+    width: 250px;
+    padding-left: 5px;
+}
+
+.good_feedback {
+    border: 1px solid lightgray;
+}
+
+.bad_feedback {
+    border: 1px solid red;
+}
+
+.sf_dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.sf_dropdown_link {}
+
+.param_icon_box_width {
+    width: 220px;
+}
+
+.parameter_content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 220px;
+    z-index: 2;
+    border: 2px solid #bfe5f5;
+}
+
+.parameter_content a {
+    color: #61AEB5 !important;
+    padding: 8px 12px;
+    text-decoration: none;
+    display: block;
+    cursor: pointer;
+}
+
+.parameter_content a:hover {
+    background-color: rgb(245, 247, 250);
+}
+
+.show_parameter_content {
+    display: block;
+}
+
+.sf_ad_direct_links_frame {
+    display: flex;
+    width: 100%;
+    height: 200px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.sf_ad_direct_links_container {
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    width: 40%;
+    height: 100%;
+    background-color: #1D203B;
+}
+
+.sf_ad_direct_links_container_title {
+    height: 50px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.sf_ad_direct_links_title {
+    color: white;
+    text-align: center;
+    font-size: 20px;
+}
+
+.sf_ad_direct_links_element {
+    height: 30px;
+    width: 100%;
+    padding-left: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.sf_ad_direct_link {
+    color: white;
+    text-align: left;
+    text-decoration: none;
+    font-size: 16px;
+    color: #9E9EA0 !important;
+}
+
+.sf_ad_direct_link_icon {
+    font-size: 12px !important;
+    color: #9E9EA0;
+}
+
+.sf_estimate_link_frame {
+    width: 100%;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    margin-top: 40px;
+}
+
+.sf_estimate_link {
+    display: block;
+    width: 15%;
+}
+
+.sf_visit_file_link {
+    display: block;
+    width: 20%;
+}
+
+.sf_estimate_link_container {
+    width: 100%;
+    background-color: #222545;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    height: 40px;
+}
+
+.sf_estimate_link_icon {
+    font-size: 20px !important;
+    color: white;
+}
+
+.sf_estimate_link_text {
+    margin-left: 10px;
+    color: #61AEB5;
+}
+
+.sf_city_description_text_color {
+    color: #61AEB5 !important;
+}
+
+.sf_city_description_container {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+    margin-top: 30px;
+}
+
+.sf_city_description_frame {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+    border: 1px solid #61AEB5;
+    width: 70%;
+    height: 950px;
+    background-color: white;
+}
+
+.sf_city_description_box {
+    width: 100%;
+    height: 220px;
+    text-align: center;
+    display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-  }
-  .sf_city_description_text_box
-  {
-    display:flex;
-    align-items:center;
-    width:100%;
-    height:240px;
-    text-align:center;
-  }
-  .sf_city_description_text_header_box
-  {
-    height:80px;
-    width:100%;
-    display:flex;
-    align-items:center;
-    text-align:center;
-  }
-  .sf_city_description_text_header
-  {
-    color:#61AEB5;
-    font-size:18px;
-    margin: auto;
-  }
-  .sf_city_description_text_color
-  {
-    color:#61AEB5 !important;
-    font-size: 12px;
-  }
-  .sf_city_description_details_icon_box
-  {
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    border:1px solid #61AEB5;
-    width:20%;
-    height:110px;
-    border-radius:8px;
-  }
-  .sf_city_description_details_icon_size
-  {
-    font-size:20px;
-  }
-  .sf_city_description_details_element
-  {
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    flex-direction:row;
-    width:100%;
-    height:115px;
-  }
-  .sf_city_description_details_element_text
-  {
-    width:85%;
-    height:115px;
-    display:flex;
-    align-items:center;
-    justify-content: center;
-    padding:1px;
-  }
-  .sf_city_description_details_container
-  {
-    display:flex;
-    justify-content: center;
-    align-items:center;
-    flex-direction:column;
-    width:100%;
-    height:920px;
-  }
-  .announce_summary_history
-  {
-    float:right;
-    color: #787878 !important;
-    font-size: 12px;
-  }
-  .announce_text_description_frame
-  {
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    flex-direction:column;
-    height:415px;
-    width:100%;
-  }
+}
 
-  .announce_text_description_container
-   {
-     display:flex;
-     justify-content:center;
-     align-items:center;
-     height:395px;
-     width:100%;
-   }
-   .sf_modal_box_width
-  {
-    width: 80%;
-  }
-  .sf_realestate_agencies_frame
-  {
+.sf_city_description_text_box {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 150px;
+    text-align: center;
+}
+
+.sf_city_description_text_header_box {
+    height: 70px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
+.sf_city_description_text_header {
+    color: #61AEB5;
+    font-size: 20px;
+    margin: auto;
+}
+
+.sf_city_description_details_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    height: 680px;
+}
+
+.sf_city_description_details_element {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    width: 100%;
+    height: 85px;
+}
+
+.sf_city_description_details_icon_box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 10%;
+    height: 82px;
+    border-radius: 8px;
+}
+
+.sf_city_description_details_icon_size {
+    font-size: 30px;
+}
+
+.sf_city_description_details_element_text {
+    width: 85%;
+    height: 82px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px;
+}
+
+.announce_summary_history {
+    float: right;
+    color: #787878 !important;
+    font-size: 14px;
+}
+
+.announce_text_description_frame {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 280px;
+    width: 100%;
+}
+
+.announce_text_description_header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20px;
+    width: 100%;
+    text-align: center;
+}
+
+.announce_text_description_header_text {
+    font-size: 12px;
+    margin: auto;
+    color: black !important;
+    padding: 3px;
+}
+
+.announce_text_description_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 260px;
+    width: 100%;
+}
+
+.sf_modal_box_width {
+    width: 65%;
+}
+
+.sf_modal_title_box {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.sf_modal_title_text {
+    color: #61AEB5!important;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.sf_modal_frame {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 8px;
+}
+
+.sf_modal_input {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.sf_modal_connect_button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: #4C8E99;
+    height: 35px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    cursor: pointer;
+}
+
+.sf_modal_connect_button_text {
+    color: white !important;
+    font-size: 20px;
+}
+
+.sf_realestate_agencies_frame {
     height: 150px;
     border: 3px solid white;
-    width: 95%;
+    width: 45%;
     background-color: white;
     box-shadow: 2px 2px #aaa;
-    display:flex;
-    align-items:center;
+    display: flex;
+    align-items: center;
     justify-content: center;
-    flex-direction:row;
-    margin-top:10px;
-  }
-  .sf_realestate_agencies_container
-  {
-    height:130px;
-    width:65%;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
+    flex-direction: row;
+    margin-top: 30px;
+}
+
+.sf_realestate_agencies_logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 130px;
+    width: 30%;
+    border-radius: 8px;
+}
+
+.sf_realestate_agencies_container {
+    height: 130px;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: space-evenly;
-    margin-left:5px;
-  }
-  .sf_technology_frame
-  {
-    display:flex;
-    justify-content:center;
-    height:1100px;
-    width:100%;
-    margin-bottom: 20px;
-  }
-  .sf_technology_container
-  {
-    display:flex;
-    justify-content:center;
-    flex-direction:column;
-    height:100%;
-    width:88%;
-    background-color:white;
-  }
-  .sf_technology_image_container
-  {
-    display:flex;
-    justify-content:center;
-    height:350px;
-    width:100%;
-  }
-  .sf_technology_text_container
-  {
-    display:flex;
-    justify-content:center;
-    height:780px;
-    width:100%;
-    flex-direction:column;
-  }
-  .sf_technology_text_header_container
-  {
-    display:flex;
-    justify-content:center;
-    align-items: center;
-    height:60px;
-    width:100%;
-  }
-  .sf_technology_functionality
-  {
-    display:flex;
-    justify-content:center;
-    height:730px;
-    width:100%;
-    flex-direction:column;
-  }
-  .sf_technology_subtitle
-  {
-    width:100%;
-    height:70px;
-    padding:3px;
-  }
-  .sf_technology_assist
-  {
-    width:100%;
-    height:370px;
-    padding:2px;
-  }
-  .sf_technology_estimate
-  {
-    width:100%;
-    height:210px;
-    padding:2px;
-  }
-  .sf_home_page_actu_frame
-  {
-    display:none;
-    width:100%;
-    height:1200px;
-    justify-content:center;
-    margin-bottom:20px;
-  }
-  .sf_home_page_actu_link_container
-  {
-    display:flex;
-    justify-content:center;
-    align-items: center;
-    width:100%;
-    height:280px;
-    background-color:white;
-    margin-bottom:10px;
-    flex-direction:column;
-    border-radius:8px;
-    padding:5px;
-  }
-  .sf_home_page_actu_title_box
-  {
-    width:100%;
-    height:50px;
-  }
-  .sf_home_page_actu_text_box
-  {
-    width:100%;
-    height:210px;
-  }
-  .sf_technology_text_size
-  {
-    font-size:13px;
-  }
+    margin-left: 20px;
+}
 
-  .sf_my_research_title_text
-  {
-    font-size:18px;color: #61AEB5;
+.sf_realestate_agencies_box {
+    width: 100%;
+    height: 30px;
+    display: flex;
+    align-items: center;
+}
+
+.sf_realestate_agencies_icon {
+    color: #4c94bc;
+    font-size: 20px;
+}
+
+.sf_realestate_agencies_text {
     margin-left: 10px;
-  }
+    font-size: 12px;
+}
 
+.sf_technology_frame {
+    display: flex;
+    justify-content: center;
+    height: 910px;
+    width: 100%;
+    margin-bottom: 20px;
+}
 
-  .sf_my_research_text
-  {
-    color: #61AEB5;font-weight:bold;font-size:13px;
-  }
-  .sf_my_research_email_alert_text
-  {
-    color:green;font-size:14px;
-  }
-  .sf_my_research_container
-  {
-    display:flex;justify-content:center;
-     flex-direction:column;width:48%; height:100%;margin-left:10px;align-items:center;box-shadow:3px 3px #aaaaaa;border:1px solid #aaaaaa;
-  }
-  .sf_bell_alert_icon
-  {
-    color:green;font-size:14px;margin-right:2px;
-  }
-  .sf_alert_text
-  {
-    color:green;font-size:13px;
+.sf_technology_container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    height: 100%;
+    width: 40%;
+    background-color: white;
+}
+
+.sf_technology_image_container {
+    display: flex;
+    justify-content: center;
+    height: 400px;
+    width: 100%;
+}
+
+.sf_technology_text_container {
+    display: flex;
+    justify-content: center;
+    height: 510px;
+    width: 100%;
+    flex-direction: column;
+}
+
+.sf_technology_text_header_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    width: 100%;
+}
+
+.sf_technology_functionality {
+    display: flex;
+    justify-content: center;
+    height: 470px;
+    width: 100%;
+    flex-direction: column;
+}
+
+.sf_technology_subtitle {
+    width: 100%;
+    height: 35px;
+    padding: 3px;
+}
+
+.sf_technology_assist {
+    width: 100%;
+    height: 265px;
+    padding: 2px;
+}
+
+.sf_technology_estimate {
+    width: 100%;
+    height: 135px;
+    padding: 2px;
+}
+
+.sf_home_page_actu_frame {
+    display: none;
+    width: 100%;
+    height: 880px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.sf_home_page_actu_link_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 200px;
+    background-color: white;
+    margin-bottom: 10px;
+    flex-direction: column;
+    border-radius: 8px;
+    padding: 5px;
+}
+
+.sf_home_page_actu_title_box {
+    width: 100%;
+    height: 30px;
+}
+
+.sf_home_page_actu_source_box {
+    width: 100%;
+    height: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.sf_home_page_actu_text_box {
+    width: 100%;
+    height: 100px;
+}
+
+.sf_technology_text_size {
+    font-size: 16px;
+}
+
+.sf_my_research_title_box {
+    display: flex;
+    width: 100%;
+    height: 50px;
+    align-items: center;
+}
+
+.sf_my_research_title_text {
+    font-size: 24px;
+    color: #61AEB5;
+    margin-left: 10px;
+}
+
+.sf_my_research_frame {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 360px;
+    margin-bottom: 30px;
+}
+
+.sf_my_research_link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    width: 92%;
+    height: 230px;
+    border-radius: 6px;
+    border: 3px solid #61AEB5;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.sf_my_research_email_alert {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 95%;
+    height: 30px;
+    border-radius: 5px;
+}
+
+.sf_my_research_text {
+    color: #61AEB5;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.sf_my_research_small_box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45%;
+    height: 40px;
+    border-radius: 5px;
+    border: 1px solid #61AEB5;
+}
+
+.sf_my_research_large_box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 85%;
+    height: 50px;
+    border-radius: 5px;
+    border: 1px solid #61AEB5;
+}
+
+.sf_my_research_city_box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 85%;
+    height: 40px;
+    border-radius: 5px;
+}
+
+.sf_my_research_container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 17%;
+    height: 100%;
+    margin-left: 70px;
+    align-items: center;
+    box-shadow: 3px 3px #aaaaaa;
+    border: 1px solid #aaaaaa;
+}
+
+.sf_my_research_infos {
+    display: flex;
+    flex-direction: row;
+    width: 84%;
+    height: 40px;
+    justify-content: space-evenly;
+}
+
+.sf_bell_alert_icon {
+    color: green;
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+.sf_alert_text {
+    color: green;
+    font-size: 14px;
     margin-left: 5px;
-  }
-  .sf_bell_alert_deactivated_icon
-  {
-    color:gray;font-size:14px;margin-right:2px;
-  }
-  .sf_alert__deactivated_text
-  {
-    color:gray;font-size:13px;
+}
+
+.sf_bell_alert_deactivated_icon {
+    color: gray;
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+.sf_alert_deactivated_text {
+    color: gray;
+    font-size: 14px;
     margin-left: 5px;
-  }
-  .sf_alert_trash
-  {
-    color:red;font-size:18px;
-  }
-  .sf_my_research_small_box
-  {
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    width:50%;
-    height:40px;
-    border-radius:5px;
-    border:1px solid #61AEB5;
-  }
+}
 
-  .sf_pagination_container
-  {
-    display:flex;justify-content:center;align-items:center;height:100%;width:95%;background-color:white;
-  }
-} /* end of @media (max-width:1024px)  */
+.sf_alert_trash {
+    color: red;
+    font-size: 24px;
+}
 
-@media (max-height:800px)
-{
-  .contact_info
-  {
-    text-align:center;
-    width:100%;
-    height:30px;
-    bottom: unset;
-  }
-  .social_media
-  {
-    text-align:center;
-    width:100%;
-    height:30px;
-    margin-top:100px;
-    bottom: unset;
-    display:flex;
-    flex-direction:row;
-    justify-content:center;
-    margin-top:20px;
-  }
-} /* end of @media (max-height:700px)  */
+.sf_generic_infos_box {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 20px;
+}
 
-@media (max-width:360px)
-{
-  .header_title_estimation
-  {
-    font-size:16px;
-    color:#61AEB5;
-  }
+.sf_generic_infos_container {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    width: 60%;
+    border-radius: 10px;
+    height: 100%;
+    justify-content: center;
+}
+
+.sf_generic_infos_desc_header {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 50px;
+}
+
+.sf_generic_infos_desc {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    padding-left: 10px;
+    height: 30px;
+}
+
+.sf_generic_infos_desc_header_text {
+    color: #787878;
+    font-size: 20px;
+}
+
+.sf_generic_infos_desc_text {
+    color: rgb(76, 148, 188);
+    font-size: 16px;
+    text-decoration: none;
+}
+
+.sf_generic_infos_desc_text:hover {
+    color: rgb(76, 148, 188);
+}
+
+.sf_generic_infos_desc_text_icon {
+    color: rgb(76, 148, 188);
+    font-size: 12px !important;
+    margin-left: 3px;
+}
+
+.sf_announce_summary_desc_text {
+    font-size: 14px;
+    color: #787878;
+}
+
+.sf_pagination_box {
+    display: flex;
+    justify-content: center;
+    height: 60px;
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sf_pagination_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50%;
+    width: 40%;
+    background-color: white;
+}
+
+@media (max-width:1024px) {
+    .search_type_text {
+        font-size: 22px;
+        font-weight: bold;
+    }
+    .desc_title {
+        font-size: 22px;
+    }
+    .estimate_button {
+        height: 120px;
+        width: 88%;
+        border-radius: 8px;
+    }
+    .deposit_button {
+        height: 120px;
+        width: 88%;
+        border-radius: 8px;
+    }
+    .deposit_city {
+        height: 140px;
+        width: 88%;
+    }
+    .estimate_icon_box {
+        height: 100px;
+        width: 60%;
+        border-radius: 98%;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .estimate_header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 70px;
+        width: 100%;
+    }
+    .estimate_footer {
+        height: 40px;
+        width: 100%;
+        text-align: center;
+    }
+    .sf_slider_min {
+        /*transform: translateX(10px);
+    width:20%;*/
+        position: absolute;
+        left: 5%;
+        width: 20%;
+    }
+    .sf_slider_track_width {
+        /*width:80%;*/
+        width: 85%;
+    }
+    .sf_slider_max {
+        /*transform: translateX(-10px);
+    width:20%;*/
+        width: 20%;
+        /* transform: translateX(-10px); */
+        position: absolute;
+        right: 5%;
+    }
+    .header_title {
+        font-size: 18px;
+        color: #61AEB5;
+    }
+    .header_title_estimation {
+        font-size: 18px;
+        color: #61AEB5;
+    }
+    .header_subtitle_estimation {
+        font-size: 12px;
+        color: #61AEB5;
+    }
+    .icon_arrow_left {
+        font-size: 25px;
+    }
+    .property_type_box {
+        width: 22%;
+        height: 120px;
+        border-radius: 6px;
+        display: flex;
+        transform: scale(0.85);
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+        background-color: #bfe5f5;
+        cursor: pointer;
+    }
+    .property_type_text {
+        font-weight: bold;
+        font-size: 20px;
+    }
+    .header_title_left_box {
+        width: 20%;
+    }
+    .header_title_center_box {
+        width: 70%;
+    }
+    .header_title_right_box {
+        width: 20%;
+    }
+    .announce_link {
+        display: block;
+        width: 100%;
+        margin: auto;
+    }
+    .announce_frame {
+        height: 230px;
+        border: 3px solid white;
+        border-radius: 10px;
+        width: 100%;
+        background-color: white;
+        box-shadow: 2px 2px #aaa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: row;
+    }
+    .announce_container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: row;
+        height: 100%;
+        width: 100%;
+    }
+    .announce_image_container {
+        height: 100%;
+        width: 40%;
+        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+    }
+    .announce_summary_container {
+        height: 100%;
+        width: 55%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-evenly;
+        margin-left: 10px;
+    }
+    .announce_summary_details {
+        color: #787878;
+        font-size: 14px;
+        float: left;
+    }
+    .announce_summary_refresh_time {
+        color: #bdbdbd;
+        margin-right: 5px;
+        font-size: 14px;
+        float: right;
+    }
+    .det_header_title {
+        font-size: 16px;
+        color: #61AEB5;
+    }
+    .det_median_price_text {
+        font-size: 13px;
+        color: black;
+    }
+    .det_ad_container {
+        height: 925px;
+        width: 50%;
+        background-color: #FFFFFF;
+        box-shadow: 3px 3px #aaaaaa;
+    }
+    .announce_summary_desc {
+        height: 55px;
+        width: 100%;
+        padding-top: 0px;
+        line-height: 17px;
+    }
+    .sf_announce_summary_desc_text {
+        font-size: 11px;
+        color: #787878;
+    }
+    .announce_summary_city_container {
+        height: 25px;
+        width: 100%;
+    }
+    .sf_generic_infos_container {
+        display: flex;
+        flex-direction: column;
+        background-color: white;
+        width: 95%;
+        border-radius: 10px;
+        height: 100%;
+        justify-content: center;
+    }
+    .sf_generic_infos_desc_header_text {
+        color: #787878;
+        font-size: 16px;
+    }
+    .sf_generic_infos_desc_text {
+        color: rgb(76, 148, 188);
+        font-size: 15px;
+        text-decoration: none;
+    }
+    .announce_summary_icon {
+        font-size: 20px;
+        color: #4c94bc;
+        float: left;
+    }
+    .det_ad_image_container {
+        height: 165px;
+        width: 100%;
+        display: flex;
+        justify-content: space-evenly;
+    }
+    .det_ad_image_frame {
+        height: 150px;
+        border-radius: 5px;
+        width: 90%;
+        margin-top: 10px;
+        display: flex;
+        position: relative;
+        justify-content: center;
+    }
+    .det_ad_desc_container {
+        height: 250px;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+        padding-top: 2px;
+    }
+    .det_ad_logo_container {
+        height: 50px;
+        width: 100%;
+        position: relative;
+    }
+    .det_ad_desc_border {
+        border: 1px solid #4C8E99;
+    }
+    .det_ad_desc_shape {
+        height: 61px;
+        width: 32%;
+        border-radius: 5px;
+    }
+    .search_type_button {
+        height: 140px;
+        width: 40%;
+        border-radius: 8px;
+    }
+    .rent_settings {
+        /*background-color:#61AEB5;*/
+        background-color: #4C8E99;
+        margin-left: 30px;
+    }
+    .estimate_place {
+        width: 100%;
+        height: 140px;
+        background-image: url('map.svg');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: left;
+    }
+    .deposit_title {
+        width: 100%;
+        height: 140px;
+        background-image: url('map.svg');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: left;
+    }
+    .estimate_place_left {
+        width: 5%;
+        height: 25px;
+    }
+    .estimate_place_right {
+        width: 3%;
+        height: 25px;
+    }
+    .estimate_road_number {
+        width: 21%;
+    }
+    .estimate_road {
+        width: 67%;
+    }
+    .estimate_city {
+        width: 92%;
+    }
+    .empty_property_type {
+        width: 0%;
+        height: 0px;
+    }
+    .estimate_area {
+        width: 40%;
+        height: 90px;
+        border-radius: 6px;
+        display: flex;
+        background-color: #bfe5f5;
+    }
+    .estimate_area_ground {
+        margin-left: 5%;
+    }
+    .estimate_results_footer_image {
+        width: 100%;
+        height: calc(100vh - 560px);
+        background-image: url('data/city.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+    }
+    .estimate_results_text {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        width: 100%;
+        height: 250px;
+    }
+    .estimate_results_text_size {
+        font-size: 30px;
+    }
+    .estimate_results_price {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        width: 100%;
+        height: 250px;
+    }
+    .estimate_results_price_text {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        width: 80%;
+        height: 70px;
+        background-color: #61AEB5;
+    }
+    .estimate_results_expl_size {
+        font-size: 13px;
+    }
+    .ad_summary_src_provider {
+        height: 70%;
+        width: 32%;
+        border-radius: 10px;
+        text-align: center;
+        margin-left: 2px;
+    }
+    .sf_ad_direct_links_container {
+        display: flex;
+        flex-direction: column;
+        border-radius: 10px;
+        width: 92%;
+        height: 100%;
+        background-color: #1D203B;
+    }
+    .sf_ad_direct_links_title {
+        color: white;
+        text-align: center;
+        font-size: 18px;
+    }
+    .sf_estimate_link {
+        display: block;
+        width: 50%;
+    }
+    .sf_visit_file_link {
+        display: block;
+        width: 80%;
+    }
+    .sf_estimate_link_frame {
+        width: 100%;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        flex-direction: row;
+        margin-top: 20px;
+    }
+    .social_media {
+        text-align: center;
+        width: 100%;
+        height: 30px;
+        bottom: 5px;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        margin-top: 20px;
+    }
+    .det_notary_fees_text {
+        margin: auto;
+        font-size: 11px;
+        color: black;
+    }
+    .sf_city_description_frame {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        flex-direction: column;
+        border: 1px solid #61AEB5;
+        width: 95%;
+        height: 1240px;
+        background-color: white;
+    }
+    .sf_city_description_box {
+        width: 100%;
+        height: 320px;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+    .sf_city_description_text_box {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        height: 240px;
+        text-align: center;
+    }
+    .sf_city_description_text_header_box {
+        height: 80px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        text-align: center;
+    }
+    .sf_city_description_text_header {
+        color: #61AEB5;
+        font-size: 18px;
+        margin: auto;
+    }
+    .sf_city_description_text_color {
+        color: #61AEB5 !important;
+        font-size: 12px;
+    }
+    .sf_city_description_details_icon_box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid #61AEB5;
+        width: 20%;
+        height: 110px;
+        border-radius: 8px;
+    }
+    .sf_city_description_details_icon_size {
+        font-size: 20px;
+    }
+    .sf_city_description_details_element {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: row;
+        width: 100%;
+        height: 115px;
+    }
+    .sf_city_description_details_element_text {
+        width: 85%;
+        height: 115px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1px;
+    }
+    .sf_city_description_details_container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        width: 100%;
+        height: 920px;
+    }
+    .announce_summary_history {
+        float: right;
+        color: #787878 !important;
+        font-size: 12px;
+    }
+    .announce_text_description_frame {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        height: 415px;
+        width: 100%;
+    }
+    .announce_text_description_container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 395px;
+        width: 100%;
+    }
+    .sf_modal_box_width {
+        width: 80%;
+    }
+    .sf_realestate_agencies_frame {
+        height: 150px;
+        border: 3px solid white;
+        width: 95%;
+        background-color: white;
+        box-shadow: 2px 2px #aaa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: row;
+        margin-top: 10px;
+    }
+    .sf_realestate_agencies_container {
+        height: 130px;
+        width: 65%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-evenly;
+        margin-left: 5px;
+    }
+    .sf_technology_frame {
+        display: flex;
+        justify-content: center;
+        height: 1100px;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .sf_technology_container {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        height: 100%;
+        width: 88%;
+        background-color: white;
+    }
+    .sf_technology_image_container {
+        display: flex;
+        justify-content: center;
+        height: 350px;
+        width: 100%;
+    }
+    .sf_technology_text_container {
+        display: flex;
+        justify-content: center;
+        height: 780px;
+        width: 100%;
+        flex-direction: column;
+    }
+    .sf_technology_text_header_container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 60px;
+        width: 100%;
+    }
+    .sf_technology_functionality {
+        display: flex;
+        justify-content: center;
+        height: 730px;
+        width: 100%;
+        flex-direction: column;
+    }
+    .sf_technology_subtitle {
+        width: 100%;
+        height: 70px;
+        padding: 3px;
+    }
+    .sf_technology_assist {
+        width: 100%;
+        height: 370px;
+        padding: 2px;
+    }
+    .sf_technology_estimate {
+        width: 100%;
+        height: 210px;
+        padding: 2px;
+    }
+    .sf_home_page_actu_frame {
+        display: none;
+        width: 100%;
+        height: 1200px;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+    .sf_home_page_actu_link_container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 280px;
+        background-color: white;
+        margin-bottom: 10px;
+        flex-direction: column;
+        border-radius: 8px;
+        padding: 5px;
+    }
+    .sf_home_page_actu_title_box {
+        width: 100%;
+        height: 50px;
+    }
+    .sf_home_page_actu_text_box {
+        width: 100%;
+        height: 210px;
+    }
+    .sf_technology_text_size {
+        font-size: 13px;
+    }
+    .sf_my_research_title_text {
+        font-size: 18px;
+        color: #61AEB5;
+        margin-left: 10px;
+    }
+    .sf_my_research_text {
+        color: #61AEB5;
+        font-weight: bold;
+        font-size: 13px;
+    }
+    .sf_my_research_email_alert_text {
+        color: green;
+        font-size: 14px;
+    }
+    .sf_my_research_container {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        width: 48%;
+        height: 100%;
+        margin-left: 10px;
+        align-items: center;
+        box-shadow: 3px 3px #aaaaaa;
+        border: 1px solid #aaaaaa;
+    }
+    .sf_bell_alert_icon {
+        color: green;
+        font-size: 14px;
+        margin-right: 2px;
+    }
+    .sf_alert_text {
+        color: green;
+        font-size: 13px;
+        margin-left: 5px;
+    }
+    .sf_bell_alert_deactivated_icon {
+        color: gray;
+        font-size: 14px;
+        margin-right: 2px;
+    }
+    .sf_alert__deactivated_text {
+        color: gray;
+        font-size: 13px;
+        margin-left: 5px;
+    }
+    .sf_alert_trash {
+        color: red;
+        font-size: 18px;
+    }
+    .sf_my_research_small_box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 50%;
+        height: 40px;
+        border-radius: 5px;
+        border: 1px solid #61AEB5;
+    }
+    .sf_pagination_container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        width: 95%;
+        background-color: white;
+    }
+}
+
+
+/* end of @media (max-width:1024px)  */
+
+@media (max-height:800px) {
+    .contact_info {
+        text-align: center;
+        width: 100%;
+        height: 30px;
+        bottom: unset;
+    }
+    .social_media {
+        text-align: center;
+        width: 100%;
+        height: 30px;
+        margin-top: 100px;
+        bottom: unset;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        margin-top: 20px;
+    }
+}
+
+
+/* end of @media (max-height:700px)  */
+
+@media (max-width:360px) {
+    .header_title_estimation {
+        font-size: 16px;
+        color: #61AEB5;
+    }
 }
