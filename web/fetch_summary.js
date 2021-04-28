@@ -499,7 +499,6 @@ function addGoogleAds(ad_content)
 
   ad_link.append(ins);
   var script = createNode("script");
-  script.type ="text/javascript"
   script.innerHTML = "var isPageAlreadyRendered = document.getElementById(\"prerendered-page\"); if(isPageAlreadyRendered) {(adsbygoogle = window.adsbygoogle || []).push({});}";
 
   ad_link.append(script);

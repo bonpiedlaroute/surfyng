@@ -1372,6 +1372,23 @@ padding:5px;
 {
   display:flex;justify-content:center;align-items:center;height:50%;width:40%;background-color:white;
 }
+.sf_estimate_description
+{
+  display:block;
+  background-color:#F2F2F2;
+  max-width:80%;
+  max-height: 1000px;
+  margin:0 auto;
+  padding:10px;
+}
+.sf_estimate_title_description
+{
+  font-size:26px;
+}
+.sf_estimate_subtitle_description
+{
+  font-size:20px;
+}
 @media (max-width:1024px) {
   .search_type_text
   {
@@ -2091,6 +2108,23 @@ padding:5px;
   {
     color:#787878 !important;
     font-size:13px;
+  }
+  .sf_estimate_description
+  {
+    display:block;
+    background-color:#F2F2F2;
+    max-width:95%;
+    max-height: 1700px;
+    margin:0 auto;
+    padding:10px;
+  }
+  .sf_estimate_title_description
+  {
+    font-size:18px;
+  }
+  .sf_estimate_subtitle_description
+  {
+    font-size:16px;
   }
 } /* end of @media (max-width:1024px)  */
 

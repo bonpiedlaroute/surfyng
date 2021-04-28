@@ -97,7 +97,6 @@ async function ssr(path, browserWSEndpoint) {
 
 	var url = HOST +  path;
 	console.log('url before building:' + url);
-	var needToSetCanonicalUrl = false;
 
 	if(path.includes("liste-annonces"))
 	{
@@ -112,16 +111,14 @@ async function ssr(path, browserWSEndpoint) {
 		{
 			//TODO in case of error, return an error page
 			build_params(path);
-			needToSetCanonicalUrl = true;
+
 		}
 
 		url = HOST + '/liste_annonces.html' + url_params;
-
 	}
 	else if(path.includes("/annonce/"))
 	{
 		url = build_params_detail(path);
-		needToSetCanonicalUrl = true;
 	}
 	else if(path.includes("actualite-immobilier.html"))
 	{
@@ -151,15 +148,22 @@ async function ssr(path, browserWSEndpoint) {
 		await page.goto(url);
 		console.log('Waiting for #prerendered-page');
 		await page.waitForSelector('#prerendered-page');
-		if(needToSetCanonicalUrl)
-		{
 
-			await page.evaluate((path) => {
-			var rel_link = document.getElementById("canonical_url");
-			rel_link.rel = "canonical";
-			rel_link.href = path;
+		await page.evaluate((path) => {
+				var rel_link = document.getElementById("canonical_url");
+				if(rel_link)
+				{
+					rel_link.rel = "canonical";
+					rel_link.href = path;
+				}
+
+				const meta_origin_trial = document.querySelectorAll("[http-equiv='origin-trial']");
+				meta_origin_trial.forEach(function(item) {
+		  		item.remove();
+				}
+				);
 		}, path);
-		}
+
 		console.log('#prerendered-page loaded');
     } catch(err) {
     	console.error(err);
