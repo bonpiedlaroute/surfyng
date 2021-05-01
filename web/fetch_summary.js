@@ -324,8 +324,21 @@ function computeMinMaxAdPrice(arr) {
   function ByTimeStamp(lhs, rhs)
   {
     var d1, d2;
-    d1 = new Date(lhs.FIRST_TIMESTAMP);
-    d2 = new Date(rhs.FIRST_TIMESTAMP);
+    if(!lhs.hasOwnProperty("FIRST_TIMESTAMP"))
+    {
+      d1 = new Date(lhs.TIMESTAMP);
+    }
+    else {
+      d1 = new Date(lhs.FIRST_TIMESTAMP);
+    }
+
+    if(!rhs.hasOwnProperty("FIRST_TIMESTAMP"))
+    {
+      d2 = new Date(rhs.TIMESTAMP);
+    }
+    else {
+      d2 = new Date(rhs.FIRST_TIMESTAMP);
+    }
 
     return d2 - d1; //descending order
   }
