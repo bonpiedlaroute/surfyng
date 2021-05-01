@@ -1134,7 +1134,7 @@ function generate_details_page(data)
 
          var sf_estimate_link = createNode("a");
          sf_estimate_link.className = "sf_estimate_link";
-         sf_estimate_link.href = "estimation-immobiliere-en-ligne.html";
+         sf_estimate_link.href = "/estimation-immobiliere-en-ligne.html";
 
          sf_estimate_link.appendChild(sf_estimate_link_container);
 
@@ -1171,9 +1171,9 @@ function generate_details_page(data)
     var sf_visit_file_link = createNode("a");
     sf_visit_file_link.className = "sf_visit_file_link";
     if(isForSale)
-    sf_visit_file_link.href = "data/docs/fiche-visite-achat-appartement-maison.pdf";
+    sf_visit_file_link.href = "/data/docs/fiche-visite-achat-appartement-maison.pdf";
     else {
-      sf_visit_file_link.href = "data/docs/fiche-visite-location-appartement-maison.pdf";
+      sf_visit_file_link.href = "/data/docs/fiche-visite-location-appartement-maison.pdf";
     }
 
     sf_visit_file_link.appendChild(sf_visit_file_link_container);

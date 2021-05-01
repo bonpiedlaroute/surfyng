@@ -257,7 +257,7 @@ function populateOthersRelatedInfos(search_city, searchType, propertyType)
       var generic_infos_desc_text4 = createNode("a");
       generic_infos_desc_text4.className = "sf_generic_infos_desc_text";
       generic_infos_desc_text4.innerHTML = realestate_city_infos_text_2;
-      generic_infos_desc_text4.href = "estimation-immobiliere-en-ligne.html";
+      generic_infos_desc_text4.href = "/estimation-immobiliere-en-ligne.html";
       generic_infos_desc_text_icon = createNode("i");
       generic_infos_desc_text_icon.className = "fas fa-chevron-right sf_generic_infos_desc_text_icon";
       generic_infos_desc_text4.appendChild(generic_infos_desc_text_icon);
@@ -272,7 +272,7 @@ function populateOthersRelatedInfos(search_city, searchType, propertyType)
     var generic_infos_desc_text5 = createNode("a");
     generic_infos_desc_text5.className = "sf_generic_infos_desc_text";
     generic_infos_desc_text5.innerHTML = realestate_city_infos_text_3;
-    generic_infos_desc_text5.href = "conseil-immobilier.html";
+    generic_infos_desc_text5.href = "/conseil-immobilier.html";
     generic_infos_desc_text_icon = createNode("i");
     generic_infos_desc_text_icon.className = "fas fa-chevron-right sf_generic_infos_desc_text_icon";
     generic_infos_desc_text5.appendChild(generic_infos_desc_text_icon);
@@ -628,7 +628,7 @@ function generate_summary_page(data, empty=false)
       document.getElementsByTagName('meta')["description"].content = meta_description;
 
       var realestate_agencies_city = document.getElementById('realestate_agencies_city');
-      realestate_agencies_city.href = 'agence-immobiliere-'+ search_city.toLowerCase() +'-' + postalcode + '.html';
+      realestate_agencies_city.href = '/agence-immobiliere-'+ search_city.toLowerCase() +'-' + postalcode + '.html';
       realestate_agencies_city.innerHTML = 'Agences immobilières à ' + search_city + " ("+ postalcode + ")";
 
   }
