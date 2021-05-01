@@ -307,24 +307,25 @@ function populateOthersRelatedInfos(search_city, searchType, propertyType)
     ad_sum_src_provider.appendChild(ad_sum_src_provider_text);
   }
 
+var adPriceMax = -Infinity;
+var adPriceMin = Infinity;
+function computeMinMaxAdPrice(arr) {
+  var len = arr.length;
+  while (len--) {
+    var val = Number(arr[len].PRICE);
+    if (val < adPriceMin) {
+      adPriceMin = val;
+    }
+    if (val > adPriceMax) {
+      adPriceMax = val;
+    }
+  }
+}
   function ByTimeStamp(lhs, rhs)
   {
     var d1, d2;
-    if(!lhs.hasOwnProperty("FIRST_TIMESTAMP"))
-    {
-      d1 = new Date(lhs.TIMESTAMP);
-    }
-    else {
-      d1 = new Date(lhs.FIRST_TIMESTAMP);
-    }
-
-    if(!rhs.hasOwnProperty("FIRST_TIMESTAMP"))
-    {
-      d2 = new Date(rhs.TIMESTAMP);
-    }
-    else {
-      d2 = new Date(rhs.FIRST_TIMESTAMP);
-    }
+    d1 = new Date(lhs.FIRST_TIMESTAMP);
+    d2 = new Date(rhs.FIRST_TIMESTAMP);
 
     return d2 - d1; //descending order
   }
@@ -354,7 +355,7 @@ function populateOthersRelatedInfos(search_city, searchType, propertyType)
   ProcessorBySource.set("fnaim", function(param) {SrcProcessor(param, "yellow", "Fnaim"); });
 
   var current_page = 1;
-  var records_per_page = 50;
+  var records_per_page = 30;
 
   var url = 'https://surfyn.fr:7878/search/all';
   //var url = 'http://127.0.0.1:7878/search/all';
@@ -598,10 +599,11 @@ function generate_summary_page(data, empty=false)
       meta_description += search_city;
       var postalcode = getPostalCode(search_city);
 
-      meta_description += " ("+ postalcode + ")";
+      meta_description += " ("+ postalcode + "). ";
 
-      meta_description += " actualisées en temps réel, à partir de tous les sites de petites annonces immobilières et d'agences immobilières couvrant la ville de "
-      meta_description += search_city + ".";
+      computeMinMaxAdPrice(data);
+      meta_description += "Prix Min: " + String(adPriceMin) + "€ ";
+      meta_description += "Prix Max: " + String(adPriceMax) + "€.";
       meta_description += searchType == 1? "Vente ": "Location ";
       meta_description += isFlat? "appartements":"maisons";
       meta_description += searchType == 2 ? " meublés ou non meublés": "";
@@ -817,7 +819,7 @@ function generate_summary_page(data, empty=false)
         var ad_summary_desc_span3 = createNode("span");
         ad_summary_desc_span3.className = "sf_announce_summary_desc_text";
         if( data[i].hasOwnProperty('AD_TEXT_DESCRIPTION'))
-        ad_summary_desc_span3.innerHTML = data[i].AD_TEXT_DESCRIPTION.slice(0,100);
+        ad_summary_desc_span3.innerHTML = data[i].AD_TEXT_DESCRIPTION.slice(0,125);
         ad_summary_desc_div3.appendChild(ad_summary_desc_span3);
 
         ad_summary_container_div.appendChild(ad_summary_desc_div3);
