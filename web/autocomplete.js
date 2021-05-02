@@ -116,4 +116,4 @@ if(input_search_city)
   autocomplete(input_search_city, available_cities);
 
 if(input_deposit_city)
-  autocomplete(input_deposit_city, cities);
+  autocomplete(input_deposit_city, available_cities);

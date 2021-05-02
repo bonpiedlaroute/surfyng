@@ -183,22 +183,37 @@
           name="description" id="deposit_description" maxlength="300" onblur="checkDescription()"></textarea>
         <div> <a id="description_error_message"></a></div>
 
-        <div class="mt-3 d-flex justify-content-center">
-          <label class="switch">
-            <input id="parking" type="checkbox">
-            <span class="slider round"></span>
-          </label>
-          <p class="ml-3"> <strong>Avec Parking</strong></p>
+        <div class="mt-3 d-flex">
+          <div class="col-lg-8 col-md-6 col-sm-6 col-8">
+            <label class="switch">
+              <input id="parking" type="checkbox" onclick="display_number_field(this);">
+              <span class="slider round"></span>
+            </label>
+            <label for="parking" class="ml-2"><strong>Avec Parking</strong></label>
+          </div>
+
+          <div class="col-lg-4 col-md-6 col-sm-6 col-4 d-flex justify-content-center">
+            <input class="form-control" type="search" value="1" id="parking_number"
+              onkeypress="return allowOnlyNumber(event)" maxlength="2" style="display: None;">
+            </input>
+          </div>
         </div>
-        <div class="mt-3 d-flex justify-content-center">
-          <label class="switch">
-            <input id="cellar" type="checkbox">
-            <span class="slider round"></span>
-          </label>
-          <p class="ml-3"> <strong>Avec Cave</strong></p>
+        <div class="mt-3 d-flex">
+          <div class="col-lg-8 col-md-6 col-sm-6 col-8">
+            <label class="switch">
+              <input id="cellar" type="checkbox" onclick="display_number_field(this);">
+              <span class="slider round"></span>
+            </label>
+            <label for="cellar" class="ml-2"> <strong>Avec Cave</strong></label>
+          </div>
+
+          <div class="col-lg-4 col-md-6 col-sm-6 col-4 d-flex justify-content-center">
+            <input class="form-control" type="search" value="1" id="cellar_number"
+              onkeypress="return allowOnlyNumber(event)" maxlength="2" style="display: None;">
+            </input>
+          </div>
         </div>
       </div>
-    </div>
     </div>
 
     </div>
@@ -261,6 +276,19 @@
         </div>
         <input id="uploadImage4" type="file" name="image" class="img upload" accept="image/*"
           onchange="validateAndUpload(this)">
+
+        <!-- Image 5 -->
+        <div id="imagePreview5" class="sf_preview m-2 d-flex">
+          <div id="overlay-5" class="sf_overlay">
+            <img id="loading-5" src="loading.gif" alt="loading">
+          </div>
+
+          <i id="icon5" class="fa fa-camera property_type_icon" aria-hidden="true"></i>
+          <i id="imageOK5" class="fa fa-check property_type_icon center" style="display: none; color: green;"
+            aria-hidden="true"></i>
+        </div>
+        <input id="uploadImage5" type="file" name="image" class="img upload" accept="image/*"
+          onchange="validateAndUpload(this)">
       </div>
       <div> <a id="images_error_message"></a></div>
       <!-- Options -->
@@ -293,13 +321,48 @@
           <div class="estimate_city">
             <div class="autocomplete" style="width:100%;">
               <select id="type_of_heating" class="form-control sf_title_decoration">
-                <option value="Pas de chauffage">Pas de chauffage</option>
-                <option value="Chauffage individuel">Chauffage individuel</option>
-                <option value="Chauffage collectif">Chauffage collectif</option>
+                <option value="Chauffage individuel - Electrique">Chauffage individuel - Electrique</option>
+                <option value="Chauffage individuel - Gaz">Chauffage individuel - Gaz</option>
+                <option value="Chauffage individuel - Fuel">Chauffage individuel - Fuel</option>
+                <option value="Chauffage collectif - Electrique">Chauffage collectif - Electrique</option>
+                <option value="Chauffage collectif - Gaz">Chauffage collectif - Gaz</option>
+                <option value="Chauffage collectif - Fuel">Chauffage collectif - Fuel</option>
               </select>
             </div>
           </div>
           <div class="estimate_place_right"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Others infos -->
+    <div class="sf_line row mx-auto">
+      <a style="font-size:18px; color:black;" class="mx-auto">Informations complémentaires</a>
+    </div>
+    <div class="row mx-auto pt-2 pb-2" style="justify-content: center">
+      <div class="col-md-10 col-sm-10 col-lg-6">
+        <div class="sf_adapt mt-3 d-flex">
+          <div class="col-lg-6 col-md-6 col-sm-6 col-10 d-flex justify-content-center">
+            <label class="switch">
+              <input id="lift" type="checkbox" onclick="display_floor(this);">
+              <span class="slider round"></span>
+            </label>
+            <label for="lift" class="ml-2"><strong>Avec Ascenseur</strong></label>
+          </div>
+
+          <div class="col-lg-6 col-md-6 col-sm-6 col-10 d-flex justify-content-center">
+            <label class="switch">
+              <input id="balcony" type="checkbox">
+              <span class="slider round"></span>
+            </label>
+            <label for="balcony" class="ml-2"> <strong>Avec Balcon</strong></label>
+          </div>
+        </div>
+        <div id="floor_div" class="mt-3 justify-content-center align-items-center" style="display: none;">
+          <label for="floor"><strong>Etage du bien:</strong></label>
+          <input class="form-control col-md-3 col-sm-3 col-3 ml-2" type="search" value="1" id="floor"
+            onkeypress="return allowOnlyNumber(event)" maxlength="2">
+          </input>
         </div>
       </div>
     </div>
