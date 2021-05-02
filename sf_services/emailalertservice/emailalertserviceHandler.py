@@ -40,6 +40,7 @@ import threading
 import Queue
 from email.header import Header
 from email.utils import formataddr
+from inseecode_postalcode import *
 
 
 
@@ -378,7 +379,34 @@ class EmailAlertServiceHandler(Iface):
          retval.error = ret.error
 
       return retval
- 
+
+   def buildAdsUrl(self, ads, city):
+      url = "https://surfyn.fr/annonce/"
+      if ads["SEARCH_TYPE"] == "For sale":
+         url += "achat/"
+      else:
+         url += "location/"
+
+      if ads["PROPERTY_TYPE"] == "Appartement":
+         url += "appartement-"
+         if ads["ROOMS"] == "1":
+            url += "studios/"
+         else:
+            url += ads["ROOMS"]
+            url += "-pieces/"
+      else:
+         url += "maison-"
+         url += ads["ROOMS"]
+         url += "-pieces/"
+      
+      url += city
+      url += "-"
+      url += postalcodeByCity[city]
+      url += "?"
+      url += ads["ID"]
+
+      return url
+       
    def checkAndNotifyUsers(self, city):
       active_alert_list = []
       filterexpression_alert = "CITY = :ct and ALERT_STATUS = :als"
@@ -530,7 +558,7 @@ class EmailAlertServiceHandler(Iface):
       for ads in new_ads:
          for alert in active_alert_list:
             if self.ads_match(ads, alert) and ads["ID"] not in userToNotify[alert["USERID"]].forbidden_ads:
-               userToNotify[alert["USERID"]].ads_list.append(ads["ID"])
+               userToNotify[alert["USERID"]].ads_list.append(self.buildAdsUrl(ads, city))
                if "DUPLICATES" in ads:
                   duplicates_ad=ads["DUPLICATES"].split(",")
                   for announce in duplicates_ad:
@@ -569,10 +597,10 @@ class EmailAlertServiceHandler(Iface):
                body_msg += u' correspond à vos critères de recherche immobilière\n'
 
             for ad in userToNotify[userid].ads_list:
-               url = 'https://surfyn.fr/annonce_detaille.html?'+ str(ad)
-               body_msg += url
+               body_msg += ad
                body_msg += '\n'
 
+            body_msg += u"\n Vous souhaitez connaitre le prix d'un bien immobilier? vous pouvez estimer son prix en ligne, gratuitement sur https://surfyn.fr/estimation-immobiliere-en-ligne.html" 
             body_msg += u"\n\n A votre service\nL' équipe Surfyn"
             msg = MIMEText(body_msg, _charset='utf-8')
             msg['Subject'] = subject_msg

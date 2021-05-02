@@ -1,0 +1,9 @@
+firebase_admin
+configparser
+add symbolic link: ln -s ../../../bot/thrift_generated/dynamodb_access dynamodb_access
+add symbolic link: ln -s ../../bot spiders
+
+pip install configparser  (install global)
+
+crontab rajouter lancement notifierUser.py
+
