@@ -7,10 +7,12 @@ sys.path.append('../../bot')
 sys.path.append('../../bot/thrift_generated')
 
 import json
+import pytz
 import Queue
 import logging
 import datetime
 import threading
+import unidecode
 import configparser
 import firebase_admin
 from thrift_generated.depositservice.deposit_service import Processor
@@ -39,6 +41,7 @@ class DepositServiceHandler(Iface):
 
         self.deposit_tablename = config['DEFAULT']['deposit_tablename']
         self.summary_tablename = config['DEFAULT']['summary_tablename']
+        
         self.works = Queue.Queue()
         self.condition = threading.Condition()
 
@@ -70,60 +73,29 @@ class DepositServiceHandler(Iface):
         id_value.fieldtype = ttypes.Type.NUMBER
         values['ID'] = id_value
 
-        # TITLE
-        title_value = ttypes.ValueType()
-        title_value.field = data['title']
-        title_value.fieldtype = ttypes.Type.STRING
-        values['TITLE'] = title_value
+        # ANNOUNCE LINK
+        announce_link_value = ttypes.ValueType()
+        announce_link_value.field = "https://surfyn.fr"
+        announce_link_value.fieldtype = ttypes.Type.STRING
+        values['ANNOUNCE_LINK'] = announce_link_value
+        
+        # ANNOUNCE SOURCE
+        announce_source_value = ttypes.ValueType()
+        announce_source_value.field = "Surfyn"
+        announce_source_value.fieldtype = ttypes.Type.STRING
+        values['ANNOUNCE_SOURCE'] = announce_source_value
 
+        # ANNOUNCE TITLE
+        title_value = ttypes.ValueType()
+        title_value.field = unidecode.unidecode(data['title'])
+        title_value.fieldtype = ttypes.Type.STRING
+        values['ANNOUNCE_TITLE'] = title_value
+        
         # CITY
         city_value = ttypes.ValueType()
         city_value.field = data['city']
         city_value.fieldtype = ttypes.Type.STRING
         values['CITY'] = city_value
-
-        # ADDRESS
-        address_value = ttypes.ValueType()
-        address_value.field = data['address']
-        address_value.fieldtype = ttypes.Type.STRING
-        values['ADDRESS'] = address_value
-
-        # DESCRIPTION
-        description_value = ttypes.ValueType()
-        description_value.field = data['description']
-        description_value.fieldtype = ttypes.Type.STRING
-        values['AD_TEXT_DESCRIPTION'] = description_value
-
-        # PARKING
-        parking_value = ttypes.ValueType()
-        parking_value.field = data['parking']
-        parking_value.fieldtype = ttypes.Type.STRING
-        values['PARKING'] = parking_value
-
-        # CELLAR
-        cellar_value = ttypes.ValueType()
-        cellar_value.field = data['cellar']
-        cellar_value.fieldtype = ttypes.Type.STRING
-        values['CELLAR'] = cellar_value
-
-        # USERID
-        userid_value = ttypes.ValueType()
-        userid_value.field = user_id
-        userid_value.fieldtype = ttypes.Type.STRING
-        values['USERID'] = userid_value
-
-        # USER_DISPLAY_NAME
-        if user.display_name:
-            userdisplayname_value = ttypes.ValueType()
-            userdisplayname_value.field = user.display_name
-            userdisplayname_value.fieldtype = ttypes.Type.STRING
-            values["USER_DISPLAY_NAME"] = userdisplayname_value
-
-        # EMAIL
-        email_value = ttypes.ValueType()
-        email_value.field = user.email
-        email_value.fieldtype = ttypes.Type.STRING
-        values["EMAIL"] = email_value
 
         # PROPERTY_TYPE
         property_type_value = ttypes.ValueType()
@@ -137,17 +109,24 @@ class DepositServiceHandler(Iface):
         search_type_value.fieldtype = ttypes.Type.STRING
         values['SEARCH_TYPE'] = search_type_value
 
-        # ROOMS
-        rooms_value = ttypes.ValueType()
-        rooms_value.field = data['rooms']
-        rooms_value.fieldtype = ttypes.Type.NUMBER
-        values['ROOMS'] = rooms_value
+        # TIMESTAMP
+        utc_now = datetime.datetime.now(pytz.utc)
+        utc_now = utc_now.strftime("%Y-%m-%dT%H:%M:%S")
+        timestamp_value = ttypes.ValueType()
+        timestamp_value.field = utc_now
+        timestamp_value.fieldtype = ttypes.Type.STRING
+        values['TIMESTAMP'] = timestamp_value
 
-        # BEDROOMS
-        bedrooms_value = ttypes.ValueType()
-        bedrooms_value.field = data['bedrooms']
-        bedrooms_value.fieldtype = ttypes.Type.NUMBER
-        values['BEDROOMS'] = bedrooms_value
+        # FIRST_TIMESTAMP
+        first_timestamp_value = ttypes.ValueType()
+        first_timestamp_value.field = utc_now
+        first_timestamp_value.fieldtype = ttypes.Type.STRING
+        values['FIRST_TIMESTAMP'] = first_timestamp_value
+
+        # ANNOUNCE IMAGE
+        announce_image_value = ttypes.ValueType()
+        announce_link_value.field = data['image1']
+        announce_link_value.fieldtype = ttypes.Type.STRING
 
         # PRICE
         price_value = ttypes.ValueType()
@@ -155,11 +134,30 @@ class DepositServiceHandler(Iface):
         price_value.fieldtype = ttypes.Type.NUMBER
         values['PRICE'] = price_value
 
-        # AREA
+        # SURFACE
         area_value = ttypes.ValueType()
-        area_value.field = data['area']
+        area_value.field = data['surface']
         area_value.fieldtype = ttypes.Type.NUMBER
-        values['AREA'] = area_value
+        values['SURFACE'] = area_value
+
+        # CONSTRUCTION_YEAR
+        if data.has_key('construction_year'):
+            construction_year_value = ttypes.ValueType()
+            construction_year_value.field = str(data['construction_year'])
+            construction_year_value.fieldtype = ttypes.Type.NUMBER
+            values['CONSTRUCTION_YEAR'] = construction_year_value
+
+        # ROOMS
+        rooms_value = ttypes.ValueType()
+        rooms_value.field = str(data['rooms'])
+        rooms_value.fieldtype = ttypes.Type.NUMBER
+        values['ROOMS'] = rooms_value
+
+        # BEDROOMS
+        bedrooms_value = ttypes.ValueType()
+        bedrooms_value.field = str(data['bedrooms'])
+        bedrooms_value.fieldtype = ttypes.Type.NUMBER
+        values['BEDROOMS'] = bedrooms_value
 
         # TYPE OF HEATING
         type_heating_value = ttypes.ValueType()
@@ -167,19 +165,56 @@ class DepositServiceHandler(Iface):
         type_heating_value.fieldtype = ttypes.Type.STRING
         values['TYPE_OF_HEATING'] = type_heating_value
 
-        # CONSTRUCTION_YEAR
-        if data.has_key('construction_year'):
-            construction_year_value = ttypes.ValueType()
-            construction_year_value.field = data['construction_year']
-            construction_year_value.fieldtype = ttypes.Type.NUMBER
-            values['CONSTRUCTION_YEAR'] = construction_year_value
+        # CELLAR
+        cellar_value = ttypes.ValueType()
+        cellar_value.field = str(data['cellar'])
+        cellar_value.fieldtype = ttypes.Type.NUMBER
+        values['CELLAR'] = cellar_value
+
+        # FLOOR
+        floor_value = ttypes.ValueType()
+        floor_value.field = str(data['floor'])
+        floor_value.fieldtype = ttypes.Type.NUMBER
+        values['FLOOR'] = floor_value
+
+        # PARKING
+        parking_value = ttypes.ValueType()
+        parking_value.field = data['parking']
+        parking_value.fieldtype = ttypes.Type.STRING
+        values['PARKING'] = parking_value
+
+        # LAND_SURFACE
+        if data.has_key('land_surface'):
+            land_surface_value = ttypes.ValueType()
+            land_surface_value.field = str(data['land_surface'])
+            land_surface_value.fieldtype = ttypes.Type.NUMBER
+            values['LAND_SURFACE'] = land_surface_value
+
+        # LIFT
+        lift_value = ttypes.ValueType()
+        lift_value.field = data['lift']
+        lift_value.fieldtype = ttypes.Type.STRING
+        values['LIFT'] = lift_value
+
+        # BALCONY
+        balcony_value = ttypes.ValueType()
+        balcony_value.field = data['balcony']
+        balcony_value.fieldtype = ttypes.Type.STRING
+        values['BALCONY'] = balcony_value
+
+        # DESCRIPTION
+        description_value = ttypes.ValueType()
+        description_value.field = unidecode.unidecode(data['description'])
+        description_value.fieldtype = ttypes.Type.STRING
+        values['AD_TEXT_DESCRIPTION'] = description_value
 
         # IMAGE
         images = {
             'image1': data['image1'],
             'image2': data['image2'],
             'image3': data['image3'],
-            'image4': data['image4']
+            'image4': data['image4'],
+            'image5': data['image5']
         }
         image = str(images)
 
@@ -188,11 +223,51 @@ class DepositServiceHandler(Iface):
         image_value.fieldtype = ttypes.Type.STRING
         values['IMAGE'] = image_value
 
-        # ANNOUNCE SOURCE
-        announce_source_value = ttypes.ValueType()
-        announce_source_value.field = "Surfyn"
-        announce_source_value.fieldtype = ttypes.Type.STRING
-        values['ANNOUNCE_SOURCE'] = announce_source_value
+        # IMAGE COUNT
+        image_count = ttypes.ValueType()
+        image_count.field = str(len(filter(lambda item: 'image' in item, list(data.keys()))))
+        image_count.fieldtype = ttypes.Type.NUMBER
+        values['IMAGE_COUNT'] = image_count
+
+        # ADDRESS
+        address_value = ttypes.ValueType()
+        address_value.field = unidecode.unidecode(data['address'])
+        address_value.fieldtype = ttypes.Type.STRING
+        values['ADDRESS'] = address_value
+
+        # SOURCE LOGO
+        source_logo_value = ttypes.ValueType()
+        source_logo_value.field = "data/surfyn.svg"
+        source_logo_value.fieldtype = ttypes.Type.STRING
+        values['SOURCE_LOGO'] = source_logo_value
+        
+        # DELETED STATUS
+        deleted_value = ttypes.ValueType()
+        deleted_value.field = 'OFF'
+        deleted_value.fieldtype = ttypes.Type.STRING
+        values['DELETED_STATUS'] = deleted_value
+        
+        result_summary = self.client.put(self.summary_tablename, values)
+        
+        # USERID
+        userid_value = ttypes.ValueType()
+        userid_value.field = user_id
+        userid_value.fieldtype = ttypes.Type.STRING
+        values['USERID'] = userid_value
+
+
+        # USER_DISPLAY_NAME
+        if user.display_name:
+            userdisplayname_value = ttypes.ValueType()
+            userdisplayname_value.field = unidecode.unidecode(user.display_name)
+            userdisplayname_value.fieldtype = ttypes.Type.STRING
+            values["USER_DISPLAY_NAME"] = userdisplayname_value
+
+        # EMAIL
+        email_value = ttypes.ValueType()
+        email_value.field = user.email
+        email_value.fieldtype = ttypes.Type.STRING
+        values["EMAIL"] = email_value
 
         # PHONE NUMBER
         if data.has_key('phone'):
@@ -201,40 +276,27 @@ class DepositServiceHandler(Iface):
             announce_phone_number.fieldtype = ttypes.Type.NUMBER
             values['PHONE_NUMBER'] = announce_phone_number
 
-        # ANNOUNCE LINK
-        announce_link_value = ttypes.ValueType()
-        announce_link_value.field = "https://surfyn.fr"
-        announce_link_value.fieldtype = ttypes.Type.STRING
-        values['ANNOUNCE_LINK'] = announce_link_value
-
-        # SOURCE LOGO
-        source_logo_value = ttypes.ValueType()
-        source_logo_value.field = "data/surfyn.svg"
-        source_logo_value.fieldtype = ttypes.Type.STRING
-        values['SOURCE_LOGO'] = source_logo_value
-
-        # DELETED STATUS
-        deleted_value = ttypes.ValueType()
-        deleted_value.field = 'OFF'
-        deleted_value.fieldtype = ttypes.Type.STRING
-        values['DELETED_STATUS'] = deleted_value
-
         result = self.client.put(self.deposit_tablename, values)
 
         logging.info('Data send to dynamodb')
 
         return_value = DepositResult()
 
-        if result.success:
+        if result.success and result_summary.success:
             return_value.success = True
-            logging.info('Successful put announce {} in table {}'.format(
-                ID, self.deposit_tablename))
-        else:
+            logging.info('Successful put announce {} in table {} and table {}'.format(
+                ID, self.deposit_tablename, self.summary_tablename))
+        elif not result.success:
             return_value.success = False
             return_value.error = result.error
             logging.error('Fail to put announce {} in table {}'.format(
                 ID, self.deposit_tablename))
-
+        elif not result_summary.success:
+            return_value.success = False
+            return_value.error = result.error
+            logging.error('Fail to put announce {} in table {}'.format(
+                ID, self.summary_tablename))
+                
         return return_value
 
 

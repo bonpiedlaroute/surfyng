@@ -52,17 +52,21 @@ var houseSelect = document.getElementById("house");
 var appartSelect = document.getElementById("appart");
 var officeSelect = document.getElementById("office");
 
-var surfaceInput = document.getElementById("surface_deposit");
-
 var priceInput = document.getElementById("price_deposit");
 
 
 // Second page
 var descriptionInput = document.getElementById("deposit_description");
 var parkingInput = document.getElementById("parking");
+var parkingNumberInput = document.getElementById("parking_number");
 var cellarInput = document.getElementById("cellar");
+var cellarNumberInput = document.getElementById("cellar_number");
 var constructionYearInput = document.getElementById("construction_year");
 var heatingInput = document.getElementById("type_of_heating");
+var liftInput = document.getElementById("lift");
+var balconyInput = document.getElementById("balcony");
+var floorInput = document.getElementById("floor");
+var floorDiv = document.getElementById("floor_div");
 
 
 var imageInput1 = document.getElementById("uploadImage1");
@@ -89,7 +93,7 @@ var images_error = document.getElementById("images_error_message");
 function validate_first_step() {
     var prop_result = isPropertyTypeSelected();
     var rooms_result = isOneRoomsSelected();
-    var bedrooms_result = isOneBedroosSelected();
+    var bedrooms_result = isOneBedroomsSelected();
 
     if (isConnectedUser()) {
         if (checkInputs(input = 0)) {
@@ -109,6 +113,8 @@ function validate_first_step() {
                             sessionStorage.setItem("search_type", isSelectedSearch[searchType.sell] ? divSell.id : divRent.id);
                             sessionStorage.setItem("prop_type", prop_result[1].id);
                             sessionStorage.setItem("area", areaInput.value);
+                            if(!isEmpty(landSurfaceInput.value))
+                                sessionStorage.setItem("land_surface", landSurfaceInput.value);
                             sessionStorage.setItem("rooms", rooms_result[1]);
                             sessionStorage.setItem("bedrooms", bedrooms_result[1]);
                             sessionStorage.setItem("price", priceInput.value);
@@ -161,11 +167,19 @@ function validate_second_step() {
                     if (checkPhone()) {
                         sessionStorage.setItem("address", addressInput.value);
                         sessionStorage.setItem("description", descriptionInput.value)
-                        sessionStorage.setItem("parking", parkingInput.checked ? 'Oui' : 'Non');
-                        sessionStorage.setItem("cellar", cellarInput.checked ? 'Oui' : 'Non');
+                        sessionStorage.setItem("parking", parkingInput.checked ? parkingNumberInput.value : 'Non');
+                        sessionStorage.setItem("cellar", cellarInput.checked ? cellarNumberInput.value : 'Non');
                         sessionStorage.setItem("type_of_heating", heatingInput.value);
                         sessionStorage.setItem("phone", phoneInput.value);
                         sessionStorage.setItem("construction_year", constructionYearInput.value);
+                        sessionStorage.setItem("lift", liftInput.checked ? 'Oui' : 'Non');
+                        sessionStorage.setItem("balcony", balconyInput.checked ? 'Oui' : 'Non');
+
+                        if(liftInput.checked)
+                        {
+                            sessionStorage.setItem("floor", floorInput.value);
+                            dataParams["floor"] = floorInput.value;
+                        }
 
                         if (isEmpty(phoneInput.value) === false)
                             dataParams["phone"] = phoneInput.value;
@@ -175,9 +189,11 @@ function validate_second_step() {
 
                         dataParams["address"] = addressInput.value;
                         dataParams["description"] = descriptionInput.value;
-                        dataParams["parking"] = parkingInput.checked ? 'Oui' : 'Non';
-                        dataParams["cellar"] = cellarInput.checked ? 'Oui' : 'Non';
+                        dataParams["parking"] = parkingInput.checked ? parkingNumberInput.value : 'Non';
+                        dataParams["cellar"] = cellarInput.checked ? cellarNumberInput.value : 'Non';
                         dataParams["type_of_heating"] = heatingInput.value;
+                        dataParams["lift"] = sessionStorage.getItem("lift");
+                        dataParams["balcony"] = sessionStorage.getItem("balcony");
 
                         console.log(dataParams);
                         if (buildParams()) {
@@ -215,7 +231,7 @@ function validate_second_step() {
 
 function showSuccessAnnounceDeposit() {
     alert("Annonce enregistrer avec succès");
-    backHome();
+    window.location.href = "mesrecherches.html";
 }
 
 function showErrorAnnounceDeposit() {
@@ -239,7 +255,12 @@ function buildParams() {
         return false;
 
     if (sessionStorage.getItem("area"))
-        dataParams["area"] = sessionStorage.getItem("area");
+        dataParams["surface"] = sessionStorage.getItem("area");
+    else
+        return false;
+    
+    if (sessionStorage.getItem("land_surface"))
+        dataParams["land_surface"] = sessionStorage.getItem("land_surface");
     else
         return false;
 
@@ -562,6 +583,7 @@ for (i = 0; i < rooms.length; i++) {
 }
 
 var areaInput = document.getElementById("surface_deposit");
+var landSurfaceInput = document.getElementById("land_surface");
 var priceInput = document.getElementById("price_deposit");
 var titleInput = document.getElementById("title_deposit");
 var cityInput = document.getElementById("city_deposit");
@@ -621,13 +643,13 @@ function checkInputs(input = 0) {
             validate.href = "javascript:void(0)";
             return false;
         } else {
-            if (cities.includes(cityInput.value.toUpperCase())) {
+            if (available_cities.includes(cityInput.value)) {
                 city_error.innerHTML = "";
                 city_error.style.color = "";
                 city_error.style.fontsize = "";
             } else {
                 if (input == 4) {
-                    city_error.innerHTML = "* Vous devez renseigner une ville du département des haut-de-seine.";
+                    city_error.innerHTML = "* Vous devez renseigner une des villes prises en compte (Houilles, Puteaux, Colombes et Nanterre).";
                     city_error.style.color = "red";
                     city_error.style.fontsize = "12px";
                     validate.href = "javascript:void(0)";
@@ -653,7 +675,7 @@ function isOneRoomsSelected() {
     return [false];
 }
 
-function isOneBedroosSelected() {
+function isOneBedroomsSelected() {
     for (i = 0; i < bedrooms.length; i++) {
         if (isBedroomsSelected.get(bedrooms[i]) == true) {
             return [true, (i + 1).toString()];
@@ -736,8 +758,10 @@ var imageInput1 = document.getElementById("uploadImage1");
 var imageInput2 = document.getElementById("uploadImage2");
 var imageInput3 = document.getElementById("uploadImage3");
 var imageInput4 = document.getElementById("uploadImage4");
+var imageInput5 = document.getElementById("uploadImage5");
 
-var images = [false, false, false, false];
+
+var images = [false, false, false, false, false];
 
 function validateAndUpload(input) {
     var url = window.URL || window.webkitURL;
@@ -759,7 +783,7 @@ function validateAndUpload(input) {
         var uploadTask = storageRef.child('deposit/puteaux/' + file.name).put(file);
 
         var index = input.id.slice(-1);
-        console.log(index);
+        console.log('Image ' + index);
         // Listen for error and completion of the upload
         uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
 
@@ -819,4 +843,36 @@ function isAllImagesSet() {
     images_error.style.color = "";
     images_error.style.fontsize = "";
     return true;
+}
+
+function display_number_field(input)
+{
+    if(input.id == "parking")
+    {
+        if(input.checked)
+            parkingNumberInput.style.display = "block";
+        else
+            parkingNumberInput.style.display = "none"
+    }
+    else if(input.id == 'cellar')
+    {
+        if(input.checked)
+            cellarNumberInput.style.display = "block";
+        else
+            cellarNumberInput.style.display = "none";
+    }
+}
+
+function display_floor(input)
+{
+    console.log(input.checked);
+    if(input.checked)
+        floorDiv.style.display = "flex";
+    else
+        floorDiv.style.display = "none";
+}
+
+function clearStorage()
+{
+    sessionStorage.removeItem("");
 }

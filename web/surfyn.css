@@ -2374,3 +2374,10 @@ input:checked+.slider:before {
         color: #61AEB5;
     }
 }
+
+@media (max-width:576px) {
+    .sf_adapt {
+        flex-direction: column;
+        align-items: center;
+    }
+}
