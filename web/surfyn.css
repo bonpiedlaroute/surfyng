@@ -1238,7 +1238,7 @@ padding:5px;
 
 .sf_my_research_frame
 {
-  display:flex;align-items: center;justify-content: center;width:100%;height:360px;margin-bottom:30px;
+  display:flex;align-items: center;justify-content: center;width:100%;height:420px;margin-bottom:30px;
 }
 
 .sf_my_research_link
@@ -1248,7 +1248,7 @@ padding:5px;
 }
 .sf_my_research_email_alert
 {
-  display:flex;align-items:center;justify-content:center;width:95%;height:30px;border-radius:5px;
+  display:flex;align-items:center;justify-content:center;width:95%;height:40px;border-radius:5px;
 }
 
 .sf_my_research_text

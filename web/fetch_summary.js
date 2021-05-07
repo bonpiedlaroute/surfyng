@@ -376,6 +376,7 @@ function computeMinMaxAdPrice(arr) {
 
 function buildurlparams()
 {
+  url_params = "?";
   var pathname = window.location.pathname.split("/").slice(1);
 
   var s_city = pathname[3].split("-");

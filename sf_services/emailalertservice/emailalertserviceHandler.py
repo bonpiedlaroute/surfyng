@@ -154,24 +154,41 @@ class EmailAlertServiceHandler(Iface):
 
       #PRICE_MIN and PRICE_MAX
       price_min_value = ttypes.ValueType()
-      price_min_value.field = str(int(parameters["price_min"])*1000) if parameters["search_type"] == "1" else str(int(parameters["price_min"]))      
+      if "price_min" in parameters:
+         price_min_value.field = str(int(parameters["price_min"])*1000) if parameters["search_type"] == "1" else str(int(parameters["price_min"]))
+      else:
+         price_min_value.field = "50000" if parameters["search_type"] == "1" else "100"
+      
       price_min_value.fieldtype = ttypes.Type.NUMBER
       values["PRICE_MIN"] = price_min_value
 
       price_max_value = ttypes.ValueType()
-      price_max_value.field = str(int(parameters["price_max"])*1000) if parameters["search_type"] == "1" else str(int(parameters["price_max"]))      
+      if "price_max" in parameters:
+         price_max_value.field = str(int(parameters["price_max"])*1000) if parameters["search_type"] == "1" else str(int(parameters["price_max"]))      
+      else:
+         price_max_value.field = "4000000" if parameters["search_type"] == "1" else "4000"
+
       price_max_value.fieldtype = ttypes.Type.NUMBER
+
       values["PRICE_MAX"] = price_max_value
 
  
       #AREA_MIN and AREA_MAX
       area_min_value = ttypes.ValueType()
-      area_min_value.field = str(int(parameters["area_min"]))      
+      if "area_min" in parameters:
+         area_min_value.field = str(int(parameters["area_min"]))      
+      else:
+         area_min_value.field = "10"
+
       area_min_value.fieldtype = ttypes.Type.NUMBER
       values["AREA_MIN"] = area_min_value
 
       area_max_value = ttypes.ValueType()
-      area_max_value.field = str(int(parameters["area_max"]))      
+      if "area_max" in parameters:
+         area_max_value.field = str(int(parameters["area_max"]))      
+      else:
+         area_max_value.field = "400"
+
       area_max_value.fieldtype = ttypes.Type.NUMBER
       values["AREA_MAX"] = area_max_value
 
@@ -190,7 +207,8 @@ class EmailAlertServiceHandler(Iface):
       values["ALERT_STATUS"] = alertstatus_value
 
       #URL
-      url = "/liste_annonces.html?"
+      url = self.buildSummaryUrl(parameters)
+      url += "?"
       url += "search_city="
       url += parameters["search_city"]
       url += "&search_type="
@@ -201,15 +219,21 @@ class EmailAlertServiceHandler(Iface):
          url += "&rooms="
          url += parameters["rooms"]
 
-      url += "&price_min="
-      url += parameters["price_min"]
-      url += "&price_max="
-      url += parameters["price_max"]
+      if "price_min" in parameters:
+         url += "&price_min="
+         url += parameters["price_min"]
+
+      if "price_max" in parameters:
+         url += "&price_max="
+         url += parameters["price_max"]
       
-      url += "&area_min="
-      url += parameters["area_min"]
-      url += "&area_max="
-      url += parameters["area_max"]
+      if "area_min" in parameters:
+         url += "&area_min="
+         url += parameters["area_min"]
+
+      if "area_max" in parameters:
+         url += "&area_max="
+         url += parameters["area_max"]
 
 
       url_value = ttypes.ValueType()
@@ -406,7 +430,40 @@ class EmailAlertServiceHandler(Iface):
       url += ads["ID"]
 
       return url
-       
+   
+   def buildSummaryUrl(self, parameters):
+      url = "/liste-annonces/"
+      
+      if parameters["search_type"] == "1":
+         url += "achat/"
+      else:
+         url += "location/"
+
+      if parameters["prop_type"] == "1":
+         url += "appartements"
+         if "rooms" in parameters:
+            if parameters["rooms"] == "1":
+               url += "-studios"
+            else:
+               url += "-"
+               url += parameters["rooms"]
+               url += "-pieces"
+         url += "/"
+      else:
+         url += "maisons"
+         if "rooms" in parameters:
+            url += "-"
+            url += parameters["rooms"]
+            url += "-pieces"
+
+         url += "/"
+
+      url += parameters["search_city"].lower()
+      url += "-"
+      url += postalcodeByCity[parameters["search_city"].lower()]
+
+      return url
+    
    def checkAndNotifyUsers(self, city):
       active_alert_list = []
       filterexpression_alert = "CITY = :ct and ALERT_STATUS = :als"
@@ -581,6 +638,10 @@ class EmailAlertServiceHandler(Iface):
                subject_msg += u' nouvelles annonces immobilières'
             else:
                subject_msg += u' nouvelle annonce immobilière'
+
+            subject_msg += u' à '
+            subject_msg += city[0].upper()
+            subject_msg += city[1:]
             
             body_msg = 'Bonjour '
             if userToNotify[userid].user_display_name:

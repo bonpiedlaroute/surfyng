@@ -527,7 +527,6 @@ function register_alert()
 
       if(window.location.search == "")
       {
-        var url_params = '?';
         if(buildurlparams() == true)
         {
           url += url_params;
