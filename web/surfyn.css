@@ -816,6 +816,18 @@ a:hover {
     display: none;
 }
 
+.sf_modal_waiting .modal-dialog {
+    display: table;
+    position: relative;
+    margin: 0 auto;
+    top: calc(50% - 24px);
+}
+
+.sf_modal_waiting {
+    background-color: transparent;
+    border: none;
+}
+
 
 /* Switch button*/
 
