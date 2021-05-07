@@ -90,6 +90,15 @@ var address_error = document.getElementById("address_error_message");
 var phone_error = document.getElementById("phone_error_message");
 var images_error = document.getElementById("images_error_message");
 
+function modal(){
+    
+    $('.sf_modal_waiting').modal('show');
+    setTimeout(function () {
+        console.log('Yes oog');
+        $('.sf_modal_waiting').modal('hide');
+    }, 3000);
+}
+
 function validate_first_step() {
     var prop_result = isPropertyTypeSelected();
     var rooms_result = isOneRoomsSelected();
@@ -114,7 +123,10 @@ function validate_first_step() {
                             sessionStorage.setItem("prop_type", prop_result[1].id);
                             sessionStorage.setItem("area", areaInput.value);
                             if(!isEmpty(landSurfaceInput.value))
+                            {
                                 sessionStorage.setItem("land_surface", landSurfaceInput.value);
+                                dataParams["land_surface"] = landSurfaceInput.value;
+                            }
                             sessionStorage.setItem("rooms", rooms_result[1]);
                             sessionStorage.setItem("bedrooms", bedrooms_result[1]);
                             sessionStorage.setItem("price", priceInput.value);
@@ -197,6 +209,7 @@ function validate_second_step() {
 
                         console.log(dataParams);
                         if (buildParams()) {
+                            $('.sf_modal_waiting').modal('show');
                             console.log(url);
                             fetch(url, {
                                 method: "POST",
@@ -210,6 +223,7 @@ function validate_second_step() {
                                         showErrorAnnounceDeposit();
                                 })
                                 .catch(function (error) {
+                                    $('.sf_modal_waiting').modal('hide');
                                     console.log(error);
                                 });
                         }
@@ -230,11 +244,12 @@ function validate_second_step() {
 }
 
 function showSuccessAnnounceDeposit() {
-    alert("Annonce enregistrer avec succès");
+    $('.sf_modal_waiting').modal('hide');
     window.location.href = "mesrecherches.html";
 }
 
 function showErrorAnnounceDeposit() {
+    $('.sf_modal_waiting').modal('hide');
     alert("Erreur: Impossible d'enregistrer l'annonce");
 }
 
@@ -259,10 +274,10 @@ function buildParams() {
     else
         return false;
     
-    if (sessionStorage.getItem("land_surface"))
-        dataParams["land_surface"] = sessionStorage.getItem("land_surface");
-    else
-        return false;
+    // if (sessionStorage.getItem("land_surface"))
+    //     dataParams["land_surface"] = sessionStorage.getItem("land_surface");
+    // else
+    //     return false;
 
     if (sessionStorage.getItem("rooms"))
         dataParams["rooms"] = sessionStorage.getItem("rooms");
@@ -375,12 +390,18 @@ var reverseProperty = Object.freeze({
 })
 
 var isSelected = [false, false, false, false];
+var land_banner = document.getElementById("land_banner");
+var land_field = document.getElementById("land_field");
 
 function handleEventDownHouse(event) {
     if (isSelected[propertyType.house]) {
         isSelected[propertyType.house] = false;
         divHouse.style.transform = "scale(0.85)";
         divHouse.style.border = "";
+
+        // Hide field for land superficie
+        land_banner.style.display = "none";
+        land_field.style.display = "none";
     } else {
         isSelected[propertyType.house] = true;
         divHouse.style.transform = "scale(1)";
@@ -389,6 +410,11 @@ function handleEventDownHouse(event) {
         prop_error.innerHTML = "";
         prop_error.style.color = "";
         prop_error.style.fontsize = "";
+
+        // Display field for land superficie
+        land_banner.style.display = "flex";
+        land_field.style.display = "flex";
+
 
         if (isSelected[propertyType.loft]) {
             isSelected[propertyType.loft] = false;
@@ -423,6 +449,10 @@ function handleEventDownAppart(event) {
         prop_error.innerHTML = "";
         prop_error.style.color = "";
         prop_error.style.fontsize = "";
+
+        // Hide field for land superficie
+        land_banner.style.display = "none";
+        land_field.style.display = "none";
 
         if (isSelected[propertyType.loft]) {
             isSelected[propertyType.loft] = false;
@@ -865,7 +895,6 @@ function display_number_field(input)
 
 function display_floor(input)
 {
-    console.log(input.checked);
     if(input.checked)
         floorDiv.style.display = "flex";
     else

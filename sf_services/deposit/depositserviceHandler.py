@@ -56,6 +56,13 @@ class DepositServiceHandler(Iface):
         self.transport.open()
 
     def announce_deposit(self, user_id, data):
+        """
+            Function used to deposit an announce on dynamoDB server
+            params:
+                @user_id: User who places the announce
+                @data: Dictionnary containing data of announce
+        """
+
         logging.info('Deposit announce of user {}'.format(user_id))
 
         user = auth.get_user(user_id)
@@ -87,7 +94,7 @@ class DepositServiceHandler(Iface):
 
         # ANNOUNCE TITLE
         title_value = ttypes.ValueType()
-        title_value.field = unidecode.unidecode(data['title'])
+        title_value.field = data['title']
         title_value.fieldtype = ttypes.Type.STRING
         values['ANNOUNCE_TITLE'] = title_value
         
@@ -172,10 +179,11 @@ class DepositServiceHandler(Iface):
         values['CELLAR'] = cellar_value
 
         # FLOOR
-        floor_value = ttypes.ValueType()
-        floor_value.field = str(data['floor'])
-        floor_value.fieldtype = ttypes.Type.NUMBER
-        values['FLOOR'] = floor_value
+        if data.has_key('floor'):
+            floor_value = ttypes.ValueType()
+            floor_value.field = str(data['floor'])
+            floor_value.fieldtype = ttypes.Type.NUMBER
+            values['FLOOR'] = floor_value
 
         # PARKING
         parking_value = ttypes.ValueType()
@@ -204,7 +212,7 @@ class DepositServiceHandler(Iface):
 
         # DESCRIPTION
         description_value = ttypes.ValueType()
-        description_value.field = unidecode.unidecode(data['description'])
+        description_value.field = data['description']
         description_value.fieldtype = ttypes.Type.STRING
         values['AD_TEXT_DESCRIPTION'] = description_value
 
@@ -245,7 +253,7 @@ class DepositServiceHandler(Iface):
         deleted_value = ttypes.ValueType()
         deleted_value.field = 'OFF'
         deleted_value.fieldtype = ttypes.Type.STRING
-        values['DELETED_STATUS'] = deleted_value
+        values['AD_STATUS'] = deleted_value             # Can be ON, OFF
         
         result_summary = self.client.put(self.summary_tablename, values)
         
@@ -299,6 +307,14 @@ class DepositServiceHandler(Iface):
                 
         return return_value
 
+    def delete_announce(self, user_id, announce_id)
+        """
+            Function used to delete an announce. The only thing to do is to change AD_STATUS of announce.
+            params:
+                @user_id: User ID of the owner of ad
+                @announce_id: ad ID
+        """
+        
 
 if __name__ == '__main__':
     app = credentials.Certificate('surfyn-firebase-adminsdk.json')
