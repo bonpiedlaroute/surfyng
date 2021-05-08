@@ -223,7 +223,9 @@ function validate_second_step() {
                                         showErrorAnnounceDeposit();
                                 })
                                 .catch(function (error) {
-                                    $('.sf_modal_waiting').modal('hide');
+                                    $('#waiting_modal').modal({
+                                        show: false
+                                    });
                                     console.log(error);
                                 });
                         }
