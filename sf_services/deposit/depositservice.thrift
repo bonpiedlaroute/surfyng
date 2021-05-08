@@ -8,4 +8,5 @@ service deposit_service
 {
 	DepositResult announce_deposit(1: string user_id, 2: string data)
 	DepositResult delete_announce(1: string user_id, 2: string announce_id)
+   list<map<string, string>> fetch_user_announces(1: string user_id)
 }

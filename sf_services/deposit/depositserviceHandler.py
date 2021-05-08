@@ -151,7 +151,7 @@ class DepositServiceHandler(Iface):
         if data.has_key('construction_year'):
             construction_year_value = ttypes.ValueType()
             construction_year_value.field = str(data['construction_year'])
-            construction_year_value.fieldtype = ttypes.Type.NUMBER
+            construction_year_value.fieldtype = ttypes.Type.STRING
             values['CONSTRUCTION_YEAR'] = construction_year_value
 
         # ROOMS
@@ -163,7 +163,7 @@ class DepositServiceHandler(Iface):
         # BEDROOMS
         bedrooms_value = ttypes.ValueType()
         bedrooms_value.field = str(data['bedrooms'])
-        bedrooms_value.fieldtype = ttypes.Type.NUMBER
+        bedrooms_value.fieldtype = ttypes.Type.STRING
         values['BEDROOMS'] = bedrooms_value
 
         # TYPE OF HEATING
@@ -175,14 +175,14 @@ class DepositServiceHandler(Iface):
         # CELLAR
         cellar_value = ttypes.ValueType()
         cellar_value.field = str(data['cellar'])
-        cellar_value.fieldtype = ttypes.Type.NUMBER
+        cellar_value.fieldtype = ttypes.Type.STRING
         values['CELLAR'] = cellar_value
 
         # FLOOR
         if data.has_key('floor'):
             floor_value = ttypes.ValueType()
             floor_value.field = str(data['floor'])
-            floor_value.fieldtype = ttypes.Type.NUMBER
+            floor_value.fieldtype = ttypes.Type.STRING
             values['FLOOR'] = floor_value
 
         # PARKING
@@ -195,7 +195,7 @@ class DepositServiceHandler(Iface):
         if data.has_key('land_surface'):
             land_surface_value = ttypes.ValueType()
             land_surface_value.field = str(data['land_surface'])
-            land_surface_value.fieldtype = ttypes.Type.NUMBER
+            land_surface_value.fieldtype = ttypes.Type.STRING
             values['LAND_SURFACE'] = land_surface_value
 
         # LIFT
@@ -234,7 +234,7 @@ class DepositServiceHandler(Iface):
         # IMAGE COUNT
         image_count = ttypes.ValueType()
         image_count.field = str(len(filter(lambda item: 'image' in item, list(data.keys()))))
-        image_count.fieldtype = ttypes.Type.NUMBER
+        image_count.fieldtype = ttypes.Type.STRING
         values['IMAGE_COUNT'] = image_count
 
         # ADDRESS
@@ -280,8 +280,8 @@ class DepositServiceHandler(Iface):
         # PHONE NUMBER
         if data.has_key('phone'):
             announce_phone_number = ttypes.ValueType()
-            announce_phone_number.field = data['phone']
-            announce_phone_number.fieldtype = ttypes.Type.NUMBER
+            announce_phone_number.field = str(data['phone'])
+            announce_phone_number.fieldtype = ttypes.Type.STRING
             values['PHONE_NUMBER'] = announce_phone_number
 
         result = self.client.put(self.deposit_tablename, values)
@@ -299,15 +299,17 @@ class DepositServiceHandler(Iface):
             return_value.error = result.error
             logging.error('Fail to put announce {} in table {}'.format(
                 ID, self.deposit_tablename))
+            logging.error(result.error)
         elif not result_summary.success:
             return_value.success = False
             return_value.error = result.error
             logging.error('Fail to put announce {} in table {}'.format(
                 ID, self.summary_tablename))
+            logging.error(result.error)
                 
         return return_value
 
-    def delete_announce(self, user_id, announce_id)
+    def delete_announce(self, user_id, announce_id):
         """
             Function used to delete an announce. The only thing to do is to change AD_STATUS of announce.
             params:
@@ -315,6 +317,96 @@ class DepositServiceHandler(Iface):
                 @announce_id: ad ID
         """
         
+        id_value = ttypes.ValueType()
+        id_value.field = announce_id
+        id_value.fieldtype = Type.STRING
+        item_key = KeyValue('ID', id_value)
+
+        values = {}
+        announce_status = ttypes.ValueType()
+        announce_status.field = 'OFF'
+        announce_status.fieldtype = Type.STRING
+        values['AD_STATUS'] = announce_status
+
+        logging.info('Delete announce with ID: {}'.format(announce_id))
+        
+        result = self.client.update(self.tablename, item_key, values)
+        return_value = DepositResult()
+        if result.success:
+            logging.info('Successfully deleted announce {} of user {}'.format(announce_id, user_id))
+            return_value.success = TBufferedTransport
+        else:
+            logging.error(result.error)
+            return_value.success = False
+            return_value.error = result.error
+        
+        return return_value
+    
+    def fetch_user_announces(self, user_id):
+        """
+            Function used to fetch all announces of a user
+            @user: User ID
+        """
+        active_announces = []
+        filter_expression = 'USERD_ID = :uid and AD_STATUS = :ads'
+        
+        attributes_to_get = {}
+        
+        while True:
+            # ANNOUNCE TITLE
+            announce_title = ttypes.ValueType()
+            announce_title.fieldtype = ttypes.Type.STRING
+            attributes_to_get['ANNOUNCE_TITLE'] = announce_title
+
+            # PROPERTY TYPE
+            property_type = ttypes.ValueType()
+            property_type.fieldtype = ttypes.Type.STRING
+            attributes_to_get['PROPERTY_TYPE'] = property_type
+
+            # ROOMS
+            rooms_value = ttypes.ValueType()
+            rooms_value.fieldtype = ttypes.Type.NUMBER
+            attributes_to_get['ROOMS'] = rooms_value
+
+            # BEDROOMS
+            bedrooms_value = ttypes.ValueType()
+            bedrooms_value.fieldtype = ttypes.Type.STRING
+            attributes_to_get['BEDROOMS'] = bedrooms_value
+
+            # SURFACE
+            surface_value = ttypes.ValueType()
+            surface_value.fieldtype = ttypes.Type.NUMBER
+            attributes_to_get['SURFACE'] = surface_value
+
+            # USER ID
+            userid_value = ttypes.ValueType()
+            userid_value.fieldtype = ttypes.Type.STRING
+            attributes_to_get['USERID'] = userid_value
+
+            # PRICE
+            price_value = ttypes.ValueType()
+            price_value.fieldtype = ttypes.Type.NUMBER
+            attributes_to_get['PRICE'] = price_value
+
+            expression_value = {}
+            userid_value.field = user_id
+            expression_value[':uid'] = userid_value
+
+            ad_status_value = ttypes.ValueType()
+            ad_status_value.field = 'ON'
+            ad_status_value.fieldtype = ttypes.Type.STRING
+            expression_value[':ads'] = ad_status_value
+
+            query_result = self.client.scan(self.deposit_tablename, attributes_to_get, filter_expression, expression_value)
+
+            if query_result.result.success and query_result.values:
+                logging.info('Received {} alert'.format(len(query_result.values)))
+                active_announces == query_result.values
+            if query_result.scanend:
+                break
+        print(active_announces)
+        return active_announces
+
 
 if __name__ == '__main__':
     app = credentials.Certificate('surfyn-firebase-adminsdk.json')
