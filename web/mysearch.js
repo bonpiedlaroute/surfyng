@@ -19,6 +19,13 @@ function loadJSON(path, success, error) {
     xobj.send(null);
  }
 
+INSEE_CODE = {
+  "PUTEAUX": 92800,
+  "HOUILLES": 78800,
+  "NANTERRE": 92000,
+  "COLOMBES": 92700
+};
+
 function createNode(element) {
     return document.createElement(element);
 }
@@ -233,6 +240,109 @@ function generate_my_search_page(data)
 
 }
 
+function generate_my_announce_page(data)
+{
+  var main_section = document.getElementById("mydeposit-main-content");
+  var my_deposit_frame = createNode("div");
+  my_deposit_frame.className = "d-flex flex-row flex-wrap";
+
+  main_section.appendChild(my_deposit_frame);
+  
+  for(var i = 0; i < data.length; i++)
+  {
+      var announce_outer = createNode("div");
+      announce_outer.className = "row col-md-6 col-lg-4 mt-3 pr-0";
+
+      var image_container = createNode("div");
+      image_container.className = "col-md-6 pl-0 ml-2 pr-0";
+      image_container.style = "border: 1px solid #61AEB5; border-radius: 2px;"
+
+      var announce_image = createNode("img");
+      announce_image.className = "img-fluid";
+      announce_image.style = "width: 100%; height: 100%;"
+      announce_image.src = data[i].IMAGE;
+      announce_image.alt = "announce"
+
+      image_container.append(announce_image);
+      announce_outer.append(image_container);
+
+      var description_outer = createNode("div");
+      description_outer.className = "col-md-5";
+
+      var title_container = createNode("h4");
+      var title = createNode("strong");
+      title.innerHTML = data[i].ANNOUNCE_TITLE;
+
+      title_container.append(title);
+      description_outer.append(title_container);
+
+      var price_container = create("h5");
+      var price = createNode("strong");
+      price.innerHTML = data[i].PRICE;
+      
+      price_container.append(price);
+      description_outer.append(price_container);
+
+      var details_info = createNode("p");
+      if (data[i].PROPERTY_TYPE == 1)
+        details_info.innerHTML += "Maison";
+      else
+        details_info.innerHTML += "Appartement";
+      details_info.innerHTML += "&bull; ";
+      details_info.innerHTML += data[i].ROOMS + " pièces";
+      details_info.innerHTML += "&bull; ";
+      details_info.innerHTML += data[i].BEDROOMS + " chambres";
+      details_info.innerHTML += "&bull; ";
+      details_info.innerHTML += data[i].SURFACE + " m²";
+
+      description_outer.append(details_info);
+
+      var department = createNode("span");
+      department.innerHTML = data[i].CITY + "(" + INSEE_CODE[data[i].CITY] + ")";
+
+      description_outer.append(department);
+
+      // View button
+      var view_button_outer = createNode("div");
+      view_button_outer.className = "col-md-10 mt-3 d-flex justify-content-center align-items-center";
+      view_button_outer.style = "border-radius:5px; border:1px solid #61AEB5; background-color:#61AEB5; height:40px; cursor: pointer;";
+
+      var view_icon = createNode("i");
+      view_icon.className = "fas fa-eye";
+      view_icon.style = "color:white !important; font-size:15px; margin-right:10px;";
+      
+      view_button_outer.append(view_icon);
+
+      var view_text = createNode("span");
+      view_text.style = "color:white; font-weight: bold; font-size: 13px;";
+      view_text.innerHTML = "Voir l'annonce";
+
+      view_button_outer.append(view_text);
+      description_outer.append(view_button_outer);
+
+      // Delete button
+      var delete_button_outer = createNode("div");
+      delete_button_outer.className = "col-md-10 mt-3 d-flex justify-content-center align-items-center";
+      delete_button_outer.style = "border-radius:5px; border:1px solid #ff3333; background-color:#ff3333; height:40px; cursor: pointer;";
+
+      var delete_icon = createNode("i");
+      delete_icon.className = "far fa-trash-alt";
+      delete_icon.style = "color:white !important; font-size:12px; margin-right:4px;";
+
+      delete_button_outer.append(delete_icon);
+
+      var delete_text = createNode("span");
+      delete_text.style = "color:white; font-weight: bold; font-size: 10px;";
+      delete_text.innerHTML =  "Supprimer l'annonce";
+
+      delete_button_outer.append(delete_text);
+      description_outer.append(delete_button_outer);
+
+      announce_outer.append(description_outer);
+      main_section.append(announce_outer);
+  }
+}
+
 
 /*loadJSON("data/criteria.json",
 function (data) { generate_my_search_page(JSON.parse(data.response));}, function(err) {console.log(err);});
@@ -242,6 +352,7 @@ var url = 'https://surfyn.fr:7878/my_realestate_search?userid=';
 
 var userid = sessionStorage.getItem("user_id");
 url += userid;
+
 fetch(url)
 .then(function(resp) { return resp.json(); } )
 .then(function(data) {
@@ -250,3 +361,17 @@ fetch(url)
 .catch(function(error) {
     console.log(error);
 });
+
+// var url_ad = "https://surfyn.fr:7878/my_ad_search?userid="
+var url_ad = "https://localhost:7878/my_ad_search?userid="
+
+url_ad += userid;
+
+fetch(url_ad)
+.then(function(resp) { return resp.json(); })
+.then(function(data) {
+  generate_my_announce_page(data);
+})
+.catch(function(error) {
+  console.log(error);
+})

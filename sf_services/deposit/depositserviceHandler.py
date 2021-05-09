@@ -405,6 +405,7 @@ class DepositServiceHandler(Iface):
             if query_result.scanend:
                 break
         print(active_announces)
+        
         return active_announces
 
 
