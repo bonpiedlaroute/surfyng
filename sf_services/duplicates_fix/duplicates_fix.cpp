@@ -100,7 +100,7 @@ namespace surfyn
    const char* FIRST_TIMESTAMP = "FIRST_TIMESTAMP";
    const char* RealEstateSearchType = "SEARCH_TYPE";
    static double priceMaxErrorPercentage = 0.001;
-   static double surfaceMaxErrorPercentage = 0.02;
+   static double surfaceMaxErrorPercentage = 1.0;
    
 
    ValueType BuildValueType(const std::string& fieldName, const std::string& fieldValue)
@@ -294,7 +294,7 @@ const std::pair<std::string, std::string>& propType)
       {
          double leftSurface = atof(leftSurfaceStr.c_str());
          double rightSurface = atof(rightSurfaceStr.c_str());
-         if (fabs(leftSurface - rightSurface) / leftSurface > surfaceMaxErrorPercentage)
+         if (fabs(leftSurface - rightSurface) >= surfaceMaxErrorPercentage)
          {
             logStream << leftAnnounce->getId() << " surface[" << leftSurface << "] and " << rightAnnounce->getId() << " surface["
                << rightSurface << "] are not similar as their surfaces differ";
@@ -488,11 +488,25 @@ struct Compare
       {
          if(atoi(raw_price1.c_str()) > atoi(raw_price2.c_str()))
             return false;
-         else {
-            auto surface1 = announce1->getDescription(surfyn::RealEstateSurface);
-            auto surface2 = announce2->getDescription(surfyn::RealEstateSurface);
+         else 
+         {
+            std::string rooms1 = announce1->getDescription(surfyn::RealEstateRooms);
+            std::string rooms2 = announce2->getDescription(surfyn::RealEstateRooms);
 
-            return atof(surface1.c_str()) < atof(surface2.c_str());
+            if( atoi(rooms1.c_str()) < atoi(rooms2.c_str()) )
+                  return true;
+            else 
+            {
+               if(atoi(rooms1.c_str()) > atoi(rooms2.c_str()))
+                  return false;
+               else 
+               {
+                  auto surface1 = announce1->getDescription(surfyn::RealEstateSurface);
+                  auto surface2 = announce2->getDescription(surfyn::RealEstateSurface);
+
+                  return atof(surface1.c_str()) < atof(surface2.c_str());
+               }
+            }
          }
       }
    }

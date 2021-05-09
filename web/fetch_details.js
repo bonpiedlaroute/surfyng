@@ -118,7 +118,7 @@ function enrichRelatedInfos(cityname, isForSale, isFlat)
     generic_infos_desc_5.className = "sf_generic_infos_desc";
     var generic_infos_desc_text5 = createNode("a");
     generic_infos_desc_text5.className = "sf_generic_infos_desc_text";
-    generic_infos_desc_text5.innerHTML = "Trouvez les déménageurs autour de ";
+    generic_infos_desc_text5.innerHTML = "Trouvez des déménageurs autour de ";
     generic_infos_desc_text5.innerHTML += cityname;
     generic_infos_desc_text5.href = "/demenageur.html";
     generic_infos_desc_text_icon = createNode("i");
@@ -935,7 +935,7 @@ function generate_details_page(data)
         det_ad_text_description_container.className = "announce_text_description_container";
         var det_ad_text_description_container_description = createNode("span");
         det_ad_text_description_container_description.className = "no_select announce_text_description_header_text";
-        var ad_text_description = data[i].AD_TEXT_DESCRIPTION.slice(0,614);
+        var ad_text_description = data[i].AD_TEXT_DESCRIPTION.slice(0,640);
         det_ad_text_description_container_description.innerHTML = ad_text_description;
         det_ad_text_description_container_description.innerHTML+= " [...]";
 
@@ -1134,7 +1134,7 @@ function generate_details_page(data)
 
          var sf_estimate_link = createNode("a");
          sf_estimate_link.className = "sf_estimate_link";
-         sf_estimate_link.href = "estimation-immobiliere-en-ligne.html";
+         sf_estimate_link.href = "/estimation-immobiliere-en-ligne.html";
 
          sf_estimate_link.appendChild(sf_estimate_link_container);
 
@@ -1171,9 +1171,9 @@ function generate_details_page(data)
     var sf_visit_file_link = createNode("a");
     sf_visit_file_link.className = "sf_visit_file_link";
     if(isForSale)
-    sf_visit_file_link.href = "data/docs/fiche-visite-achat-appartement-maison.pdf";
+    sf_visit_file_link.href = "/data/docs/fiche-visite-achat-appartement-maison.pdf";
     else {
-      sf_visit_file_link.href = "data/docs/fiche-visite-location-appartement-maison.pdf";
+      sf_visit_file_link.href = "/data/docs/fiche-visite-location-appartement-maison.pdf";
     }
 
     sf_visit_file_link.appendChild(sf_visit_file_link_container);

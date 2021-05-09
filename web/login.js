@@ -77,15 +77,31 @@ function showSurfynLoginPage()
 
 function signOutUser()
 {
-  console.log("User signed out");
   // User is signed out.
-  // ...
-  var login_connected_box = document.getElementById("login_connected_box");
-  login_connected_box.style.display = "none";
+
   var user_display_name = document.getElementById("user_display_name");
   user_display_name.innerHTML = "";
   sessionStorage.setItem("user_id", "");
   sessionStorage.setItem("user_display_name", "");
+  var user_not_connected_box = document.getElementById("user_not_connected_box");
+  var user_connected_box = document.getElementById("user_connected_box");
+  user_not_connected_box.style.display = "flex";
+  user_connected_box.style.display = "none";
+}
+function updateUserStatus()
+{
+  var user_id = sessionStorage.getItem("user_id");
+  var user_connected_box = document.getElementById("user_connected_box");
+  var user_not_connected_box = document.getElementById("user_not_connected_box");
+  if(user_id != "")
+  {
+
+      user_connected_box.style.display = "flex";
+      user_not_connected_box.style.display = "none";
+      var user_display_name = document.getElementById("user_display_name");
+      user_display_name.innerHTML = sessionStorage.getItem("user_display_name");
+
+  }
 }
 function checkUserStatus(user)
 {
@@ -103,15 +119,16 @@ function checkUserStatus(user)
     var isAnonymous = user.isAnonymous;
     var uid = user.uid;
     var providerData = user.providerData;
-    var login_connected_box = document.getElementById("login_connected_box");
-    login_connected_box.style.display = "block";
+
     var user_display_name = document.getElementById("user_display_name");
     user_display_name.innerHTML = displayName.slice(0,1).toUpperCase();
-    console.log("User signed in");
-    console.log("userid:");
-    console.log(uid);
+
     sessionStorage.setItem("user_id", uid);
     sessionStorage.setItem("user_display_name", user_display_name.innerHTML);
+    var user_not_connected_box = document.getElementById("user_not_connected_box");
+    var user_connected_box = document.getElementById("user_connected_box");
+    user_not_connected_box.style.display = "none";
+    user_connected_box.style.display = "flex";
     // ...
     } else {
       signOutUser();
@@ -127,7 +144,7 @@ function connect_to_surfyn()
 
   var email_check = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
 
-  var email_feedback = document.getElementById("email-feedback");
+  var email_feedback = document.getElementById("email-feedback-login");
   var pass_feedback = document.getElementById("pass-feedback");
   if( email_check.test(email.value) && mot_de_passe.value != "" )
   {
@@ -260,7 +277,6 @@ function connect_to_surfyn_with_facebook()
   var provider = new firebase.auth.FacebookAuthProvider();
   provider.setCustomParameters({ prompt: 'select_account' });
 
-  //provider.addScope('https://www.googleapis.com/auth/userinfo.email');
   firebase.auth().signInWithRedirect(provider);
 
 
@@ -511,7 +527,6 @@ function register_alert()
 
       if(window.location.search == "")
       {
-        var url_params = '?';
         if(buildurlparams() == true)
         {
           url += url_params;
@@ -533,22 +548,6 @@ function register_alert()
       .catch(function(error) {
         console.log(error);
       });
-
-      /*fetch(url, {
-    method:"POST",
-    body: JSON.stringify({
-        name: "Deska",
-        email: "deska@gmail.com",
-        phone: "342234553"
-        })
-    })
-    .then(result => {
-        // do something with the result
-        console.log("Completed with result:", result);
-    });
-
-      */
-
     }
     else {
       showSurfynLoginPage();

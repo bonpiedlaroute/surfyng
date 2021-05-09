@@ -61,7 +61,7 @@ class AvendreAlouerSpider(scrapy.Spider):
 
    def parse(self, response, ptype, stype, page):
 
-      links = response.xpath('//*[@id="property-list-content-responsive"]/div[2]/main/div[2]/div[contains(@class, "listing-item")]/div/a/@href').extract() 
+      links = response.xpath('//*[@id="property-list-content-responsive"]/div[*]/main/div[2]/div[contains(@class, "listing-item")]/div/a/@href').extract() 
       for link in links:
 
          if "programme-neuf" not in link:

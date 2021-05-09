@@ -257,7 +257,7 @@ function populateOthersRelatedInfos(search_city, searchType, propertyType)
       var generic_infos_desc_text4 = createNode("a");
       generic_infos_desc_text4.className = "sf_generic_infos_desc_text";
       generic_infos_desc_text4.innerHTML = realestate_city_infos_text_2;
-      generic_infos_desc_text4.href = "estimation-immobiliere-en-ligne.html";
+      generic_infos_desc_text4.href = "/estimation-immobiliere-en-ligne.html";
       generic_infos_desc_text_icon = createNode("i");
       generic_infos_desc_text_icon.className = "fas fa-chevron-right sf_generic_infos_desc_text_icon";
       generic_infos_desc_text4.appendChild(generic_infos_desc_text_icon);
@@ -272,7 +272,7 @@ function populateOthersRelatedInfos(search_city, searchType, propertyType)
     var generic_infos_desc_text5 = createNode("a");
     generic_infos_desc_text5.className = "sf_generic_infos_desc_text";
     generic_infos_desc_text5.innerHTML = realestate_city_infos_text_3;
-    generic_infos_desc_text5.href = "conseil-immobilier.html";
+    generic_infos_desc_text5.href = "/conseil-immobilier.html";
     generic_infos_desc_text_icon = createNode("i");
     generic_infos_desc_text_icon.className = "fas fa-chevron-right sf_generic_infos_desc_text_icon";
     generic_infos_desc_text5.appendChild(generic_infos_desc_text_icon);
@@ -307,6 +307,20 @@ function populateOthersRelatedInfos(search_city, searchType, propertyType)
     ad_sum_src_provider.appendChild(ad_sum_src_provider_text);
   }
 
+var adPriceMax = -Infinity;
+var adPriceMin = Infinity;
+function computeMinMaxAdPrice(arr) {
+  var len = arr.length;
+  while (len--) {
+    var val = Number(arr[len].PRICE);
+    if (val < adPriceMin) {
+      adPriceMin = val;
+    }
+    if (val > adPriceMax) {
+      adPriceMax = val;
+    }
+  }
+}
   function ByTimeStamp(lhs, rhs)
   {
     var d1, d2;
@@ -354,7 +368,7 @@ function populateOthersRelatedInfos(search_city, searchType, propertyType)
   ProcessorBySource.set("fnaim", function(param) {SrcProcessor(param, "yellow", "Fnaim"); });
 
   var current_page = 1;
-  var records_per_page = 50;
+  var records_per_page = 30;
 
   // var url = 'https://surfyn.fr:7878/search/all';
   var url = 'http://127.0.0.1:7878/search/all';
@@ -362,6 +376,7 @@ function populateOthersRelatedInfos(search_city, searchType, propertyType)
 
 function buildurlparams()
 {
+  url_params = "?";
   var pathname = window.location.pathname.split("/").slice(1);
 
   var s_city = pathname[3].split("-");
@@ -499,7 +514,6 @@ function addGoogleAds(ad_content)
 
   ad_link.append(ins);
   var script = createNode("script");
-  script.type ="text/javascript"
   script.innerHTML = "var isPageAlreadyRendered = document.getElementById(\"prerendered-page\"); if(isPageAlreadyRendered) {(adsbygoogle = window.adsbygoogle || []).push({});}";
 
   ad_link.append(script);
@@ -535,25 +549,28 @@ function generate_summary_page(data, empty=false)
 
     const Params = new URLSearchParams(url_parameters);
     var searchType = Params.get('search_type');
-    var pagetitle = "";
     var propertyType_param = Params.get('prop_type');
     var split_propertyType = propertyType_param.split(",");
     var first_proptype = true;
     var propertyType = "";
     var title = "";
     var isFlat = false;
-    var meta_description = "Toutes les annonces"
+    var meta_description = "Toutes les annonces ";
+    if( data.length >1 )
+    meta_description = String(data.length) +  " annonces "
+    else {
+      if(data.length == 1)
+      meta_description = "1 annonce ";
+    }
 
     if (split_propertyType.indexOf("1") !== -1 || split_propertyType.indexOf("3") !== -1)
     {
-      if(!first_proptype)
-        pagetitle += ", ";
-        else {
+      if(first_proptype)
           first_proptype = false;
-        }
+
       propertyType = "appartements";
       meta_description += " d'";
-      pagetitle += "Appartement";
+
       isFlat = true;
     }
     else {
@@ -568,7 +585,6 @@ function generate_summary_page(data, empty=false)
           first_proptype = false;
         }
       propertyType += "maisons";
-      pagetitle += "Maison";
       isFlat = false;
     }
       meta_description+= propertyType;
@@ -576,49 +592,44 @@ function generate_summary_page(data, empty=false)
       var rooms = Params.get('rooms');
       if(rooms)
       {
-        pagetitle += " ";
         if( rooms == "1")
         {
-          pagetitle += "studio";
           rooms_text = " studios";
         }else
         {
-            pagetitle += rooms;
-            pagetitle += " pièces"
             rooms_text = " " + rooms;
             rooms_text += " pièces";
         }
         meta_description+= rooms_text;
 
       }
-      pagetitle += " à ";
       meta_description += " à ";
-      pagetitle += searchType == 1 ? "vendre ": "louer ";
+
       meta_description += searchType == 1 ? "vendre ": "louer ";
       meta_description += " à ";
 
       var search_city = Params.get('search_city');
-      pagetitle += search_city;
+
       meta_description += search_city;
       var postalcode = getPostalCode(search_city);
-      pagetitle +=" ("+ postalcode + ")";
-      meta_description += " ("+ postalcode + ")";
-      pagetitle += " - Surfyn";
-      meta_description += " actualisées en temps réel, à partir de tous les sites de petites annonces immobilières et d'agences immobilières couvrant la ville de "
-      meta_description += search_city + ".";
-      meta_description += isFlat? " Appartements":" Maisons";
+
+      meta_description += " ("+ postalcode + "). ";
+
+      computeMinMaxAdPrice(data);
+      meta_description += "Prix Min: " + String(adPriceMin) + "€ ";
+      meta_description += "Prix Max: " + String(adPriceMax) + "€.";
+      meta_description += searchType == 1? "Vente ": "Location ";
+      meta_description += isFlat? "appartements":"maisons";
       meta_description += searchType == 2 ? " meublés ou non meublés": "";
       meta_description += " dans " + getNeighborhoodByCity(search_city) + ".";
-      meta_description += isFlat ? "Studio, T2, T3 avec ascenseur, avec balcon, avec parking, avec terrasse, avec cave":
-      "Maisons avec parking, avec garage, avec sous-sol total"
+      meta_description += isFlat ? "Studio/F1, T2/F2, T3/F3, T4/F4, T5/F5 avec ascenseur, avec balcon, avec parking, avec terrasse, avec cave":
+      "Maisons avec parking, avec garage, avec jardin, avec sous-sol total"
       meta_description += "  - Surfyn";
-
-      document.title = pagetitle;
 
       document.getElementsByTagName('meta')["description"].content = meta_description;
 
       var realestate_agencies_city = document.getElementById('realestate_agencies_city');
-      realestate_agencies_city.href = 'agence-immobiliere-'+ search_city.toLowerCase() +'-' + postalcode + '.html';
+      realestate_agencies_city.href = '/agence-immobiliere-'+ search_city.toLowerCase() +'-' + postalcode + '.html';
       realestate_agencies_city.innerHTML = 'Agences immobilières à ' + search_city + " ("+ postalcode + ")";
 
   }
@@ -629,13 +640,8 @@ function generate_summary_page(data, empty=false)
     announces_found.innerHTML = "Aucune annonce à ";
     announces_found.innerHTML += search_city;
     announces_found.innerHTML += " ne correspond à vos critères";
-
-    // Indicator to finish loading
-    var main_content = document.getElementById("main-content");
-    var forPuppeteer = document.createElement("div");
-    forPuppeteer.setAttribute("id", "puppeteer");
-    forPuppeteer.style.visibility = 'hidden';
-    main_content.appendChild(forPuppeteer);
+    document.title = announces_found.innerHTML;
+    document.title +=" - Surfyn";
   }
   else
   {
@@ -649,6 +655,8 @@ function generate_summary_page(data, empty=false)
         announces_found.innerHTML += search_city;
 
         announces_found.innerHTML += " (" +postalcode+")";
+        document.title = announces_found.innerHTML;
+        document.title +=" - Surfyn";
     }
 
     var ad_content = document.getElementById("ad-content");
@@ -826,7 +834,7 @@ function generate_summary_page(data, empty=false)
         var ad_summary_desc_span3 = createNode("span");
         ad_summary_desc_span3.className = "sf_announce_summary_desc_text";
         if( data[i].hasOwnProperty('AD_TEXT_DESCRIPTION'))
-        ad_summary_desc_span3.innerHTML = data[i].AD_TEXT_DESCRIPTION.slice(0,100);
+        ad_summary_desc_span3.innerHTML = data[i].AD_TEXT_DESCRIPTION.slice(0,125);
         ad_summary_desc_div3.appendChild(ad_summary_desc_span3);
 
         ad_summary_container_div.appendChild(ad_summary_desc_div3);

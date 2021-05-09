@@ -140,8 +140,12 @@ function generate_my_search_page(data)
 
    var rooms = createNode("span");
    rooms.className = "sf_my_research_text";
-   rooms.innerHTML = String(data[i].ROOMS);
-   rooms.innerHTML += " pièce(s)";
+   if(data[i].hasOwnProperty("ROOMS"))
+   {
+     rooms.innerHTML = String(data[i].ROOMS);
+     rooms.innerHTML += " pièce(s)";
+
+   }
 
    rooms_box.append(rooms);
    my_research_infos.append(rooms_box);
@@ -219,6 +223,29 @@ function generate_my_search_page(data)
    my_research_email_alert.onclick = change_alert_status;
 
    my_research_container.append(my_research_email_alert);
+
+   var see_my_research = createNode("a");
+   see_my_research.className = "sf_my_research_email_alert";
+   see_my_research.href = data[i].ADS_URL;
+
+   var see_my_research_icon = createNode("i");
+   var see_my_research_msg  = createNode("span");
+
+   see_my_research_icon.className = "far fa-eye sf_bell_alert_icon";
+   see_my_research_icon.style.color = "#61AEB5";
+   see_my_research_msg.innerHTML = "Voir les annonces";
+   see_my_research_msg.className = "sf_alert_text";
+   see_my_research_msg.style.color = "#61AEB5";
+
+   see_my_research.append(see_my_research_icon);
+   see_my_research.append(see_my_research_msg);
+
+   see_my_research.style.border = "1px solid #61AEB5";
+   see_my_research.style.marginBottom = "20px";
+   see_my_research.style.cursor = "pointer";
+
+
+   my_research_container.append(see_my_research);
 
    var delete_alert_box = createNode("div");
    delete_alert_box.className = "sf_my_research_small_box";
