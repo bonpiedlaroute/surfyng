@@ -414,6 +414,264 @@ uint32_t deposit_service_delete_announce_presult::read(::apache::thrift::protoco
   return xfer;
 }
 
+
+deposit_service_fetch_user_announces_args::~deposit_service_fetch_user_announces_args() throw() {
+}
+
+
+uint32_t deposit_service_fetch_user_announces_args::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->user_id);
+          this->__isset.user_id = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t deposit_service_fetch_user_announces_args::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("deposit_service_fetch_user_announces_args");
+
+  xfer += oprot->writeFieldBegin("user_id", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString(this->user_id);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+deposit_service_fetch_user_announces_pargs::~deposit_service_fetch_user_announces_pargs() throw() {
+}
+
+
+uint32_t deposit_service_fetch_user_announces_pargs::write(::apache::thrift::protocol::TProtocol* oprot) const {
+  uint32_t xfer = 0;
+  apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
+  xfer += oprot->writeStructBegin("deposit_service_fetch_user_announces_pargs");
+
+  xfer += oprot->writeFieldBegin("user_id", ::apache::thrift::protocol::T_STRING, 1);
+  xfer += oprot->writeString((*(this->user_id)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+deposit_service_fetch_user_announces_result::~deposit_service_fetch_user_announces_result() throw() {
+}
+
+
+uint32_t deposit_service_fetch_user_announces_result::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_LIST) {
+          {
+            this->success.clear();
+            uint32_t _size2;
+            ::apache::thrift::protocol::TType _etype5;
+            xfer += iprot->readListBegin(_etype5, _size2);
+            this->success.resize(_size2);
+            uint32_t _i6;
+            for (_i6 = 0; _i6 < _size2; ++_i6)
+            {
+              {
+                this->success[_i6].clear();
+                uint32_t _size7;
+                ::apache::thrift::protocol::TType _ktype8;
+                ::apache::thrift::protocol::TType _vtype9;
+                xfer += iprot->readMapBegin(_ktype8, _vtype9, _size7);
+                uint32_t _i11;
+                for (_i11 = 0; _i11 < _size7; ++_i11)
+                {
+                  std::string _key12;
+                  xfer += iprot->readString(_key12);
+                  std::string& _val13 = this->success[_i6][_key12];
+                  xfer += iprot->readString(_val13);
+                }
+                xfer += iprot->readMapEnd();
+              }
+            }
+            xfer += iprot->readListEnd();
+          }
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
+uint32_t deposit_service_fetch_user_announces_result::write(::apache::thrift::protocol::TProtocol* oprot) const {
+
+  uint32_t xfer = 0;
+
+  xfer += oprot->writeStructBegin("deposit_service_fetch_user_announces_result");
+
+  if (this->__isset.success) {
+    xfer += oprot->writeFieldBegin("success", ::apache::thrift::protocol::T_LIST, 0);
+    {
+      xfer += oprot->writeListBegin(::apache::thrift::protocol::T_MAP, static_cast<uint32_t>(this->success.size()));
+      std::vector<std::map<std::string, std::string> > ::const_iterator _iter14;
+      for (_iter14 = this->success.begin(); _iter14 != this->success.end(); ++_iter14)
+      {
+        {
+          xfer += oprot->writeMapBegin(::apache::thrift::protocol::T_STRING, ::apache::thrift::protocol::T_STRING, static_cast<uint32_t>((*_iter14).size()));
+          std::map<std::string, std::string> ::const_iterator _iter15;
+          for (_iter15 = (*_iter14).begin(); _iter15 != (*_iter14).end(); ++_iter15)
+          {
+            xfer += oprot->writeString(_iter15->first);
+            xfer += oprot->writeString(_iter15->second);
+          }
+          xfer += oprot->writeMapEnd();
+        }
+      }
+      xfer += oprot->writeListEnd();
+    }
+    xfer += oprot->writeFieldEnd();
+  }
+  xfer += oprot->writeFieldStop();
+  xfer += oprot->writeStructEnd();
+  return xfer;
+}
+
+
+deposit_service_fetch_user_announces_presult::~deposit_service_fetch_user_announces_presult() throw() {
+}
+
+
+uint32_t deposit_service_fetch_user_announces_presult::read(::apache::thrift::protocol::TProtocol* iprot) {
+
+  apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
+  uint32_t xfer = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TType ftype;
+  int16_t fid;
+
+  xfer += iprot->readStructBegin(fname);
+
+  using ::apache::thrift::protocol::TProtocolException;
+
+
+  while (true)
+  {
+    xfer += iprot->readFieldBegin(fname, ftype, fid);
+    if (ftype == ::apache::thrift::protocol::T_STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+        if (ftype == ::apache::thrift::protocol::T_LIST) {
+          {
+            (*(this->success)).clear();
+            uint32_t _size16;
+            ::apache::thrift::protocol::TType _etype19;
+            xfer += iprot->readListBegin(_etype19, _size16);
+            (*(this->success)).resize(_size16);
+            uint32_t _i20;
+            for (_i20 = 0; _i20 < _size16; ++_i20)
+            {
+              {
+                (*(this->success))[_i20].clear();
+                uint32_t _size21;
+                ::apache::thrift::protocol::TType _ktype22;
+                ::apache::thrift::protocol::TType _vtype23;
+                xfer += iprot->readMapBegin(_ktype22, _vtype23, _size21);
+                uint32_t _i25;
+                for (_i25 = 0; _i25 < _size21; ++_i25)
+                {
+                  std::string _key26;
+                  xfer += iprot->readString(_key26);
+                  std::string& _val27 = (*(this->success))[_i20][_key26];
+                  xfer += iprot->readString(_val27);
+                }
+                xfer += iprot->readMapEnd();
+              }
+            }
+            xfer += iprot->readListEnd();
+          }
+          this->__isset.success = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      default:
+        xfer += iprot->skip(ftype);
+        break;
+    }
+    xfer += iprot->readFieldEnd();
+  }
+
+  xfer += iprot->readStructEnd();
+
+  return xfer;
+}
+
 void deposit_serviceClient::announce_deposit(DepositResult& _return, const std::string& user_id, const std::string& data)
 {
   send_announce_deposit(user_id, data);
@@ -530,6 +788,64 @@ void deposit_serviceClient::recv_delete_announce(DepositResult& _return)
     return;
   }
   throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "delete_announce failed: unknown result");
+}
+
+void deposit_serviceClient::fetch_user_announces(std::vector<std::map<std::string, std::string> > & _return, const std::string& user_id)
+{
+  send_fetch_user_announces(user_id);
+  recv_fetch_user_announces(_return);
+}
+
+void deposit_serviceClient::send_fetch_user_announces(const std::string& user_id)
+{
+  int32_t cseqid = 0;
+  oprot_->writeMessageBegin("fetch_user_announces", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  deposit_service_fetch_user_announces_pargs args;
+  args.user_id = &user_id;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+}
+
+void deposit_serviceClient::recv_fetch_user_announces(std::vector<std::map<std::string, std::string> > & _return)
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  iprot_->readMessageBegin(fname, mtype, rseqid);
+  if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+    ::apache::thrift::TApplicationException x;
+    x.read(iprot_);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+    throw x;
+  }
+  if (mtype != ::apache::thrift::protocol::T_REPLY) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  if (fname.compare("fetch_user_announces") != 0) {
+    iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+    iprot_->readMessageEnd();
+    iprot_->getTransport()->readEnd();
+  }
+  deposit_service_fetch_user_announces_presult result;
+  result.success = &_return;
+  result.read(iprot_);
+  iprot_->readMessageEnd();
+  iprot_->getTransport()->readEnd();
+
+  if (result.__isset.success) {
+    // _return pointer has now been filled
+    return;
+  }
+  throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "fetch_user_announces failed: unknown result");
 }
 
 bool deposit_serviceProcessor::dispatchCall(::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, const std::string& fname, int32_t seqid, void* callContext) {
@@ -656,6 +972,60 @@ void deposit_serviceProcessor::process_delete_announce(int32_t seqid, ::apache::
 
   if (this->eventHandler_.get() != NULL) {
     this->eventHandler_->postWrite(ctx, "deposit_service.delete_announce", bytes);
+  }
+}
+
+void deposit_serviceProcessor::process_fetch_user_announces(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext)
+{
+  void* ctx = NULL;
+  if (this->eventHandler_.get() != NULL) {
+    ctx = this->eventHandler_->getContext("deposit_service.fetch_user_announces", callContext);
+  }
+  ::apache::thrift::TProcessorContextFreer freer(this->eventHandler_.get(), ctx, "deposit_service.fetch_user_announces");
+
+  if (this->eventHandler_.get() != NULL) {
+    this->eventHandler_->preRead(ctx, "deposit_service.fetch_user_announces");
+  }
+
+  deposit_service_fetch_user_announces_args args;
+  args.read(iprot);
+  iprot->readMessageEnd();
+  uint32_t bytes = iprot->getTransport()->readEnd();
+
+  if (this->eventHandler_.get() != NULL) {
+    this->eventHandler_->postRead(ctx, "deposit_service.fetch_user_announces", bytes);
+  }
+
+  deposit_service_fetch_user_announces_result result;
+  try {
+    iface_->fetch_user_announces(result.success, args.user_id);
+    result.__isset.success = true;
+  } catch (const std::exception& e) {
+    if (this->eventHandler_.get() != NULL) {
+      this->eventHandler_->handlerError(ctx, "deposit_service.fetch_user_announces");
+    }
+
+    ::apache::thrift::TApplicationException x(e.what());
+    oprot->writeMessageBegin("fetch_user_announces", ::apache::thrift::protocol::T_EXCEPTION, seqid);
+    x.write(oprot);
+    oprot->writeMessageEnd();
+    oprot->getTransport()->writeEnd();
+    oprot->getTransport()->flush();
+    return;
+  }
+
+  if (this->eventHandler_.get() != NULL) {
+    this->eventHandler_->preWrite(ctx, "deposit_service.fetch_user_announces");
+  }
+
+  oprot->writeMessageBegin("fetch_user_announces", ::apache::thrift::protocol::T_REPLY, seqid);
+  result.write(oprot);
+  oprot->writeMessageEnd();
+  bytes = oprot->getTransport()->writeEnd();
+  oprot->getTransport()->flush();
+
+  if (this->eventHandler_.get() != NULL) {
+    this->eventHandler_->postWrite(ctx, "deposit_service.fetch_user_announces", bytes);
   }
 }
 
@@ -827,6 +1197,90 @@ void deposit_serviceConcurrentClient::recv_delete_announce(DepositResult& _retur
       }
       // in a bad state, don't commit
       throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "delete_announce failed: unknown result");
+    }
+    // seqid != rseqid
+    this->sync_.updatePending(fname, mtype, rseqid);
+
+    // this will temporarily unlock the readMutex, and let other clients get work done
+    this->sync_.waitForWork(seqid);
+  } // end while(true)
+}
+
+void deposit_serviceConcurrentClient::fetch_user_announces(std::vector<std::map<std::string, std::string> > & _return, const std::string& user_id)
+{
+  int32_t seqid = send_fetch_user_announces(user_id);
+  recv_fetch_user_announces(_return, seqid);
+}
+
+int32_t deposit_serviceConcurrentClient::send_fetch_user_announces(const std::string& user_id)
+{
+  int32_t cseqid = this->sync_.generateSeqId();
+  ::apache::thrift::async::TConcurrentSendSentry sentry(&this->sync_);
+  oprot_->writeMessageBegin("fetch_user_announces", ::apache::thrift::protocol::T_CALL, cseqid);
+
+  deposit_service_fetch_user_announces_pargs args;
+  args.user_id = &user_id;
+  args.write(oprot_);
+
+  oprot_->writeMessageEnd();
+  oprot_->getTransport()->writeEnd();
+  oprot_->getTransport()->flush();
+
+  sentry.commit();
+  return cseqid;
+}
+
+void deposit_serviceConcurrentClient::recv_fetch_user_announces(std::vector<std::map<std::string, std::string> > & _return, const int32_t seqid)
+{
+
+  int32_t rseqid = 0;
+  std::string fname;
+  ::apache::thrift::protocol::TMessageType mtype;
+
+  // the read mutex gets dropped and reacquired as part of waitForWork()
+  // The destructor of this sentry wakes up other clients
+  ::apache::thrift::async::TConcurrentRecvSentry sentry(&this->sync_, seqid);
+
+  while(true) {
+    if(!this->sync_.getPending(fname, mtype, rseqid)) {
+      iprot_->readMessageBegin(fname, mtype, rseqid);
+    }
+    if(seqid == rseqid) {
+      if (mtype == ::apache::thrift::protocol::T_EXCEPTION) {
+        ::apache::thrift::TApplicationException x;
+        x.read(iprot_);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+        sentry.commit();
+        throw x;
+      }
+      if (mtype != ::apache::thrift::protocol::T_REPLY) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+      }
+      if (fname.compare("fetch_user_announces") != 0) {
+        iprot_->skip(::apache::thrift::protocol::T_STRUCT);
+        iprot_->readMessageEnd();
+        iprot_->getTransport()->readEnd();
+
+        // in a bad state, don't commit
+        using ::apache::thrift::protocol::TProtocolException;
+        throw TProtocolException(TProtocolException::INVALID_DATA);
+      }
+      deposit_service_fetch_user_announces_presult result;
+      result.success = &_return;
+      result.read(iprot_);
+      iprot_->readMessageEnd();
+      iprot_->getTransport()->readEnd();
+
+      if (result.__isset.success) {
+        // _return pointer has now been filled
+        sentry.commit();
+        return;
+      }
+      // in a bad state, don't commit
+      throw ::apache::thrift::TApplicationException(::apache::thrift::TApplicationException::MISSING_RESULT, "fetch_user_announces failed: unknown result");
     }
     // seqid != rseqid
     this->sync_.updatePending(fname, mtype, rseqid);

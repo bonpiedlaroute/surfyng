@@ -23,6 +23,7 @@ class deposit_serviceIf {
   virtual ~deposit_serviceIf() {}
   virtual void announce_deposit(DepositResult& _return, const std::string& user_id, const std::string& data) = 0;
   virtual void delete_announce(DepositResult& _return, const std::string& user_id, const std::string& announce_id) = 0;
+  virtual void fetch_user_announces(std::vector<std::map<std::string, std::string> > & _return, const std::string& user_id) = 0;
 };
 
 class deposit_serviceIfFactory {
@@ -56,6 +57,9 @@ class deposit_serviceNull : virtual public deposit_serviceIf {
     return;
   }
   void delete_announce(DepositResult& /* _return */, const std::string& /* user_id */, const std::string& /* announce_id */) {
+    return;
+  }
+  void fetch_user_announces(std::vector<std::map<std::string, std::string> > & /* _return */, const std::string& /* user_id */) {
     return;
   }
 };
@@ -282,6 +286,110 @@ class deposit_service_delete_announce_presult {
 
 };
 
+typedef struct _deposit_service_fetch_user_announces_args__isset {
+  _deposit_service_fetch_user_announces_args__isset() : user_id(false) {}
+  bool user_id :1;
+} _deposit_service_fetch_user_announces_args__isset;
+
+class deposit_service_fetch_user_announces_args {
+ public:
+
+  deposit_service_fetch_user_announces_args(const deposit_service_fetch_user_announces_args&);
+  deposit_service_fetch_user_announces_args& operator=(const deposit_service_fetch_user_announces_args&);
+  deposit_service_fetch_user_announces_args() : user_id() {
+  }
+
+  virtual ~deposit_service_fetch_user_announces_args() throw();
+  std::string user_id;
+
+  _deposit_service_fetch_user_announces_args__isset __isset;
+
+  void __set_user_id(const std::string& val);
+
+  bool operator == (const deposit_service_fetch_user_announces_args & rhs) const
+  {
+    if (!(user_id == rhs.user_id))
+      return false;
+    return true;
+  }
+  bool operator != (const deposit_service_fetch_user_announces_args &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const deposit_service_fetch_user_announces_args & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+
+class deposit_service_fetch_user_announces_pargs {
+ public:
+
+
+  virtual ~deposit_service_fetch_user_announces_pargs() throw();
+  const std::string* user_id;
+
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _deposit_service_fetch_user_announces_result__isset {
+  _deposit_service_fetch_user_announces_result__isset() : success(false) {}
+  bool success :1;
+} _deposit_service_fetch_user_announces_result__isset;
+
+class deposit_service_fetch_user_announces_result {
+ public:
+
+  deposit_service_fetch_user_announces_result(const deposit_service_fetch_user_announces_result&);
+  deposit_service_fetch_user_announces_result& operator=(const deposit_service_fetch_user_announces_result&);
+  deposit_service_fetch_user_announces_result() {
+  }
+
+  virtual ~deposit_service_fetch_user_announces_result() throw();
+  std::vector<std::map<std::string, std::string> >  success;
+
+  _deposit_service_fetch_user_announces_result__isset __isset;
+
+  void __set_success(const std::vector<std::map<std::string, std::string> > & val);
+
+  bool operator == (const deposit_service_fetch_user_announces_result & rhs) const
+  {
+    if (!(success == rhs.success))
+      return false;
+    return true;
+  }
+  bool operator != (const deposit_service_fetch_user_announces_result &rhs) const {
+    return !(*this == rhs);
+  }
+
+  bool operator < (const deposit_service_fetch_user_announces_result & ) const;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
+
+};
+
+typedef struct _deposit_service_fetch_user_announces_presult__isset {
+  _deposit_service_fetch_user_announces_presult__isset() : success(false) {}
+  bool success :1;
+} _deposit_service_fetch_user_announces_presult__isset;
+
+class deposit_service_fetch_user_announces_presult {
+ public:
+
+
+  virtual ~deposit_service_fetch_user_announces_presult() throw();
+  std::vector<std::map<std::string, std::string> > * success;
+
+  _deposit_service_fetch_user_announces_presult__isset __isset;
+
+  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
+
+};
+
 class deposit_serviceClient : virtual public deposit_serviceIf {
  public:
   deposit_serviceClient(boost::shared_ptr< ::apache::thrift::protocol::TProtocol> prot) {
@@ -313,6 +421,9 @@ class deposit_serviceClient : virtual public deposit_serviceIf {
   void delete_announce(DepositResult& _return, const std::string& user_id, const std::string& announce_id);
   void send_delete_announce(const std::string& user_id, const std::string& announce_id);
   void recv_delete_announce(DepositResult& _return);
+  void fetch_user_announces(std::vector<std::map<std::string, std::string> > & _return, const std::string& user_id);
+  void send_fetch_user_announces(const std::string& user_id);
+  void recv_fetch_user_announces(std::vector<std::map<std::string, std::string> > & _return);
  protected:
   boost::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   boost::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
@@ -330,11 +441,13 @@ class deposit_serviceProcessor : public ::apache::thrift::TDispatchProcessor {
   ProcessMap processMap_;
   void process_announce_deposit(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
   void process_delete_announce(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
+  void process_fetch_user_announces(int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, void* callContext);
  public:
   deposit_serviceProcessor(boost::shared_ptr<deposit_serviceIf> iface) :
     iface_(iface) {
     processMap_["announce_deposit"] = &deposit_serviceProcessor::process_announce_deposit;
     processMap_["delete_announce"] = &deposit_serviceProcessor::process_delete_announce;
+    processMap_["fetch_user_announces"] = &deposit_serviceProcessor::process_fetch_user_announces;
   }
 
   virtual ~deposit_serviceProcessor() {}
@@ -383,6 +496,16 @@ class deposit_serviceMultiface : virtual public deposit_serviceIf {
     return;
   }
 
+  void fetch_user_announces(std::vector<std::map<std::string, std::string> > & _return, const std::string& user_id) {
+    size_t sz = ifaces_.size();
+    size_t i = 0;
+    for (; i < (sz - 1); ++i) {
+      ifaces_[i]->fetch_user_announces(_return, user_id);
+    }
+    ifaces_[i]->fetch_user_announces(_return, user_id);
+    return;
+  }
+
 };
 
 // The 'concurrent' client is a thread safe client that correctly handles
@@ -419,6 +542,9 @@ class deposit_serviceConcurrentClient : virtual public deposit_serviceIf {
   void delete_announce(DepositResult& _return, const std::string& user_id, const std::string& announce_id);
   int32_t send_delete_announce(const std::string& user_id, const std::string& announce_id);
   void recv_delete_announce(DepositResult& _return, const int32_t seqid);
+  void fetch_user_announces(std::vector<std::map<std::string, std::string> > & _return, const std::string& user_id);
+  int32_t send_fetch_user_announces(const std::string& user_id);
+  void recv_fetch_user_announces(std::vector<std::map<std::string, std::string> > & _return, const int32_t seqid);
  protected:
   boost::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
   boost::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;

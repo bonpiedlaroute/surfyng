@@ -93,7 +93,8 @@ void HttpRequestHandler::handle_get(http_request message)
             }
             std::make_shared<EstimatorAccess>(m_estimator_host, m_estimator_port)->fetchHousePrice(sstream, query,  isFlat, highpricebym2, lowpricebym2);
 
-           }else 
+           }
+           else 
            {
                 if(paths.size() == 1  && paths[0] == "city_info")
                 {
@@ -108,18 +109,26 @@ void HttpRequestHandler::handle_get(http_request message)
                         std::make_shared<EmailAlertAccess>(m_emailalert_host, m_emailalert_port)->my_realestate_search(sstream, query);
                     }else
                     {
-                        std::string error = "Unknown requested service: ";
-                        for( auto valuepath : paths)
+                        if(paths.size() == 1 && paths[0] == "my_ad_search")
                         {
-                            error += valuepath;
-                            error +="/";
+                            auto query = http::uri::split_query(http::uri::decode(message.relative_uri().query()));
+                            std::make_shared<DepositAccess>(m_deposit_host, m_deposit_port)->fetch_user_announces(sstream, query);
                         }
-                        Log::getInstance()->error(error);
-                        http_response response (status_codes::NotFound);
-                        response.headers().add(U("Access-Control-Allow-Origin"), U("*"));
-                        message.reply(response);
-                        
-                        return;
+                        else
+                        {
+                            std::string error = "Unknown requested service: ";
+                            for( auto valuepath : paths)
+                            {
+                                error += valuepath;
+                                error +="/";
+                            }
+                            Log::getInstance()->error(error);
+                            http_response response (status_codes::NotFound);
+                            response.headers().add(U("Access-Control-Allow-Origin"), U("*"));
+                            message.reply(response);
+                            
+                            return;
+                        }
 
                     }
                 }
@@ -210,6 +219,18 @@ void HttpRequestHandler::handle_post(http_request message)
                 }
             })
             .wait();
+    }
+    else if(paths.size() == 1 && paths[0] == "delete_announce")
+    {
+        auto query = http::uri::split_query(http::uri::decode(message.relative_uri().query()));
+        auto result =  std::make_shared<DepositAccess>(m_deposit_host, m_deposit_port)->delete_announce(query);
+        if(!result.success)
+        {
+            http_response response (status_codes::BadRequest);
+            response.headers().add(U("Access-Control-Allow-Origin"), U("*"));
+            message.reply(response);
+            return;
+        }
     }
     else 
     {

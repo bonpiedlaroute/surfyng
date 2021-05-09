@@ -25,6 +25,8 @@ namespace surfyn
 			public:
 				DepositAccess(const std::string& host, int port);
 				DepositResult announce_deposit(const std::string user_id, std::string data);
+				DepositResult delete_announce(const std::map<utility::string_t,  utility::string_t>& query);
+				void fetch_user_announces(utility::stringstream_t& sstream, const std::map<utility::string_t,  utility::string_t>& query);
 
 		};
 	}

@@ -6,25 +6,25 @@ sys.path.append('thrift_generated/depositservice')
 sys.path.append('../../bot')
 sys.path.append('../../bot/thrift_generated')
 
-import json
-import pytz
-import Queue
-import logging
-import datetime
-import threading
-import unidecode
-import configparser
-import firebase_admin
-from thrift_generated.depositservice.deposit_service import Processor
-from thrift_generated.depositservice.deposit_service import Iface
-from thrift_generated.depositservice.ttypes import DepositResult
-from thrift.transport import TSocket, TTransport
-from thrift.protocol import TBinaryProtocol
-from thrift.server import TServer
-from firebase_admin import credentials, auth
-from hash_id import *
-from dynamodb_access import dynamodb_access, ttypes
 from dynamodb_access.ttypes import Type, ValueType, KeyValue
+from dynamodb_access import dynamodb_access, ttypes
+from hash_id import *
+from firebase_admin import credentials, auth
+from thrift.server import TServer
+from thrift.protocol import TBinaryProtocol
+from thrift.transport import TSocket, TTransport
+from thrift_generated.depositservice.ttypes import DepositResult
+from thrift_generated.depositservice.deposit_service import Iface
+from thrift_generated.depositservice.deposit_service import Processor
+import firebase_admin
+import configparser
+import unidecode
+import threading
+import datetime
+import logging
+import Queue
+import pytz
+import json
 
 
 class UserDeposit:
@@ -41,7 +41,7 @@ class DepositServiceHandler(Iface):
 
         self.deposit_tablename = config['DEFAULT']['deposit_tablename']
         self.summary_tablename = config['DEFAULT']['summary_tablename']
-        
+
         self.works = Queue.Queue()
         self.condition = threading.Condition()
 
@@ -62,6 +62,12 @@ class DepositServiceHandler(Iface):
                 @user_id: User who places the announce
                 @data: Dictionnary containing data of announce
         """
+        INSEE_CODE = {
+            "Puteaux": 92800,
+            "Houilles": 78800,
+            "Nanterre": 92000,
+            "Colombes": 92700
+        }
 
         logging.info('Deposit announce of user {}'.format(user_id))
 
@@ -81,11 +87,13 @@ class DepositServiceHandler(Iface):
         values['ID'] = id_value
 
         # ANNOUNCE LINK
+        prop_type = "maison" if data['prop_type'] == 1 else "appartement"
+        search_type = "achat" if data['search_type'] == 1 else "location"
         announce_link_value = ttypes.ValueType()
-        announce_link_value.field = "https://surfyn.fr"
+        announce_link_value.field = "https://surfyn.fr/annonce-detail/{}/{}-{}-pieces/{}-{}?{}".format(search_type, prop_type, data['rooms'], data['city'].lower(), INSEE_CODE[data['city'].capitalize()], ID)
         announce_link_value.fieldtype = ttypes.Type.STRING
         values['ANNOUNCE_LINK'] = announce_link_value
-        
+
         # ANNOUNCE SOURCE
         announce_source_value = ttypes.ValueType()
         announce_source_value.field = "Surfyn"
@@ -97,7 +105,7 @@ class DepositServiceHandler(Iface):
         title_value.field = data['title']
         title_value.fieldtype = ttypes.Type.STRING
         values['ANNOUNCE_TITLE'] = title_value
-        
+
         # CITY
         city_value = ttypes.ValueType()
         city_value.field = data['city']
@@ -132,8 +140,9 @@ class DepositServiceHandler(Iface):
 
         # ANNOUNCE IMAGE
         announce_image_value = ttypes.ValueType()
-        announce_link_value.field = data['image1']
-        announce_link_value.fieldtype = ttypes.Type.STRING
+        announce_image_value.field = data['image1']
+        announce_image_value.fieldtype = ttypes.Type.STRING
+        values['ANNOUNCE_IMAGE'] = announce_image_value
 
         # PRICE
         price_value = ttypes.ValueType()
@@ -233,7 +242,8 @@ class DepositServiceHandler(Iface):
 
         # IMAGE COUNT
         image_count = ttypes.ValueType()
-        image_count.field = str(len(filter(lambda item: 'image' in item, list(data.keys()))))
+        image_count.field = str(
+            len(filter(lambda item: 'image' in item, list(data.keys()))))
         image_count.fieldtype = ttypes.Type.STRING
         values['IMAGE_COUNT'] = image_count
 
@@ -248,26 +258,26 @@ class DepositServiceHandler(Iface):
         source_logo_value.field = "data/surfyn.svg"
         source_logo_value.fieldtype = ttypes.Type.STRING
         values['SOURCE_LOGO'] = source_logo_value
-        
+
         # DELETED STATUS
         deleted_value = ttypes.ValueType()
         deleted_value.field = 'OFF'
         deleted_value.fieldtype = ttypes.Type.STRING
         values['AD_STATUS'] = deleted_value             # Can be ON, OFF
-        
+
         result_summary = self.client.put(self.summary_tablename, values)
-        
+
         # USERID
         userid_value = ttypes.ValueType()
         userid_value.field = user_id
         userid_value.fieldtype = ttypes.Type.STRING
         values['USERID'] = userid_value
 
-
         # USER_DISPLAY_NAME
         if user.display_name:
             userdisplayname_value = ttypes.ValueType()
-            userdisplayname_value.field = unidecode.unidecode(user.display_name)
+            userdisplayname_value.field = unidecode.unidecode(
+                user.display_name)
             userdisplayname_value.fieldtype = ttypes.Type.STRING
             values["USER_DISPLAY_NAME"] = userdisplayname_value
 
@@ -306,7 +316,7 @@ class DepositServiceHandler(Iface):
             logging.error('Fail to put announce {} in table {}'.format(
                 ID, self.summary_tablename))
             logging.error(result.error)
-                
+
         return return_value
 
     def delete_announce(self, user_id, announce_id):
@@ -316,47 +326,65 @@ class DepositServiceHandler(Iface):
                 @user_id: User ID of the owner of ad
                 @announce_id: ad ID
         """
-        
+
         id_value = ttypes.ValueType()
         id_value.field = announce_id
-        id_value.fieldtype = Type.STRING
+        id_value.fieldtype = ttypes.Type.NUMBER
         item_key = KeyValue('ID', id_value)
 
         values = {}
         announce_status = ttypes.ValueType()
-        announce_status.field = 'OFF'
+        announce_status.field = 'ON'
         announce_status.fieldtype = Type.STRING
         values['AD_STATUS'] = announce_status
 
         logging.info('Delete announce with ID: {}'.format(announce_id))
-        
-        result = self.client.update(self.tablename, item_key, values)
+
+        result = self.client.update(self.summary_tablename, item_key, values)
+        result_deposit = self.client.update(self.deposit_tablename, item_key, values)
+
         return_value = DepositResult()
-        if result.success:
-            logging.info('Successfully deleted announce {} of user {}'.format(announce_id, user_id))
-            return_value.success = TBufferedTransport
+        if result.success and result_deposit.success:
+            logging.info('Successfully deleted announce {} of user {}'.format(
+                announce_id, user_id))
+            return_value.success = True
         else:
             logging.error(result.error)
             return_value.success = False
             return_value.error = result.error
-        
+
         return return_value
-    
+
     def fetch_user_announces(self, user_id):
         """
             Function used to fetch all announces of a user
             @user: User ID
         """
         active_announces = []
-        filter_expression = 'USERD_ID = :uid and AD_STATUS = :ads'
-        
+        filter_expression = 'USERID = :uid and AD_STATUS = :ads'
+
         attributes_to_get = {}
-        
+
         while True:
+            # ID
+            id_value = ttypes.ValueType()
+            id_value.fieldtype = ttypes.Type.NUMBER
+            attributes_to_get['ID'] = id_value
+
             # ANNOUNCE TITLE
             announce_title = ttypes.ValueType()
             announce_title.fieldtype = ttypes.Type.STRING
             attributes_to_get['ANNOUNCE_TITLE'] = announce_title
+
+            # ANNOUNCE_LINK
+            announce_link = ttypes.ValueType()
+            announce_link.fieldtype = ttypes.Type.STRING
+            attributes_to_get['ANNOUNCE_LINK'] = announce_link
+
+            # CITY
+            city_value = ttypes.ValueType()
+            city_value.fieldtype = ttypes.Type.STRING
+            attributes_to_get['CITY'] = city_value
 
             # PROPERTY TYPE
             property_type = ttypes.ValueType()
@@ -388,23 +416,29 @@ class DepositServiceHandler(Iface):
             price_value.fieldtype = ttypes.Type.NUMBER
             attributes_to_get['PRICE'] = price_value
 
+            # IMAGE
+            image_value = ttypes.ValueType()
+            image_value.fieldtype = ttypes.Type.STRING
+            attributes_to_get['IMAGE'] = image_value
+
             expression_value = {}
             userid_value.field = user_id
             expression_value[':uid'] = userid_value
 
             ad_status_value = ttypes.ValueType()
-            ad_status_value.field = 'ON'
+            ad_status_value.field = 'OFF'
             ad_status_value.fieldtype = ttypes.Type.STRING
             expression_value[':ads'] = ad_status_value
 
-            query_result = self.client.scan(self.deposit_tablename, attributes_to_get, filter_expression, expression_value)
+            query_result = self.client.scan(
+                self.deposit_tablename, attributes_to_get, filter_expression, expression_value)
 
             if query_result.result.success and query_result.values:
-                logging.info('Received {} alert'.format(len(query_result.values)))
-                active_announces == query_result.values
+                logging.info('Received {} announce(s)'.format(
+                    len(query_result.values)))
+                active_announces += query_result.values
             if query_result.scanend:
                 break
-        print(active_announces)
         
         return active_announces
 

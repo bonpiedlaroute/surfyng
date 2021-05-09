@@ -73,5 +73,80 @@ namespace surfyn
 
 			return _return;
 		}
+
+		DepositResult DepositAccess::delete_announce(const std::map<utility::string_t,  utility::string_t>& query)
+		{
+			auto iter = query.find("user_id");
+
+			DepositResult _return;
+			if(iter == query.end())
+			{
+				_return.success = false;
+				_return.error = "No user_id found!";
+
+				return _return;
+			}
+			std::string user_id = iter->second;
+
+			iter = query.find("ad_id");
+			if(iter == query.end())
+			{
+				_return.success = false;
+				_return.error = "No announce_id found!";
+
+				return _return;
+			}
+			std::string ad_id = iter->second;
+
+			m_client->delete_announce(_return, user_id, ad_id);
+
+			return _return;
+		}
+
+		void DepositAccess::fetch_user_announces(utility::stringstream_t& sstream, const std::map<utility::string_t,  utility::string_t>& query)
+		{
+			auto iter = query.find("userid");
+			if(iter == query.end())
+			{
+				sstream << U("[]");
+				return;
+			}
+			
+			std::string user_id = iter->second;
+			std::vector<std::map<std::string, std::string>> _return;
+			m_client->fetch_user_announces(_return, user_id);
+
+			if(_return.empty())
+			{
+				sstream << U("[]");
+				return;
+			}
+
+			sstream << U("[\n");
+			for(auto iter_my_ad = _return.begin(); iter_my_ad != _return.end(); ++iter_my_ad)
+			{
+				if(iter_my_ad != _return.begin())
+				{
+					sstream << U(",\n");
+				}
+				sstream << U("{\n");
+				for(auto attribute_iter = iter_my_ad->begin(); attribute_iter != iter_my_ad->end(); ++attribute_iter)
+				{
+					if( attribute_iter != iter_my_ad->begin())
+					{
+					sstream << U(",\n");
+					}
+
+					sstream << "\"";
+					sstream << attribute_iter->first;
+					sstream << "\":\"";
+					sstream << attribute_iter->second;
+					sstream << "\"";
+				}
+				sstream << U("\n}");
+
+			}
+			sstream << U("\n]");
+		}
 	}
 }
