@@ -48,8 +48,8 @@
           <div style="height:60px;display:flex;flex-direction:row;justify-content:flex-end;z-index:6;" class="header_title_right_box">
             <div class="sf_dropdown" id="dropdownmenu" style="z-index:4;">
               <div class="param_icon_box_width" style="display:flex;height:43px;justify-content:flex-end;flex-direction:row;align-items:center;">
-                <div style="cursor:pointer;width:32px;height:32px;display:none;margin-top:10px;" id="login_connected_box" >
-                  <div class="sf_login_connected_icon" onclick="show_login_menu()">
+                <div style="cursor:pointer;width:32px;height:32px;display:block;margin-top:10px;"  >
+                  <div class="sf_login_connected_icon" onclick="show_login_menu()" id="user_connected_box">
                     <a class="sf_user_display_name" id="user_display_name">
                     </a>
                   </div>
@@ -145,15 +145,17 @@
        window.onload = function() {
 
                var user_id = sessionStorage.getItem("user_id");
+               var user_connected_box = document.getElementById("user_connected_box");
                if(user_id != "")
                {
-                   var login_connected_box = document.getElementById("login_connected_box");
-                   login_connected_box.style.display = "block";
+
+                   user_connected_box.style.display = "flex";
                    var user_display_name = document.getElementById("user_display_name");
                    user_display_name.innerHTML = sessionStorage.getItem("user_display_name");
 
                }
                else {
+                   user_connected_box.style.display = "none";
                    window.location.href = "/";
                }
 
@@ -169,7 +171,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
     <script src="dropdownmenu.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-analytics.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-auth.js"></script>
     <script src="login.js"> </script>
     <script src="mysearch.js"> </script>

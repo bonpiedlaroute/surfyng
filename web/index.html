@@ -4,11 +4,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="Content-Security-Policy" content="frame-src *;">
-    <meta name="description" content="Découvrez toutes les annonces immobilières à partir d'une seule plateforme: Appartements, Maisons en vente et en location actualisées
+    <meta name="description" content="Découvrez toutes les annonces immobilières à partir d'une seule plateforme. Agrégateur annonces immobilières: Appartements, Maisons en vente, en location ou colocation actualisées
     en temps réel de tous les sites de petites annonces immobilières et d'agences immobilières en France. Estimation immobilière rapide, gratuite et en ligne de votre bien immobilier.">
     <meta name="author" content="Surfyn">
 
-    <title> Toutes les annonces immobilières - estimation immobilière - Surfyn </title>
+    <title> Agrégateur annonces immobilières - estimation immobilière - Surfyn </title>
 
     <!-- Bootstrap core CSS -->
    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
@@ -44,9 +44,14 @@
           <div class="sf_dropdown">
 
             <div class="param_icon_box_width" style="display:flex;height:43px;justify-content:flex-end;flex-direction:row;align-items:center;">
-              <div style="cursor:pointer;width:32px;height:32px;display:none;margin-top:10px;" id="login_connected_box" >
-                <div class="sf_login_connected_icon" onclick="show_login_menu()">
+              <div style="width:32px;height:32px;display:block;margin-top:10px;"  >
+                <div class="sf_login_connected_icon" onclick="show_login_menu()" id="user_connected_box">
                   <a class="sf_user_display_name" id="user_display_name">
+                  </a>
+                </div>
+                <div class="sf_login_not_connected_icon" id="user_not_connected_box">
+                  <a data-toggle="modal" data-target="#login" style="color:white;cursor:pointer;margin-left:10px;">
+                  <i class="far fa-user-circle" style="color:white;font-size:25px;" ></i>
                   </a>
                 </div>
               </div>
@@ -58,7 +63,7 @@
             </div>
             <div id="filter_parameter" class="parameter_content">
               <a href="/" > Accueil </a>
-              <a data-toggle="modal" data-target="#login" style="color: #61AEB5;cursor:pointer;">Se connecter</a>
+              <a data-toggle="modal" data-target="#login" style="color: #61AEB5;cursor:pointer;">Mon compte</a>
               <a href="/recherche/achat/immobilier?search_type=1" > Acheter un bien </a>
               <a href="/recherche/location/immobilier?search_type=2" > Louer un bien </a>
               <a href="estimation-immobiliere-en-ligne.html" > Estimer un bien </a>
@@ -80,7 +85,7 @@
     <div style="height:260px; width:100%;" >
 
       <div style="height:80px; width:100%;text-align:center;">
-        <h1 style="color:white;" class="desc_title"> Toutes les annonces immobilières à partir de Surfyn - Estimation immobilière</h1>
+        <h1 style="color:white;" class="desc_title"> Agrégateur annonces immobilières - Estimation immobilière</h1>
       </div>
       <div style="margin-top: 40px;height:140px;width:100%;display:flex; align-items:center; justify-content:center;">
       <div class="search_type_button buy_settings" style="cursor:pointer;" onclick="location.href='/recherche/achat/immobilier?search_type=1';">
@@ -315,7 +320,7 @@
       <div class="sf_ad_direct_links_container_title">
         <h2 class="sf_ad_direct_links_title"> Les dernières actualités de l'immobilier </h2>
       </div>
-      <a id="actu_link_1" rel="nofollow" target="_blank" style="text-decoration:none;">
+      <a id="actu_link_1"  target="_blank" style="text-decoration:none;">
         <div class="sf_home_page_actu_link_container">
           <div class="sf_home_page_actu_title_box">
             <strong id="actu_title_1" class="sf_actu_immo_text_title_size"></strong>
@@ -329,7 +334,7 @@
           </div>
         </div>
       </a>
-      <a id="actu_link_2" rel="nofollow" target="_blank" style="text-decoration:none;">
+      <a id="actu_link_2"  target="_blank" style="text-decoration:none;">
         <div class="sf_home_page_actu_link_container">
           <div class="sf_home_page_actu_title_box">
             <strong id="actu_title_2" class="sf_actu_immo_text_title_size"></strong>
@@ -343,7 +348,7 @@
           </div>
         </div>
       </a>
-      <a id="actu_link_3" rel="nofollow" target="_blank" style="text-decoration:none;">
+      <a id="actu_link_3"  target="_blank" style="text-decoration:none;">
       <div class="sf_home_page_actu_link_container">
         <div class="sf_home_page_actu_title_box">
           <strong id="actu_title_3" class="sf_actu_immo_text_title_size"></strong>
@@ -357,7 +362,7 @@
         </div>
       </div>
       </a>
-      <a id="actu_link_4" rel="nofollow" target="_blank" style="text-decoration:none;">
+      <a id="actu_link_4"  target="_blank" style="text-decoration:none;">
       <div class="sf_home_page_actu_link_container">
         <div class="sf_home_page_actu_title_box">
           <strong id="actu_title_4" class="sf_actu_immo_text_title_size"></strong>
@@ -376,37 +381,65 @@
   <div id="technologie-surfyn" class="sf_technology_frame">
     <div class="sf_technology_container">
       <div class="sf_technology_image_container">
-      <iframe width="100%" height="100%" src="https://www.youtube.com/embed/aLAqEpyGoJw" ></iframe>
+      <iframe style="width:100%; height:100%;" src="https://www.youtube.com/embed/aLAqEpyGoJw" ></iframe>
       </div>
       <div class="sf_technology_text_container">
-        <div class="sf_technology_text_header_container">
-          <h2 style="font-size:20px;color: #787878 !important;"> Notre technologie </h2>
-        </div>
-        <div class="sf_technology_functionality">
-          <div class="sf_technology_subtitle">
+
+          <h2 style="font-size:20px;color: #787878 !important;margin:0 auto;"> Notre technologie </h2>
+
+
             <h3 style="color: #787878 !important;font-size:16px;font-weight:bolder;">Mieux qu'un moteur de recherche immobilier, un vrai assistant de recherche de bien immobilier</h3>
-          </div>
-          <div class="sf_technology_assist">
+
+
             <p class="sf_technology_text_size"> La plateforme Surfyn agrège l'ensemble des annonces immobilières provenant des sites web de petites annonces immobilières, ainsi que des sites web des agences immobilières.
               Elle référence aujourd'hui près d'une vingtaine de plateformes. Au-delà de l'agrégation, la plateforme identifie les annonces immobilières en double (les annonces immobilières désignant le même
               bien immobilier), les regroupe, et fait ressortir les informations similaires, les informations présentes sur une annonce, et absentes chez une autre. Pour cela, plusieurs algorithmes sont
               utilisés, y compris des algorithmes d'apprentissage profonds (Deep learning). Dans l'optique de fournir les meilleures informations aux utilisateurs dans le cadre de leur projet
               immobilier, le prix au m<sup>2</sup> médian de chaque ville, une estimation des frais de notaire, une fiche de visite et les principales infrastructures de chaque ville, sont
-              présentés sur chaque annonce.
+              présentés sur chaque annonce. Vous pouvez aussi créer votre compte Surfyn, ou vous connectez sur Surfyn avec votre compte gmail ou facebook, ceci vous permettra entre autre de créer des alertes. Ainsi vous
+              serez notifié par email dès qu'une annonce, correspondant à vos critères de recherche immobilier, est mise en ligne sur le web.
             </p>
-          </div>
-          <div class="sf_technology_subtitle">
+
           <h3 style="color: #787878 !important;font-size:16px;font-weight:bolder;">Une estimation immobilière fiable, basée sur les dernières ventes actées chez les notaires</h3>
-          </div>
-          <div class="sf_technology_estimate">
+
+
             <p class="sf_technology_text_size"> Nous avons mis en place un outil d'estimation du prix de votre bien immobilier, celui-ci s'appuie sur les algorithmes d'apprentissage automatique (machine learning) ainsi que les
               ventes effectuées chez les notaires, au cours des 5 dernières années dans votre commune afin de prédire le prix actuel de votre bien. Notre taux de précision est 99% (sur 100 prédictions de prix,
                99 sont correctes).Que ce soit un appartement, ou une maison, vous obtiendrez en ligne, rapidement et gratuitement un prix fiable.
             </p>
-          </div>
-        </div>
+
       </div>
     </div>
+  </div>
+  <div class="sf_surfyn_description">
+    <h2 class="sf_estimate_title_description" style="color: #787878 !important;font-size:20px;"> Pourquoi utiliser Surfyn ?
+    </h2>
+    <h3 class="sf_estimate_subtitle_description" style="color: #787878 !important;font-size:16px;font-weight:bolder;"> L'un des meilleurs agrégateur d'annonces immobilières
+    </h3>
+    <p class="sf_technology_text_size"> Avec la multiplication de sites de petites annonces immobilières et aussi des sites d'agences d'immobilières, les informations concernant une annonce immobilière se retrouvent dispatchés sur plusieurs plateformes. Pour un utilisateur à la recherche d'un bien (particulier, chasseur d'appart ou de maisons, agent immobilier), faute de temps, celui-ci regarde en général, 2 ou 3 portails immobiliers de petites annonces, or ces 3 portails n'affichent que 40% des biens en vente ou en locations. Aussi, plus de 70% des annonces sont publiées en doublons sur plusieurs plateformes et l'information sur un bien est parfois incomplète d'une plateforme à l'autre.
+    </p>
+
+    <ul class="sf_technology_text_size" style="list-style-type:'-';text-indent:5px; ">
+      <li> <strong> L' agrégateur Surfyn  </strong>scanne les portails de petites annonces immobilières en France, ainsi que les sites d'agences immobilières, et <strong>centralise les informations</strong> sur une seule plateforme.
+      </li>
+      <li>Surfyn <strong>identifie les annonces publiées en doublons</strong>, et vous les présente sur une même page avec <strong>les critères importants pour votre recherche immobilière</strong>.
+      </li>
+      <li>Vous avez ainsi sur une même page, les <strong>informations présentes sur une plateforme et absentes sur une autre</strong>, par exemple, le <strong>nombre de photos</strong>, souvent plus nombreux sur le site de l'agence immobilière qui vend le bien, vous pouvez ainsi en un clic obtenir un visuel plus précis du bien, la <strong>localisation du bien</strong>, Surfyn indique si sur une plateforme il a pu retrouvé une localisation plus précise du bien, le <strong>nombre de chambres</strong>, la présence d'une terasse, et bien d'autres infos utiles.
+      </li>
+      <li>Surfyn est conçu et pensé avant tout pour satisfaire d'abord tous ceux qui recherchent un bien, <strong>pour vous simplifier la recherche et vous faire gagner du temps</strong>, vous êtes notre priorité numéro 1.
+      </li>
+
+    </ul>
+    <h3 class="sf_estimate_subtitle_description" style="color: #787878 !important;font-size:16px;font-weight:bolder;"> Une intelligence artificielle pour estimer le prix de votre bien immobilier
+    </h3>
+    <ul class="sf_technology_text_size" style="list-style-type:'-';text-indent:5px;">
+      <li>Surfyn a mis en place les meilleurs algorithmes d'apprentissage automatique (machine learning), avec les données des ventes des notaires, pour prédire le prix de votre bien immobilier. Nous sommes les seuls à communiquer sur le niveau de précision de notre outil, car nous évaluons régulièrement notre outil.
+      </li>
+      <li>Nous avons <strong>une précision de 99%</strong>. Plusieurs critères de description du bien sont nécessaires, cependant certains sont déduit par corrélation aux ventes passées réalisées à la même localisation.
+      </li>
+      <li>Pour chaque annonce, vous avez aussi <strong>le prix au m<sup>2</sup> médian de la ville</strong>.
+      </li>
+    </ul>
   </div>
 
 </main>
@@ -441,11 +474,11 @@
   <div class="contact_info" style="display:flex;flex-direction:row; justify-content:center;">
     <a href="partenaires.html" style="color:white;cursor:pointer;margin-left:10px;"> Nos partenaires</a>
     <a data-toggle="modal" data-target="#login" style="color:white;cursor:pointer;margin-left:10px;">
-    <i class="far fa-user-circle" style="color:white;"></i> Se connecter
+    <i class="far fa-user-circle" style="color:white;"></i> Mon compte
     </a>
   </div>
     <div class="contact_info" style="display:flex;flex-direction:row; justify-content:center;">
-	   <!--span style="color:white"><b><a href="/login">Se connecter</a></b></span><br/-->
+
 
       <div style ="margin-left:10px;">
       <a href="https://www.facebook.com/surfyn.fr/">
@@ -492,22 +525,22 @@
                   <div class="sf_modal_frame">
                     <div class="sf_modal_box_width sf_modal_input" >
                       <input class="form-control" type="text" placeholder="Nom" value="" id ="name" >
-                      </input>
+
                     </div>
                     <div class="sf_modal_box_width sf_modal_input" style="margin-top:20px;">
                       <input class="form-control" type="text" placeholder="Prénom" value="" id ="firstname" >
-                      </input>
+
                     </div>
                     <div class="sf_modal_box_width sf_modal_input" style="margin-top:20px;">
                       <input class="form-control" type="email" placeholder="Votre e-mail" value="" id="email" >
-                      </input>
+
                     </div>
                     <div class="sf_modal_box_width" style="height:20px;" id="email-feedback">
 
                     </div>
                     <div class="sf_modal_box_width sf_modal_input" >
                       <input class="form-control" type="text" placeholder="Sujet" value="" id ="email-subject" >
-                      </input>
+
                     </div>
                     <div class="sf_modal_box_width sf_modal_input" style="margin-top:20px;">
                       <textarea class="form-control" id="email-msg" placeholder="Votre message" rows="10"></textarea>
@@ -540,7 +573,23 @@
         </div>
       </div>
       <!-- end Modal sendemail-result -->
+      <!-- Modal generic message result -->
+      <div id="generic-box-message-result" class="modal fade" role="dialog">
+        <div class="modal-dialog" style="height:10%;">
 
+          <!-- Modal content-->
+          <div class="modal-content" style="height:100%;">
+            <div class="modal-body" style="height:100%;padding:0px;">
+
+              <div class="alert alert-success" role="alert" style="height:100%;text-align:center;">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+              <strong id="generic-message-result"></strong></div>
+            </div>
+          </div>
+          <!-- End Modal content -->
+        </div>
+      </div>
+      <!-- end Modal generic message-result-->
       <!-- Modal login -->
       <div id="login" class="modal fade" role="dialog">
         <!-- <script src="login.js"> </script> -->
@@ -557,14 +606,14 @@
                 <div class="sf_modal_frame">
                   <div class="sf_modal_box_width sf_modal_input" >
                     <input class="form-control" type="email" placeholder="E-mail" value="" id="login_email" >
-                    </input>
+
                   </div>
                   <div class="sf_modal_box_width" style="height:20px;" id="email-feedback-login">
 
                   </div>
                   <div class="sf_modal_box_width sf_modal_input"  >
                     <input class="form-control" type="password" placeholder="Mot de passe" value="" id ="mot_de_passe">
-                    </input>
+
                   </div>
                   <div class="sf_modal_box_width" style="height:20px;" id="pass-feedback">
 
@@ -602,14 +651,6 @@
 
                     </div>
                   </div>
-                  <!-- <div class="sf_modal_box_width sf_modal_login_foreign_auth_frame" onclick="location.href='#';" >
-                    <div class="sf_modal_login_foreign_auth_box">
-                      <i class="fab fa-twitter" style="color:#55acee;font-size:20px;width:20px;height:20px;"></i>
-
-                      <a class="sf_modal_login_foreign_auth_text"> Se connecter avec Twitter </a>
-
-                      </div>
-                    </div> -->
                 </div>
 
           </div>
@@ -653,28 +694,28 @@
               <div class="sf_modal_frame">
                 <div class="sf_modal_box_width sf_modal_input" >
                   <input class="form-control" type="text" placeholder="Prénom" value=""  id="inscription_prenom">
-                  </input>
+
                 </div>
                 <div class="sf_modal_box_width" style="height:20px;" >
 
                 </div>
                 <div class="sf_modal_box_width sf_modal_input" >
                   <input class="form-control" type="email" placeholder="E-mail" value=""  id="inscription_email">
-                  </input>
+
                 </div>
                 <div class="sf_modal_box_width" style="height:20px;" id="email-feedback-inscription">
 
                 </div>
                 <div class="sf_modal_box_width sf_modal_input">
                   <input class="form-control" type="password" placeholder="Mot de passe" value=""  id="mot_de_passe_inscription">
-                  </input>
+
                 </div>
                 <div class="sf_modal_box_width" style="height:20px;" id="mot_de_passe_inscription_feedback">
 
                 </div>
                 <div class="sf_modal_box_width sf_modal_input" >
                   <input class="form-control" type="password" placeholder="Confirmez votre Mot de passe" value=""  id="mot_de_passe_confirmation">
-                  </input>
+
                 </div>
                 <div class="sf_modal_box_width" style="height:20px;" id="mot_de_passe_confirmation_feedback">
 
@@ -746,7 +787,7 @@
               <div class="sf_modal_frame">
                 <div class="sf_modal_box_width sf_modal_input" style="margin-top:20px;">
                   <input class="form-control" type="email" placeholder="Votre e-mail" value="" id="emailpasswordreset" >
-                  </input>
+
                 </div>
                 <div class="sf_modal_box_width" style="height:20px;" id="emailpasswordreset-feedback">
                 </div>
@@ -771,13 +812,11 @@
     <script src="index.js"></script>
     <script src="dropdownmenu.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-analytics.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-auth.js"></script>
 
     <script>
        window.onload = function() {
 
-           console.log("we have firebase apps");
            // Initialize Firebase
            if (!firebase.apps.length)
            {
@@ -791,7 +830,6 @@
                appId: "1:1080663386908:web:d0c38731a4d55de5dea8d9",
                measurementId: "G-7X8E11EEFD"
              };
-             console.log("firebase initialization");
              firebase.initializeApp(firebaseConfig);
            }
            firebase.auth().getRedirectResult().then(function(result) {
@@ -809,20 +847,22 @@
                mot_de_passe.value = "";
 
                var user = result.user;
+               var user_not_connected_box = document.getElementById("user_not_connected_box");
+               var user_connected_box = document.getElementById("user_connected_box");
                if(user)
                {
                    showSuccessConnexionMessage();
-                   var login_connected_box = document.getElementById("login_connected_box");
-                   login_connected_box.style.display = "block";
+
                    var user_display_name = document.getElementById("user_display_name");
                    user_display_name.innerHTML = user.displayName.slice(0,1).toUpperCase();
-                   console.log("successful login");
-                   console.log("token : ");
-                   console.log(token);
+
                    console.log(user.displayName);
 
                    sessionStorage.setItem("user_id", user.uid);
                    sessionStorage.setItem("user_display_name", user_display_name.innerHTML);
+
+                   user_connected_box.style.display = 'flex';
+                   user_not_connected_box.style.display = 'none';
 
                    user.updateProfile({
                     displayName: user.displayName
@@ -833,10 +873,6 @@
                     console.log(error);
                   });
 
-               }
-               else {
-                   sessionStorage.setItem("user_id", "");
-                   sessionStorage.setItem("user_display_name", "");
                }
              }).catch(function(error)
              {
@@ -851,11 +887,9 @@
                console.log(error);
                // ...
              });
-             console.log("end of initialization");
+
              firebase.auth().onAuthStateChanged(checkUserStatus);
-             console.log("end of onload");
-
-
+             updateUserStatus();
        }
     </script>
   </body>

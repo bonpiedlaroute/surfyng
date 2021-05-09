@@ -120,12 +120,13 @@ a:hover{ text-decoration: none; }
 .sf_actu_immo_text_source_size
 {
   color:#787878;
-  font-size:12px;
+  font-size:14px;
 }
 
 .sf_actu_immo_text_size
 {
   color:black !important;
+  font-size:14px;
 }
 
 .whoarewe_header_title
