@@ -57,6 +57,7 @@ namespace rest_server
            void handle_predict(http_request& message);
            void handle_city_info(http_request& message);
            void handle_my_realestate_search(http_request& message);
+           void handle_my_ad(http_request& message);
 
             /* POST SERVICE REQUEST HANDLERS */
            void handle_sendemailtosurfyn(http_request& message);

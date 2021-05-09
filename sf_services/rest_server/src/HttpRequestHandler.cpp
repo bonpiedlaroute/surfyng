@@ -45,6 +45,7 @@ HttpRequestHandler::HttpRequestHandler(utility::string_t url, http_listener_conf
     m_http_get_services.insert(std::make_pair("/predict", [this](http_request& message){handle_predict(message);}));
     m_http_get_services.insert(std::make_pair("/city_info", [this](http_request& message){handle_city_info(message);}));
     m_http_get_services.insert(std::make_pair("/my_realestate_search", [this](http_request& message){handle_my_realestate_search(message);}));
+    m_http_get_services.insert(std::make_pair("/my_ad", [this](http_request& message){handle_my_ad(message);}));
 
     m_http_post_services.insert(std::make_pair("/sendemailtosurfyn", [this](http_request& message){handle_sendemailtosurfyn(message);}));
     m_http_post_services.insert(std::make_pair("/registeremailalert", [this](http_request& message){handle_registeremailalert(message);}));
@@ -52,6 +53,7 @@ HttpRequestHandler::HttpRequestHandler(utility::string_t url, http_listener_conf
     m_http_post_services.insert(std::make_pair("/accountcreation", [this](http_request& message){handle_accountcreation(message);}));
     m_http_post_services.insert(std::make_pair("/announcedeposit", [this](http_request& message){handle_announce_deposit(message);}));
     m_http_post_services.insert(std::make_pair("/delete_announce", [this](http_request& message){handle_delete_announce(message);}));
+    
 }
 HttpRequestHandler::~HttpRequestHandler()
 {
@@ -132,6 +134,14 @@ void HttpRequestHandler::handle_my_realestate_search(http_request& message)
     send_json_response(sstream, message);
 }
 
+void HttpRequestHandler::handle_my_ad(http_request& message)
+{
+    auto query = http::uri::split_query(http::uri::decode(message.relative_uri().query()));
+
+    utility::stringstream_t sstream;
+    std::make_shared<DepositAccess>(m_deposit_host, m_deposit_port)->fetch_user_announces(sstream, query);
+    send_json_response(sstream, message);
+}
 //
 // Get Request 
 //
@@ -150,6 +160,7 @@ void HttpRequestHandler::handle_get(http_request message)
     {
         std::string error = "Unknown requested service: ";
         error += service;
+
 
         Log::getInstance()->error(error);
         http_response response (status_codes::NotFound);
@@ -252,6 +263,7 @@ void HttpRequestHandler::handle_accountcreation(http_request& message)
     std::string user_email;
     if(iter != query.end())
         user_email = iter->second;
+
     else 
     {
         send_badrequest_response(message);

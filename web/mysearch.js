@@ -20,10 +20,10 @@ function loadJSON(path, success, error) {
  }
 
 INSEE_CODE = {
-  "PUTEAUX": 92800,
-  "HOUILLES": 78800,
-  "NANTERRE": 92000,
-  "COLOMBES": 92700
+  "Puteaux": 92800,
+  "Houilles": 78800,
+  "Nanterre": 92000,
+  "Colombes": 92700
 };
 
 function createNode(element) {
@@ -274,7 +274,7 @@ function generate_my_announce_page(data)
   my_deposit_frame.className = "d-flex flex-row flex-wrap";
 
   main_section.appendChild(my_deposit_frame);
-  
+
   for(var i = 0; i < data.length; i++)
   {
       var announce_outer = createNode("div");
@@ -287,7 +287,10 @@ function generate_my_announce_page(data)
       var announce_image = createNode("img");
       announce_image.className = "img-fluid";
       announce_image.style = "width: 100%; height: 100%;"
-      announce_image.src = data[i].IMAGE;
+      images = data[i].IMAGE.replaceAll('\'', '\"');
+      images = images.replaceAll('u\"', '\"');
+      images = JSON.parse(images)
+      announce_image.src = images['image1'];
       announce_image.alt = "announce"
 
       image_container.append(announce_image);
@@ -303,10 +306,10 @@ function generate_my_announce_page(data)
       title_container.append(title);
       description_outer.append(title_container);
 
-      var price_container = create("h5");
+      var price_container = createNode("h5");
       var price = createNode("strong");
-      price.innerHTML = data[i].PRICE;
-      
+      price.innerHTML = data[i].PRICE + " €";
+
       price_container.append(price);
       description_outer.append(price_container);
 
@@ -315,11 +318,11 @@ function generate_my_announce_page(data)
         details_info.innerHTML += "Maison";
       else
         details_info.innerHTML += "Appartement";
-      details_info.innerHTML += "&bull; ";
+      details_info.innerHTML += " &bull; ";
       details_info.innerHTML += data[i].ROOMS + " pièces";
-      details_info.innerHTML += "&bull; ";
+      details_info.innerHTML += " &bull; ";
       details_info.innerHTML += data[i].BEDROOMS + " chambres";
-      details_info.innerHTML += "&bull; ";
+      details_info.innerHTML += " &bull; ";
       details_info.innerHTML += data[i].SURFACE + " m²";
 
       description_outer.append(details_info);
@@ -330,14 +333,16 @@ function generate_my_announce_page(data)
       description_outer.append(department);
 
       // View button
-      var view_button_outer = createNode("div");
+      var view_button_outer = createNode("a");
+      view_button_outer.id = data[i].ID;
       view_button_outer.className = "col-md-10 mt-3 d-flex justify-content-center align-items-center";
       view_button_outer.style = "border-radius:5px; border:1px solid #61AEB5; background-color:#61AEB5; height:40px; cursor: pointer;";
+      view_button_outer.href = data[i].ANNOUNCE_LINK;
 
       var view_icon = createNode("i");
       view_icon.className = "fas fa-eye";
       view_icon.style = "color:white !important; font-size:15px; margin-right:10px;";
-      
+
       view_button_outer.append(view_icon);
 
       var view_text = createNode("span");
@@ -349,8 +354,10 @@ function generate_my_announce_page(data)
 
       // Delete button
       var delete_button_outer = createNode("div");
+      delete_button_outer.id = data[i].ID;
       delete_button_outer.className = "col-md-10 mt-3 d-flex justify-content-center align-items-center";
       delete_button_outer.style = "border-radius:5px; border:1px solid #ff3333; background-color:#ff3333; height:40px; cursor: pointer;";
+      delete_button_outer.onclick = delete_announce;
 
       var delete_icon = createNode("i");
       delete_icon.className = "far fa-trash-alt";
@@ -366,10 +373,39 @@ function generate_my_announce_page(data)
       description_outer.append(delete_button_outer);
 
       announce_outer.append(description_outer);
-      main_section.append(announce_outer);
+      my_deposit_frame.append(announce_outer);
   }
 }
 
+function detail_announce(event)
+{
+  window.location.href = url;
+}
+
+function delete_announce(event)
+{
+  // d_url = 'https://surfyn.fr:7878/delete_announce?user_id=' + isConnectedUser() + '&ad_id=' + ad_id;
+  d_url = 'http://localhost:7878/delete_announce?user_id=' + isConnectedUser() + '&ad_id=' + event.currentTarget.id;
+
+  fetch(d_url, {
+    method: "POST",
+  })
+    .then(function (response) {
+        if(response.ok)
+        {
+          console.log('Announce deleted');
+          document.location.reload()
+        }
+        else
+            console.log('An error occured');
+    })
+    .catch(function (error) {
+        $('#waiting_modal').modal({
+            show: false
+        });
+        console.log(error);
+    });
+}
 
 /*loadJSON("data/criteria.json",
 function (data) { generate_my_search_page(JSON.parse(data.response));}, function(err) {console.log(err);});
@@ -389,8 +425,8 @@ fetch(url)
     console.log(error);
 });
 
-// var url_ad = "https://surfyn.fr:7878/my_ad_search?userid="
-var url_ad = "https://localhost:7878/my_ad_search?userid="
+// var url_ad = "https://surfyn.fr:7878/my_ad?userid="
+var url_ad = "http://localhost:7878/my_ad?userid="
 
 url_ad += userid;
 

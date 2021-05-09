@@ -73,7 +73,11 @@ namespace surfyn
 
 			return _return;
 		}
+<<<<<<< HEAD
 		
+=======
+
+>>>>>>> Announce deposit available
 		DepositResult DepositAccess::delete_announce(const std::map<utility::string_t,  utility::string_t>& query)
 		{
 			auto iter = query.find("user_id");

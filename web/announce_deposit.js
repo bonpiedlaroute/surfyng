@@ -812,7 +812,7 @@ function validateAndUpload(input) {
         // imagesData.append('image'+input.id.slice(-1), file);
 
         // Upload image on Cloud Storage Bucket
-        var uploadTask = storageRef.child('deposit/puteaux/' + file.name).put(file);
+        var uploadTask = storageRef.child('deposit/' + sessionStorage.getItem('city').toLowerCase() + '/' + file.name).put(file);
 
         var index = input.id.slice(-1);
         console.log('Image ' + index);
