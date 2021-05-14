@@ -12,6 +12,7 @@
 #include "EstimatorAccess.h"
 #include "sf_services/sf_utils/inc/Geolocal.h"
 #include "EmailAlertAccess.h"
+#include <unordered_map>
 
 using namespace web;
 using namespace http;
@@ -41,6 +42,25 @@ namespace rest_server
            void handle_put(http_request message);
            void handle_post(http_request message);
            void handle_delete(http_request message);
+
+           void send_json_response(const utility::stringstream_t& sstream, http_request& message);
+           void send_ok_response(http_request& message);
+           void send_badrequest_response(http_request& message);
+           void send_serviceunavailable_response(http_request& message);
+
+           /* GET SERVICE REQUEST HANDLERS */
+           void handle_searchall(http_request& message);
+           void handle_searchad(http_request& message);
+           void handle_predict(http_request& message);
+           void handle_city_info(http_request& message);
+           void handle_my_realestate_search(http_request& message);
+
+            /* POST SERVICE REQUEST HANDLERS */
+           void handle_sendemailtosurfyn(http_request& message);
+           void handle_registeremailalert(http_request& message);
+           void handle_change_alert_status(http_request& message);
+           void handle_accountcreation(http_request& message);
+       private:
            http_listener m_listener;
            std::string m_dbaccess_host;
            int m_dbaccess_port;
@@ -49,10 +69,9 @@ namespace rest_server
            std::string m_emailalert_host;
            int m_emailalert_port;
            std::shared_ptr<surfyn::utils::GeoLocal> m_geoLocalService;
-           /*DBaccess m_dbaccess;
-           EstimatorAccess m_estimatoraccess;
-           EmailAlertAccess m_emailalertaccess;*/
 
+          std::unordered_map<std::string, std::function<void(http_request& message)>> m_http_get_services;
+          std::unordered_map<std::string, std::function<void(http_request& message)>> m_http_post_services;
    };
 }
 }

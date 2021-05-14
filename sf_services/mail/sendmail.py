@@ -46,7 +46,7 @@ class SendMailHandler(Iface):
       logging.info("start sending email to Surfyn")
       smtp_host_port = self.smtp_host + ':' + self.smtp_port
       smtp_server = smtplib.SMTP(smtp_host_port) 
-      logging.info("log in to smtp server")
+      logging.info("sendemailtosurfyn log in to smtp server")
       smtp_server.login(self.from_addr, self.password)
 
       msg_to_send = 'De la part de :' + sender_email + '\n\n '+ msg
@@ -74,7 +74,43 @@ class SendMailHandler(Iface):
 
       smtp_server.quit()
 
-      logging.info("send email finished!")
+      logging.info("sendemailtosurfyn finished!")
+
+      retval = SendEmailResult()
+      retval.success = True
+      retval.error = ""
+
+      return retval
+
+
+   def sendaccountcreationemail(self, display_name, new_account_email):
+      logging.info(u'start sending email to user {}'.format(display_name))
+      smtp_host_port = self.smtp_host + ':' + self.smtp_port
+      smtp_server = smtplib.SMTP(smtp_host_port) 
+      logging.info("sendaccountcreationemail log in to smtp server")
+      smtp_server.login(self.from_addr, self.password)
+
+      msg_to_send = u'Bonjour '
+      msg_to_send += display_name
+      msg_to_send += u',\n\n'
+      msg_to_send += u'Votre compte Surfyn a bien été créé.\n'
+      msg_to_send += u'Connectez-vous dès à  présent sur https://surfyn.fr et créez des alertes email.\n'
+      msg_to_send += u'Ainsi, vous serez notifié par email dès qu\'une annonce immobilière, correspondant à votre recherche, est mise en ligne sur le web.\n\n'
+      msg_to_send += u'A votre service  \n'
+      msg_to_send += u'L\' équipe Surfyn\n'
+
+      msg = MIMEText(msg_to_send, _charset='utf-8')
+      msg['Subject'] = u'Merci - Votre compte Surfyn a bien été créé'
+      msg['From'] = formataddr((str(Header('Surfyn', 'utf-8')), self.from_addr))
+      msg['To'] = new_account_email
+      logging.info("sending msg :\n\n"+msg_to_send)
+      recipients = []
+      recipients.append(new_account_email)
+      smtp_server.sendmail(self.from_addr, recipients, msg.as_string())
+
+      smtp_server.quit()
+
+      logging.info("sendaccountcreationemail finished!")
 
       retval = SendEmailResult()
       retval.success = True

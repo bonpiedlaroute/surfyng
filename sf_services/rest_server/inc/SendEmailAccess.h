@@ -23,6 +23,7 @@ namespace rest_server
    public:
       SendEmailAccess(const std::string& host, int port);
       bool sendToSurfyn(const std::string& sender_email, const std::string& subject, const std::string& msg);
+      bool sendAccountCreationEmail(const std::string& user_dislayname, const std::string& user_email);
 
    };
 }

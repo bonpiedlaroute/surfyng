@@ -85,7 +85,9 @@ function signOutUser()
   sessionStorage.setItem("user_display_name", "");
   var user_not_connected_box = document.getElementById("user_not_connected_box");
   var user_connected_box = document.getElementById("user_connected_box");
+  if(user_not_connected_box)
   user_not_connected_box.style.display = "flex";
+  if(user_connected_box)
   user_connected_box.style.display = "none";
 }
 function updateUserStatus()
@@ -95,12 +97,15 @@ function updateUserStatus()
   var user_not_connected_box = document.getElementById("user_not_connected_box");
   if(user_id != "")
   {
-
       user_connected_box.style.display = "flex";
       user_not_connected_box.style.display = "none";
       var user_display_name = document.getElementById("user_display_name");
       user_display_name.innerHTML = sessionStorage.getItem("user_display_name");
-
+  }
+  else
+  {
+    user_not_connected_box.style.display = "flex";
+    user_connected_box.style.display = "none";
   }
 }
 function checkUserStatus(user)
@@ -129,7 +134,6 @@ function checkUserStatus(user)
     var user_connected_box = document.getElementById("user_connected_box");
     user_not_connected_box.style.display = "none";
     user_connected_box.style.display = "flex";
-    // ...
     } else {
       signOutUser();
     }
@@ -170,7 +174,6 @@ function connect_to_surfyn()
       if (!firebase.apps.length)
       {
         firebase.initializeApp(firebaseConfig);
-        firebase.analytics();
       }
 
 
@@ -243,7 +246,6 @@ function connect_to_surfyn_with_google()
   if (!firebase.apps.length)
   {
     firebase.initializeApp(firebaseConfig);
-    firebase.analytics();
   }
 
   var provider = new firebase.auth.GoogleAuthProvider();
@@ -251,8 +253,6 @@ function connect_to_surfyn_with_google()
 
   provider.addScope('https://www.googleapis.com/auth/userinfo.email');
   firebase.auth().signInWithRedirect(provider);
-  console.log("connect_to_surfyn_with_google");
-
 }
 
 function connect_to_surfyn_with_facebook()
@@ -271,7 +271,6 @@ function connect_to_surfyn_with_facebook()
   if (!firebase.apps.length)
   {
     firebase.initializeApp(firebaseConfig);
-    firebase.analytics();
   }
 
   var provider = new firebase.auth.FacebookAuthProvider();
@@ -427,7 +426,6 @@ function subscribe_to_surfyn()
       if (!firebase.apps.length)
       {
         firebase.initializeApp(firebaseConfig);
-        firebase.analytics();
       }
 
 
@@ -439,14 +437,28 @@ function subscribe_to_surfyn()
         var user = usercredentials.user;
         if(user && prenom.value)
         {
-          user.updateProfile({
-           displayName: prenom.value
-         }).then(function() {
-           console.log('username successfully updated');
-         }, function(error) {
-           // An error happened.
-           console.log(error);
-         });
+           user.updateProfile({
+             displayName: prenom.value
+           }).then(function() {
+             console.log('username successfully updated');
+           }, function(error) {
+             // An error happened.
+             console.log(error);
+           });
+
+           var service_endpoint = "https://surfyn.fr:7878/accountcreation";
+           //var service_endpoint = "http://localhost:7878/accountcreation";
+
+           service_endpoint +="?user_displayname="
+           service_endpoint += prenom.value;
+           service_endpoint +="&user_email="
+           service_endpoint += email.value;
+           fetch(service_endpoint, {
+             method : 'POST'
+           })
+           .catch(function(error) {
+             console.log(error);
+           });
         }
 
         $("#inscription").modal("hide");
@@ -502,16 +514,61 @@ function subscribe_to_surfyn()
 
 }
 
-function disconnect_to_surfyn()
+function disconnect_and_reload()
 {
+  // Initialize Firebase
+  if (!firebase.apps.length)
+  {
+    var firebaseConfig = {
+      apiKey: "AIzaSyAWjNYovhM8IDUWL_ZGZ9jnb4i14dLQSe4",
+      authDomain: "surfyn.firebaseapp.com",
+      databaseURL: "https://surfyn.firebaseio.com",
+      projectId: "surfyn",
+      storageBucket: "surfyn.appspot.com",
+      messagingSenderId: "1080663386908",
+      appId: "1:1080663386908:web:d0c38731a4d55de5dea8d9",
+      measurementId: "G-7X8E11EEFD"
+    };
+    firebase.initializeApp(firebaseConfig);
+  }
   firebase.auth().signOut().then(() => {
     // Sign-out successful.
     signOutUser();
+    document.location.reload();
     console.log("Sign out successfull");
   }).catch((error) => {
   // An error happened.
   console.log(error);
   });
+}
+
+function disconnect_and_goto_homepage()
+{
+  // Initialize Firebase
+  if (!firebase.apps.length)
+  {
+    var firebaseConfig = {
+      apiKey: "AIzaSyAWjNYovhM8IDUWL_ZGZ9jnb4i14dLQSe4",
+      authDomain: "surfyn.firebaseapp.com",
+      databaseURL: "https://surfyn.firebaseio.com",
+      projectId: "surfyn",
+      storageBucket: "surfyn.appspot.com",
+      messagingSenderId: "1080663386908",
+      appId: "1:1080663386908:web:d0c38731a4d55de5dea8d9",
+      measurementId: "G-7X8E11EEFD"
+    };
+    firebase.initializeApp(firebaseConfig);
+  }
+  firebase.auth().signOut().then(() => {
+    // Sign-out successful.
+    signOutUser();
+    document.location.href ="/";
+    console.log("Sign out successfull");
+  }).catch((error) => {
+  // An error happened.
+  console.log(error);
+  });
+
 }
 
 function isConnectedUser()
@@ -522,7 +579,7 @@ function register_alert()
 {
     if(isConnectedUser())
     {
-      var url = 'https://surfyn.fr:7878/registeremailalert';
+      var url = "https://surfyn.fr:7878/registeremailalert";
       //var url = "http://localhost:7878/registeremailalert";
 
       if(window.location.search == "")
@@ -570,7 +627,6 @@ function passwordResetByEmail()
   if (!firebase.apps.length)
   {
     firebase.initializeApp(firebaseConfig);
-    firebase.analytics();
   }
 
 
