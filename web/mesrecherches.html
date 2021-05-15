@@ -18,6 +18,7 @@
   <!--  Surfyn styles -->
   <link href="surfyn.css" rel="stylesheet">
   <link href="login.css" rel="stylesheet">
+  <link href="mysearch.css" rel="stylesheet">
   <!--- font awesome -->
 
   <link rel="shortcut icon" href="#" />
@@ -139,34 +140,136 @@
 
     <div id="mydeposit-main-content">
       <div class="sf_my_research_title_box">
-        <h1 class="sf_my_research_title_text"> <strong>Mes annonces</strong></h1>
+        <h1 class="sf_my_research_title_text"> <strong>Mes annonces</strong> <span id="ad_loader"
+            class="fa fa-spinner fa-spin"></span></h1>
       </div>
-      <!-- <div class="d-flex flex-row flex-wrap">
-        <div class="row col-md-6 col-lg-4 mt-3 pr-0">
-          <div class="col-md-6 pl-0 ml-2 pr-0" style="border: 1px solid #61AEB5; border-radius: 2px;">
-            <img class="img-fluid" style="width: 100%; height: 100%;" src="bitcoin_joke.jpg" alt="loft">
-          </div>
-          <div class="col-md-5">
-            <h4><strong>Appartement meublé</strong></h4>
-            <h5><strong>178 000 €</strong></h5>
-            <p>Appartement &bull; 7 pièces &bullet; 3 chambres &bullet; 89 m²</p>
-            Puteaux(92800)
+      <div class="container mx-auto mt-4">
+        <div class="row justify-content-center mt-4">
+          <div class="card-deck">
+            <div class="col-md-6 col-lg-4 mb-3">
+              <div class="card ml-0">
+                <img class="card-img-top img-fluid" src="apart4.jpg" alt="loft">
+                <div class="card-body">
+                  <h4 class="card-title text-muted">Appartement meublé</h4>
+                  <h5 class="card-subtitle mb-2">178 000 €</h5>
+                  <p class="card-text text-muted">Appartement &bull; 7 pièces &bullet; 3 chambres &bullet; 89 m²</p>
+                  <p class="card-text text-muted">Puteaux(92800)</p>
 
-            <div class="col-md-10 mt-3 d-flex justify-content-center align-items-center"
-              style="border-radius:5px; border:1px solid #61AEB5; background-color:#61AEB5; height:40px; cursor: pointer;">
-              <i class="fas fa-eye" style="color:white !important; font-size:15px; margin-right:10px;"></i>
-              <span class="" style="color:white; font-weight: bold; font-size: 13px;">Voir l'annonce</span>
+                  <div class="mt-3 d-flex justify-content-center align-items-center"
+                    style="border-radius:5px; border:1px solid #61AEB5; background-color:#61AEB5; height:40px; cursor: pointer;">
+                    <i class="fas fa-eye" style="color:white !important; font-size:15px; margin-right:10px;"></i>
+                    <span style="color:white; font-weight: bold; font-size: 13px;">Voir l'annonce</span>
+                  </div>
+
+                  <div class="mt-3 d-flex justify-content-center align-items-center"
+                    style="border-radius:5px; border:1px solid #ff3333; background-color:#ff3333; height:40px; cursor: pointer;">
+                    <i class="far fa-trash-alt" style="color:white !important; font-size:15px; margin-right:10px;"></i>
+                    <span style="color:white; font-weight: bold; font-size: 13px;">Supprimer l'annonce</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div class="col-md-10 mt-3 d-flex justify-content-center align-items-center"
-              style="border-radius:5px; border:1px solid #ff3333; background-color:#ff3333; height:40px; cursor: pointer;">
-              <i class="far fa-trash-alt" style="color:white !important; font-size:12px; margin-right:4px;"></i>
-              <span class="" style="color:white; font-weight: bold; font-size: 10px;">Supprimer l'annonce</span>
-            </div>
-          </div>
-        </div> -->
-      </div>
+            <div class="col-md-6 col-lg-4 mb-3">
+              <div class="card ml-0">
+                <img class="card-img-top img-fluid" src="apart5.jpg" alt="loft">
+                <div class="card-body">
+                  <h4 class="card-title">Appartement meublé</h4>
+                  <h5 class="card-subtitle mb-2 text-muted">178 000 €</h5>
+                  <p class="card-text">Appartement &bull; 7 pièces &bullet; 3 chambres &bullet; 89 m²</p>
+                  <p class="card-text">Puteaux(92800)</p>
 
+                  <div class="mt-3 d-flex justify-content-center align-items-center"
+                    style="border-radius:5px; border:1px solid #61AEB5; background-color:#61AEB5; height:40px; cursor: pointer;">
+                    <i class="fas fa-eye" style="color:white !important; font-size:15px; margin-right:10px;"></i>
+                    <span style="color:white; font-weight: bold; font-size: 13px;">Voir l'annonce</span>
+                  </div>
+
+                  <div class="mt-3 d-flex justify-content-center align-items-center"
+                    style="border-radius:5px; border:1px solid #ff3333; background-color:#ff3333; height:40px; cursor: pointer;">
+                    <i class="far fa-trash-alt" style="color:white !important; font-size:15px; margin-right:10px;"></i>
+                    <span style="color:white; font-weight: bold; font-size: 13px;">Supprimer l'annonce</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 mb-3">
+              <div class="card ml-0">
+                <img class="card-img-top img-fluid" src="apart6.jpg" alt="loft">
+                <div class="card-body">
+                  <h4 class="card-title">Appartement meublé</h4>
+                  <h5 class="card-subtitle mb-2 text-muted">178 000 €</h5>
+                  <p class="card-text">Appartement &bull; 7 pièces &bullet; 3 chambres &bullet; 89 m²</p>
+                  <p class="card-text">Puteaux(92800)</p>
+
+                  <div class="mt-3 d-flex justify-content-center align-items-center"
+                    style="border-radius:5px; border:1px solid #61AEB5; background-color:#61AEB5; height:40px; cursor: pointer;">
+                    <i class="fas fa-eye" style="color:white !important; font-size:15px; margin-right:10px;"></i>
+                    <span style="color:white; font-weight: bold; font-size: 13px;">Voir l'annonce</span>
+                  </div>
+
+                  <div class="mt-3 d-flex justify-content-center align-items-center"
+                    style="border-radius:5px; border:1px solid #ff3333; background-color:#ff3333; height:40px; cursor: pointer;">
+                    <i class="far fa-trash-alt" style="color:white !important; font-size:15px; margin-right:10px;"></i>
+                    <span style="color:white; font-weight: bold; font-size: 13px;">Supprimer l'annonce</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 mb-3">
+              <div class="card ml-0">
+                <img class="card-img-top img-fluid" src="apart6.jpg" alt="loft">
+                <div class="card-body">
+                  <h4 class="card-title">Appartement meublé</h4>
+                  <h5 class="card-subtitle mb-2 text-muted">178 000 €</h5>
+                  <p class="card-text">Appartement &bull; 7 pièces &bullet; 3 chambres &bullet; 89 m²</p>
+                  <p class="card-text">Puteaux(92800)</p>
+
+                  <div class="mt-3 d-flex justify-content-center align-items-center"
+                    style="border-radius:5px; border:1px solid #61AEB5; background-color:#61AEB5; height:40px; cursor: pointer;">
+                    <i class="fas fa-eye" style="color:white !important; font-size:15px; margin-right:10px;"></i>
+                    <span style="color:white; font-weight: bold; font-size: 13px;">Voir l'annonce</span>
+                  </div>
+
+                  <div class="mt-3 d-flex justify-content-center align-items-center"
+                    style="border-radius:5px; border:1px solid #ff3333; background-color:#ff3333; height:40px; cursor: pointer;">
+                    <i class="far fa-trash-alt" style="color:white !important; font-size:15px; margin-right:10px;"></i>
+                    <span style="color:white; font-weight: bold; font-size: 13px;">Supprimer l'annonce</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 mb-3">
+              <div class="card ml-0">
+                <img class="card-img-top img-fluid" src="apart6.jpg" alt="loft">
+                <div class="card-body">
+                  <h4 class="card-title">Appartement meublé</h4>
+                  <h5 class="card-subtitle mb-2 text-muted">178 000 €</h5>
+                  <p class="card-text">Appartement &bull; 7 pièces &bullet; 3 chambres &bullet; 89 m²</p>
+                  <p class="card-text">Puteaux(92800)</p>
+
+                  <div class="mt-3 d-flex justify-content-center align-items-center"
+                    style="border-radius:5px; border:1px solid #61AEB5; background-color:#61AEB5; height:40px; cursor: pointer;">
+                    <i class="fas fa-eye" style="color:white !important; font-size:15px; margin-right:10px;"></i>
+                    <span style="color:white; font-weight: bold; font-size: 13px;">Voir l'annonce</span>
+                  </div>
+
+                  <div class="mt-3 d-flex justify-content-center align-items-center"
+                    style="border-radius:5px; border:1px solid #ff3333; background-color:#ff3333; height:40px; cursor: pointer;">
+                    <i class="far fa-trash-alt" style="color:white !important; font-size:15px; margin-right:10px;"></i>
+                    <span style="color:white; font-weight: bold; font-size: 13px;">Supprimer l'annonce</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
   </main>
   <footer>
 

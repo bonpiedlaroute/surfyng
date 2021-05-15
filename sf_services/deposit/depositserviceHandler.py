@@ -426,7 +426,7 @@ class DepositServiceHandler(Iface):
             expression_value[':uid'] = userid_value
 
             ad_status_value = ttypes.ValueType()
-            ad_status_value.field = 'OFF'
+            ad_status_value.field = 'ON'
             ad_status_value.fieldtype = ttypes.Type.STRING
             expression_value[':ads'] = ad_status_value
 
