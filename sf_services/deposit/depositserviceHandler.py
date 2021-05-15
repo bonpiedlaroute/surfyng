@@ -51,7 +51,7 @@ class DepositServiceHandler(Iface):
         self.smtp_port = config['EMAIL']['smtp_port']
 
         self.from_addr = config['EMAIL']['from_addr']
-        self.to_addrs = config['EMAIL']['to_addrs']
+        self.to_addrs = config['EMAIL']['to_addr']
         self.password = config['EMAIL']['password']
         
         self.works = Queue.Queue()
@@ -272,7 +272,7 @@ class DepositServiceHandler(Iface):
 
         # DELETED STATUS
         deleted_value = ttypes.ValueType()
-        deleted_value.field = 'OFF'
+        deleted_value.field = 'ON'
         deleted_value.fieldtype = ttypes.Type.STRING
         values['AD_STATUS'] = deleted_value             # Can be ON, OFF
 
@@ -320,18 +320,18 @@ class DepositServiceHandler(Iface):
             smtp_host_port = '{}:{}'.format(self.smtp_host, self.smtp_port)
             smtp_server = smtplib.SMTP(smtp_host_port)
             logging.info('Logging into SMTP Server')
-            smtp_server.loging(self.from_addr, self.password)
+            smtp_server.login(self.from_addr, self.password)
 
             msg_to_send = 'Votre annonce est en ligne sur Surfyn'
             
             recipients = []
             recipients.append(user.email)
             message = MIMEText(msg_to_send, _charset='utf-8')
-            message['Subject'] = 'Confirmation: Annonce déposée avec succès'
+            message['Subject'] = 'Confirmation: Annonce deposee avec succes'
             message['From'] = formataddr((str(Header('Surfyn', 'utf-8')), self.from_addr))
             message['To'] = user.email
 
-            smtp_server.sendmail(self.from_addr, recipients)
+            smtp_server.sendmail(self.from_addr, recipients, message.as_string())
 
             smtp_server.quit()
             
@@ -367,7 +367,7 @@ class DepositServiceHandler(Iface):
 
         values = {}
         announce_status = ttypes.ValueType()
-        announce_status.field = 'ON'
+        announce_status.field = 'OFF'
         announce_status.fieldtype = Type.STRING
         values['AD_STATUS'] = announce_status
 

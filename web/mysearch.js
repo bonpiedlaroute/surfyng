@@ -269,51 +269,46 @@ function generate_my_search_page(data)
 
 function generate_my_announce_page(data)
 {
-  var main_section = document.getElementById("mydeposit-main-content");
-  var my_deposit_frame = createNode("div");
-  my_deposit_frame.className = "d-flex flex-row flex-wrap";
 
-  main_section.appendChild(my_deposit_frame);
+  var card_deck = document.getElementById("deck");
 
   for(var i = 0; i < data.length; i++)
   {
-      var announce_outer = createNode("div");
-      announce_outer.className = "row col-md-6 col-lg-4 mt-3 pr-0";
 
-      var image_container = createNode("div");
-      image_container.className = "col-md-6 pl-0 ml-2 pr-0";
-      image_container.style = "border: 1px solid #61AEB5; border-radius: 2px;"
+      var card_col = createNode("div");
+      card_col.className = "col-md-6 col-lg-4 mb-3";
+
+      var card = createNode("div");
+      card.className = "card ml-0 h-100";
 
       var announce_image = createNode("img");
-      announce_image.className = "img-fluid";
-      announce_image.style = "width: 100%; height: 100%;"
+      announce_image.className = "card-img-top img-fluid";
       images = data[i].IMAGE.replaceAll('\'', '\"');
       images = images.replaceAll('u\"', '\"');
       images = JSON.parse(images)
       announce_image.src = images['image1'];
       announce_image.alt = "announce"
 
-      image_container.append(announce_image);
-      announce_outer.append(image_container);
+      card.appendChild(announce_image);
 
-      var description_outer = createNode("div");
-      description_outer.className = "col-md-5";
+      var card_body = createNode("div");
+      card_body.className = "card-body";
 
-      var title_container = createNode("h4");
-      var title = createNode("strong");
+      var title = createNode("h4");
+      title.className = "card-title text-muted";
       title.innerHTML = data[i].ANNOUNCE_TITLE;
 
-      title_container.append(title);
-      description_outer.append(title_container);
+      card_body.appendChild(title);
 
-      var price_container = createNode("h5");
-      var price = createNode("strong");
+      var price = createNode("h5");
+      price.className = "card-subtitle mb-2";
       price.innerHTML = data[i].PRICE + " €";
 
-      price_container.append(price);
-      description_outer.append(price_container);
+      card_body.append(price);
 
       var details_info = createNode("p");
+      details_info.className = "card-text text-muted";
+
       if (data[i].PROPERTY_TYPE == 1)
         details_info.innerHTML += "Maison";
       else
@@ -325,17 +320,18 @@ function generate_my_announce_page(data)
       details_info.innerHTML += " &bull; ";
       details_info.innerHTML += data[i].SURFACE + " m²";
 
-      description_outer.append(details_info);
+      card_body.append(details_info);
 
-      var department = createNode("span");
+      var department = createNode("p");
+      department.className = "card-text text-muted"
       department.innerHTML = data[i].CITY + "(" + INSEE_CODE[data[i].CITY] + ")";
 
-      description_outer.append(department);
+      card_body.append(department);
 
       // View button
       var view_button_outer = createNode("a");
       view_button_outer.id = data[i].ID;
-      view_button_outer.className = "col-md-10 mt-3 d-flex justify-content-center align-items-center";
+      view_button_outer.className = "mt-3 d-flex justify-content-center align-items-center";
       view_button_outer.style = "border-radius:5px; border:1px solid #61AEB5; background-color:#61AEB5; height:40px; cursor: pointer;";
       view_button_outer.href = data[i].ANNOUNCE_LINK;
 
@@ -350,30 +346,31 @@ function generate_my_announce_page(data)
       view_text.innerHTML = "Voir l'annonce";
 
       view_button_outer.append(view_text);
-      description_outer.append(view_button_outer);
+      card_body.append(view_button_outer);
 
       // Delete button
       var delete_button_outer = createNode("div");
       delete_button_outer.id = data[i].ID;
-      delete_button_outer.className = "col-md-10 mt-3 d-flex justify-content-center align-items-center";
+      delete_button_outer.className = "mt-3 d-flex justify-content-center align-items-center";
       delete_button_outer.style = "border-radius:5px; border:1px solid #ff3333; background-color:#ff3333; height:40px; cursor: pointer;";
       delete_button_outer.onclick = delete_announce;
 
       var delete_icon = createNode("i");
       delete_icon.className = "far fa-trash-alt";
-      delete_icon.style = "color:white !important; font-size:12px; margin-right:4px;";
+      delete_icon.style = "color:white !important; font-size:15px; margin-right:10px;";
 
       delete_button_outer.append(delete_icon);
 
       var delete_text = createNode("span");
-      delete_text.style = "color:white; font-weight: bold; font-size: 10px;";
+      delete_text.style = "color:white; font-weight: bold; font-size: 13px;";
       delete_text.innerHTML =  "Supprimer l'annonce";
 
       delete_button_outer.append(delete_text);
-      description_outer.append(delete_button_outer);
+      card_body.append(delete_button_outer);
 
-      announce_outer.append(description_outer);
-      my_deposit_frame.append(announce_outer);
+      card.append(card_body);
+      card_col.append(card);
+      card_deck.appendChild(card_col);
   }
   var loader = document.getElementById("ad_loader");
   loader.style.display = "none";
