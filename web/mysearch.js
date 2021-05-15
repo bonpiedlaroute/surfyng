@@ -375,6 +375,8 @@ function generate_my_announce_page(data)
       announce_outer.append(description_outer);
       my_deposit_frame.append(announce_outer);
   }
+  var loader = document.getElementById("ad_loader");
+  loader.style.display = "none";
 }
 
 function detail_announce(event)
