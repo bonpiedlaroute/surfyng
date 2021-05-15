@@ -6,21 +6,26 @@ sys.path.append('thrift_generated/depositservice')
 sys.path.append('../../bot')
 sys.path.append('../../bot/thrift_generated')
 
-from dynamodb_access.ttypes import Type, ValueType, KeyValue
-from dynamodb_access import dynamodb_access, ttypes
 from hash_id import *
-from firebase_admin import credentials, auth
+from email.header import Header
 from thrift.server import TServer
+from email.utils import formataddr
+from email.mime.text import MIMEText
 from thrift.protocol import TBinaryProtocol
+from firebase_admin import credentials, auth
 from thrift.transport import TSocket, TTransport
+from dynamodb_access import dynamodb_access, ttypes
+from dynamodb_access.ttypes import Type, ValueType, KeyValue
 from thrift_generated.depositservice.ttypes import DepositResult
 from thrift_generated.depositservice.deposit_service import Iface
 from thrift_generated.depositservice.deposit_service import Processor
+
 import firebase_admin
 import configparser
 import unidecode
 import threading
 import datetime
+import smtplib
 import logging
 import Queue
 import pytz
@@ -42,6 +47,13 @@ class DepositServiceHandler(Iface):
         self.deposit_tablename = config['DEFAULT']['deposit_tablename']
         self.summary_tablename = config['DEFAULT']['summary_tablename']
 
+        self.smtp_host = config['EMAIL']['smtp_host']
+        self.smtp_port = config['EMAIL']['smtp_port']
+
+        self.from_addr = config['EMAIL']['from_addr']
+        self.to_addrs = config['EMAIL']['to_addrs']
+        self.password = config['EMAIL']['password']
+        
         self.works = Queue.Queue()
         self.condition = threading.Condition()
 
@@ -68,7 +80,6 @@ class DepositServiceHandler(Iface):
             "Nanterre": 92000,
             "Colombes": 92700
         }
-
         logging.info('Deposit announce of user {}'.format(user_id))
 
         user = auth.get_user(user_id)
@@ -304,6 +315,28 @@ class DepositServiceHandler(Iface):
             return_value.success = True
             logging.info('Successful put announce {} in table {} and table {}'.format(
                 ID, self.deposit_tablename, self.summary_tablename))
+            
+            logging.info('Start sending confirmation mail')
+            smtp_host_port = '{}:{}'.format(self.smtp_host, self.smtp_port)
+            smtp_server = smtplib.SMTP(smtp_host_port)
+            logging.info('Logging into SMTP Server')
+            smtp_server.loging(self.from_addr, self.password)
+
+            msg_to_send = 'Votre annonce est en ligne sur Surfyn'
+            
+            recipients = []
+            recipients.append(user.email)
+            message = MIMEText(msg_to_send, _charset='utf-8')
+            message['Subject'] = 'Confirmation: Annonce déposée avec succès'
+            message['From'] = formataddr((str(Header('Surfyn', 'utf-8')), self.from_addr))
+            message['To'] = user.email
+
+            smtp_server.sendmail(self.from_addr, recipients)
+
+            smtp_server.quit()
+            
+            logging.info('Email sent successfully')
+
         elif not result.success:
             return_value.success = False
             return_value.error = result.error
