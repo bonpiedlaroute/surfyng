@@ -36,16 +36,26 @@ from thrift_generated.dynamodb_access.ttypes import KeyValue
 from thrift_generated.dynamodb_access import *
 from hash_id import *
 from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 import threading
 import Queue
 from email.header import Header
 from email.utils import formataddr
 from inseecode_postalcode import *
+from template_notification_email import *
+import re
 
 
 
 #EmailAlertResult registerEmailAlert(1: string userid, 2: map<string, string> parameters),
 #EmailAlertResult notifyNewAnnounces(1: string city)
+
+def from_dict(dct):
+    def lookup(match):
+        key = match.group(1)
+        return dct[key] if key in dct else ''
+    return lookup
+
 
 class UserAlert:
    def __init__(self):
@@ -578,6 +588,12 @@ class EmailAlertServiceHandler(Iface):
          duplicates_value.fieldtype = ttypes.Type.STRING
          attribute_to_get["DUPLICATES"] = duplicates_value
 
+         #IMAGE
+         image_value = ttypes.ValueType()
+         image_value.fieldtype = ttypes.Type.STRING
+         attribute_to_get["IMAGE"] = image_value
+
+
 
          expression_value = {}
          city_value = ttypes.ValueType()
@@ -615,7 +631,7 @@ class EmailAlertServiceHandler(Iface):
       for ads in new_ads:
          for alert in active_alert_list:
             if self.ads_match(ads, alert) and ads["ID"] not in userToNotify[alert["USERID"]].forbidden_ads:
-               userToNotify[alert["USERID"]].ads_list.append(self.buildAdsUrl(ads, city))
+               userToNotify[alert["USERID"]].ads_list.append(ads)
                if "DUPLICATES" in ads:
                   duplicates_ad=ads["DUPLICATES"].split(",")
                   for announce in duplicates_ad:
@@ -640,33 +656,64 @@ class EmailAlertServiceHandler(Iface):
                subject_msg += u' nouvelle annonce immobilière'
 
             subject_msg += u' à '
-            subject_msg += city[0].upper()
-            subject_msg += city[1:]
             
-            body_msg = 'Bonjour '
+            formated_city = city[0].upper()
+            formated_city += city[1:]
+
+            subject_msg += formated_city
+           
+
+            body_msg = ""
+            text_msg = u"Bonjour "
+   
+            user_display_name = ""
+
+            subs = {}
+
             if userToNotify[userid].user_display_name:
                pos = userToNotify[userid].user_display_name.find(' ')
-               name = userToNotify[userid].user_display_name[:pos] if pos != -1 else userToNotify[userid].user_display_name 
-               body_msg += name
-            body_msg += '\n'
-            body_msg += str(len(userToNotify[userid].ads_list))
+               user_display_name = userToNotify[userid].user_display_name[:pos] if pos != -1 else userToNotify[userid].user_display_name 
+           
+            subs["USER_DISPLAY_NAME"] = user_display_name
+            
+            text_msg += user_display_name
+            text_msg += "\n\n"
+
+            nb_ads = str(len(userToNotify[userid].ads_list))
+            subs["NB_NEW_AD"] = nb_ads
+
             if isplural:
-               body_msg += u' nouvelles annonces sur https://surfyn.fr'
-               body_msg += u' correspondent à vos critères de recherche immobilière\n'
+               tmp_msg_header = template_email_msg_header_many
+               text_msg += nb_ads
+               text_msg += u" nouvelles annonces sur https://surfyn.fr correspondent à vos critères de recherche immobilière.\n"
             else:
-               body_msg += u' nouvelle annonce sur https://surfyn.fr'
-               body_msg += u' correspond à vos critères de recherche immobilière\n'
+               tmp_msg_header = template_email_msg_header_one
+               text_msg += u"1 nouvelle annonce sur https://surfyn.fr correspond à vos critères de recherche immobilière.\n"                       
+
+            body_msg += re.sub(u'@@(.*?)@@', from_dict(subs), tmp_msg_header)               
 
             for ad in userToNotify[userid].ads_list:
-               body_msg += ad
-               body_msg += '\n'
+               ad["CITY"] = formated_city
+               ad["AD_URL"] = self.buildAdsUrl(ad, city) 
+               text_msg  += ad["AD_URL"]
+               text_msg  += "\n"
+               body_msg += re.sub(u'@@(.*?)@@', from_dict(ad), template_email_msg_body)
 
-            body_msg += u"\n Vous souhaitez connaitre le prix d'un bien immobilier? vous pouvez estimer son prix en ligne, gratuitement sur https://surfyn.fr/estimation-immobiliere-en-ligne.html" 
-            body_msg += u"\n\n A votre service\nL' équipe Surfyn"
-            msg = MIMEText(body_msg, _charset='utf-8')
+            body_msg += template_email_msg_footer
+            text_msg += u"Vous souhaitez connaitre le prix d'un bien immobilier? vous pouvez estimer son prix en ligne, gratuitement sur https://surfyn.fr/estimation-immobiliere-en-ligne.html \n"
+            text_msg += u"A votre service \n"
+            text_msg += u"L' equipe Surfyn\n"
+
+            msg = MIMEMultipart('alternative')
             msg['Subject'] = subject_msg
             msg['From'] = formataddr((str(Header('Surfyn', 'utf-8')), self.from_addr))
             msg['To'] = userToNotify[userid].email
+
+            text_msg_content = MIMEText(text_msg, 'plain', _charset='utf-8')
+            body_msg_content = MIMEText(body_msg, 'html', _charset='utf-8')
+
+            msg.attach(text_msg_content)
+            msg.attach(body_msg_content)
 
             logging.info(u'sending msg:\n{} to user [{}] '.format(body_msg, userToNotify[userid].email))
             smtp_server.sendmail(self.from_addr, recipients, msg.as_string())
