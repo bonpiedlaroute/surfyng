@@ -150,8 +150,8 @@ function enrichRelatedInfos(cityname, isForSale, isFlat)
 
 }
 
-const url = 'https://surfyn.fr:7878/search/ad?id='+ window.location.search.substr(1);
-//const url = 'http://127.0.0.1:7878/search/ad?id='+ window.location.search.substr(1);
+// const url = 'https://surfyn.fr:7878/search/ad?id='+ window.location.search.substr(1);
+const url = 'http://127.0.0.1:7878/search/ad?id='+ window.location.search.substr(1);
 
 var puppeter = document.getElementById("prerendered-page");
 if(!puppeter)
@@ -159,8 +159,10 @@ if(!puppeter)
   fetch(url)
   .then(function(resp) { return resp.json(); } )
   .then(function(data) {
-
-    generate_details_page(data);
+    if(data[0].hasOwnProperty("AD_STATUS"))
+      generate_details_page_surfyn(data);
+    else
+      generate_details_page(data);
 
   })
   .catch(function(error) {
