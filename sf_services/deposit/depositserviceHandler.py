@@ -101,7 +101,7 @@ class DepositServiceHandler(Iface):
         prop_type = "maison" if data['prop_type'] == 1 else "appartement"
         search_type = "achat" if data['search_type'] == 1 else "location"
         announce_link_value = ttypes.ValueType()
-        announce_link_value.field = "https://surfyn.fr/annonce-detail/{}/{}-{}-pieces/{}-{}?{}".format(search_type, prop_type, data['rooms'], data['city'].lower(), INSEE_CODE[data['city'].capitalize()], ID)
+        announce_link_value.field = "https://surfyn.fr/annonce/{}/{}-{}-pieces/{}-{}?{}".format(search_type, prop_type, data['rooms'], data['city'].lower(), INSEE_CODE[data['city'].capitalize()], ID)
         announce_link_value.fieldtype = ttypes.Type.STRING
         values['ANNOUNCE_LINK'] = announce_link_value
 

@@ -36,6 +36,7 @@ namespace surfyn
 namespace rest_server
 {
 const std::string id_field = "ID";
+const std::string ad_status = "AD_STATUS";
 const std::string id_city = "CITY";
 const std::string id_property_type = "PROPERTY_TYPE";
 const std::string id_surface = "SURFACE";
@@ -194,6 +195,9 @@ std::string searchTypeValue = "";
       value.field = "";
       value.fieldtype = Type::type::NUMBER;
       attributestoget[id_field] = value;
+
+      value.fieldtype = Type::type::STRING;
+      attributestoget[ad_status] = value;
 
       value.fieldtype = Type::type::STRING;
       attributestoget[id_city] = value;
