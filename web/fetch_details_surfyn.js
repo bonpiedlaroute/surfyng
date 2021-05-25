@@ -125,7 +125,6 @@ function generate_details_page_surfyn(data) {
             if (Object.keys(data[i]).length === 0)
                 continue
             if (i == 0) {
-                console.log(data[i].AD_STATUS);
                 // Title
                 var title = document.getElementById("ad_title");
                 title.innerHTML = data[i].SEARCH_TYPE == "For sale" ? "Achat - " : "Location - ";
@@ -229,13 +228,19 @@ function generate_details_page_surfyn(data) {
                 container.appendChild(carousel);
 
                 // Publication date
+                var months = ["Janvier", "Fevrier", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+                var days = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
+
                 var publication_date = createNode("div");
                 publication_date.className = "text-muted";
 
                 var publication_content = createNode("span");
                 publication_content.style = "font-size: 12px;";
                 publication_content.innerHTML = "Publié le ";
-                publication_content.innerHTML += data[i].TIMESTAMP;
+                var date = new Date(data[i].TIMESTAMP);
+                publication_content.innerHTML += days[date.getUTCDay()] + ", " + date.getUTCDate() + " " + months[date.getUTCMonth()] + " " + date.getUTCFullYear();
+                publication_content.innerHTML += " à ";
+                publication_content.innerHTML += date.getUTCHours() + ":" + date.getUTCMinutes();
                 publication_content.innerHTML += " sur <strong>Surfyn</strong>"
 
                 publication_date.appendChild(publication_content);
@@ -660,7 +665,7 @@ function generate_details_page_surfyn(data) {
                 // Facebook
                 var facebook_link = createNode("a");
                 facebook_link.target = "_blank";
-                facebook_link.href = "";
+                facebook_link.href = "http://www.facebook.com/share.php?u=" + data[i].ANNOUNCE_LINK;
 
                 var facebook_icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
                 facebook_icon.setAttribute("viewBox", "0 0 24 24");
@@ -677,7 +682,7 @@ function generate_details_page_surfyn(data) {
                 // Twitter
                 var twitter_link = createNode("a");
                 twitter_link.target = "_blank";
-                twitter_link.href = "";
+                twitter_link.href = "http://twitter.com/share?text=" + pagetitle + "&url=" + data[i].ANNOUNCE_LINK;
 
                 var twitter_icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
                 twitter_icon.setAttribute("viewBox", "0 0 24 24");
@@ -691,27 +696,27 @@ function generate_details_page_surfyn(data) {
 
                 share_container.appendChild(twitter_link);
 
-                // Telegram
-                var telegram_link = createNode("a");
-                telegram_link.target = "_blank";
-                telegram_link.href = "";
+                // LinkedIn
+                var linkedin_link = createNode("a");
+                linkedin_link.target = "_blank";
+                linkedin_link.href = "https://www.linkedin.com/shareArticle?mini=true&url=" + data[i].ANNOUNCE_LINK;
 
-                var telegram_icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-                telegram_icon.setAttribute("viewBox", "0 0 24 24");
-                telegram_icon.setAttribute("fill", "#3a838a");
+                var linkedin_icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                linkedin_icon.setAttribute("viewBox", "0 0 24 24");
+                linkedin_icon.setAttribute("fill", "#3a838a");
 
-                var telegram_path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                telegram_path.setAttribute("d", "M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z");
+                var linkedin_path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                linkedin_path.setAttribute("d", "M19 3a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h14m-.5 15.5v-5.3a3.26 3.26 0 00-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 011.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 001.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 00-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z");
 
-                telegram_icon.appendChild(telegram_path);
-                telegram_link.appendChild(telegram_icon);
+                linkedin_icon.appendChild(linkedin_path);
+                linkedin_link.appendChild(linkedin_icon);
 
-                share_container.appendChild(telegram_link);
+                share_container.appendChild(linkedin_link);
 
                 // Mail
                 var mail_link = createNode("a");
                 mail_link.target = "_blank";
-                mail_link.href = "";
+                mail_link.href = "mailto:?subject= Je veux partager avec toi ce bien immobilier&amp;body=" + pagetitle + "\nClique sur le lien: " + data[i].ANNOUNCE_LINK;
 
                 var mail_icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
                 mail_icon.setAttribute("viewBox", "0 0 24 24");
@@ -766,7 +771,6 @@ function generate_details_page_surfyn(data) {
         }
 
         var header_content = document.getElementById("header-content");
-
 
         var forPuppeteer = document.createElement("div");
         forPuppeteer.setAttribute("id", "prerendered-page");
