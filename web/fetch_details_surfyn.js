@@ -22,8 +22,8 @@ function createNode(element) {
     return document.createElement(element);
 }
 
-// const url_dt = 'https://surfyn.fr:7878/search/ad?id='+ window.location.search.substr(1);
-const url_dt = 'http://127.0.0.1:7878/search/ad?id=' + window.location.search.substr(1);
+const url_dt = 'https://surfyn.fr:7878/search/ad?id='+ window.location.search.substr(1);
+// const url_dt = 'http://127.0.0.1:7878/search/ad?id=' + window.location.search.substr(1);
 
 console.log(url_dt);
 
@@ -124,6 +124,7 @@ function generate_details_page_surfyn(data) {
         for (var i = 0; i < data.length; i++) {
             if (Object.keys(data[i]).length === 0)
                 continue
+            
             if (i == 0) {
                 // Title
                 var title = document.getElementById("ad_title");
@@ -438,7 +439,8 @@ function generate_details_page_surfyn(data) {
                 }
 
                 // Floor
-                if (data[i].hasOwnProperty("FLOOR") && data[i].PARKING != "Non") {
+                if (data[i].hasOwnProperty("FLOOR")) {
+                    
                     var details_floor = createNode("div");
                     details_floor.className = "col-sm-12 col-md-4 sf_ad_details";
 
@@ -586,18 +588,6 @@ function generate_details_page_surfyn(data) {
                 others_details_container.appendChild(others_details_info_container);
                 container.appendChild(others_details_container);
 
-                // Similars Announces
-                var similar_container = createNode("div");
-                similar_container.className = "w-100 mt-5";
-
-                var similar_title = createNode("h2");
-                similar_title.style = "color: #3a838a";
-                similar_title.innerHTML = "ANNONCES SIMILAIRES";
-
-                similar_container.appendChild(similar_title);
-
-                container.appendChild(similar_container);
-
                 // Side menu
                 // var side_container = document.getElementById("side_container");
 
@@ -734,29 +724,29 @@ function generate_details_page_surfyn(data) {
                 side_container.appendChild(details_card);
 
                 // Patners title
-                var partners_title = createNode("h4");
-                partners_title.style = "color: #3a838a";
-                partners_title.innerHTML = "NOS PARTENAIRES";
+                // var partners_title = createNode("h4");
+                // partners_title.style = "color: #3a838a";
+                // partners_title.innerHTML = "NOS PARTENAIRES";
 
                 // side_container.appendChild(partners_title);
 
-                var partners_container = createNode("div");
-                partners_container.className = "d-flex flex-column justify-content-center align-items-center";
+                // var partners_container = createNode("div");
+                // partners_container.className = "d-flex flex-column justify-content-center align-items-center";
 
-                var partner1 = createNode("img");
-                partner1.className = "mb-2 rounded";
-                partner1.style = "height: 100px;width: 100px;";
-                partner1.src = "partner1.jpg";
+                // var partner1 = createNode("img");
+                // partner1.className = "mb-2 rounded";
+                // partner1.style = "height: 100px;width: 100px;";
+                // partner1.src = "partner1.jpg";
 
-                var partner2 = createNode("img");
-                partner2.className = "mb-2 rounded";
-                partner2.style = "height: 100px;width: 100px;";
-                partner2.src = "partner2.jpg";
+                // var partner2 = createNode("img");
+                // partner2.className = "mb-2 rounded";
+                // partner2.style = "height: 100px;width: 100px;";
+                // partner2.src = "partner2.jpg";
 
-                var partner3 = createNode("img");
-                partner3.className = "mb-2 rounded";
-                partner3.style = "height: 100px;width: 100px;";
-                partner3.src = "partner1.jpg";
+                // var partner3 = createNode("img");
+                // partner3.className = "mb-2 rounded";
+                // partner3.style = "height: 100px;width: 100px;";
+                // partner3.src = "partner1.jpg";
 
                 // partners_container.appendChild(partner1);
                 // partners_container.appendChild(partner2);
@@ -765,7 +755,19 @@ function generate_details_page_surfyn(data) {
                 // side_container.appendChild(partners_container);
             }
             else {
-                // Similar announces
+                // Similars Announces
+                similar_container = createNode("div");
+                similar_container.className = "w-100 mt-5";
+
+                similar_title = createNode("h2");
+                similar_title.style = "color: #3a838a";
+                similar_title.innerHTML = (data.length-1) + " annonces identiques publiées sur d'autres plateformes";
+
+                similar_container.appendChild(similar_title);
+
+                container.appendChild(similar_container);
+                data.shift();
+                generate_details_page(data, true);
             }
 
         }
