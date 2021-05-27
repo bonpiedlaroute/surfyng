@@ -379,12 +379,14 @@ function buildurlparams()
   url_params = "?";
   var pathname = window.location.pathname.split("/").slice(1);
 
-  var s_city = pathname[3].split("-");
+  var index = pathname[3].lastIndexOf("-");
+  var s_city = pathname[3].substring(0,index);
+  var s_postalcode = pathname[3].substring(index+1);
 
-  if( s_city[0].toUpperCase() in postalCodeByCity && getPostalCode(s_city[0]) == s_city[1])
+  if( s_city.toUpperCase() in postalCodeByCity && getPostalCode(s_city) == s_postalcode)
   {
-    var city_param = s_city[0][0].toUpperCase();
-    city_param += s_city[0].slice(1);
+    var city_param = s_city[0].toUpperCase();
+    city_param += s_city.slice(1);
     url_params += "search_city=" + city_param;
   }
   else {

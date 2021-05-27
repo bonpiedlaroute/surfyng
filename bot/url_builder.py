@@ -335,7 +335,8 @@ def buildFnaimUrl(city, ptype, stype):
       'puteaux': 35777,
       'houilles': 7813,
       'colombes': 16906,
-      'nanterre': 30819
+      'nanterre': 30819,
+      'boulogne-billancourt':10001
    }
 
    filename = ''

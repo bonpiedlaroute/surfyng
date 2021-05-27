@@ -4,6 +4,7 @@ postalCodeByCity["COLOMBES"]="92700";
 postalCodeByCity["HOUILLES"]="78800";
 postalCodeByCity["PUTEAUX"]="92800";
 postalCodeByCity["NANTERRE"]="92000";
+postalCodeByCity["BOULOGNE-BILLANCOURT"]="92100";
 
 function getPostalCode(cityname)
 {
@@ -19,6 +20,8 @@ neighborhoodByCity["PUTEAUX"]="le quartier Centre Ville-Vieux Puteaux, secteur R
  secteur La Défense, quartier Front de Seine-Bellini, secteur Pressensé-Rives de Seine, quartier Rosiers-Lorieux";
 neighborhoodByCity["NANTERRE"]="le quartier Vieux Pont, secteur Parc-La Boule- Champs Pierreux, quartier Plateau, secteur Centre,\
  quartier République-Université, secteur Chemin de l'île, quartier Petit Nanterre, secteur Mont Valérien";
+neighborhoodByCity["BOULOGNE-BILLANCOURT"]="le quartier Silly-Gallieni, secteur Billancourt–Rives de Seine,\
+quartier Reine-Mairie, secteur Vaillant-Sembat, quartier Grenier–Point du Jour, secteur Prince–Marmottan, quartier Parchamp–Albert Kahn";
 
 function getNeighborhoodByCity(cityname)
 {
