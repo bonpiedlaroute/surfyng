@@ -7,3 +7,4 @@ node_modules/
 *actus/
 surfyn-firebase-adminsdk.json
 *.sh
+sf_services/deposit/config.ini

@@ -19,6 +19,8 @@ from dynamodb_access.ttypes import Type, ValueType, KeyValue
 from thrift_generated.depositservice.ttypes import DepositResult
 from thrift_generated.depositservice.deposit_service import Iface
 from thrift_generated.depositservice.deposit_service import Processor
+from inseecode_postalcode import *
+
 
 import firebase_admin
 import configparser
@@ -74,12 +76,6 @@ class DepositServiceHandler(Iface):
                 @user_id: User who places the announce
                 @data: Dictionnary containing data of announce
         """
-        INSEE_CODE = {
-            "Puteaux": 92800,
-            "Houilles": 78800,
-            "Nanterre": 92000,
-            "Colombes": 92700
-        }
         logging.info('Deposit announce of user {}'.format(user_id))
 
         user = auth.get_user(user_id)
@@ -101,7 +97,7 @@ class DepositServiceHandler(Iface):
         prop_type = "maison" if data['prop_type'] == 1 else "appartement"
         search_type = "achat" if data['search_type'] == 1 else "location"
         announce_link_value = ttypes.ValueType()
-        announce_link_value.field = "https://surfyn.fr/annonce/{}/{}-{}-pieces/{}-{}?{}".format(search_type, prop_type, data['rooms'], data['city'].lower(), INSEE_CODE[data['city'].capitalize()], ID)
+        announce_link_value.field = "https://surfyn.fr/annonce/{}/{}-{}-pieces/{}-{}?{}".format(search_type, prop_type, data['rooms'], data['city'].lower(), postalcodeByCity[data['city'].lower()], ID)
         announce_link_value.fieldtype = ttypes.Type.STRING
         values['ANNOUNCE_LINK'] = announce_link_value
 

@@ -324,7 +324,7 @@ function generate_my_announce_page(data)
 
       var department = createNode("p");
       department.className = "card-text text-muted"
-      department.innerHTML = data[i].CITY + "(" + INSEE_CODE[data[i].CITY] + ")";
+      department.innerHTML = data[i].CITY + "(" + postalCodeByCity[data[i].CITY.toUpperCase()] + ")";
 
       card_body.append(department);
 
@@ -409,8 +409,8 @@ function delete_announce(event)
 /*loadJSON("data/criteria.json",
 function (data) { generate_my_search_page(JSON.parse(data.response));}, function(err) {console.log(err);});
 */
-var url = 'https://surfyn.fr:7878/my_realestate_search?userid=';
-//var url = 'http://localhost:7878/my_realestate_search?userid=';
+//var url = 'https://surfyn.fr:7878/my_realestate_search?userid=';
+var url = 'http://localhost:7878/my_realestate_search?userid=';
 
 var userid = sessionStorage.getItem("user_id");
 url += userid;

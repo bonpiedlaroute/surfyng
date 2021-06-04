@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
     std::string emailalert_host = "localhost";
     int         emailalert_port = 7810;
     std::string deposit_host = "localhost";
-    int         deposit_port = 9000;
+    int         deposit_port = 7820;
 
     if(argc == 2)
     {

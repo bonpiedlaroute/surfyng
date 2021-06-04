@@ -254,7 +254,6 @@
   <script>
     window.onload = function () {
 
-<<<<<<< HEAD
                var user_id = sessionStorage.getItem("user_id");
                var user_connected_box = document.getElementById("user_connected_box");
                if(user_id != "")
@@ -269,27 +268,10 @@
                    user_connected_box.style.display = "none";
                    window.location.href = "/";
                }
-=======
-      var user_id = sessionStorage.getItem("user_id");
-      if (user_id != "") {
-        var login_connected_box = document.getElementById("login_connected_box");
-        login_connected_box.style.display = "block";
-        var user_display_name = document.getElementById("user_display_name");
-        user_display_name.innerHTML = sessionStorage.getItem("user_display_name");
-
-      }
-      else {
-        window.location.href = "/";
-      }
->>>>>>> Upload in FR_SUMMARY & FR_DEPOSIT
-
-
-
     }
   </script>
   <!-- Bootstrap core JavaScript
     ================================================== -->
-<<<<<<< HEAD
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
@@ -298,27 +280,7 @@
     <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-auth.js"></script>
     <script src="login.js"> </script>
+    <script src="geolocal.js"> </script>
     <script src="mysearch.js"> </script>
   </body>
 </html>
-=======
-  <!-- Placed at the end of the document so the pages load faster -->
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-    crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-    crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
-    integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
-    crossorigin="anonymous"></script>
-  <script src="dropdownmenu.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-analytics.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-auth.js"></script>
-  <script src="login.js"> </script>
-  <script src="mysearch.js"> </script>
-</body>
-
-</html>
->>>>>>> Upload in FR_SUMMARY & FR_DEPOSIT
