@@ -73,6 +73,21 @@
       <changefreq>daily</changefreq>
 
    </url>
+   <url>
+
+      <loc>https://surfyn.fr/liste-annonces/achat/appartements/boulogne-billancourt-92100</loc>
+
+      <changefreq>daily</changefreq>
+
+   </url>
+
+   <url>
+
+      <loc>https://surfyn.fr/liste-annonces/achat/maisons/boulogne-billancourt-92100</loc>
+
+      <changefreq>daily</changefreq>
+
+   </url>
 
    <url>
 
@@ -131,6 +146,21 @@
    <url>
 
       <loc>https://surfyn.fr/liste-annonces/location/maisons/colombes-92700</loc>
+
+      <changefreq>daily</changefreq>
+
+   </url>
+   <url>
+
+      <loc>https://surfyn.fr/liste-annonces/location/appartements/boulogne-billancourt-92100</loc>
+
+      <changefreq>daily</changefreq>
+
+   </url>
+
+   <url>
+
+      <loc>https://surfyn.fr/liste-annonces/location/maisons/boulogne-billancourt-92100</loc>
 
       <changefreq>daily</changefreq>
 

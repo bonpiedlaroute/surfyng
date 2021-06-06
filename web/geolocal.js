@@ -4,6 +4,7 @@ postalCodeByCity["COLOMBES"]="92700";
 postalCodeByCity["HOUILLES"]="78800";
 postalCodeByCity["PUTEAUX"]="92800";
 postalCodeByCity["NANTERRE"]="92000";
+postalCodeByCity["BOULOGNE-BILLANCOURT"]="92100";
 
 function getPostalCode(cityname)
 {
@@ -12,13 +13,15 @@ function getPostalCode(cityname)
 
 var neighborhoodByCity = [];
 
-neighborhoodByCity["COLOMBES"]="le quartier Plateau-Grèves-Europe-Gare du Stade-Fossés Jean, quartier Agent Sarre-Centre-Les Vallées-La Garenne,\
- quartier Gabriel Péri-Estienne d'Orves, quartier Petit Colombes-Charles de Gaulle";
-neighborhoodByCity["HOUILLES"]="le quartier Belles Vues, quartier Blanches-Pierrats-Tonkin, quartier Réveil Matin, quartier Main de Fer";
-neighborhoodByCity["PUTEAUX"]="le quartier Centre Ville-Vieux Puteaux, quartier République, quartier Bergère-Moulin, quartier Seine Sud, quartier Colline,\
- quartier La Défense, quartier Front de Seine-Bellini, quartier Pressensé-Rives de Seine, quartier Rosiers-Lorieux";
-neighborhoodByCity["NANTERRE"]="le quartier Vieux Pont, quartier Parc-La Boule- Champs Pierreux, quartier Plateau, quartier Centre,\
- quartier République-Université, quartier Chemin de l'île, quartier Petit Nanterre, quartier Mont Valérien";
+neighborhoodByCity["COLOMBES"]="le quartier Plateau-Grèves-Europe-Gare du Stade-Fossés Jean, secteur Agent Sarre-Centre-Les Vallées-La Garenne,\
+ quartier Gabriel Péri-Estienne d'Orves, secteur Petit Colombes-Charles de Gaulle";
+neighborhoodByCity["HOUILLES"]="le quartier Belles Vues, secteur Blanches-Pierrats-Tonkin, quartier Réveil Matin, secteur Main de Fer";
+neighborhoodByCity["PUTEAUX"]="le quartier Centre Ville-Vieux Puteaux, secteur République, quartier Bergère-Moulin, secteur Seine Sud, quartier Colline,\
+ secteur La Défense, quartier Front de Seine-Bellini, secteur Pressensé-Rives de Seine, quartier Rosiers-Lorieux";
+neighborhoodByCity["NANTERRE"]="le quartier Vieux Pont, secteur Parc-La Boule- Champs Pierreux, quartier Plateau, secteur Centre,\
+ quartier République-Université, secteur Chemin de l'île, quartier Petit Nanterre, secteur Mont Valérien";
+neighborhoodByCity["BOULOGNE-BILLANCOURT"]="le quartier Silly-Gallieni, secteur Billancourt–Rives de Seine,\
+quartier Reine-Mairie, secteur Vaillant-Sembat, quartier Grenier–Point du Jour, secteur Prince–Marmottan, quartier Parchamp–Albert Kahn";
 
 function getNeighborhoodByCity(cityname)
 {

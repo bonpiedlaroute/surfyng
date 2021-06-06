@@ -51,5 +51,20 @@ namespace rest_server
       }
       return result.success;
    }
+
+    bool SendEmailAccess::sendAccountCreationEmail(const std::string& user_dislayname, const std::string& user_email)
+   {
+      SendEmailResult  result;
+      m_client->sendaccountcreationemail(result,  user_dislayname, user_email);
+      if(result.success)
+         Log::getInstance()->info("Account creation email successfully sent to [" + user_email + "]!");
+      else {
+            std::string error_msg = "Some issue appears during email sent [";
+            error_msg += result.error;
+            error_msg += "]";
+            Log::getInstance()->error(error_msg);
+      }
+      return result.success;
+   }
 }
 }

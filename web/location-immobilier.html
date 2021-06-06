@@ -16,6 +16,7 @@
     <!--  Surfyn styles -->
     <link href="surfyn.css" rel="stylesheet">
     <link href="autocomplete.css" rel="stylesheet">
+    <link href="login.css" rel="stylesheet">
     <link rel="shortcut icon" href="#" />
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-140583317-1"></script>
@@ -44,7 +45,7 @@
           <i class="fas fa-arrow-left icon_arrow_left" style="color:white; margin-top:10px; margin-left:15px;" ></i>
           </a>
         </div>
-        <div style="height:60px; width:50%;display:flex; justify-content:center;align-items:center;text-align:center;z-index:5;" >
+        <div style="height:60px; width:50%;display:flex; justify-content:center;align-items:center;text-align:center;z-index:3;" >
           <a href="/">
           <svg id="Layer_1" width="288" height="45.17" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 288 46.27"><defs><style>.cls-1{fill:#232646;}.cls-2{fill:#fafafb;}.cls-3{fill:#fbfbfb;}.cls-4{fill:#f9f9fa;}.cls-5{fill:#fbfbfc;}.cls-6{fill:#f9f9f9;}</style></defs><title>surfyn</title><rect class="cls-1" x="0.16" y="1.46" width="288" height="45.17"/><path class="cls-2" d="M155.3,39.48c7.79-1.12,7.79-1.12,3.21-7.51-3.93-5.49-3.93-5.49-3.19-15.46,2.34,0,4.74-.11,7.1.1.45,0,1.1,1.32,1.12,2,.08,3.46-.72,7,2,10a6.16,6.16,0,0,1,.78,1.56c3.28-3.15,3.28-3.15,3.6-13.74,2.34,0,4.74-.1,7.1.09.52,0,1.32,1.11,1.36,1.74.27,5,.58,10-3.22,14.3a110.14,110.14,0,0,0-7.31,9.82,6.05,6.05,0,0,1-5.64,2.75C156.69,45,156.68,45.16,155.3,39.48Z"/><path class="cls-3" d="M117.73,16.56v21c-5.28,1.6-7.77,1-8.8-1.69-2.37.73-4.68,1.87-7.08,2.09-4.13.38-6.7-1.51-7.1-5.6-.43-4.5,0-9.08,0-13.63,0-1.87,1-2.5,2.82-2.34s3.46,0,5.34,0c0,4-.16,7.73,0,11.47.16,2.9,2.56,4,4.86,2.43A3.84,3.84,0,0,0,109,27.68c.12-3.67,0-7.35,0-11.12Z"/><path class="cls-2" d="M189.59,37.89h-8.43V17l7.51-1.26.94,2.07c2.87-.68,5.53-1.74,8.23-1.87,3.68-.17,5.91,2.35,6,6,.1,4.67.13,9.34.24,14,0,1.45-.44,2-2,2.14-6.54.42-6.54.47-6.54-6,0-1.95,0-3.89,0-5.84,0-1.75-.44-3.36-2.37-3.31s-3.6.93-3.6,3.34Z"/><path class="cls-4" d="M73.56,31c2-.48,3.39-.72,4.75-1.18,2.75-.95,3.43-3.09,1.74-5.47-.73-1-1.63-1.92-2.46-2.88C73.47,16.64,74.1,11.4,79.21,8c6.33-4.25,9.5-2.87,10.86,4.15L84.5,14.87c.86,1.67,1.37,3.69,2.64,4.94,8,7.92,1.62,16.7-7.57,18.68A3.06,3.06,0,0,1,77,37.36,70.61,70.61,0,0,1,73.56,31Z"/><path class="cls-5" d="M152.41,4.92c.36,2,.69,3.89,1,5.74-4.86,1.51-4.92,1.58-4.51,5.66h4.51c.12,2.42.23,4.68.35,7.16h-4.3V38h-8.62c0-3.93,0-7.77,0-11.61,0-2.6,0-2.6-2.73-3.28.69-2.29-1.51-5.36,2.2-7.19C141.29,6.81,143.81,4.39,152.41,4.92Z"/><path class="cls-6" d="M136.77,25c-.19.14-.27.24-.35.25-6.27.78-6.28.78-6.21,7.34,0,1.74.15,3.47.24,5.49h-8.76V17l7.43-1.24.38,2.53,7.27-2.39Z"/></svg>
           </a>
@@ -54,6 +55,17 @@
           <div class="sf_dropdown" id="dropdownmenu" style="z-index:4;">
 
             <div class="param_icon_box_width" style="display:flex;height:43px;justify-content:flex-end;flex-direction:row;align-items:center;">
+              <div style="width:32px;height:32px;display:block;margin-top:10px;"  >
+                <div class="sf_login_connected_icon" onclick="show_login_menu()" id="user_connected_box">
+                  <a class="sf_user_display_name" id="user_display_name">
+                  </a>
+                </div>
+                <div class="sf_login_not_connected_icon" id="user_not_connected_box">
+                  <a data-toggle="modal" data-target="#login" style="color:white;cursor:pointer;margin-left:10px;">
+                  <i class="far fa-user-circle" style="color:white;font-size:25px;" ></i>
+                  </a>
+                </div>
+              </div>
                 <a onclick="show_dropdown_list()" id="sf_dropdown_link">
                   <i class="fas fa-bars" style="font-size: 30px !important; color:white;margin-top:10px;margin-left:15px;">
                 </i>
@@ -68,6 +80,10 @@
               <a href="conseil-immobilier.html" > Conseil immobilier </a>
               <a href="actualite-immobilier.html" > Actualité immobilière en France </a>
             </div>
+            <div id="login_menu" class="sf_login_menu_content">
+              <a href="mesrecherches.html" ><i class="fas fa-search" style="color:#61AEB5;margin-right:5px;"></i>Mes recherches </a>
+              <a onclick="disconnect_and_reload()" style="cursor:pointer;color: #61AEB5;"><i class="fas fa-sign-out-alt" style="color:#61AEB5;margin-right:5px;"></i>Se déconnecter </a>
+            </div>
 
           </div>
         </div>
@@ -80,7 +96,7 @@
     </div>
   </header>
   <main>
-     <div style="height:140px;" class="row mx-auto">
+     <div style="height:170px;" class="row mx-auto">
         <div class="sf_search_block mx-auto d-block">
          <div class="sf_input_block">
            <div class="autocomplete" style="width:100%;">
@@ -92,7 +108,7 @@
            </input>
          </div>
            <div class="feedback_box good_feedback" id="city_check_msg">
-             <a style="color:#61AEB5;font-weight:bold" id="msg_type">Info</a><a id="feedback_msg"> : Uniquement <strong>Colombes</strong>, <strong>Nanterre</strong>, <strong>Puteaux</strong> et <strong>Houilles</strong> pour l'instant &#128515;</a></div>
+             <a style="color:#61AEB5;font-weight:bold" id="msg_type">Info</a><a id="feedback_msg"> : Uniquement <strong>Colombes</strong>, <strong>Nanterre</strong>, <strong>Puteaux</strong>, <strong>Houilles</strong> et <strong>Boulogne-billancourt</strong> pour l'instant &#128515;</a></div>
          </div>
 
        </div>
@@ -174,29 +190,7 @@
         <div class="sf_range_slider_input sf_slider_max no_select" id = "area_max"><a style="color:#61AEB5;font-weight:bold" id = "value_area_max">400 m<sup>2</a></div>
       </div>
     </div>
-    <!-- <div class="sf_line row mx-auto">
-      <a style="font-size:18px; color:black;" class="mx-auto">Temps de trajet</a>
-    </div>
-    <div style="height:150px;" class="row mx-auto">
-      <div style = " display: flex; align-items: center;flex-direction:row;width:100%;justify-content: space-evenly;flex-wrap:wrap;">
-        <div class = "property_type_box" style="cursor:default;" id="work">
-            <div class=" property_type_icon_box">
-                <i class="fas fa-industry property_type_icon" ></i>
-            </div>
-            <div class="property_type_text_box no_select"> <a class="property_type_text" style="color:#61AEB5;">Travail</a>
-            </div>
-        </div>
-        <div class = "property_type_box" style="cursor:default;" id ="school">
-            <div class=" property_type_icon_box">
-                <i class="fas fa-school property_type_icon" ></i>
-            </div>
-            <div class="property_type_text_box no_select"> <a class="property_type_text" style="color:#61AEB5;">Ecole</a>
-            </div>
-        </div>
 
-      </div>
-
-    </div> -->
     <div class="sf_line row mx-auto">
       <a style="font-size:18px; color:black;" class="mx-auto">Nombre de pièces</a>
     </div>
@@ -235,7 +229,318 @@
         </a>
       </main>
       <footer>
+        <!-- Modal generic message result -->
+        <div id="generic-box-message-result" class="modal fade" role="dialog">
+          <div class="modal-dialog" style="height:10%;">
+
+            <!-- Modal content-->
+            <div class="modal-content" style="height:100%;">
+              <div class="modal-body" style="height:100%;padding:0px;">
+
+                <div class="alert alert-success" role="alert" style="height:100%;text-align:center;">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong id="generic-message-result"></strong></div>
+              </div>
+            </div>
+            <!-- End Modal content -->
+          </div>
+        </div>
+        <!-- end Modal generic message-result-->
+        <!-- Modal login -->
+        <div id="login" class="modal fade" role="dialog">
+          <!-- <script src="login.js"> </script> -->
+          <div class="modal-dialog" style="height:70%;">
+
+          <!-- Modal content-->
+          <div class="modal-content" style="height:100%;">
+            <div class="modal-body">
+                <div style="height:3%;">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="modal-title sf_modal_title_box" ><a class="sf_modal_title_text">Connexion</a></div>
+                  <div class="sf_modal_frame">
+                    <div class="sf_modal_box_width sf_modal_input" >
+                      <input class="form-control" type="email" placeholder="E-mail" value="" id="login_email" >
+                      </input>
+                    </div>
+                    <div class="sf_modal_box_width" style="height:20px;" id="email-feedback-login">
+
+                    </div>
+                    <div class="sf_modal_box_width sf_modal_input"  >
+                      <input class="form-control" type="password" placeholder="Mot de passe" value="" id ="mot_de_passe">
+                      </input>
+                    </div>
+                    <div class="sf_modal_box_width" style="height:20px;" id="pass-feedback">
+
+                    </div>
+                    <div class="sf_modal_box_width sf_modal_connect_button"  onclick="connect_to_surfyn()">
+                      <a class="sf_modal_connect_button_text">Se connecter</a>
+                    </div>
+                    <div class="sf_modal_box_width sf_modal_inscription_frame_link" >
+                      <div style="width:100%; height:25px;">
+                        <a data-toggle="modal" data-target="#passwordresetbox" data-dismiss="modal" style="text-decoration:none;color:#007bff !important;cursor:pointer;" > Mot de passe oublié</a>
+                      </div>
+                      <div style="width:100%; height:15px;">
+                      </div>
+                      <div style="width:100%; height:25px;text-align:center;">
+                        <a > Pas encore de compte ?</a>
+                        <a data-toggle="modal" data-target="#inscription" data-dismiss="modal" style="text-decoration:none;color:#007bff !important;cursor:pointer;"> Inscrivez-vous.</a>
+                      </div>
+                    </div>
+                    <div class="sf_modal_box_width sf_modal_login_separation" >
+                      <span class="sf_modal_line_separation"> ou </span>
+                    </div>
+                    <div class="sf_modal_box_width sf_modal_login_foreign_auth_frame"  onclick="connect_to_surfyn_with_google()" >
+                      <div class="sf_modal_login_foreign_auth_box">
+                        <img alt="login avec Google" src="google.svg"/>
+
+                        <a class="sf_modal_login_foreign_auth_text"> Se connecter avec Google </a>
+
+                      </div>
+                    </div>
+                    <div class="sf_modal_box_width sf_modal_login_foreign_auth_frame" onclick="connect_to_surfyn_with_facebook()" >
+                      <div class="sf_modal_login_foreign_auth_box">
+                        <i class="fab fa-facebook" style="margin-left: 15px;color:#3b5998;font-size:20px;width:20px;height:20px;"></i>
+
+                        <a class="sf_modal_login_foreign_auth_text"> Se connecter avec Facebook </a>
+
+                      </div>
+                    </div>
+
+                  </div>
+
+            </div>
+
+          </div>
+          <!-- End Modal content-->
+        </div>
+      </div>
+      <!-- End Modal login -->
+      <!-- Modal login-result-->
+      <div id="login-result" class="modal fade" role="dialog">
+        <div class="modal-dialog" style="height:10%;">
+
+          <!-- Modal content-->
+          <div class="modal-content" style="height:100%;">
+            <div class="modal-body" style="height:100%;padding:0px;">
+
+              <div class="alert alert-success" role="alert" style="height:100%;text-align:center;">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+              <strong>Connexion réussie!</strong></div>
+            </div>
+          </div>
+          <!-- End Modal content -->
+        </div>
+      </div>
+      <!-- end Modal login-result-->
+
+      <!-- Modal inscription -->
+      <div id="inscription" class="modal fade" role="dialog">
+
+        <div class="modal-dialog" style="height:70%;">
+
+        <!-- Modal content-->
+        <div class="modal-content" style="height:100%;">
+          <div class="modal-body">
+              <div style="height:3%;">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+              </div>
+
+              <div class="modal-title sf_modal_title_box" ><a class="sf_modal_title_text">Inscription</a></div>
+                <div class="sf_modal_frame">
+                  <div class="sf_modal_box_width sf_modal_input" >
+                    <input class="form-control" type="text" placeholder="Prénom" value="" style="background-color:white;" id="inscription_prenom">
+                    </input>
+                  </div>
+                  <div class="sf_modal_box_width" style="height:20px;" >
+
+                  </div>
+                  <div class="sf_modal_box_width sf_modal_input" >
+                    <input class="form-control" type="email" placeholder="E-mail" value=""  id="inscription_email">
+                    </input>
+                  </div>
+                  <div class="sf_modal_box_width" style="height:20px;" id="email-feedback-inscription">
+
+                  </div>
+                  <div class="sf_modal_box_width sf_modal_input">
+                    <input class="form-control" type="password" placeholder="Mot de passe" value=""  id="mot_de_passe_inscription">
+                    </input>
+                  </div>
+                  <div class="sf_modal_box_width" style="height:20px;" id="mot_de_passe_inscription_feedback">
+
+                  </div>
+                  <div class="sf_modal_box_width sf_modal_input" >
+                    <input class="form-control" type="password" placeholder="Confirmez votre Mot de passe" value=""  id="mot_de_passe_confirmation">
+                    </input>
+                  </div>
+                  <div class="sf_modal_box_width" style="height:20px;" id="mot_de_passe_confirmation_feedback">
+
+                  </div>
+                  <div class="sf_modal_box_width sf_modal_connect_button"  onclick="subscribe_to_surfyn()">
+                    <a class="sf_modal_connect_button_text">Créer mon compte</a>
+                  </div>
+                  <div id="passwd-restriction" class="sf_modal_box_width" style="height: 150px;display:flex;flex-direction:column;justify-content:center;align-items:center;">
+                    <div >
+                      <a style="font-size:18px;">Votre mot de passe doit contenir:</a>
+                    </div>
+                    <div >
+                      <ul>
+                      <li id="letter" style="color:red;font-size:16px;">Une lettre <b>miniscule</b></li>
+
+                      <li id="capital" style="color:red;font-size:16px;">Une lettre <b>majuscule</b></li>
+
+
+                      <li id="number" style="color:red;font-size:16px;">Un <b>nombre</b></li>
+
+
+                      <li id="length" style="color:red;font-size:16px;">Un minimum de <b>8 caractères</b></li>
+                    </ul>
+                    </div>
+                  </div>
+                  <div id="passwd-match" style="display:none;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
+                    <a style="font-size:18px;">Les deux mots de passes doivent être:</a>
+                    <ul>
+                    <li id="same-passwd" style="color:red;font-size:16px;"><b>Identiques</b></li>
+                  </ul>
+                  </div>
+
+                </div>
+
+          </div>
+
+        </div>
+        <!-- End Modal content-->
+      </div>
+      </div>
+    <!-- End Modal inscription -->
+    <!-- Modal inscription-result-->
+    <div id="inscription-result" class="modal fade" role="dialog">
+      <div class="modal-dialog" style="height:10%;">
+
+        <!-- Modal content-->
+        <div class="modal-content" style="height:100%;">
+          <div class="modal-body" style="height:100%;padding:0px;">
+
+            <div class="alert alert-success" role="alert" style="height:100%;text-align:center;">
+              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Inscription réussie!</strong></div>
+          </div>
+        </div>
+        <!-- End Modal content -->
+      </div>
+    </div>
+    <!-- end Modal inscription-result-->
+    <!-- Modal password reset content-->
+    <div id="passwordresetbox" class="modal fade" role="dialog">
+      <div class="modal-dialog" style="height:40%;">
+        <div class="modal-content" style="height:100%;">
+          <div class="modal-body">
+              <div style="height:3%;">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+              </div>
+
+              <div class="modal-title sf_modal_title_box" ></div>
+                <div class="sf_modal_frame">
+                  <div class="sf_modal_box_width sf_modal_input" style="margin-top:20px;">
+                    <input class="form-control" type="email" placeholder="Votre e-mail" value="" id="emailpasswordreset" >
+                    </input>
+                  </div>
+                  <div class="sf_modal_box_width" style="height:20px;" id="emailpasswordreset-feedback">
+                  </div>
+                  <div class="sf_modal_box_width sf_modal_connect_button"  style="margin-top:20px;" onclick="passwordResetByEmail()">
+                    <a class="sf_modal_connect_button_text">Reinitialiser votre mot de passe</a>
+                  </div>
+                </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Modal password reset content-->
       </footer>
+      <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-app.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-auth.js"></script>
+      <script src="login.js"> </script>
+      <script>
+         window.onload = function() {
+
+             // Initialize Firebase
+             if (!firebase.apps.length)
+             {
+               var firebaseConfig = {
+                 apiKey: "AIzaSyAWjNYovhM8IDUWL_ZGZ9jnb4i14dLQSe4",
+                 authDomain: "surfyn.firebaseapp.com",
+                 databaseURL: "https://surfyn.firebaseio.com",
+                 projectId: "surfyn",
+                 storageBucket: "surfyn.appspot.com",
+                 messagingSenderId: "1080663386908",
+                 appId: "1:1080663386908:web:d0c38731a4d55de5dea8d9",
+                 measurementId: "G-7X8E11EEFD"
+               };
+               console.log("firebase initialization");
+               firebase.initializeApp(firebaseConfig);
+             }
+             firebase.auth().getRedirectResult().then(function(result) {
+               var token;
+                 if (result.credential) {
+                   // This gives you a Google Access Token. You can use it to access the Google API.
+                   token = result.credential.accessToken;
+                   // ...
+                 }
+                 // The signed-in user info.
+
+                 var email = document.getElementById("login_email");
+                 var mot_de_passe = document.getElementById("mot_de_passe");
+                 email.value = "";
+                 mot_de_passe.value = "";
+
+                 var user = result.user;
+                 var user_not_connected_box = document.getElementById("user_not_connected_box");
+                 var user_connected_box = document.getElementById("user_connected_box");
+                 if(user)
+                 {
+                     showSuccessConnexionMessage();
+
+                     var user_display_name = document.getElementById("user_display_name");
+                     user_display_name.innerHTML = user.displayName.slice(0,1).toUpperCase();
+
+
+                     console.log(user.displayName);
+
+                     sessionStorage.setItem("user_id", user.uid);
+                     sessionStorage.setItem("user_display_name", user_display_name.innerHTML);
+
+                     user_connected_box.style.display = 'flex';
+                     user_not_connected_box.style.display = 'none';
+
+                     user.updateProfile({
+                      displayName: user.displayName
+                    }).then(function() {
+                      console.log('username successfully updated');
+                    }, function(error) {
+                      // An error happened.
+                      console.log(error);
+                    });
+
+                 }
+               }).catch(function(error)
+               {
+                 // Handle Errors here.
+                 var errorCode = error.code;
+                 var errorMessage = error.message;
+                 // The email of the user's account used.
+                 var email = error.email;
+                 // The firebase.auth.AuthCredential type that was used.
+                 var credential = error.credential;
+                 console.error("Error:");
+                 console.log(error);
+                 // ...
+               });
+               firebase.auth().onAuthStateChanged(checkUserStatus);
+               updateUserStatus();
+
+         }
+      </script>
     <script src="geolocal.js"></script>
     <script src="surfyn.js"></script>
     <script src="autocomplete.js"></script>

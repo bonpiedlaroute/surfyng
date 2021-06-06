@@ -23,16 +23,10 @@ function createNode(element) {
 }
 
 const url_dt = 'https://surfyn.fr:7878/search/ad?id='+ window.location.search.substr(1);
-// const url_dt = 'http://127.0.0.1:7878/search/ad?id=' + window.location.search.substr(1);
+//  const url_dt = 'http://127.0.0.1:7878/search/ad?id=' + window.location.search.substr(1);
 
 console.log(url_dt);
 
-INSEE_CODE = {
-    "Puteaux": 92800,
-    "Houilles": 78800,
-    "Nanterre": 92000,
-    "Colombes": 92700
-};
 
 // fetch(url_dt)
 //     .then(function (resp) { return resp.json(); })
@@ -124,7 +118,6 @@ function generate_details_page_surfyn(data) {
         for (var i = 0; i < data.length; i++) {
             if (Object.keys(data[i]).length === 0)
                 continue
-            
             if (i == 0) {
                 // Title
                 var title = document.getElementById("ad_title");
@@ -143,7 +136,6 @@ function generate_details_page_surfyn(data) {
                 carousel.id = "myCarousel";
                 carousel.className = "carousel slide";
                 carousel.setAttribute("data-ride", "carousel");
-
 
                 var carousel_list = createNode("ol");
                 carousel_list.className = "carousel-indicators";

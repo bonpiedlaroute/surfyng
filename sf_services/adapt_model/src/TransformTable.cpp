@@ -9,6 +9,7 @@
 #include "sf_services/sf_utils/inc/Config.h"
 #include <boost/algorithm/string/erase.hpp>
 #include <math.h>
+#include <sstream>
 
 using namespace ::apache::thrift;
 using namespace ::apache::thrift::protocol;
@@ -262,6 +263,7 @@ namespace surfyn
       m_AnnouncesByID.clear();
       m_ReaderBySources.clear();
    }
+
    void DataFormater::PopulateValuesExtractFromDescription(const std::string& desc, classifier::RealEstateAd* realEstate) const
    {
       auto pos = desc.find("cave");
@@ -286,6 +288,8 @@ namespace surfyn
 
       rapidjson::Document document;
       document.Parse(json.c_str());
+
+      
 
       if(document.HasParseError())
       {
@@ -619,18 +623,34 @@ namespace surfyn
 
       if (document.HasMember("price"))
       {
+         if(document["price"].IsArray())
+         {
+            Log::getInstance()->info("Skipping potentially programme neuf id [" + std::to_string(realEstate->getId()) + "]");
+            return;
+         }
+            
          std::string price = std::to_string(document["price"].GetDouble());
          std::replace(price.begin(), price.end(), ',', '.');
          realEstate->setDescription(RealEstatePrice, price);
       }
       if (document.HasMember("surfaceArea"))
       {
+         if(document["surfaceArea"].IsArray())
+         {
+            Log::getInstance()->info("Skipping potentially programme neuf id [" + std::to_string(realEstate->getId()) + "]");
+            return;
+         }
          std::string surface = std::to_string(document["surfaceArea"].GetDouble());
          std::replace(surface.begin(), surface.end(), ',', '.');
          realEstate->setDescription(RealEstateSurface, surface);
       }
       if (document.HasMember("roomsQuantity"))
       {
+         if(document["roomsQuantity"].IsArray())
+         {
+            Log::getInstance()->info("Skipping potentially programme neuf id [" + std::to_string(realEstate->getId()) + "]");
+            return;
+         }
          std::string nb_room = std::to_string(document["roomsQuantity"].GetUint());
 
          realEstate->setDescription(RealEstateRooms, nb_room);
@@ -865,6 +885,7 @@ void DataFormater::ReadLaForetJSON(const std::string& json, classifier::RealEsta
 
 void DataFormater::ReadOrpiJSON(const std::string& json, classifier::RealEstateAd* realEstate)
 {
+
    std::locale::global(std::locale(""));
 
    rapidjson::Document document;

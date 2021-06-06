@@ -101,7 +101,7 @@ document.addEventListener("click", function (e) {
 });
 }
 
-var available_cities= ["Colombes", "Nanterre", "Puteaux", "Houilles"];
+var available_cities= ["Colombes", "Nanterre", "Puteaux", "Houilles", "boulogne-billancourt"];
 
 var input_estimate_city = document.getElementById("estimate_city");
 

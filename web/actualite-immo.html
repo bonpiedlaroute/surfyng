@@ -2,10 +2,10 @@
 <html lang="fr"><head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Découvrez toute l'actualité immobilière en France, pour acheter, louer, vendre un bien immobilier. Des conseils pratiques et astuces récupérés en temps réel afin que vous soyez le mieux informé pour votre projet immobilier - Surfyn">
+    <meta name="description" content="Découvrez toute l'actualité de l'immobilier en France, conseils, tendances, évolution du marché pour acheter, louer, vendre un bien immobilier. Prix de  l'immobilier, fiscalité, notaire, taux d'emprunt, investissement, des infos récupérés en temps réel pour votre projet immobilier - Surfyn">
     <meta name="author" content="">
 
-    <title>Toute l'actualité de l'immobilier - Surfyn</title>
+    <title>Actualité de l'immobilier en France: dernières infos - Surfyn</title>
     <base href="/">
 
     <!-- Bootstrap core CSS -->
@@ -13,7 +13,9 @@
    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
     <!--  Surfyn styles -->
     <link href="surfyn_immo_actu.css" rel="stylesheet">
+    <link href="surfyn.css" rel="stylesheet">
     <link rel="shortcut icon" href="#" />
+    <link rel="canonical" href="/actualite-immobilier.html"> </link>
     <!-- Google Adsense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -66,30 +68,36 @@
             </div>
           </div>
           <div style="height:40px;display:flex; justify-content: center; text-align:center;align-items:center;" class="row mx-auto">
-          <h1 class="actu_header_title">Toute l'actualité de l'immobilier en France - Dernières infos</h1>
+          <h1 class="actu_header_title">Actualité de l'immobilier en France: dernières infos</h1>
         </div>
       </header>
       <main id="main-content">
-          <!-- <a href="https://www.capital.fr/immobilier/assurance-mobil-home-1387319" target="_blank">
-          <div class="row mx-auto sf_actu_immo_container">
-                  <div class="sf_actu_immo_image_container">
-                   <img src="https://cap.img.pmdstatic.net/fit/http.3A.2F.2Fprd2-bone-image.2Es3-website-eu-west-1.2Eamazonaws.2Ecom.2Fcap.2F2020.2F11.2F25.2Fc0544367-ad66-4812-b416-86e54423b299.2Ejpeg/1200x900/quality/80/assurance-mobil-home-laquelle-choisir.jpg" alt="Surfyn" style="height:100px;width:100px;border-radius:8px;" />
-                  </div>
-                  <div class="sf_actu_immo_text_container">
-                      <div class="sf_actu_immo_text_title">
-                        <strong class="sf_actu_immo_text_title_size">Assurance mobil-home : laquelle choisir ?</strong>
-                      </div>
-                      <div class="sf_actu_immo_source_container">
-                        <span class="sf_actu_immo_text_source_size"> Capital</span>
-                        <span class="sf_actu_immo_text_source_size" style="margin-left:3px;"> - il y'a 1 heure</span>
-                      </div>
-                      <div class="sf_actu_immo_text_box">
-                        <span class="sf_actu_immo_text_size">Qu’il soit utilisé comme résidence principale ou comme résidence temporaire de loisirs, le mobil-home est un
-                         compromis entre l’habitation classique et la caravane. Comment l’assurer et quels sont les risques garantis ?</span>
-                      </div>
-                  </div>
+        <div id="news-content">
+        </div>
+        <div id="news-pagination">
+        </div>
+        <div id="related-news">
+          <div class="sf_line_results row mx-auto"></div>
+          <div class="sf_generic_infos_box" style="height: 210px;">
+            <div class="sf_generic_infos_container">
+              <div class="sf_generic_infos_desc_header">
+                <h2 class="sf_generic_infos_desc_header_text">Immobilier en France</h2>
+              </div>
+              <div class="sf_generic_infos_desc">
+                <a class="sf_generic_infos_desc_text" href="/recherche/achat/immobilier?search_type=1">Acheter un bien<i class="fas fa-chevron-right sf_generic_infos_desc_text_icon"></i></a>
+              </div>
+              <div class="sf_generic_infos_desc">
+                <a class="sf_generic_infos_desc_text" href="/recherche/location/immobilier?search_type=2">Louer un bien<i class="fas fa-chevron-right sf_generic_infos_desc_text_icon"></i></a>
+              </div>
+              <div class="sf_generic_infos_desc">
+                <a class="sf_generic_infos_desc_text" href="estimation-immobiliere-en-ligne.html">Prix de l'immobilier<i class="fas fa-chevron-right sf_generic_infos_desc_text_icon"></i></a>
+              </div>
+              <div class="sf_generic_infos_desc">
+                <a class="sf_generic_infos_desc_text" href="conseil-immobilier.html">Conseils et astuces pour bien réussir votre projet immobilier<i class="fas fa-chevron-right sf_generic_infos_desc_text_icon"></i></a>
+              </div>
+            </div>
           </div>
-        </a> -->
+        </div>
     </main>
       <footer>
         <a style="position: fixed; bottom: 10px; right: 20px; z-index: 20; display: none;" id="gotoTopButton" onclick="scrollToTop()">
@@ -137,5 +145,6 @@
     <script src="refresh_scroll.js"></script>
     <script src="refresh_actu.js"></script>
     <script src="dropdownmenu.js"></script>
+    <script src="actu_pagination.js"></script>
 
 </body></html>

@@ -935,7 +935,6 @@ function display_number_field(input)
     }
 }
 
-
 function display_floor(input)
 {
     if(input.checked)
@@ -1024,6 +1023,7 @@ function display_video_field(input)
 
 }
 
+// Function to remove all items in sessionStorage at the end.
 function clearStorage()
 {
     sessionStorage.removeItem("");

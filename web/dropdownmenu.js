@@ -37,6 +37,7 @@ window.onclick = function(event) {
       dropdown.style.zIndex = "4";
   }
 
+
   if ( (event.target.className != "sf_login_connected_icon" && event.target.className != "sf_user_display_name") || ( (nb_login_click % 2) == 0) )
   {
     var dropdownslogin = document.getElementsByClassName("sf_login_menu_content");
@@ -48,10 +49,6 @@ window.onclick = function(event) {
       }
     }
     nb_login_click = 0;
-
-    var dropdown = document.getElementById("dropdownmenu");
-    if(dropdown)
-      dropdown.style.zIndex = "4";
   }
 
 }

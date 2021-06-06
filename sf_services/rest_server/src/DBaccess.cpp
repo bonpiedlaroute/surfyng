@@ -211,9 +211,6 @@ std::string searchTypeValue = "";
       value.fieldtype = Type::type::NUMBER;
       attributestoget[id_nbrooms] = value;
 
-      value.fieldtype = Type::type::STRING;
-      attributestoget[id_history] = value;
-
       value.fieldtype = Type::type::NUMBER;
       attributestoget[id_price] = value;
 

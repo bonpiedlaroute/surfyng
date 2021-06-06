@@ -20,6 +20,7 @@ async function ssr(path, browserWSEndpoint) {
 	postalCodeByCity["HOUILLES"]="78800";
 	postalCodeByCity["PUTEAUX"]="92800";
 	postalCodeByCity["NANTERRE"]="92000";
+	postalCodeByCity["BOULOGNE-BILLANCOURT"]="92100";
 
 	function getPostalCode(cityname)
 	{
@@ -30,14 +31,16 @@ async function ssr(path, browserWSEndpoint) {
 
 	function build_params(url){
 		var pathname = url.split("/").slice(1);
-		var s_city = pathname[3].split("-");
+		var index = pathname[3].lastIndexOf("-");
+	  var s_city = pathname[3].substring(0,index);
+	  var s_postalcode = pathname[3].substring(index+1);
 
-		if(s_city[0].toUpperCase() in postalCodeByCity && getPostalCode(s_city[0]) == s_city[1])
-		{
-			var city_param = s_city[0][0].toUpperCase();
-			city_param += s_city[0].slice(1);
-			url_params += "search_city=" + city_param;
-		}
+	  if( s_city.toUpperCase() in postalCodeByCity && getPostalCode(s_city) == s_postalcode)
+	  {
+	    var city_param = s_city[0].toUpperCase();
+	    city_param += s_city.slice(1);
+	    url_params += "search_city=" + city_param;
+	  }
 	  	else {
 	    	throw new Error('Unable to parse CITY');
 	  	}
@@ -97,7 +100,6 @@ async function ssr(path, browserWSEndpoint) {
 
 	var url = HOST +  path;
 	console.log('url before building:' + url);
-	var needToSetCanonicalUrl = false;
 
 	if(path.includes("liste-annonces"))
 	{
@@ -112,16 +114,14 @@ async function ssr(path, browserWSEndpoint) {
 		{
 			//TODO in case of error, return an error page
 			build_params(path);
-			needToSetCanonicalUrl = true;
+
 		}
 
 		url = HOST + '/liste_annonces.html' + url_params;
-
 	}
 	else if(path.includes("/annonce/"))
 	{
 		url = build_params_detail(path);
-		needToSetCanonicalUrl = true;
 	}
 	else if(path.includes("actualite-immobilier.html"))
 	{
@@ -151,15 +151,22 @@ async function ssr(path, browserWSEndpoint) {
 		await page.goto(url);
 		console.log('Waiting for #prerendered-page');
 		await page.waitForSelector('#prerendered-page');
-		if(needToSetCanonicalUrl)
-		{
 
-			await page.evaluate((path) => {
-			var rel_link = document.getElementById("canonical_url");
-			rel_link.rel = "canonical";
-			rel_link.href = path;
+		await page.evaluate((path) => {
+				var rel_link = document.getElementById("canonical_url");
+				if(rel_link)
+				{
+					rel_link.rel = "canonical";
+					rel_link.href = path;
+				}
+
+				const meta_origin_trial = document.querySelectorAll("[http-equiv='origin-trial']");
+				meta_origin_trial.forEach(function(item) {
+		  		item.remove();
+				}
+				);
 		}, path);
-		}
+
 		console.log('#prerendered-page loaded');
     } catch(err) {
     	console.error(err);

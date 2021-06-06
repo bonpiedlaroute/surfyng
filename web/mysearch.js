@@ -19,13 +19,6 @@ function loadJSON(path, success, error) {
     xobj.send(null);
  }
 
-INSEE_CODE = {
-  "Puteaux": 92800,
-  "Houilles": 78800,
-  "Nanterre": 92000,
-  "Colombes": 92700
-};
-
 function createNode(element) {
     return document.createElement(element);
 }
@@ -140,8 +133,12 @@ function generate_my_search_page(data)
 
    var rooms = createNode("span");
    rooms.className = "sf_my_research_text";
-   rooms.innerHTML = String(data[i].ROOMS);
-   rooms.innerHTML += " pièce(s)";
+   if(data[i].hasOwnProperty("ROOMS"))
+   {
+     rooms.innerHTML = String(data[i].ROOMS);
+     rooms.innerHTML += " pièce(s)";
+
+   }
 
    rooms_box.append(rooms);
    my_research_infos.append(rooms_box);
@@ -219,6 +216,29 @@ function generate_my_search_page(data)
    my_research_email_alert.onclick = change_alert_status;
 
    my_research_container.append(my_research_email_alert);
+
+   var see_my_research = createNode("a");
+   see_my_research.className = "sf_my_research_email_alert";
+   see_my_research.href = data[i].ADS_URL;
+
+   var see_my_research_icon = createNode("i");
+   var see_my_research_msg  = createNode("span");
+
+   see_my_research_icon.className = "far fa-eye sf_bell_alert_icon";
+   see_my_research_icon.style.color = "#61AEB5";
+   see_my_research_msg.innerHTML = "Voir les annonces";
+   see_my_research_msg.className = "sf_alert_text";
+   see_my_research_msg.style.color = "#61AEB5";
+
+   see_my_research.append(see_my_research_icon);
+   see_my_research.append(see_my_research_msg);
+
+   see_my_research.style.border = "1px solid #61AEB5";
+   see_my_research.style.marginBottom = "20px";
+   see_my_research.style.cursor = "pointer";
+
+
+   my_research_container.append(see_my_research);
 
    var delete_alert_box = createNode("div");
    delete_alert_box.className = "sf_my_research_small_box";
@@ -317,7 +337,7 @@ function generate_my_announce_page(data)
 
       var department = createNode("p");
       department.className = "card-text text-muted"
-      department.innerHTML = data[i].CITY + "(" + INSEE_CODE[data[i].CITY] + ")";
+      department.innerHTML = data[i].CITY + "(" + postalCodeByCity[data[i].CITY.toUpperCase()] + ")";
 
       card_body.append(department);
 
@@ -402,8 +422,8 @@ function delete_announce(event)
 /*loadJSON("data/criteria.json",
 function (data) { generate_my_search_page(JSON.parse(data.response));}, function(err) {console.log(err);});
 */
-var url = 'https://surfyn.fr:7878/my_realestate_search?userid=';
-//var url = 'http://localhost:7878/my_realestate_search?userid=';
+//var url = 'https://surfyn.fr:7878/my_realestate_search?userid=';
+var url = 'http://localhost:7878/my_realestate_search?userid=';
 
 var userid = sessionStorage.getItem("user_id");
 url += userid;
@@ -417,8 +437,8 @@ fetch(url)
     console.log(error);
 });
 
-// var url_ad = "https://surfyn.fr:7878/my_ad_search?userid="
-var url_ad = "http://localhost:7878/my_ad_search?userid="
+// var url_ad = "https://surfyn.fr:7878/my_ad?userid="
+var url_ad = "http://localhost:7878/my_ad?userid="
 
 url_ad += userid;
 

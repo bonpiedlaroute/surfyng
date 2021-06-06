@@ -36,15 +36,26 @@ from thrift_generated.dynamodb_access.ttypes import KeyValue
 from thrift_generated.dynamodb_access import *
 from hash_id import *
 from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 import threading
 import Queue
 from email.header import Header
 from email.utils import formataddr
+from inseecode_postalcode import *
+from template_notification_email import *
+import re
 
 
 
 #EmailAlertResult registerEmailAlert(1: string userid, 2: map<string, string> parameters),
 #EmailAlertResult notifyNewAnnounces(1: string city)
+
+def from_dict(dct):
+    def lookup(match):
+        key = match.group(1)
+        return dct[key] if key in dct else ''
+    return lookup
+
 
 class UserAlert:
    def __init__(self):
@@ -153,24 +164,41 @@ class EmailAlertServiceHandler(Iface):
 
       #PRICE_MIN and PRICE_MAX
       price_min_value = ttypes.ValueType()
-      price_min_value.field = str(int(parameters["price_min"])*1000) if parameters["search_type"] == "1" else str(int(parameters["price_min"]))      
+      if "price_min" in parameters:
+         price_min_value.field = str(int(parameters["price_min"])*1000) if parameters["search_type"] == "1" else str(int(parameters["price_min"]))
+      else:
+         price_min_value.field = "50000" if parameters["search_type"] == "1" else "100"
+      
       price_min_value.fieldtype = ttypes.Type.NUMBER
       values["PRICE_MIN"] = price_min_value
 
       price_max_value = ttypes.ValueType()
-      price_max_value.field = str(int(parameters["price_max"])*1000) if parameters["search_type"] == "1" else str(int(parameters["price_max"]))      
+      if "price_max" in parameters:
+         price_max_value.field = str(int(parameters["price_max"])*1000) if parameters["search_type"] == "1" else str(int(parameters["price_max"]))      
+      else:
+         price_max_value.field = "4000000" if parameters["search_type"] == "1" else "4000"
+
       price_max_value.fieldtype = ttypes.Type.NUMBER
+
       values["PRICE_MAX"] = price_max_value
 
  
       #AREA_MIN and AREA_MAX
       area_min_value = ttypes.ValueType()
-      area_min_value.field = str(int(parameters["area_min"]))      
+      if "area_min" in parameters:
+         area_min_value.field = str(int(parameters["area_min"]))      
+      else:
+         area_min_value.field = "10"
+
       area_min_value.fieldtype = ttypes.Type.NUMBER
       values["AREA_MIN"] = area_min_value
 
       area_max_value = ttypes.ValueType()
-      area_max_value.field = str(int(parameters["area_max"]))      
+      if "area_max" in parameters:
+         area_max_value.field = str(int(parameters["area_max"]))      
+      else:
+         area_max_value.field = "400"
+
       area_max_value.fieldtype = ttypes.Type.NUMBER
       values["AREA_MAX"] = area_max_value
 
@@ -189,7 +217,8 @@ class EmailAlertServiceHandler(Iface):
       values["ALERT_STATUS"] = alertstatus_value
 
       #URL
-      url = "/liste_annonces.html?"
+      url = self.buildSummaryUrl(parameters)
+      url += "?"
       url += "search_city="
       url += parameters["search_city"]
       url += "&search_type="
@@ -200,15 +229,21 @@ class EmailAlertServiceHandler(Iface):
          url += "&rooms="
          url += parameters["rooms"]
 
-      url += "&price_min="
-      url += parameters["price_min"]
-      url += "&price_max="
-      url += parameters["price_max"]
+      if "price_min" in parameters:
+         url += "&price_min="
+         url += parameters["price_min"]
+
+      if "price_max" in parameters:
+         url += "&price_max="
+         url += parameters["price_max"]
       
-      url += "&area_min="
-      url += parameters["area_min"]
-      url += "&area_max="
-      url += parameters["area_max"]
+      if "area_min" in parameters:
+         url += "&area_min="
+         url += parameters["area_min"]
+
+      if "area_max" in parameters:
+         url += "&area_max="
+         url += parameters["area_max"]
 
 
       url_value = ttypes.ValueType()
@@ -378,7 +413,67 @@ class EmailAlertServiceHandler(Iface):
          retval.error = ret.error
 
       return retval
- 
+
+   def buildAdsUrl(self, ads, city):
+      url = "https://surfyn.fr/annonce/"
+      if ads["SEARCH_TYPE"] == "For sale":
+         url += "achat/"
+      else:
+         url += "location/"
+
+      if ads["PROPERTY_TYPE"] == "Appartement":
+         url += "appartement-"
+         if ads["ROOMS"] == "1":
+            url += "studios/"
+         else:
+            url += ads["ROOMS"]
+            url += "-pieces/"
+      else:
+         url += "maison-"
+         url += ads["ROOMS"]
+         url += "-pieces/"
+      
+      url += city
+      url += "-"
+      url += postalcodeByCity[city]
+      url += "?"
+      url += ads["ID"]
+
+      return url
+   
+   def buildSummaryUrl(self, parameters):
+      url = "/liste-annonces/"
+      
+      if parameters["search_type"] == "1":
+         url += "achat/"
+      else:
+         url += "location/"
+
+      if parameters["prop_type"] == "1":
+         url += "appartements"
+         if "rooms" in parameters:
+            if parameters["rooms"] == "1":
+               url += "-studios"
+            else:
+               url += "-"
+               url += parameters["rooms"]
+               url += "-pieces"
+         url += "/"
+      else:
+         url += "maisons"
+         if "rooms" in parameters:
+            url += "-"
+            url += parameters["rooms"]
+            url += "-pieces"
+
+         url += "/"
+
+      url += parameters["search_city"].lower()
+      url += "-"
+      url += postalcodeByCity[parameters["search_city"].lower()]
+
+      return url
+    
    def checkAndNotifyUsers(self, city):
       active_alert_list = []
       filterexpression_alert = "CITY = :ct and ALERT_STATUS = :als"
@@ -493,6 +588,12 @@ class EmailAlertServiceHandler(Iface):
          duplicates_value.fieldtype = ttypes.Type.STRING
          attribute_to_get["DUPLICATES"] = duplicates_value
 
+         #IMAGE
+         image_value = ttypes.ValueType()
+         image_value.fieldtype = ttypes.Type.STRING
+         attribute_to_get["IMAGE"] = image_value
+
+
 
          expression_value = {}
          city_value = ttypes.ValueType()
@@ -530,7 +631,7 @@ class EmailAlertServiceHandler(Iface):
       for ads in new_ads:
          for alert in active_alert_list:
             if self.ads_match(ads, alert) and ads["ID"] not in userToNotify[alert["USERID"]].forbidden_ads:
-               userToNotify[alert["USERID"]].ads_list.append(ads["ID"])
+               userToNotify[alert["USERID"]].ads_list.append(ads)
                if "DUPLICATES" in ads:
                   duplicates_ad=ads["DUPLICATES"].split(",")
                   for announce in duplicates_ad:
@@ -553,31 +654,66 @@ class EmailAlertServiceHandler(Iface):
                subject_msg += u' nouvelles annonces immobilières'
             else:
                subject_msg += u' nouvelle annonce immobilière'
+
+            subject_msg += u' à '
             
-            body_msg = 'Bonjour '
+            formated_city = city[0].upper()
+            formated_city += city[1:]
+
+            subject_msg += formated_city
+           
+
+            body_msg = ""
+            text_msg = u"Bonjour "
+   
+            user_display_name = ""
+
+            subs = {}
+
             if userToNotify[userid].user_display_name:
                pos = userToNotify[userid].user_display_name.find(' ')
-               name = userToNotify[userid].user_display_name[:pos] if pos != -1 else userToNotify[userid].user_display_name 
-               body_msg += name
-            body_msg += '\n'
-            body_msg += str(len(userToNotify[userid].ads_list))
+               user_display_name = userToNotify[userid].user_display_name[:pos] if pos != -1 else userToNotify[userid].user_display_name 
+           
+            subs["USER_DISPLAY_NAME"] = user_display_name
+            
+            text_msg += user_display_name
+            text_msg += "\n\n"
+
+            nb_ads = str(len(userToNotify[userid].ads_list))
+            subs["NB_NEW_AD"] = nb_ads
+
             if isplural:
-               body_msg += u' nouvelles annonces sur https://surfyn.fr'
-               body_msg += u' correspondent à vos critères de recherche immobilière\n'
+               tmp_msg_header = template_email_msg_header_many
+               text_msg += nb_ads
+               text_msg += u" nouvelles annonces sur https://surfyn.fr correspondent à vos critères de recherche immobilière.\n"
             else:
-               body_msg += u' nouvelle annonce sur https://surfyn.fr'
-               body_msg += u' correspond à vos critères de recherche immobilière\n'
+               tmp_msg_header = template_email_msg_header_one
+               text_msg += u"1 nouvelle annonce sur https://surfyn.fr correspond à vos critères de recherche immobilière.\n"                       
+
+            body_msg += re.sub(u'@@(.*?)@@', from_dict(subs), tmp_msg_header)               
 
             for ad in userToNotify[userid].ads_list:
-               url = 'https://surfyn.fr/annonce_detaille.html?'+ str(ad)
-               body_msg += url
-               body_msg += '\n'
+               ad["CITY"] = formated_city
+               ad["AD_URL"] = self.buildAdsUrl(ad, city) 
+               text_msg  += ad["AD_URL"]
+               text_msg  += "\n"
+               body_msg += re.sub(u'@@(.*?)@@', from_dict(ad), template_email_msg_body)
 
-            body_msg += u"\n\n A votre service\nL' équipe Surfyn"
-            msg = MIMEText(body_msg, _charset='utf-8')
+            body_msg += template_email_msg_footer
+            text_msg += u"Vous souhaitez connaitre le prix d'un bien immobilier? vous pouvez estimer son prix en ligne, gratuitement sur https://surfyn.fr/estimation-immobiliere-en-ligne.html \n"
+            text_msg += u"A votre service \n"
+            text_msg += u"L' equipe Surfyn\n"
+
+            msg = MIMEMultipart('alternative')
             msg['Subject'] = subject_msg
             msg['From'] = formataddr((str(Header('Surfyn', 'utf-8')), self.from_addr))
             msg['To'] = userToNotify[userid].email
+
+            text_msg_content = MIMEText(text_msg, 'plain', _charset='utf-8')
+            body_msg_content = MIMEText(body_msg, 'html', _charset='utf-8')
+
+            msg.attach(text_msg_content)
+            msg.attach(body_msg_content)
 
             logging.info(u'sending msg:\n{} to user [{}] '.format(body_msg, userToNotify[userid].email))
             smtp_server.sendmail(self.from_addr, recipients, msg.as_string())
