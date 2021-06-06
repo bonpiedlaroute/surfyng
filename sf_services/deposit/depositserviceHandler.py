@@ -151,7 +151,7 @@ class DepositServiceHandler(Iface):
 
         # ANNOUNCE IMAGE
         announce_image_value = ttypes.ValueType()
-        announce_image_value.field = data['image1']
+        announce_image_value.field = data['video'] if data.has_key('video') else data['image1']
         announce_image_value.fieldtype = ttypes.Type.STRING
         values['ANNOUNCE_IMAGE'] = announce_image_value
 
@@ -236,27 +236,34 @@ class DepositServiceHandler(Iface):
         description_value.fieldtype = ttypes.Type.STRING
         values['AD_TEXT_DESCRIPTION'] = description_value
 
-        # IMAGE
-        images = {
-            'image1': data['image1'],
-            'image2': data['image2'],
-            'image3': data['image3'],
-            'image4': data['image4'],
-            'image5': data['image5']
-        }
-        image = str(images)
+        # IMAGE OR VIDEO
+        if data.has_key('video'):
+            video = data['video']
+            video_value = ttypes.ValueType()
+            video_value.field = video
+            video_value.fieldtype = ttypes.Type.STRING
+            values['VIDEO'] = video_value
+        else:
+            images = {
+                'image1': data['image1'],
+                'image2': data['image2'],
+                'image3': data['image3'],
+                'image4': data['image4'],
+                'image5': data['image5']
+            }
+            image = str(images)
 
-        image_value = ttypes.ValueType()
-        image_value.field = image
-        image_value.fieldtype = ttypes.Type.STRING
-        values['IMAGE'] = image_value
+            image_value = ttypes.ValueType()
+            image_value.field = image
+            image_value.fieldtype = ttypes.Type.STRING
+            values['IMAGE'] = image_value
 
-        # IMAGE COUNT
-        image_count = ttypes.ValueType()
-        image_count.field = str(
-            len(filter(lambda item: 'image' in item, list(data.keys()))))
-        image_count.fieldtype = ttypes.Type.STRING
-        values['IMAGE_COUNT'] = image_count
+            # IMAGE COUNT
+            image_count = ttypes.ValueType()
+            image_count.field = str(
+                len(filter(lambda item: 'image' in item, list(data.keys()))))
+            image_count.fieldtype = ttypes.Type.STRING
+            values['IMAGE_COUNT'] = image_count
 
         # ADDRESS
         address_value = ttypes.ValueType()
@@ -453,6 +460,11 @@ class DepositServiceHandler(Iface):
             image_value = ttypes.ValueType()
             image_value.fieldtype = ttypes.Type.STRING
             attributes_to_get['IMAGE'] = image_value
+
+            # VIDEO
+            video_value = ttypes.ValueType()
+            video_value.fieldtype = ttypes.Type.STRING
+            attributes_to_get['VIDEO'] = video_value
 
             expression_value = {}
             userid_value.field = user_id

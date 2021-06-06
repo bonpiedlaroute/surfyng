@@ -144,89 +144,112 @@ function generate_details_page_surfyn(data) {
                 carousel.className = "carousel slide";
                 carousel.setAttribute("data-ride", "carousel");
 
+
                 var carousel_list = createNode("ol");
                 carousel_list.className = "carousel-indicators";
 
-                var images = data[i].IMAGE.replaceAll('\'', '\"');
-                images = images.replaceAll('u\"', '\"');
-                images = JSON.parse(images);
+                if(!data[i].hasOwnProperty('VIDEO'))
+                {
 
-                var counter = 1;
-
-                for (image in images) {
-                    var list_item = createNode("li")
-                    list_item.setAttribute("data-target", "#myCarousel");
-                    list_item.setAttribute("data-slide", counter.toString());
-                    carousel_list.appendChild(list_item);
-                    counter += 1;
+                    var images = data[i].IMAGE.replaceAll('\'', '\"');
+                    images = images.replaceAll('u\"', '\"');
+                    images = JSON.parse(images);
+    
+                    var counter = 1;
+    
+                    for (image in images) {
+                        var list_item = createNode("li")
+                        list_item.setAttribute("data-target", "#myCarousel");
+                        list_item.setAttribute("data-slide", counter.toString());
+                        carousel_list.appendChild(list_item);
+                        counter += 1;
+                    }
+    
+                    carousel.appendChild(carousel_list);
+    
+                    var carousel_content = createNode("div");
+                    carousel_content.className = "carousel-inner";
+                    counter = 1;
+    
+                    for (image in images) {
+                        var carousel_item = createNode("div");
+                        carousel_item.className = counter == 1 ? "carousel-item active" : "carousel-item";
+    
+                        var carousel_item_image = createNode("img");
+                        carousel_item_image.className = "slide-image h-75 rounded";
+                        carousel_item_image.src = images[image];
+                        carousel_item.appendChild(carousel_item_image);
+    
+                        var carousel_item_positioning = createNode("div");
+                        carousel_item_positioning.className = "h-100 w-100";
+                        carousel_item_positioning.style = "background-color: #14131382  !important;position: relative;"
+                        carousel_item.appendChild(carousel_item_positioning);
+                        counter += 1
+    
+                        carousel_content.appendChild(carousel_item);
+                    }
+    
+                    carousel.appendChild(carousel_content);
+    
+                    // Previous carousel button
+                    var carousel_prev_button = createNode("a");
+                    carousel_prev_button.className = "carousel-control-prev";
+                    carousel_prev_button.href = "#myCarousel";
+                    carousel_prev_button.setAttribute("role", "button");
+                    carousel_prev_button.setAttribute("data-slide", "prev");
+    
+                    var carousel_prev_button_content1 = createNode("span");
+                    carousel_prev_button_content1.className = "carousel-control-prev-icon";
+                    carousel_prev_button_content1.setAttribute("aria-hidden", "true");
+    
+                    var carousel_prev_button_content2 = createNode("span");
+                    carousel_prev_button_content2.className = "sr-only";
+                    carousel_prev_button_content2.innerHTML = "Previous";
+    
+                    carousel_prev_button.appendChild(carousel_prev_button_content1);
+                    carousel_prev_button.appendChild(carousel_prev_button_content2);
+    
+                    // Next carousel button
+                    var carousel_next_button = createNode("a");
+                    carousel_next_button.className = "carousel-control-next";
+                    carousel_next_button.href = "#myCarousel";
+                    carousel_next_button.setAttribute("role", "button");
+                    carousel_next_button.setAttribute("data-slide", "next");
+    
+                    var carousel_next_button_content1 = createNode("span");
+                    carousel_next_button_content1.className = "carousel-control-next-icon";
+                    carousel_next_button_content1.setAttribute("aria-hidden", "true");
+    
+                    var carousel_next_button_content2 = createNode("span");
+                    carousel_next_button_content2.className = "sr-only";
+                    carousel_next_button_content2.innerHTML = "Next";
+    
+                    carousel_next_button.appendChild(carousel_next_button_content1);
+                    carousel_next_button.appendChild(carousel_next_button_content2);
+    
+                    carousel.appendChild(carousel_prev_button);
+                    carousel.appendChild(carousel_next_button);
+    
+                    container.appendChild(carousel);
                 }
+                else
+                {
+                    var video_container = createNode('div');
+                    video_container.className = "embed-responsive embed-responsive-16by9";
 
-                carousel.appendChild(carousel_list);
+                    // Video
+                    var announce_video = createNode("video");
+                    announce_video.src = data[i].VIDEO;
+                    announce_video.className = "embed-responsive-item";
+                    announce_video.style.display = "inherit";
+                    announce_video.autoplay = true;
+                    announce_video.muted = true;
+                    announce_video.loop = true;
+                    announce_video.controls = true;
+                    video_container.appendChild(announce_video);
 
-                var carousel_content = createNode("div");
-                carousel_content.className = "carousel-inner";
-                counter = 1;
-
-                for (image in images) {
-                    var carousel_item = createNode("div");
-                    carousel_item.className = counter == 1 ? "carousel-item active" : "carousel-item";
-
-                    var carousel_item_image = createNode("img");
-                    carousel_item_image.className = "slide-image h-75 rounded";
-                    carousel_item_image.src = images[image];
-                    carousel_item.appendChild(carousel_item_image);
-
-                    var carousel_item_positioning = createNode("div");
-                    carousel_item_positioning.className = "h-100 w-100";
-                    carousel_item_positioning.style = "background-color: #14131382  !important;position: relative;"
-                    carousel_item.appendChild(carousel_item_positioning);
-                    counter += 1
-
-                    carousel_content.appendChild(carousel_item);
+                    container.appendChild(video_container)
                 }
-
-                carousel.appendChild(carousel_content);
-
-                // Previous carousel button
-                var carousel_prev_button = createNode("a");
-                carousel_prev_button.className = "carousel-control-prev";
-                carousel_prev_button.href = "#myCarousel";
-                carousel_prev_button.setAttribute("role", "button");
-                carousel_prev_button.setAttribute("data-slide", "prev");
-
-                var carousel_prev_button_content1 = createNode("span");
-                carousel_prev_button_content1.className = "carousel-control-prev-icon";
-                carousel_prev_button_content1.setAttribute("aria-hidden", "true");
-
-                var carousel_prev_button_content2 = createNode("span");
-                carousel_prev_button_content2.className = "sr-only";
-                carousel_prev_button_content2.innerHTML = "Previous";
-
-                carousel_prev_button.appendChild(carousel_prev_button_content1);
-                carousel_prev_button.appendChild(carousel_prev_button_content2);
-
-                // Next carousel button
-                var carousel_next_button = createNode("a");
-                carousel_next_button.className = "carousel-control-next";
-                carousel_next_button.href = "#myCarousel";
-                carousel_next_button.setAttribute("role", "button");
-                carousel_next_button.setAttribute("data-slide", "next");
-
-                var carousel_next_button_content1 = createNode("span");
-                carousel_next_button_content1.className = "carousel-control-next-icon";
-                carousel_next_button_content1.setAttribute("aria-hidden", "true");
-
-                var carousel_next_button_content2 = createNode("span");
-                carousel_next_button_content2.className = "sr-only";
-                carousel_next_button_content2.innerHTML = "Next";
-
-                carousel_next_button.appendChild(carousel_next_button_content1);
-                carousel_next_button.appendChild(carousel_next_button_content2);
-
-                carousel.appendChild(carousel_prev_button);
-                carousel.appendChild(carousel_next_button);
-
-                container.appendChild(carousel);
 
                 // Publication date
                 var months = ["Janvier", "Fevrier", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
@@ -241,7 +264,8 @@ function generate_details_page_surfyn(data) {
                 var date = new Date(data[i].TIMESTAMP);
                 publication_content.innerHTML += days[date.getUTCDay()] + ", " + date.getUTCDate() + " " + months[date.getUTCMonth()] + " " + date.getUTCFullYear();
                 publication_content.innerHTML += " à ";
-                publication_content.innerHTML += date.getUTCHours() + ":" + date.getUTCMinutes();
+                var minutes = date.getUTCMinutes() < 10 ? "0" + date.getUTCMinutes() : date.getUTCMinutes();
+                publication_content.innerHTML += date.getHours() + ":" + minutes;
                 publication_content.innerHTML += " sur <strong>Surfyn</strong>"
 
                 publication_date.appendChild(publication_content);

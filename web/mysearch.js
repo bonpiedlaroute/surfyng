@@ -255,14 +255,34 @@ function generate_my_announce_page(data)
       card.className = "card ml-0 h-100";
 
       var announce_image = createNode("img");
+      var announce_video = createNode("video");
       announce_image.className = "card-img-top img-fluid";
-      images = data[i].IMAGE.replaceAll('\'', '\"');
-      images = images.replaceAll('u\"', '\"');
-      images = JSON.parse(images)
-      announce_image.src = images['image1'];
-      announce_image.alt = "announce"
+      console.log(data[i]);
+      if(!data[i].hasOwnProperty('VIDEO'))
+      {
+        images = data[i].IMAGE.replaceAll('\'', '\"');
+        images = images.replaceAll('u\"', '\"');
+        images = JSON.parse(images);
+        announce_image.src = images['image1'];
+        announce_image.alt = "announce"
+        card.appendChild(announce_image);
+      }
+      else
+      {
+        var video_container = createNode('div');
+        video_container.className = "embed-responsive embed-responsive-16by9";
 
-      card.appendChild(announce_image);
+        announce_video.src = data[i].VIDEO;
+        announce_video.className = "embed-responsive-item";
+        announce_video.style.display = "inherit";
+        announce_video.autoplay = true;
+        announce_video.muted = true;
+        announce_video.loop = true;
+        // announce_video.controls = true;
+        video_container.appendChild(announce_video);
+        card.appendChild(video_container);
+      }
+
     
       var card_body = createNode("div");
       card_body.className = "card-body";

@@ -781,10 +781,30 @@ a:hover {
     resize: none;
 }
 
+video, canvas {
+    display: none;
+}
+
 .sf_preview {
     position: relative;
     width: 180px;
     height: 180px;
+    background-position: center center;
+    background-size: cover;
+    background-color: #bfe5f9;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 10px;
+    border: 2px dashed rgba(0, 0, 0, .3);
+}
+
+.sf_preview_video {
+    position: relative;
+    width: 300px;
+    height: 200px;
     background-position: center center;
     background-size: cover;
     background-color: #bfe5f9;
@@ -810,6 +830,13 @@ a:hover {
     background-color: #A9A9A9;
     border-radius: 10px;
     opacity: 0.5;
+}
+
+.sf_overlay_video {
+    display: none;
+    width: 80%;
+    height: 8px;
+    opacity: 0.9;
 }
 
 .upload {

@@ -74,6 +74,8 @@ var imageInput1 = document.getElementById("uploadImage2");
 var imageInput1 = document.getElementById("uploadImage3");
 var imageInput1 = document.getElementById("uploadImage4");
 
+var videoInput = document.getElementById("video");
+
 
 // Error fields
 var title_error = document.getElementById("title_error_message");
@@ -89,6 +91,7 @@ var description_error = document.getElementById("description_error_message");
 var address_error = document.getElementById("address_error_message");
 var phone_error = document.getElementById("phone_error_message");
 var images_error = document.getElementById("images_error_message");
+var video_error = document.getElementById("video_error_message");
 
 function modal(){
     
@@ -125,7 +128,7 @@ function validate_first_step() {
                             if(!isEmpty(landSurfaceInput.value))
                             {
                                 sessionStorage.setItem("land_surface", landSurfaceInput.value);
-                                dataParams["land_surface"] = landSurfaceInput.value;
+                                // dataParams["land_surface"] = landSurfaceInput.value;
                             }
                             sessionStorage.setItem("rooms", rooms_result[1]);
                             sessionStorage.setItem("bedrooms", bedrooms_result[1]);
@@ -175,7 +178,7 @@ function validate_second_step() {
     if (isConnectedUser()) {
         if (checkAddress()) {
             if (checkDescription()) {
-                if (isAllImagesSet()) {
+                if ((isAllImagesSet() && !videoInput.checked) || (videoInput.checked && dataParams.hasOwnProperty("video"))) {
                     if (checkPhone()) {
                         sessionStorage.setItem("address", addressInput.value);
                         sessionStorage.setItem("description", descriptionInput.value)
@@ -231,9 +234,19 @@ function validate_second_step() {
                         }
                     }
                 } else {
-                    images_error.innerHTML = "* Vous devez sélectionner 4 images pour décrire votre bien.";
-                    images_error.style.color = "red";
-                    images_error.style.fontsize = "12px";
+                    if (videoInput.checked && !dataParams.hasOwnProperty('video'))
+                    {
+                        video_error.innerHTML = "* Vous devez uploader une vidéo pour décrire votre bien.";
+                        video_error.style.color = "red";
+                        video_error.style.fontsize = "12px";
+                    }
+                    else
+                    {
+                        images_error.innerHTML = "* Vous devez uploader au moins 3 images pour décrire votre bien.";
+                        images_error.style.color = "red";
+                        images_error.style.fontsize = "12px";
+                    }
+                    
                 }
             }
         }
@@ -276,10 +289,10 @@ function buildParams() {
     else
         return false;
     
-    // if (sessionStorage.getItem("land_surface"))
-    //     dataParams["land_surface"] = sessionStorage.getItem("land_surface");
-    // else
-    //     return false;
+    if (sessionStorage.getItem("land_surface"))
+        dataParams["land_surface"] = sessionStorage.getItem("land_surface");
+    else
+        return false;
 
     if (sessionStorage.getItem("rooms"))
         dataParams["rooms"] = sessionStorage.getItem("rooms");
@@ -795,42 +808,66 @@ var imageInput5 = document.getElementById("uploadImage5");
 
 var images = [false, false, false, false, false];
 
-function validateAndUpload(input) {
-    var url = window.URL || window.webkitURL;
+
+function validateAndUpload(input, type='image') {
+
+    // var url = window.URL || window.webkitURL;
     var file = input.files[0];
-    var progress_text = document.getElementById("progress");
+    // var progress_text = document.getElementById("progress");
+    var progress_bar = document.getElementById("progress_bar_video");
 
     if (file) {
-        var image = new Image();
+        var image = type == 'image' ? new Image():  new FileReader;
 
         image.onerror = function () {
             alert("Invalid image");
         };
 
         image.src = URL.createObjectURL(file);
-        sessionStorage.setItem('image' + input.id.slice(-1), image);
+        if (type == 'image')
+            sessionStorage.setItem('image' + input.id.slice(-1), image);
         // imagesData.append('image'+input.id.slice(-1), file);
-
+        
         // Upload image on Cloud Storage Bucket
         var uploadTask = storageRef.child('deposit/' + sessionStorage.getItem('city').toLowerCase() + '/' + sessionStorage.getItem('prop_type') + '/' + file.name).put(file);
 
         var index = input.id.slice(-1);
-        console.log('Image ' + index);
+        if (type == 'image')
+            console.log('Image ' + index);
+    
         // Listen for error and completion of the upload
         uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
 
             (snapshot) => {
                 var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                 // console.log('Upload is ' + progress + '% done.');
+                progress_bar.style.width = progress + "%";
                 if (progress == 100) {
+                    if (type == 'image')
+                    {
+                        images[index - 1] = true;
 
-                    images[index - 1] = true;
-
-                    $("#overlay-" + index).css("display", "none");
-                    $("#imageOK" + index).css("display", "block");
-                    setTimeout(function () {
-                        $("#imageOK" + index).css("display", "none");
-                    }, 3000);
+                        $("#overlay-" + index).css("display", "none");
+                        $("#imageOK" + index).css("display", "block");   
+                        setTimeout(function () {
+                            $("#imageOK" + index).css("display", "none");
+                        }, 3000); 
+                        if(index == 5 && images_error.innerHTML)
+                            images_error.innerHTML = "";
+                    }
+                    else if(type == 'video')
+                    {
+                        $("#overlay-video").css("display", "none");
+                        $("#imageOK_video").css("display", "block"); 
+                        setTimeout(function () {
+                            $("#imageOK_video").css("display", "none");
+                        }, 3000);
+                        if(video_error.innerHTML)
+                            video_error.innerHTML = "";
+                        console.log('Video uploaded')
+                    }
+                    
+                    
 
                 }
                 switch (snapshot.state) {
@@ -858,7 +895,10 @@ function validateAndUpload(input) {
                 // Upload completed successfully
                 uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
                     console.log('File available at', downloadURL);
-                    dataParams['image' + input.id.slice(-1)] = downloadURL;
+                    if(type == 'image')
+                        dataParams['image' + input.id.slice(-1)] = downloadURL;
+                    else if(type == 'video')
+                        dataParams['video'] = downloadURL;
                 });
             }
         );
@@ -895,12 +935,93 @@ function display_number_field(input)
     }
 }
 
+
 function display_floor(input)
 {
     if(input.checked)
         floorDiv.style.display = "flex";
     else
         floorDiv.style.display = "none";
+}
+
+var imagesTitle = document.getElementById('images_title');
+var imagesDiv = document.getElementById('images_content');
+
+var videoTitle = document.getElementById('video_title');
+var videoDiv = document.getElementById('video_content');
+
+function display_video_field(input)
+{
+    if(input.checked)
+    {
+        videoTitle.style.display = "";
+        videoDiv.style.display = "flex";
+
+        if(dataParams.hasOwnProperty('image1'))
+        {
+            delete dataParams['image1'];
+            $("#uploadImage1").val("");
+            $("#imagePreview1").css("background-image", "");
+            $("#icon1").css("display", "inherit");
+            $("#span1").css("display", "inherit");
+            $("#overlay-1").css("display", "none");
+        }
+            
+        if(dataParams.hasOwnProperty('image2'))
+        {
+            delete dataParams['image2'];
+            $("#uploadImage2").val("");
+            $("#imagePreview2").css("background-image", "");
+            $("#icon2").css("display", "inherit");
+            $("#overlay-2").css("display", "none");
+        }
+        if(dataParams.hasOwnProperty('image3'))
+        {
+            delete dataParams['image3'];
+            $("#uploadImage3").val("");
+            $("#imagePreview3").css("background-image", "");
+            $("#icon3").css("display", "inherit");
+            $("#overlay-3").css("display", "none");
+        }
+        if(dataParams.hasOwnProperty('image4'))
+        {
+            delete dataParams['image4'];
+            $("#uploadImage4").val("");
+            $("#imagePreview4").css("background-image", "");
+            $("#icon4").css("display", "inherit");
+            $("#overlay-4").css("display", "none");
+        }
+        if(dataParams.hasOwnProperty('image5'))
+        {
+            delete dataParams['image5'];
+            $("#uploadImage5").val("");
+            $("#imagePreview5").css("background-image", "");
+            $("#icon5").css("display", "inherit");
+            $("#overlay-5").css("display", "none");
+        }
+
+        imagesTitle.style.display = "none";
+        imagesDiv.style.display = "none";
+    }
+    else
+    {
+        videoTitle.style.display = "none";
+        videoDiv.style.display = "none";
+
+        imagesTitle.style.display = "";
+        imagesDiv.style.display = "flex";
+
+        if(dataParams.hasOwnProperty('video'))
+        {
+            delete dataParams['video'];
+            $("#uploadVideo").val("");
+            $("#videoPreview").css("background-image", "");
+            $("#icon_video").css("display", "inherit");
+            $("#span_video").css("display", "inherit");
+            $("#overlay-video").css("display", "none");
+        }
+    }
+
 }
 
 function clearStorage()
