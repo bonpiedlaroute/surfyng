@@ -197,7 +197,7 @@ namespace surfyn
       {
          double leftSurface = atof(leftSurfaceStr.c_str());
          double rightSurface = atof(rightSurfaceStr.c_str());
-         if (fabs(leftSurface - rightSurface) / leftSurface > 0.05)
+         if (fabs(leftSurface - rightSurface) >= 2.0)
          {
             logStream << leftAnnounce.getId() << " surface[" << leftSurface << "] and " << rightAnnounce.getId() << " surface["
                << rightSurface << "] are not similar as their surfaces differ";
