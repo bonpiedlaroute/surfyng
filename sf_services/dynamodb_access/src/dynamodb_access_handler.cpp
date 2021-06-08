@@ -81,8 +81,8 @@ dynamodb_accessHandler::dynamodb_accessHandler(const std::string& config_filenam
    config.scheme = static_cast<Aws::Http::Scheme>(ddb_conf.getIntValue("http_scheme"));
    config.connectTimeoutMs = ddb_conf.getLongValue("connection_timeout_ms");
    config.requestTimeoutMs = ddb_conf.getLongValue("request_timeout_ms");
-   config.readRateLimiter = limiter;
-   config.writeRateLimiter = limiter;
+   //config.readRateLimiter = limiter;
+   //config.writeRateLimiter = limiter;
    config.httpLibOverride = Aws::Http::TransferLibType::DEFAULT_CLIENT;
    int pooledThreadSize = ddb_conf.getIntValue("pooled_thread_size");
    Log::getInstance()->info( "PooledThreadSize : " + std::to_string(pooledThreadSize));
