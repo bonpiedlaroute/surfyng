@@ -1088,7 +1088,7 @@ function generate_details_page(data, surfyn = false) {
         city_description_text_header.innerHTML = "En savoir plus sur ";
         city_description_text_header.innerHTML += cityname + " (" + postalcode + ")";
         const city_description_endpoint = 'https://surfyn.fr:7878/city_info?city=' + data[0].CITY;
-        //const city_description_endpoint = 'http://127.0.0.1:7878/city_info?city='+ data[0].CITY;
+        // const city_description_endpoint = 'http://127.0.0.1:7878/city_info?city='+ data[0].CITY;
         fetch(city_description_endpoint)
           .then(function (resp) { return resp.json(); })
           .then(function (data) {
@@ -1226,7 +1226,6 @@ function generate_details_page(data, surfyn = false) {
     forPuppeteer.setAttribute("id", "prerendered-page");
     forPuppeteer.style.visibility = 'hidden';
     header_content.appendChild(forPuppeteer);
-
 
 
     var facebook_icon = document.getElementById("facebook-icon");

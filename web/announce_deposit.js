@@ -6,8 +6,8 @@ var eventdown = mobile ? "touchstart" : "mousedown";
 var eventmove = mobile ? "touchmove" : "mousemove";
 var eventup = mobile ? "touchend" : "mouseup";
 
-// var url = 'https://surfyn.fr:7878/announcedeposit';
-var url = "http://localhost:7878/announcedeposit";
+var url = 'https://surfyn.fr:7878/announcedeposit';
+// var url = "http://localhost:7878/announcedeposit";
 
 
 if (!firebase.apps.length) {
@@ -217,7 +217,7 @@ function validate_second_step() {
                             fetch(url, {
                                 method: "POST",
                                 body: JSON.stringify(dataParams),
-                                referrer: "same-origin",
+                                // referrer: "same-origin",
                             })
                                 .then(function (response) {
                                     if(response.ok)
@@ -289,10 +289,13 @@ function buildParams() {
     else
         return false;
     
-    if (sessionStorage.getItem("land_surface"))
-        dataParams["land_surface"] = sessionStorage.getItem("land_surface");
-    else
-        return false;
+    if (sessionStorage.getItem("prop_type") == "house") {
+        if(sessionStorage.getItem("land_surface"))
+            dataParams["land_surface"] = sessionStorage.getItem("land_surface");
+        else
+            return false;
+    }
+    
 
     if (sessionStorage.getItem("rooms"))
         dataParams["rooms"] = sessionStorage.getItem("rooms");
@@ -818,6 +821,18 @@ function validateAndUpload(input, type='image') {
 
     if (file) {
         var image = type == 'image' ? new Image():  new FileReader;
+        var filesize = (file.size/(1024*1024)).toFixed(2);
+        
+        if (type == 'video' && filesize > 20) {
+            video_error.innerHTML = "* Vous ne pouvez envoyer une video de plus de 20Mo.";
+            video_error.style.color = "red";
+            video_error.style.fontsize = "12px";
+            
+            return;
+        }
+        else {
+            video_error.innerHTML = "";
+        }
 
         image.onerror = function () {
             alert("Invalid image");
