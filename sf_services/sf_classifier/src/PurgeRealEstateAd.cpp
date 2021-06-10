@@ -29,11 +29,12 @@ namespace classifier
 
 const std::string id_field = "ID";
 const std::string timestamp_field = "TIMESTAMP";
+const std::string adstatus_field = "AD_STATUS";
 
 
 using Log = surfyn::utils::Logger;
 
-void purgeRealEstateAd(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tablename, const std::string& city, int maxDelayBeforePurgeSec)
+void purgeRealEstateAd(const std::shared_ptr<dynamodb_accessClient>& client, const std::string& tablename, const std::string& city, int maxDelayBeforePurgeSec, int maxDelayBeforePurgeSecForSurfynAd)
 {
    Log::getInstance()->info("Purge old Ad");
 
@@ -47,6 +48,8 @@ void purgeRealEstateAd(const std::shared_ptr<dynamodb_accessClient>& client, con
 
    value.fieldtype = Type::type::STRING;
    attributestoget[timestamp_field] = value;
+   value.fieldtype = Type::type::STRING;
+   attributestoget[adstatus_field] = value;
 
    bool scanend = false;
 
@@ -86,7 +89,30 @@ void purgeRealEstateAd(const std::shared_ptr<dynamodb_accessClient>& client, con
             strptime(it_timestamp->second.c_str(), "%Y-%m-%dT%H:%M:%S", &last);
             time_t last_modification_time = timegm(&last);
 
-            if((current_time - last_modification_time) >= maxDelayBeforePurgeSec)
+            int maxDelay;
+            
+            auto it_adstatus =  iter->find(adstatus_field);
+            if( it_adstatus != iter->end())
+            {
+               if( it_adstatus->second  == "OFF")
+               {
+                  const auto it_id = iter->find(id_field);
+
+                  if( it_id != iter->end())
+                  {
+                     elementKeyToDelete.emplace_back(it_id->second);
+                  }
+                  continue;
+               }
+               maxDelay = maxDelayBeforePurgeSecForSurfynAd;
+            }
+            else 
+            {
+               maxDelay = maxDelayBeforePurgeSec;
+            }
+
+
+            if((current_time - last_modification_time) >= maxDelay)
             {
                const auto it_id = iter->find(id_field);
 
