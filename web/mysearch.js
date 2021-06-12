@@ -315,7 +315,7 @@ function generate_my_announce_page(data)
 
       var price = createNode("h5");
       price.className = "card-subtitle mb-2";
-      price.innerHTML = data[i].PRICE + " €";
+      price.innerHTML = formatPrice(data[i].PRICE) + " €";
       
       card_body.append(price);
 

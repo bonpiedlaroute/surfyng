@@ -97,7 +97,6 @@ function modal(){
     
     $('.sf_modal_waiting').modal('show');
     setTimeout(function () {
-        console.log('Yes oog');
         $('.sf_modal_waiting').modal('hide');
     }, 3000);
 }
@@ -107,110 +106,109 @@ function validate_first_step() {
     var rooms_result = isOneRoomsSelected();
     var bedrooms_result = isOneBedroomsSelected();
 
-    if (isConnectedUser()) {
-        if (checkInputs(input = 0)) {
-            if ((isSelectedSearch[searchType.sell] && !isSelectedSearch[searchType.rent]) || (!isSelectedSearch[searchType.sell] && isSelectedSearch[searchType.rent])) {
-                if (rooms_result[0]) {
-                    if (bedrooms_result[0]) {
-                        if (prop_result[0]) {
-                            rooms_error.innerHTML = ""
-                            rooms_error.style.color = "";
-                            rooms_error.style.fontsize = "";
+    if (checkInputs(input = 0)) {
+        if ((isSelectedSearch[searchType.sell] && !isSelectedSearch[searchType.rent]) || (!isSelectedSearch[searchType.sell] && isSelectedSearch[searchType.rent])) {
+            if (rooms_result[0]) {
+                if (bedrooms_result[0]) {
+                    if (prop_result[0]) {
+                        rooms_error.innerHTML = ""
+                        rooms_error.style.color = "";
+                        rooms_error.style.fontsize = "";
 
-                            prop_error.innerHTML = "";
-                            prop_error.style.color = "";
-                            prop_error.style.fontsize = "";
+                        prop_error.innerHTML = "";
+                        prop_error.style.color = "";
+                        prop_error.style.fontsize = "";
 
-                            sessionStorage.setItem("title", titleInput.value);
-                            sessionStorage.setItem("search_type", isSelectedSearch[searchType.sell] ? divSell.id : divRent.id);
-                            sessionStorage.setItem("prop_type", prop_result[1].id);
-                            sessionStorage.setItem("area", areaInput.value);
-                            if(!isEmpty(landSurfaceInput.value))
-                            {
-                                sessionStorage.setItem("land_surface", landSurfaceInput.value);
-                                // dataParams["land_surface"] = landSurfaceInput.value;
-                            }
-                            sessionStorage.setItem("rooms", rooms_result[1]);
-                            sessionStorage.setItem("bedrooms", bedrooms_result[1]);
-                            sessionStorage.setItem("price", priceInput.value);
-                            sessionStorage.setItem("city", cityInput.value);
-
-                            window.location.href = "valider-deposer-une-annonce.html";
-                        } else {
-                            prop_error.innerHTML = "* Vous devez sélectionner le type de votre bien.";
-                            prop_error.style.color = "red";
-                            prop_error.style.fontsize = "12px";
-                            return;
+                        sessionStorage.setItem("title", titleInput.value);
+                        sessionStorage.setItem("search_type", isSelectedSearch[searchType.sell] ? divSell.id : divRent.id);
+                        sessionStorage.setItem("prop_type", prop_result[1].id);
+                        sessionStorage.setItem("area", areaInput.value);
+                        if(!isEmpty(landSurfaceInput.value))
+                        {
+                            sessionStorage.setItem("land_surface", landSurfaceInput.value);
+                            // dataParams["land_surface"] = landSurfaceInput.value;
                         }
-                    }
-                    else {
-                        bedrooms_error.innerHTML = "* Vous devez renseigner le nombre de chambre de votre bien";
-                        bedrooms_error.style.color = "red";
-                        bedrooms_error.fontsize = "12px";
+                        sessionStorage.setItem("rooms", rooms_result[1]);
+                        sessionStorage.setItem("bedrooms", bedrooms_result[1]);
+                        sessionStorage.setItem("price", priceInput.value);
+                        sessionStorage.setItem("city", cityInput.value);
+                        if(isConnectedUser()) {
+                            window.location.href = "valider-deposer-une-annonce.html";
+                        }
+                        else {
+                            $("#login").modal({
+                                focus: true,
+                                show: true
+                            });
+                        }
+                    } else {
+                        prop_error.innerHTML = "* Vous devez sélectionner le type de votre bien.";
+                        prop_error.style.color = "red";
+                        prop_error.style.fontsize = "12px";
                         return;
                     }
-
-                } else {
-                    rooms_error.innerHTML = "* Vous devez renseigner le nombre de pièces de votre bien."
-                    rooms_error.style.color = "red";
-                    rooms_error.style.fontsize = "12px";
+                }
+                else {
+                    bedrooms_error.innerHTML = "* Vous devez renseigner le nombre de chambre de votre bien";
+                    bedrooms_error.style.color = "red";
+                    bedrooms_error.fontsize = "12px";
                     return;
                 }
+
             } else {
-                search_error.innerHTML = "* Vous devez sélectionner la catégorie de votre bien.";
-                search_error.style.color = "red";
-                search_error.style.fontsize = "12px";
+                rooms_error.innerHTML = "* Vous devez renseigner le nombre de pièces de votre bien."
+                rooms_error.style.color = "red";
+                rooms_error.style.fontsize = "12px";
                 return;
             }
+        } else {
+            search_error.innerHTML = "* Vous devez sélectionner la catégorie de votre bien.";
+            search_error.style.color = "red";
+            search_error.style.fontsize = "12px";
+            return;
         }
-    } else {
-        $("#login").modal({
-            focus: true,
-            show: true
-        });
     }
-
-
 }
 
 function validate_second_step() {
 
-    if (isConnectedUser()) {
-        if (checkAddress()) {
-            if (checkDescription()) {
-                if ((isAllImagesSet() && !videoInput.checked) || (videoInput.checked && dataParams.hasOwnProperty("video"))) {
-                    if (checkPhone()) {
-                        sessionStorage.setItem("address", addressInput.value);
-                        sessionStorage.setItem("description", descriptionInput.value)
-                        sessionStorage.setItem("parking", parkingInput.checked ? parkingNumberInput.value : 'Non');
-                        sessionStorage.setItem("cellar", cellarInput.checked ? cellarNumberInput.value : 'Non');
-                        sessionStorage.setItem("type_of_heating", heatingInput.value);
-                        sessionStorage.setItem("phone", phoneInput.value);
-                        sessionStorage.setItem("construction_year", constructionYearInput.value);
-                        sessionStorage.setItem("lift", liftInput.checked ? 'Oui' : 'Non');
-                        sessionStorage.setItem("balcony", balconyInput.checked ? 'Oui' : 'Non');
+    if (checkAddress()) {
+        if (checkDescription()) {
+            if ((isAllImagesSet() && !videoInput.checked) || (videoInput.checked && dataParams.hasOwnProperty("video"))) {
+                if (checkPhone()) {
+                    sessionStorage.setItem("address", addressInput.value);
+                    sessionStorage.setItem("description", descriptionInput.value)
+                    sessionStorage.setItem("parking", parkingInput.checked ? parkingNumberInput.value : 'Non');
+                    sessionStorage.setItem("cellar", cellarInput.checked ? cellarNumberInput.value : 'Non');
+                    sessionStorage.setItem("type_of_heating", heatingInput.value);
+                    sessionStorage.setItem("phone", phoneInput.value);
+                    sessionStorage.setItem("construction_year", constructionYearInput.value);
+                    sessionStorage.setItem("lift", liftInput.checked ? 'Oui' : 'Non');
+                    sessionStorage.setItem("balcony", balconyInput.checked ? 'Oui' : 'Non');
 
-                        if(liftInput.checked)
-                        {
-                            sessionStorage.setItem("floor", floorInput.value);
-                            dataParams["floor"] = floorInput.value;
-                        }
+                    if(liftInput.checked)
+                    {
+                        sessionStorage.setItem("floor", floorInput.value);
+                        dataParams["floor"] = floorInput.value;
+                    }
 
-                        if (isEmpty(phoneInput.value) === false)
-                            dataParams["phone"] = phoneInput.value;
-                        
-                        if (isEmpty(construction_year) === false)
-                            dataParams["construction_year"] = constructionYearInput.value;
+                    if (isEmpty(phoneInput.value) === false)
+                        dataParams["phone"] = phoneInput.value;
+                    
+                    if (isEmpty(construction_year) === false)
+                        dataParams["construction_year"] = constructionYearInput.value;
 
-                        dataParams["address"] = addressInput.value;
-                        dataParams["description"] = descriptionInput.value;
-                        dataParams["parking"] = parkingInput.checked ? parkingNumberInput.value : 'Non';
-                        dataParams["cellar"] = cellarInput.checked ? cellarNumberInput.value : 'Non';
-                        dataParams["type_of_heating"] = heatingInput.value;
-                        dataParams["lift"] = sessionStorage.getItem("lift");
-                        dataParams["balcony"] = sessionStorage.getItem("balcony");
+                    dataParams["address"] = addressInput.value;
+                    dataParams["description"] = descriptionInput.value;
+                    dataParams["parking"] = parkingInput.checked ? parkingNumberInput.value : 'Non';
+                    dataParams["cellar"] = cellarInput.checked ? cellarNumberInput.value : 'Non';
+                    dataParams["type_of_heating"] = heatingInput.value;
+                    dataParams["lift"] = sessionStorage.getItem("lift");
+                    dataParams["balcony"] = sessionStorage.getItem("balcony");
 
-                        console.log(dataParams);
+                    console.log(dataParams);
+                    if(isConnectedUser())
+                    {
                         if (buildParams()) {
                             $('.sf_modal_waiting').modal('show');
                             console.log(url);
@@ -233,28 +231,30 @@ function validate_second_step() {
                                 });
                         }
                     }
-                } else {
-                    if (videoInput.checked && !dataParams.hasOwnProperty('video'))
-                    {
-                        video_error.innerHTML = "* Vous devez uploader une vidéo pour décrire votre bien.";
-                        video_error.style.color = "red";
-                        video_error.style.fontsize = "12px";
-                    }
-                    else
-                    {
-                        images_error.innerHTML = "* Vous devez uploader au moins 3 images pour décrire votre bien.";
-                        images_error.style.color = "red";
-                        images_error.style.fontsize = "12px";
+                    else {
+                        $("#login").modal({
+                            focus: true,
+                            show: true
+                        });
                     }
                     
                 }
+            } else {
+                if (videoInput.checked && !dataParams.hasOwnProperty('video'))
+                {
+                    video_error.innerHTML = "* Vous devez uploader une vidéo pour décrire votre bien.";
+                    video_error.style.color = "red";
+                    video_error.style.fontsize = "12px";
+                }
+                else
+                {
+                    images_error.innerHTML = "* Vous devez uploader au moins 3 images pour décrire votre bien.";
+                    images_error.style.color = "red";
+                    images_error.style.fontsize = "12px";
+                }
+                
             }
         }
-    } else {
-        $("#login").modal({
-            focus: true,
-            show: true
-        });
     }
 }
 
@@ -921,11 +921,14 @@ function validateAndUpload(input, type='image') {
 }
 
 function isAllImagesSet() {
+    var img_counter = 0;
     for (i = 0; i < images.length; i++) {
         if (images[i] === false) {
-            return false;
+            img_counter += 1;
         }
     }
+    if (img_counter > 2)
+        return false;
     images_error.innerHTML = "";
     images_error.style.color = "";
     images_error.style.fontsize = "";

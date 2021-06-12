@@ -56,19 +56,20 @@ function update_actu(data, begin, end )
 
 function goToDeposit()
 {
-    var user_id = sessionStorage.getItem("user_id");
-    if(user_id)
-    {
-      window.location.href = "deposer-une-annonce.html";
-    }
-    else
-    {
-      $("#login").modal(
-        {
-          focus: true,
-          show: true
-        });
-    }
+  window.location.href = "deposer-une-annonce.html";
+//     var user_id = sessionStorage.getItem("user_id");
+//     if(user_id)
+//     {
+//       window.location.href = "deposer-une-annonce.html";
+//     }
+//     else
+//     {
+//       $("#login").modal(
+//         {
+//           focus: true,
+//           show: true
+//         });
+//     }
 }
 
 

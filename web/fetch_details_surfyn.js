@@ -113,6 +113,14 @@ function generate_details_page_surfyn(data) {
         main.appendChild(department_header);
         main.appendChild(row_container);
 
+        // add css link in head component
+        var css_link = createNode("link");
+        css_link.rel = 'stylesheet';
+        css_link.href = 'announce_detail.css';
+
+        var head = document.getElementsByTagName('head')[0];
+        head.appendChild(css_link);
+
         // var container = document.getElementById("subcontainer");
 
         for (var i = 0; i < data.length; i++) {
