@@ -261,7 +261,7 @@ function validate_second_step() {
 
 function showSuccessAnnounceDeposit() {
     $('.sf_modal_waiting').modal('hide');
-    showSuccessMessage("#generic-box-message-result","generic-message-result","Votre annonce a supprimée avec succès", "mesrecherches.html");
+    showSuccessMessage("#generic-box-message-result","generic-message-result","Votre annonce a été déposée avec succès", "mesrecherches.html");
 }
 
 function showErrorAnnounceDeposit() {

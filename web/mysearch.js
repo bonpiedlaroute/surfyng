@@ -443,7 +443,7 @@ function delete_announce(event)
         {
           console.log('Announce deleted');
           loader.style.display = "none";
-          showSuccessMessage("#generic-box-message-result","generic-message-result","Votre annonce a été déposée avec succès", "mesrecherches.html")
+          showSuccessMessage("#generic-box-message-result","generic-message-result","Votre annonce a été supprimée avec succès", "mesrecherches.html")
         }
         else
             console.log('An error occured');

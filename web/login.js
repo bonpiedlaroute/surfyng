@@ -48,6 +48,7 @@ function showSuccessMessage(id_box, id_message, message, redirect_to=False)
    setTimeout(function() {
         $(id_box).modal('hide');
    }, 3000);
+   
    if(redirect_to){
     setTimeout(function() {
       window.location.href = redirect_to;
