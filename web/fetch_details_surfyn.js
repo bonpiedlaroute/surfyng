@@ -130,6 +130,7 @@ function generate_details_page_surfyn(data) {
                 // Title
                 var title = document.getElementById("ad_title");
                 title.innerHTML = data[i].SEARCH_TYPE == "For sale" ? "Achat - " : "Location - ";
+                title.innerHTML += data[i].PROPERTY_TYPE + "<br>";
                 title.innerHTML += data[i].ANNOUNCE_TITLE;
 
                 // Address
@@ -158,11 +159,13 @@ function generate_details_page_surfyn(data) {
                     var counter = 1;
     
                     for (image in images) {
-                        var list_item = createNode("li")
-                        list_item.setAttribute("data-target", "#myCarousel");
-                        list_item.setAttribute("data-slide", counter.toString());
-                        carousel_list.appendChild(list_item);
-                        counter += 1;
+                        if(images[image] != "") {
+                            var list_item = createNode("li")
+                            list_item.setAttribute("data-target", "#myCarousel");
+                            list_item.setAttribute("data-slide", counter.toString());
+                            carousel_list.appendChild(list_item);
+                            counter += 1;
+                        }
                     }
     
                     carousel.appendChild(carousel_list);
@@ -172,21 +175,24 @@ function generate_details_page_surfyn(data) {
                     counter = 1;
     
                     for (image in images) {
-                        var carousel_item = createNode("div");
-                        carousel_item.className = counter == 1 ? "carousel-item active" : "carousel-item";
-    
-                        var carousel_item_image = createNode("img");
-                        carousel_item_image.className = "slide-image h-75 rounded";
-                        carousel_item_image.src = images[image];
-                        carousel_item.appendChild(carousel_item_image);
-    
-                        var carousel_item_positioning = createNode("div");
-                        carousel_item_positioning.className = "h-100 w-100";
-                        carousel_item_positioning.style = "background-color: #14131382  !important;position: relative;"
-                        carousel_item.appendChild(carousel_item_positioning);
-                        counter += 1
-    
-                        carousel_content.appendChild(carousel_item);
+                        if (images[image] != "") {
+                            var carousel_item = createNode("div");
+                            carousel_item.className = counter == 1 ? "carousel-item active" : "carousel-item";
+        
+                            var carousel_item_image = createNode("img");
+                            carousel_item_image.className = "slide-image h-75 rounded";
+                            carousel_item_image.src = images[image];
+                            carousel_item.appendChild(carousel_item_image);
+        
+                            var carousel_item_positioning = createNode("div");
+                            carousel_item_positioning.className = "h-100 w-100";
+                            carousel_item_positioning.style = "background-color: #14131382  !important;position: relative;"
+                            carousel_item.appendChild(carousel_item_positioning);
+                            counter += 1
+        
+                            carousel_content.appendChild(carousel_item);
+                        }
+                        
                     }
     
                     carousel.appendChild(carousel_content);
@@ -679,7 +685,7 @@ function generate_details_page_surfyn(data) {
                 // Facebook
                 var facebook_link = createNode("a");
                 facebook_link.target = "_blank";
-                facebook_link.href = "http://www.facebook.com/share.php?u=" + data[i].ANNOUNCE_LINK;
+                facebook_link.href = "http://www.facebook.com/share.php?u=" + "https://surfyn.fr" + data[i].ANNOUNCE_LINK;
 
                 var facebook_icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
                 facebook_icon.setAttribute("viewBox", "0 0 24 24");
@@ -696,7 +702,7 @@ function generate_details_page_surfyn(data) {
                 // Twitter
                 var twitter_link = createNode("a");
                 twitter_link.target = "_blank";
-                twitter_link.href = "http://twitter.com/share?text=" + pagetitle + "&url=" + data[i].ANNOUNCE_LINK;
+                twitter_link.href = "http://twitter.com/share?text=" + pagetitle + "&url=" + "https://surfyn.fr" + data[i].ANNOUNCE_LINK;
 
                 var twitter_icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
                 twitter_icon.setAttribute("viewBox", "0 0 24 24");
@@ -713,7 +719,7 @@ function generate_details_page_surfyn(data) {
                 // LinkedIn
                 var linkedin_link = createNode("a");
                 linkedin_link.target = "_blank";
-                linkedin_link.href = "https://www.linkedin.com/shareArticle?mini=true&url=" + data[i].ANNOUNCE_LINK;
+                linkedin_link.href = "https://www.linkedin.com/shareArticle?mini=true&url=" + "https://surfyn.fr" + data[i].ANNOUNCE_LINK;
 
                 var linkedin_icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
                 linkedin_icon.setAttribute("viewBox", "0 0 24 24");
@@ -730,7 +736,7 @@ function generate_details_page_surfyn(data) {
                 // Mail
                 var mail_link = createNode("a");
                 mail_link.target = "_blank";
-                mail_link.href = "mailto:?subject= Je veux partager avec toi ce bien immobilier&amp;body=" + pagetitle + "\nClique sur le lien: " + data[i].ANNOUNCE_LINK;
+                mail_link.href = "mailto:?subject= Je veux partager avec toi ce bien immobilier&amp;body=" + pagetitle + "\nClique sur le lien: " + "https://surfyn.fr" + data[i].ANNOUNCE_LINK;
 
                 var mail_icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
                 mail_icon.setAttribute("viewBox", "0 0 24 24");

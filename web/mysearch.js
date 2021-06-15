@@ -42,6 +42,28 @@ function delete_alert_by_id(event){
   });
 }
 
+function ByTimeStamp(lhs, rhs)
+{
+  var d1, d2;
+  if(!lhs.hasOwnProperty("FIRST_TIMESTAMP"))
+  {
+    d1 = new Date(lhs.TIMESTAMP);
+  }
+  else {
+    d1 = new Date(lhs.FIRST_TIMESTAMP);
+  }
+
+  if(!rhs.hasOwnProperty("FIRST_TIMESTAMP"))
+  {
+    d2 = new Date(rhs.TIMESTAMP);
+  }
+  else {
+    d2 = new Date(rhs.FIRST_TIMESTAMP);
+  }
+
+  return d2 - d1; //descending order
+}
+
 function change_alert_status(event){
   var endpoint = "https://surfyn.fr:7878/change_alert_status?alert_id=";
   //var endpoint ="http://localhost:7878/change_alert_status?alert_id="
@@ -283,7 +305,15 @@ function generate_my_announce_page(data)
         images = data[i].IMAGE.replaceAll('\'', '\"');
         images = images.replaceAll('u\"', '\"');
         images = JSON.parse(images);
-        announce_image.src = images['image1'];
+        ad_image = null;
+        if (images['image1'] != "")
+          ad_image = images['image1'];
+        else if (images['image2'] != "")
+          ad_image = images['image2'];
+        else if (images['image3'] != "")
+          ad_image = images['image3'];
+
+        announce_image.src = ad_image;
         announce_image.alt = "announce"
         card.appendChild(announce_image);
       }
@@ -321,11 +351,13 @@ function generate_my_announce_page(data)
 
       var details_info = createNode("p");
       details_info.className = "card-text text-muted";
-
-      if (data[i].PROPERTY_TYPE == 1)
-        details_info.innerHTML += "Maison";
+      if(data[i].SEARCH_TYPE == "For sale")
+        details_info.innerHTML += "Vente";
       else
-        details_info.innerHTML += "Appartement";
+        details_info.innerHTML += "Location";
+
+      details_info.innerHTML += " &bull; ";
+      details_info.innerHTML += data[i].PROPERTY_TYPE;
       details_info.innerHTML += " &bull; ";
       details_info.innerHTML += data[i].ROOMS + " pièces";
       details_info.innerHTML += " &bull; ";
@@ -396,8 +428,12 @@ function detail_announce(event)
 
 function delete_announce(event)
 {
-  // d_url = 'https://surfyn.fr:7878/delete_announce?user_id=' + isConnectedUser() + '&ad_id=' + ad_id;
-  d_url = 'http://localhost:7878/delete_announce?user_id=' + isConnectedUser() + '&ad_id=' + event.currentTarget.id;
+  d_url = 'https://surfyn.fr:7878/delete_announce?user_id=' + isConnectedUser() + '&ad_id=' + event.currentTarget.id;
+  // d_url = 'http://localhost:7878/delete_announce?user_id=' + isConnectedUser() + '&ad_id=' + event.currentTarget.id;
+
+  var loader = document.getElementById("ad_loader");
+  loader.style.display = "";
+  var ad = document.getElementById(event.currentTarget.id);
 
   fetch(d_url, {
     method: "POST",
@@ -406,7 +442,8 @@ function delete_announce(event)
         if(response.ok)
         {
           console.log('Announce deleted');
-          document.location.reload()
+          loader.style.display = "none";
+          showSuccessMessage("#generic-box-message-result","generic-message-result","Votre annonce a été déposée avec succès", "mesrecherches.html")
         }
         else
             console.log('An error occured');
@@ -445,6 +482,7 @@ url_ad += userid;
 fetch(url_ad)
 .then(function(resp) { return resp.json(); })
 .then(function(data) {
+  data.sort(ByTimeStamp);
   generate_my_announce_page(data);
 })
 .catch(function(error) {

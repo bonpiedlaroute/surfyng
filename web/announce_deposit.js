@@ -218,8 +218,9 @@ function validate_second_step() {
                                 // referrer: "same-origin",
                             })
                                 .then(function (response) {
-                                    if(response.ok)
+                                    if(response.ok) {
                                         showSuccessAnnounceDeposit();
+                                    }
                                     else
                                         showErrorAnnounceDeposit();
                                 })
@@ -260,7 +261,7 @@ function validate_second_step() {
 
 function showSuccessAnnounceDeposit() {
     $('.sf_modal_waiting').modal('hide');
-    window.location.href = "mesrecherches.html";
+    showSuccessMessage("#generic-box-message-result","generic-message-result","Votre annonce a supprimée avec succès", "mesrecherches.html");
 }
 
 function showErrorAnnounceDeposit() {

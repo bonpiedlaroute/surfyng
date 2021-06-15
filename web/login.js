@@ -35,7 +35,7 @@ function showSuccessAlertEmailRegisteringMessage()
          $('#alert-email-registering-result').modal('hide');
      }, 3000);
 }
-function showSuccessMessage(id_box, id_message, message)
+function showSuccessMessage(id_box, id_message, message, redirect_to=False)
 {
   var box_msg = document.getElementById(id_message);
   box_msg.innerHTML = message;
@@ -46,8 +46,13 @@ function showSuccessMessage(id_box, id_message, message)
      }
    );
    setTimeout(function() {
-       $(id_box).modal('hide');
+        $(id_box).modal('hide');
    }, 3000);
+   if(redirect_to){
+    setTimeout(function() {
+      window.location.href = redirect_to;
+    }, 4000);
+   }
 }
 function showSuccessMessageAndReload(id_box, id_message, message)
 {

@@ -97,7 +97,7 @@ class DepositServiceHandler(Iface):
         prop_type = "maison" if data['prop_type'] == 1 else "appartement"
         search_type = "achat" if data['search_type'] == 1 else "location"
         announce_link_value = ttypes.ValueType()
-        announce_link_value.field = "https://surfyn.fr/annonce/{}/{}-{}-pieces/{}-{}?{}".format(search_type, prop_type, data['rooms'], data['city'].lower(), postalcodeByCity[data['city'].lower()], ID)
+        announce_link_value.field = "/annonce/{}/{}-{}-pieces/{}-{}?{}".format(search_type, prop_type, data['rooms'], data['city'].lower(), postalcodeByCity[data['city'].lower()], ID)
         announce_link_value.fieldtype = ttypes.Type.STRING
         values['ANNOUNCE_LINK'] = announce_link_value
 
@@ -147,7 +147,15 @@ class DepositServiceHandler(Iface):
 
         # ANNOUNCE IMAGE
         announce_image_value = ttypes.ValueType()
-        announce_image_value.field = data['video'] if data.has_key('video') else data['image1']
+        image_for_announce = None
+        if data.has_key('image1'):
+            image_for_announce = data['image1']
+        elif data.has_key('image2'):
+            image_for_announce = data['image2']
+        elif data.has_key('image3'):
+            image_for_announce = data['image3']
+
+        announce_image_value.field = data['video'] if data.has_key('video') else image_for_announce
         announce_image_value.fieldtype = ttypes.Type.STRING
         values['ANNOUNCE_IMAGE'] = announce_image_value
 
@@ -241,11 +249,11 @@ class DepositServiceHandler(Iface):
             values['VIDEO'] = video_value
         else:
             images = {
-                'image1': data['image1'],
-                'image2': data['image2'],
-                'image3': data['image3'],
-                'image4': data['image4'],
-                'image5': data['image5']
+                'image1': data['image1'] if data.has_key('image1') else '',
+                'image2': data['image2'] if data.has_key('image2') else '',
+                'image3': data['image3'] if data.has_key('image3') else '',
+                'image4': data['image4'] if data.has_key('image4') else '',
+                'image5': data['image5'] if data.has_key('image5') else ''
             }
             image = str(images)
 
@@ -462,6 +470,11 @@ class DepositServiceHandler(Iface):
             video_value.fieldtype = ttypes.Type.STRING
             attributes_to_get['VIDEO'] = video_value
 
+            # TIMESTAMP
+            timestamp_value = ttypes.ValueType()
+            timestamp_value.fieldtype = ttypes.Type.STRING
+            attributes_to_get['TIMESTAMP'] = timestamp_value
+
             expression_value = {}
             userid_value.field = user_id
             expression_value[':uid'] = userid_value
@@ -480,7 +493,6 @@ class DepositServiceHandler(Iface):
                 active_announces += query_result.values
             if query_result.scanend:
                 break
-        
         return active_announces
 
 
