@@ -23,7 +23,7 @@ function createNode(element) {
 }
 
 const url_dt = 'https://surfyn.fr:7878/search/ad?id='+ window.location.search.substr(1);
-//  const url_dt = 'http://127.0.0.1:7878/search/ad?id=' + window.location.search.substr(1);
+//const url_dt = 'http://127.0.0.1:7878/search/ad?id=' + window.location.search.substr(1);
 
 console.log(url_dt);
 
@@ -86,9 +86,7 @@ function generate_details_page_surfyn(data) {
         title_header.id = "ad_title";
         title_header.className = "mt-4 mb-2 text-center";
 
-        var address_header = createNode("h5");
-        address_header.id = "ad_address";
-        address_header.className = "text-center text-muted";
+
 
         var department_header = createNode("h5");
         department_header.id = "ad_dp";
@@ -109,7 +107,7 @@ function generate_details_page_surfyn(data) {
         row_container.appendChild(side_container);
 
         main.appendChild(title_header);
-        main.appendChild(address_header);
+
         main.appendChild(department_header);
         main.appendChild(row_container);
 
@@ -133,9 +131,6 @@ function generate_details_page_surfyn(data) {
                 title.innerHTML += data[i].PROPERTY_TYPE + "<br>";
                 title.innerHTML += data[i].ANNOUNCE_TITLE;
 
-                // Address
-                var address = document.getElementById("ad_address");
-                address.innerHTML = data[i].ADDRESS;
 
                 // Department
                 var department = document.getElementById("ad_dp");
@@ -152,12 +147,12 @@ function generate_details_page_surfyn(data) {
                 if(!data[i].hasOwnProperty('VIDEO'))
                 {
 
-                    var images = data[i].IMAGE.replaceAll('\'', '\"');
+                    var images = data[i].ANNOUNCE_IMAGE.replaceAll('\'', '\"');
                     images = images.replaceAll('u\"', '\"');
                     images = JSON.parse(images);
-    
+
                     var counter = 1;
-    
+
                     for (image in images) {
                         if(images[image] != "") {
                             var list_item = createNode("li")
@@ -167,75 +162,75 @@ function generate_details_page_surfyn(data) {
                             counter += 1;
                         }
                     }
-    
+
                     carousel.appendChild(carousel_list);
-    
+
                     var carousel_content = createNode("div");
                     carousel_content.className = "carousel-inner";
                     counter = 1;
-    
+
                     for (image in images) {
                         if (images[image] != "") {
                             var carousel_item = createNode("div");
                             carousel_item.className = counter == 1 ? "carousel-item active" : "carousel-item";
-        
+
                             var carousel_item_image = createNode("img");
                             carousel_item_image.className = "slide-image h-75 rounded";
                             carousel_item_image.src = images[image];
                             carousel_item.appendChild(carousel_item_image);
-        
+
                             var carousel_item_positioning = createNode("div");
                             carousel_item_positioning.className = "h-100 w-100";
                             carousel_item_positioning.style = "background-color: #14131382  !important;position: relative;"
                             carousel_item.appendChild(carousel_item_positioning);
                             counter += 1
-        
+
                             carousel_content.appendChild(carousel_item);
                         }
-                        
+
                     }
-    
+
                     carousel.appendChild(carousel_content);
-    
+
                     // Previous carousel button
                     var carousel_prev_button = createNode("a");
                     carousel_prev_button.className = "carousel-control-prev";
                     carousel_prev_button.href = "#myCarousel";
                     carousel_prev_button.setAttribute("role", "button");
                     carousel_prev_button.setAttribute("data-slide", "prev");
-    
+
                     var carousel_prev_button_content1 = createNode("span");
                     carousel_prev_button_content1.className = "carousel-control-prev-icon";
                     carousel_prev_button_content1.setAttribute("aria-hidden", "true");
-    
+
                     var carousel_prev_button_content2 = createNode("span");
                     carousel_prev_button_content2.className = "sr-only";
                     carousel_prev_button_content2.innerHTML = "Previous";
-    
+
                     carousel_prev_button.appendChild(carousel_prev_button_content1);
                     carousel_prev_button.appendChild(carousel_prev_button_content2);
-    
+
                     // Next carousel button
                     var carousel_next_button = createNode("a");
                     carousel_next_button.className = "carousel-control-next";
                     carousel_next_button.href = "#myCarousel";
                     carousel_next_button.setAttribute("role", "button");
                     carousel_next_button.setAttribute("data-slide", "next");
-    
+
                     var carousel_next_button_content1 = createNode("span");
                     carousel_next_button_content1.className = "carousel-control-next-icon";
                     carousel_next_button_content1.setAttribute("aria-hidden", "true");
-    
+
                     var carousel_next_button_content2 = createNode("span");
                     carousel_next_button_content2.className = "sr-only";
                     carousel_next_button_content2.innerHTML = "Next";
-    
+
                     carousel_next_button.appendChild(carousel_next_button_content1);
                     carousel_next_button.appendChild(carousel_next_button_content2);
-    
+
                     carousel.appendChild(carousel_prev_button);
                     carousel.appendChild(carousel_next_button);
-    
+
                     container.appendChild(carousel);
                 }
                 else
@@ -470,7 +465,7 @@ function generate_details_page_surfyn(data) {
 
                 // Floor
                 if (data[i].hasOwnProperty("FLOOR")) {
-                    
+
                     var details_floor = createNode("div");
                     details_floor.className = "col-sm-12 col-md-4 sf_ad_details";
 

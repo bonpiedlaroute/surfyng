@@ -371,8 +371,8 @@ function computeMinMaxAdPrice(arr) {
   var current_page = 1;
   var records_per_page = 30;
 
-  // var url = 'https://surfyn.fr:7878/search/all';
-  var url = 'http://127.0.0.1:7878/search/all';
+   var url = 'https://surfyn.fr:7878/search/all';
+  //var url = 'http://127.0.0.1:7878/search/all';
   var url_params = '?';
 
 function buildurlparams()

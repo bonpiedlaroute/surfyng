@@ -162,7 +162,7 @@ class DepositServiceHandler(Iface):
 
         announce_image_value.field = data['video'] if data.has_key('video') else image_for_announce
         announce_image_value.fieldtype = ttypes.Type.STRING
-        values['ANNOUNCE_IMAGE'] = announce_image_value
+        values['IMAGE'] = announce_image_value
 
         # PRICE
         price_value = ttypes.ValueType()
@@ -270,7 +270,7 @@ class DepositServiceHandler(Iface):
             image_value = ttypes.ValueType()
             image_value.field = image
             image_value.fieldtype = ttypes.Type.STRING
-            values['IMAGE'] = image_value
+            values['ANNOUNCE_IMAGE'] = image_value
 
             # IMAGE COUNT
             image_count = ttypes.ValueType()
@@ -400,7 +400,7 @@ class DepositServiceHandler(Iface):
 
         logging.info('Delete announce with ID: {}'.format(announce_id))
 
-        result = self.client.update(self.summary_tablename, item_key, values)
+        result = self.client.remove(self.summary_tablename, item_key)
         result_deposit = self.client.update(self.deposit_tablename, item_key, values)
 
         return_value = DepositResult()
@@ -451,6 +451,11 @@ class DepositServiceHandler(Iface):
             property_type.fieldtype = ttypes.Type.STRING
             attributes_to_get['PROPERTY_TYPE'] = property_type
 
+            # SEARCH TYPE
+            search_type = ttypes.ValueType()
+            search_type.fieldtype = ttypes.Type.STRING
+            attributes_to_get['SEARCH_TYPE'] = search_type
+
             # ROOMS
             rooms_value = ttypes.ValueType()
             rooms_value.fieldtype = ttypes.Type.NUMBER
@@ -476,10 +481,10 @@ class DepositServiceHandler(Iface):
             price_value.fieldtype = ttypes.Type.NUMBER
             attributes_to_get['PRICE'] = price_value
 
-            # IMAGE
+            # IMAGES
             image_value = ttypes.ValueType()
             image_value.fieldtype = ttypes.Type.STRING
-            attributes_to_get['IMAGE'] = image_value
+            attributes_to_get['ANNOUNCE_IMAGE'] = image_value
 
             # VIDEO
             video_value = ttypes.ValueType()

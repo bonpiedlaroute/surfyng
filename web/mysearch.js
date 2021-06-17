@@ -286,12 +286,12 @@ function generate_my_announce_page(data)
 {
 
   var card_deck = document.getElementById("deck");
-  
+
   for(var i = 0; i < data.length; i++)
   {
 
       var card_col = createNode("div");
-      card_col.className = "col-md-6 col-lg-4 mb-3";
+      card_col.className = "col-md-6 col-lg-8 mb-3";
 
       var card = createNode("div");
       card.className = "card ml-0 h-100";
@@ -302,7 +302,7 @@ function generate_my_announce_page(data)
       console.log(data[i]);
       if(!data[i].hasOwnProperty('VIDEO'))
       {
-        images = data[i].IMAGE.replaceAll('\'', '\"');
+        images = data[i].ANNOUNCE_IMAGE.replaceAll('\'', '\"');
         images = images.replaceAll('u\"', '\"');
         images = JSON.parse(images);
         ad_image = null;
@@ -333,7 +333,7 @@ function generate_my_announce_page(data)
         card.appendChild(video_container);
       }
 
-    
+
       var card_body = createNode("div");
       card_body.className = "card-body";
 
@@ -346,7 +346,7 @@ function generate_my_announce_page(data)
       var price = createNode("h5");
       price.className = "card-subtitle mb-2";
       price.innerHTML = formatPrice(data[i].PRICE) + " €";
-      
+
       card_body.append(price);
 
       var details_info = createNode("p");
@@ -383,7 +383,7 @@ function generate_my_announce_page(data)
       var view_icon = createNode("i");
       view_icon.className = "fas fa-eye";
       view_icon.style = "color:white !important; font-size:15px; margin-right:10px;";
-      
+
       view_button_outer.append(view_icon);
 
       var view_text = createNode("span");
@@ -429,7 +429,7 @@ function detail_announce(event)
 function delete_announce(event)
 {
   d_url = 'https://surfyn.fr:7878/delete_announce?user_id=' + isConnectedUser() + '&ad_id=' + event.currentTarget.id;
-  // d_url = 'http://localhost:7878/delete_announce?user_id=' + isConnectedUser() + '&ad_id=' + event.currentTarget.id;
+  //d_url = 'http://localhost:7878/delete_announce?user_id=' + isConnectedUser() + '&ad_id=' + event.currentTarget.id;
 
   var loader = document.getElementById("ad_loader");
   loader.style.display = "";
@@ -459,8 +459,8 @@ function delete_announce(event)
 /*loadJSON("data/criteria.json",
 function (data) { generate_my_search_page(JSON.parse(data.response));}, function(err) {console.log(err);});
 */
-//var url = 'https://surfyn.fr:7878/my_realestate_search?userid=';
-var url = 'http://localhost:7878/my_realestate_search?userid=';
+var url = 'https://surfyn.fr:7878/my_realestate_search?userid=';
+//var url = 'http://localhost:7878/my_realestate_search?userid=';
 
 var userid = sessionStorage.getItem("user_id");
 url += userid;
@@ -474,8 +474,8 @@ fetch(url)
     console.log(error);
 });
 
-// var url_ad = "https://surfyn.fr:7878/my_ad?userid="
-var url_ad = "http://localhost:7878/my_ad?userid="
+var url_ad = "https://surfyn.fr:7878/my_ad?userid="
+//var url_ad = "http://localhost:7878/my_ad?userid="
 
 url_ad += userid;
 

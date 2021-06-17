@@ -239,7 +239,7 @@ function generate_details_page(data, surfyn = false) {
 
       var det_ad_img = createNode("img");
       det_ad_img.className = "det_ad_image";
-      
+
       if (data[i].hasOwnProperty("AD_STATUS")) {
         var images = data[i].IMAGE.replaceAll('\'', '\"');
         images = images.replaceAll('u\"', '\"');

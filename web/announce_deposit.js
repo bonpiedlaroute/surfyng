@@ -94,7 +94,7 @@ var images_error = document.getElementById("images_error_message");
 var video_error = document.getElementById("video_error_message");
 
 function modal(){
-    
+
     $('.sf_modal_waiting').modal('show');
     setTimeout(function () {
         $('.sf_modal_waiting').modal('hide');
@@ -194,7 +194,7 @@ function validate_second_step() {
 
                     if (isEmpty(phoneInput.value) === false)
                         dataParams["phone"] = phoneInput.value;
-                    
+
                     if (isEmpty(construction_year) === false)
                         dataParams["construction_year"] = constructionYearInput.value;
 
@@ -238,7 +238,7 @@ function validate_second_step() {
                             show: true
                         });
                     }
-                    
+
                 }
             } else {
                 if (videoInput.checked && !dataParams.hasOwnProperty('video'))
@@ -253,7 +253,7 @@ function validate_second_step() {
                     images_error.style.color = "red";
                     images_error.style.fontsize = "12px";
                 }
-                
+
             }
         }
     }
@@ -289,14 +289,14 @@ function buildParams() {
         dataParams["surface"] = sessionStorage.getItem("area");
     else
         return false;
-    
+
     if (sessionStorage.getItem("prop_type") == "house") {
         if(sessionStorage.getItem("land_surface"))
             dataParams["land_surface"] = sessionStorage.getItem("land_surface");
         else
             return false;
     }
-    
+
 
     if (sessionStorage.getItem("rooms"))
         dataParams["rooms"] = sessionStorage.getItem("rooms");
@@ -823,12 +823,12 @@ function validateAndUpload(input, type='image') {
     if (file) {
         var image = type == 'image' ? new Image():  new FileReader;
         var filesize = (file.size/(1024*1024)).toFixed(2);
-        
+
         if (type == 'video' && filesize > 20) {
             video_error.innerHTML = "* Vous ne pouvez envoyer une video de plus de 20Mo.";
             video_error.style.color = "red";
             video_error.style.fontsize = "12px";
-            
+
             return;
         }
         else {
@@ -843,14 +843,14 @@ function validateAndUpload(input, type='image') {
         if (type == 'image')
             sessionStorage.setItem('image' + input.id.slice(-1), image);
         // imagesData.append('image'+input.id.slice(-1), file);
-        
+
         // Upload image on Cloud Storage Bucket
         var uploadTask = storageRef.child('deposit/' + sessionStorage.getItem('city').toLowerCase() + '/' + sessionStorage.getItem('prop_type') + '/' + file.name).put(file);
 
         var index = input.id.slice(-1);
         if (type == 'image')
             console.log('Image ' + index);
-    
+
         // Listen for error and completion of the upload
         uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
 
@@ -864,17 +864,17 @@ function validateAndUpload(input, type='image') {
                         images[index - 1] = true;
 
                         $("#overlay-" + index).css("display", "none");
-                        $("#imageOK" + index).css("display", "block");   
+                        $("#imageOK" + index).css("display", "block");
                         setTimeout(function () {
                             $("#imageOK" + index).css("display", "none");
-                        }, 3000); 
+                        }, 3000);
                         if(index == 5 && images_error.innerHTML)
                             images_error.innerHTML = "";
                     }
                     else if(type == 'video')
                     {
                         $("#overlay-video").css("display", "none");
-                        $("#imageOK_video").css("display", "block"); 
+                        $("#imageOK_video").css("display", "block");
                         setTimeout(function () {
                             $("#imageOK_video").css("display", "none");
                         }, 3000);
@@ -882,8 +882,8 @@ function validateAndUpload(input, type='image') {
                             video_error.innerHTML = "";
                         console.log('Video uploaded')
                     }
-                    
-                    
+
+
 
                 }
                 switch (snapshot.state) {
@@ -984,7 +984,7 @@ function display_video_field(input)
             $("#span1").css("display", "inherit");
             $("#overlay-1").css("display", "none");
         }
-            
+
         if(dataParams.hasOwnProperty('image2'))
         {
             delete dataParams['image2'];
