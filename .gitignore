@@ -5,4 +5,7 @@
 images_*/
 node_modules/
 *actus/
-
+*.log
+surfyn-firebase-adminsdk.json
+*.sh
+sf_services/deposit/config.ini

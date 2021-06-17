@@ -1,0 +1,53 @@
+.card {
+    background: #bfe5f5;
+    color: #3a838a;
+    /* box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px; */
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    width: 22rem;
+}
+
+.card-img-top {
+    width: 22rem;
+    height: 12rem;
+}
+
+body
+{
+    background: #F0F0F0 !important;
+}
+
+.sf_btn{
+    box-shadow: rgba(8, 8, 146, 0.25) 0px 30px 60px -12px, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px;
+}
+
+@media (min-width: 280px) {
+    .card {
+        width: 17rem;
+    }
+}
+
+@media (min-width: 320px) {
+    .card {
+        width: 19rem;
+    }
+}
+@media (min-width: 360px) {
+    .card {
+        width: 21rem;
+    }
+}
+@media (min-width: 768px) {
+    .card {
+        width: 100%;
+    }
+}
+
+@media (min-width: 992px) {
+    .card {
+        width: 100%;
+    }
+    
+    .card-img-top {
+        width: 100%;
+    }
+}

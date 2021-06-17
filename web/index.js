@@ -54,6 +54,23 @@ function update_actu(data, begin, end )
 
 }
 
+function goToDeposit()
+{
+  window.location.href = "deposer-une-annonce.html";
+//     var user_id = sessionStorage.getItem("user_id");
+//     if(user_id)
+//     {
+//       window.location.href = "deposer-une-annonce.html";
+//     }
+//     else
+//     {
+//       $("#login").modal(
+//         {
+//           focus: true,
+//           show: true
+//         });
+//     }
+}
 
 
 const lefigaroRssUrl = "data/actus/figaro_immobilier.xml";

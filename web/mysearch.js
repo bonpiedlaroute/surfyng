@@ -42,6 +42,28 @@ function delete_alert_by_id(event){
   });
 }
 
+function ByTimeStamp(lhs, rhs)
+{
+  var d1, d2;
+  if(!lhs.hasOwnProperty("FIRST_TIMESTAMP"))
+  {
+    d1 = new Date(lhs.TIMESTAMP);
+  }
+  else {
+    d1 = new Date(lhs.FIRST_TIMESTAMP);
+  }
+
+  if(!rhs.hasOwnProperty("FIRST_TIMESTAMP"))
+  {
+    d2 = new Date(rhs.TIMESTAMP);
+  }
+  else {
+    d2 = new Date(rhs.FIRST_TIMESTAMP);
+  }
+
+  return d2 - d1; //descending order
+}
+
 function change_alert_status(event){
   var endpoint = "https://surfyn.fr:7878/change_alert_status?alert_id=";
   //var endpoint ="http://localhost:7878/change_alert_status?alert_id="
@@ -260,6 +282,179 @@ function generate_my_search_page(data)
 
 }
 
+function generate_my_announce_page(data)
+{
+
+  var card_deck = document.getElementById("deck");
+
+  for(var i = 0; i < data.length; i++)
+  {
+
+      var card_col = createNode("div");
+      card_col.className = "col-md-6 col-lg-8 mb-3";
+
+      var card = createNode("div");
+      card.className = "card ml-0 h-100";
+
+      var announce_image = createNode("img");
+      var announce_video = createNode("video");
+      announce_image.className = "card-img-top img-fluid";
+      console.log(data[i]);
+      if(!data[i].hasOwnProperty('VIDEO'))
+      {
+        images = data[i].ANNOUNCE_IMAGE.replaceAll('\'', '\"');
+        images = images.replaceAll('u\"', '\"');
+        images = JSON.parse(images);
+        ad_image = null;
+        if (images['image1'] != "")
+          ad_image = images['image1'];
+        else if (images['image2'] != "")
+          ad_image = images['image2'];
+        else if (images['image3'] != "")
+          ad_image = images['image3'];
+
+        announce_image.src = ad_image;
+        announce_image.alt = "announce"
+        card.appendChild(announce_image);
+      }
+      else
+      {
+        var video_container = createNode('div');
+        video_container.className = "embed-responsive embed-responsive-16by9";
+
+        announce_video.src = data[i].VIDEO;
+        announce_video.className = "embed-responsive-item";
+        announce_video.style.display = "inherit";
+        announce_video.autoplay = true;
+        announce_video.muted = true;
+        announce_video.loop = true;
+        // announce_video.controls = true;
+        video_container.appendChild(announce_video);
+        card.appendChild(video_container);
+      }
+
+
+      var card_body = createNode("div");
+      card_body.className = "card-body";
+
+      var title = createNode("h4");
+      title.className = "card-title text-muted";
+      title.innerHTML = data[i].ANNOUNCE_TITLE;
+
+      card_body.appendChild(title);
+
+      var price = createNode("h5");
+      price.className = "card-subtitle mb-2";
+      price.innerHTML = formatPrice(data[i].PRICE) + " €";
+
+      card_body.append(price);
+
+      var details_info = createNode("p");
+      details_info.className = "card-text text-muted";
+      if(data[i].SEARCH_TYPE == "For sale")
+        details_info.innerHTML += "Vente";
+      else
+        details_info.innerHTML += "Location";
+
+      details_info.innerHTML += " &bull; ";
+      details_info.innerHTML += data[i].PROPERTY_TYPE;
+      details_info.innerHTML += " &bull; ";
+      details_info.innerHTML += data[i].ROOMS + " pièces";
+      details_info.innerHTML += " &bull; ";
+      details_info.innerHTML += data[i].BEDROOMS + " chambres";
+      details_info.innerHTML += " &bull; ";
+      details_info.innerHTML += data[i].SURFACE + " m²";
+
+      card_body.append(details_info);
+
+      var department = createNode("p");
+      department.className = "card-text text-muted"
+      department.innerHTML = data[i].CITY + "(" + postalCodeByCity[data[i].CITY.toUpperCase()] + ")";
+
+      card_body.append(department);
+
+      // View button
+      var view_button_outer = createNode("a");
+      view_button_outer.id = data[i].ID;
+      view_button_outer.className = "mt-3 d-flex justify-content-center align-items-center";
+      view_button_outer.style = "border-radius:5px; border:1px solid #61AEB5; background-color:#61AEB5; height:40px; cursor: pointer;";
+      view_button_outer.href = data[i].ANNOUNCE_LINK;
+
+      var view_icon = createNode("i");
+      view_icon.className = "fas fa-eye";
+      view_icon.style = "color:white !important; font-size:15px; margin-right:10px;";
+
+      view_button_outer.append(view_icon);
+
+      var view_text = createNode("span");
+      view_text.style = "color:white; font-weight: bold; font-size: 13px;";
+      view_text.innerHTML = "Voir l'annonce";
+
+      view_button_outer.append(view_text);
+      card_body.append(view_button_outer);
+
+      // Delete button
+      var delete_button_outer = createNode("div");
+      delete_button_outer.id = data[i].ID;
+      delete_button_outer.className = "mt-3 d-flex justify-content-center align-items-center";
+      delete_button_outer.style = "border-radius:5px; border:1px solid #ff3333; background-color:#ff3333; height:40px; cursor: pointer;";
+      delete_button_outer.onclick = delete_announce;
+
+      var delete_icon = createNode("i");
+      delete_icon.className = "far fa-trash-alt";
+      delete_icon.style = "color:white !important; font-size:15px; margin-right:10px;";
+
+      delete_button_outer.append(delete_icon);
+
+      var delete_text = createNode("span");
+      delete_text.style = "color:white; font-weight: bold; font-size: 13px;";
+      delete_text.innerHTML =  "Supprimer l'annonce";
+
+      delete_button_outer.append(delete_text);
+      card_body.append(delete_button_outer);
+
+      card.append(card_body);
+      card_col.append(card);
+      card_deck.appendChild(card_col);
+  }
+  var loader = document.getElementById("ad_loader");
+  loader.style.display = "none";
+}
+
+function detail_announce(event)
+{
+  window.location.href = url;
+}
+
+function delete_announce(event)
+{
+  d_url = 'https://surfyn.fr:7878/delete_announce?user_id=' + isConnectedUser() + '&ad_id=' + event.currentTarget.id;
+  //d_url = 'http://localhost:7878/delete_announce?user_id=' + isConnectedUser() + '&ad_id=' + event.currentTarget.id;
+
+  var loader = document.getElementById("ad_loader");
+  loader.style.display = "";
+  var ad = document.getElementById(event.currentTarget.id);
+
+  fetch(d_url, {
+    method: "POST",
+  })
+    .then(function (response) {
+        if(response.ok)
+        {
+          console.log('Announce deleted');
+          loader.style.display = "none";
+          showSuccessMessage("#generic-box-message-result","generic-message-result","Votre annonce a été supprimée avec succès", "mesrecherches.html")
+        }
+        else
+            console.log('An error occured');
+    })
+    .catch(function (error) {
+        $('#waiting_modal').modal({
+            show: false
+        });
+        console.log(error);
+    });
+}
 
 /*loadJSON("data/criteria.json",
 function (data) { generate_my_search_page(JSON.parse(data.response));}, function(err) {console.log(err);});
@@ -269,6 +464,7 @@ var url = 'https://surfyn.fr:7878/my_realestate_search?userid=';
 
 var userid = sessionStorage.getItem("user_id");
 url += userid;
+
 fetch(url)
 .then(function(resp) { return resp.json(); } )
 .then(function(data) {
@@ -277,3 +473,18 @@ fetch(url)
 .catch(function(error) {
     console.log(error);
 });
+
+var url_ad = "https://surfyn.fr:7878/my_ad?userid="
+//var url_ad = "http://localhost:7878/my_ad?userid="
+
+url_ad += userid;
+
+fetch(url_ad)
+.then(function(resp) { return resp.json(); })
+.then(function(data) {
+  data.sort(ByTimeStamp);
+  generate_my_announce_page(data);
+})
+.catch(function(error) {
+  console.log(error);
+})

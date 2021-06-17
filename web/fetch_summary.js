@@ -366,11 +366,12 @@ function computeMinMaxAdPrice(arr) {
   ProcessorBySource.set("etreproprio", function(param) { SrcProcessor(param, "green", "Etrepropr"); });
   ProcessorBySource.set("efficity", function(param) {SrcProcessor(param, "green", "Efficity"); });
   ProcessorBySource.set("fnaim", function(param) {SrcProcessor(param, "yellow", "Fnaim"); });
+  ProcessorBySource.set("surfyn", function(param) {SrcProcessor(param, "blue", "Surfyn"); });
 
   var current_page = 1;
   var records_per_page = 30;
 
-  var url = 'https://surfyn.fr:7878/search/all';
+   var url = 'https://surfyn.fr:7878/search/all';
   //var url = 'http://127.0.0.1:7878/search/all';
   var url_params = '?';
 
@@ -439,9 +440,11 @@ function buildurlparams()
   return true;
 }
 
+
 // Check if div with id #prerendered-page is already on the DOM to
 // To prevent re-hydratation
 var puppeteer = document.getElementById('prerendered-page');
+var content = document.querySelector('#main-content');
 
 if (!puppeteer)
 {
@@ -565,6 +568,7 @@ function generate_summary_page(data, empty=false)
       meta_description = "1 annonce ";
     }
 
+
     if (split_propertyType.indexOf("1") !== -1 || split_propertyType.indexOf("3") !== -1)
     {
       if(first_proptype)
@@ -635,14 +639,17 @@ function generate_summary_page(data, empty=false)
       realestate_agencies_city.innerHTML = 'Agences immobilières à ' + search_city + " ("+ postalcode + ")";
 
   }
+
   var announces_found = document.getElementById("nb_announces_found");
   if( data.length == 0)
   {
     announces_found.innerHTML = "Aucune annonce à ";
     announces_found.innerHTML += search_city;
     announces_found.innerHTML += " ne correspond à vos critères";
+
     document.title = announces_found.innerHTML;
     document.title +=" - Surfyn";
+
   }
   else
   {
@@ -876,7 +883,8 @@ function generate_summary_page(data, empty=false)
         lefigaroimmobilier:false,
         etreproprio:false,
         efficity:false,
-        fnaim:false
+        fnaim:false,
+        surfyn:false
         }
         var ad_sum_src_provider_cont = createNode("div");
         ad_sum_src_provider_cont.className = "ad_summary_src_provider_cont";
@@ -937,7 +945,6 @@ function generate_summary_page(data, empty=false)
         var line_div = createNode("div");
         line_div.className = "sf_line_results row mx-auto";
         ad_content.appendChild(line_div);
-
 
         /* adding google adsense */
         if( (i+1)%5 == 0)
@@ -1027,6 +1034,7 @@ function generate_summary_page(data, empty=false)
     forPuppeteer.setAttribute("data-ad-json", JSON.stringify(data));
     forPuppeteer.style.visibility = 'hidden';
     header_content.appendChild(forPuppeteer);
+
   }
 
 
@@ -1065,6 +1073,5 @@ function gotosearchcriteria()
   else {
     search_criteria.href = "/recherche/location/immobilier?search_type=2";
     }
-
 
 }

@@ -36,6 +36,7 @@ namespace surfyn
 namespace rest_server
 {
 const std::string id_field = "ID";
+const std::string ad_status = "AD_STATUS";
 const std::string id_city = "CITY";
 const std::string id_property_type = "PROPERTY_TYPE";
 const std::string id_surface = "SURFACE";
@@ -62,6 +63,7 @@ const std::string id_first_timestamp = "FIRST_TIMESTAMP";
 const std::string id_bedrooms = "BEDROOMS";
 const std::string id_landsurface = "LAND_SURFACE";
 const std::string id_adtextdescription = "AD_TEXT_DESCRIPTION";
+const std::string id_announce_image = "ANNOUNCE_IMAGE";
 
 const std::string details_table = "FR_SUMMARY";
 const std::string exprval_city = ":ct";
@@ -196,6 +198,9 @@ std::string searchTypeValue = "";
       attributestoget[id_field] = value;
 
       value.fieldtype = Type::type::STRING;
+      attributestoget[ad_status] = value;
+
+      value.fieldtype = Type::type::STRING;
       attributestoget[id_city] = value;
 
       value.fieldtype = Type::type::STRING;
@@ -227,6 +232,7 @@ std::string searchTypeValue = "";
 
       value.fieldtype = Type::type::STRING;
       attributestoget[id_adtextdescription] = value;
+
       
 
       bool scanend = false;
@@ -519,6 +525,9 @@ std::string searchTypeValue = "";
 
       value.fieldtype = Type::type::STRING;
       attributestoget[id_adtextdescription] = value;
+
+      value.fieldtype = Type::type::STRING;
+      attributestoget[id_announce_image] = value;
 
       GetResult _return;
       KeyValue key;
