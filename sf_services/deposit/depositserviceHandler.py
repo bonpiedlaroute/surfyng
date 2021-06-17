@@ -103,13 +103,18 @@ class DepositServiceHandler(Iface):
 
         # ANNOUNCE SOURCE
         announce_source_value = ttypes.ValueType()
-        announce_source_value.field = "Surfyn"
+        announce_source_value.field = "surfyn"
         announce_source_value.fieldtype = ttypes.Type.STRING
         values['ANNOUNCE_SOURCE'] = announce_source_value
 
         # ANNOUNCE TITLE
+        title = data['title']
+        title = title.replace('\n', ' ')
+        title = title.replace('\t', ' ')
+        title = title.replace('\\', ' ')
+        title = title.replace('\r', ' ')
         title_value = ttypes.ValueType()
-        title_value.field = data['title']
+        title_value.field = title
         title_value.fieldtype = ttypes.Type.STRING
         values['ANNOUNCE_TITLE'] = title_value
 
@@ -235,8 +240,13 @@ class DepositServiceHandler(Iface):
         values['BALCONY'] = balcony_value
 
         # DESCRIPTION
+        description = data['description']
+        description = description.replace('\n', ' ')
+        description = description.replace('\t', ' ')
+        description = description.replace('\\', ' ')
+        description = description.replace('\r', ' ')
         description_value = ttypes.ValueType()
-        description_value.field = data['description']
+        description_value.field = description
         description_value.fieldtype = ttypes.Type.STRING
         values['AD_TEXT_DESCRIPTION'] = description_value
 
@@ -280,6 +290,12 @@ class DepositServiceHandler(Iface):
         source_logo_value.field = "data/surfyn.svg"
         source_logo_value.fieldtype = ttypes.Type.STRING
         values['SOURCE_LOGO'] = source_logo_value
+
+        # SOURCES
+        sources_value = ttypes.ValueType()
+        sources_value.field = "surfyn"
+        sources_value.fieldtype = ttypes.Type.STRING
+        values['SOURCES'] = sources_value
 
         # DELETED STATUS
         deleted_value = ttypes.ValueType()

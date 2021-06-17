@@ -366,6 +366,7 @@ function computeMinMaxAdPrice(arr) {
   ProcessorBySource.set("etreproprio", function(param) { SrcProcessor(param, "green", "Etrepropr"); });
   ProcessorBySource.set("efficity", function(param) {SrcProcessor(param, "green", "Efficity"); });
   ProcessorBySource.set("fnaim", function(param) {SrcProcessor(param, "yellow", "Fnaim"); });
+  ProcessorBySource.set("surfyn", function(param) {SrcProcessor(param, "blue", "Surfyn"); });
 
   var current_page = 1;
   var records_per_page = 30;
@@ -882,7 +883,8 @@ function generate_summary_page(data, empty=false)
         lefigaroimmobilier:false,
         etreproprio:false,
         efficity:false,
-        fnaim:false
+        fnaim:false,
+        surfyn:false
         }
         var ad_sum_src_provider_cont = createNode("div");
         ad_sum_src_provider_cont.className = "ad_summary_src_provider_cont";

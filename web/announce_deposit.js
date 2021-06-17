@@ -131,7 +131,7 @@ function validate_first_step() {
                         sessionStorage.setItem("rooms", rooms_result[1]);
                         sessionStorage.setItem("bedrooms", bedrooms_result[1]);
                         sessionStorage.setItem("price", priceInput.value);
-                        sessionStorage.setItem("city", cityInput.value);
+                        sessionStorage.setItem("city", cityInput.value.toLowerCase());
                         if(isConnectedUser()) {
                             window.location.href = "valider-deposer-une-annonce.html";
                         }
