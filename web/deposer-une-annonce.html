@@ -606,6 +606,9 @@
 
           user_connected_box.style.display = 'flex';
           user_not_connected_box.style.display = 'none';
+          
+          // Restore written data before login
+          restore_data()
 
           user.updateProfile({
             displayName: user.displayName

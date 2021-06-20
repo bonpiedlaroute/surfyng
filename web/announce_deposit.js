@@ -42,6 +42,12 @@ function backHome() {
     window.location.href = "/";
 }
 
+function triggerMouseEvent (node, eventType) {
+    var clickEvent = document.createEvent ('MouseEvents');
+    clickEvent.initEvent (eventType, true, true);
+    node.dispatchEvent (clickEvent);
+}
+
 // First page
 
 var sellSelect = document.getElementById("sell");
@@ -220,6 +226,7 @@ function validate_second_step() {
                                 .then(function (response) {
                                     if(response.ok) {
                                         showSuccessAnnounceDeposit();
+                                        clearStorage();
                                     }
                                     else
                                         showErrorAnnounceDeposit();
@@ -1042,8 +1049,110 @@ function display_video_field(input)
 
 }
 
+// Function to save user data before going to log in on Google or Facebook
+function save_data(){
+    // title
+    if(titleInput.value)
+        sessionStorage.setItem("title", titleInput.value);
+    // city
+    if(cityInput.value)
+        sessionStorage.setItem("city", cityInput.value);
+    // area
+    if(areaInput.value)
+        sessionStorage.setItem("area", areaInput.value);
+    // land_surface
+    if(landSurfaceInput.value)
+        sessionStorage.setItem("land_surface", landSurfaceInput.value);
+    // price
+    if(priceInput.value)
+        sessionStorage.setItem("price", priceInput.value);
+    // search_type
+    if(divSell.style.transform == "scale(1)")
+        sessionStorage.setItem("search_type", "sell");
+    else if(divRent.style.transform == "scale(1)");
+        sessionStorage.setItem("search_type", "rent");
+    // prop_type
+    if(divHouse.style.transform == "scale(1)")
+        sessionStorage.setItem("prop_type", "house");
+    else if(divAppart.style.transform == "scale(1)")
+        sessionStorage.setItem("prop_type", "appart");
+    // rooms
+    for (i = 0; i < rooms.length; ++i) {
+        if(rooms[i].style.transform == "scale(1)"){
+            sessionStorage.setItem("rooms", i+1);
+            break;
+        }
+    }
+    // bedrooms
+    for (i = 0; i < bedrooms.length; ++i) {
+        if(bedrooms[0].style.transform == "scale(1)"){
+            sessionStorage.setItem("bedrooms", i+1);
+            break;
+        }
+    }
+    console.log("Data saved");
+}
+
+// Function to restore all data in corresponded fields if they are presents
+function restore_data(){
+    // title
+    titleInput.value = sessionStorage.getItem("title");
+    // city
+    cityInput.value = sessionStorage.getItem("city");
+    // area
+    areaInput.value = sessionStorage.getItem("area");
+    // price
+    priceInput.value = sessionStorage.getItem("price");
+    // search_type
+    if(sessionStorage.getItem("search_type") == "sell")
+        triggerMouseEvent(divSell, "mousedown");
+    else if(sessionStorage.getItem("search_type") == "rent")
+        triggerMouseEvent(divRent, "mousedown");
+    // prop_type x land_surface
+    if(sessionStorage.getItem("prop_type") == "house"){
+        triggerMouseEvent(divHouse, "mousedown");
+        landSurfaceInput.value = sessionStorage.getItem("land_surface");
+    }
+    else if(sessionStorage.getItem("prop_type") == "appart")
+        triggerMouseEvent(divAppart, "mousedown");
+    // rooms
+    if(sessionStorage.getItem("rooms"))
+        triggerMouseEvent(rooms[sessionStorage.getItem("rooms")-1], "mousedown");
+    // bedrooms
+    if(sessionStorage.getItem("bedrooms"))
+        triggerMouseEvent(bedrooms[sessionStorage.getItem("bedrooms")-1], "mousedown");
+    
+    console.log('Data restored');
+}
+
 // Function to remove all items in sessionStorage at the end.
 function clearStorage()
 {
-    sessionStorage.removeItem("");
+    // First page
+    sessionStorage.removeItem("area");
+    sessionStorage.removeItem("city");
+    sessionStorage.removeItem("title");
+    sessionStorage.removeItem("rooms");
+    sessionStorage.removeItem("price");
+    sessionStorage.removeItem("bedrooms");
+    sessionStorage.removeItem("prop_type");
+    sessionStorage.removeItem("search_type");
+    sessionStorage.removeItem("land_surface");
+
+    // Second page
+    sessionStorage.removeItem("lift");
+    sessionStorage.removeItem("phone");
+    sessionStorage.removeItem("video");
+    sessionStorage.removeItem("cellar");
+    sessionStorage.removeItem("image1");
+    sessionStorage.removeItem("image2");
+    sessionStorage.removeItem("image3");
+    sessionStorage.removeItem("image4");
+    sessionStorage.removeItem("image5");
+    sessionStorage.removeItem("address");
+    sessionStorage.removeItem("parking");
+    sessionStorage.removeItem("balcony");
+    sessionStorage.removeItem("description");
+    sessionStorage.removeItem("type_of_heating");
+    sessionStorage.removeItem("construction_year");
 }
