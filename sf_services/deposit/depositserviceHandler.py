@@ -12,7 +12,7 @@ from thrift.server import TServer
 from email.utils import formataddr
 from email.mime.text import MIMEText
 from thrift.protocol import TBinaryProtocol
-from firebase_admin import credentials, auth
+from firebase_admin import credentials, auth, storage
 from thrift.transport import TSocket, TTransport
 from dynamodb_access import dynamodb_access, ttypes
 from dynamodb_access.ttypes import Type, ValueType, KeyValue
@@ -20,6 +20,7 @@ from thrift_generated.depositservice.ttypes import DepositResult
 from thrift_generated.depositservice.deposit_service import Iface
 from thrift_generated.depositservice.deposit_service import Processor
 from inseecode_postalcode import *
+from urllib import unquote
 
 
 import firebase_admin
@@ -399,6 +400,37 @@ class DepositServiceHandler(Iface):
         values['AD_STATUS'] = announce_status
 
         logging.info('Delete announce with ID: {}'.format(announce_id))
+        
+        attributes_to_get = {}
+        
+        filter_expression = 'ID = :id'
+
+        announces = []
+        while True:
+            # ANNOUNCE_IMAGE = IMAGES_LIST
+            announce_image_value = ttypes.ValueType()
+            announce_image_value.fieldtype = ttypes.Type.STRING
+            attributes_to_get['ANNOUNCE_IMAGE'] = announce_image_value
+
+            # VIDEO
+            video_value = ttypes.ValueType()
+            video_value.fieldtype = ttypes.Type.STRING
+            attributes_to_get['VIDEO'] = video_value
+
+            expression_value = {}
+            ad_id_value = ttypes.ValueType()
+            ad_id_value.fieldtype = ttypes.Type.NUMBER
+            ad_id_value.field = announce_id
+            expression_value[':id'] = ad_id_value
+
+            query_result = self.client.scan(
+                self.deposit_tablename, attributes_to_get, filter_expression, expression_value
+            )
+
+            if query_result.result.success and query_result.values:
+                announces += query_result.values
+            if query_result.scanend:
+                break
 
         result = self.client.remove(self.summary_tablename, item_key)
         result_deposit = self.client.update(self.deposit_tablename, item_key, values)
@@ -408,6 +440,31 @@ class DepositServiceHandler(Iface):
             logging.info('Successfully deleted announce {} of user {}'.format(
                 announce_id, user_id))
             return_value.success = True
+
+            if announces[0].has_key('ANNOUNCE_IMAGE'):
+                images = announces[0]['ANNOUNCE_IMAGE']
+                images = images.replace("'", "\"")
+                images = images.replace("u\"", "\"")
+                images = json.loads(images)
+
+                for filename in images.values():
+                    if filename:
+                        file_name = filename.split('/o/')[-1]
+                        file_name = unquote(file_name)
+                        file_name = file_name.split('?')[0]
+                        
+                        blob = bucket.blob(file_name)
+                        blob.delete()
+            elif announces[0].has_key('VIDEO'):
+                videoname = announces[0]['VIDEO']
+                videoname = unquote(videoname)
+                videoname = videoname.split('/o/')[-1]
+                videoname = videoname.split('?')[0]
+
+                logging.info(videoname)
+                blob = bucket.blob(videoname)
+                blob.delete()
+            logging.info('Successfully deleted medias')
         else:
             logging.error(result.error)
             return_value.success = False
@@ -519,8 +576,12 @@ class DepositServiceHandler(Iface):
 
 if __name__ == '__main__':
     app = credentials.Certificate('surfyn-firebase-adminsdk.json')
-    firebase_admin.initialize_app(app)
+    firebase_admin.initialize_app(app, {
+        'storageBucket': 'surfyn.appspot.com'
+    })
 
+    bucket = storage.bucket()
+    
     now = datetime.datetime.now()
     log_filename = "deposit_{}.log".format(now.strftime('%Y-%m-%d-%H-%M-%S'))
     logging.basicConfig(filename=log_filename, level=logging.INFO,
