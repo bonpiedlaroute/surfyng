@@ -352,3 +352,8 @@ def buildFnaimUrl(city, ptype, stype):
 
    return url
    
+idal_url = 'https://api.apimo.pro/agencies/{idal_id}/properties'
+def buildIdalUrl(idal_id):
+   url = idal_url.format(idal_id=idal_id)
+
+   return url
