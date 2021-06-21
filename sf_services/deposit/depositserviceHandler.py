@@ -403,34 +403,27 @@ class DepositServiceHandler(Iface):
         
         attributes_to_get = {}
         
-        filter_expression = 'ID = :id'
+        # ANNOUNCE_IMAGE = IMAGES_LIST
+        announce_image_value = ttypes.ValueType()
+        announce_image_value.fieldtype = ttypes.Type.STRING
+        attributes_to_get['ANNOUNCE_IMAGE'] = announce_image_value
 
-        announces = []
-        while True:
-            # ANNOUNCE_IMAGE = IMAGES_LIST
-            announce_image_value = ttypes.ValueType()
-            announce_image_value.fieldtype = ttypes.Type.STRING
-            attributes_to_get['ANNOUNCE_IMAGE'] = announce_image_value
+        # VIDEO
+        video_value = ttypes.ValueType()
+        video_value.fieldtype = ttypes.Type.STRING
+        attributes_to_get['VIDEO'] = video_value
 
-            # VIDEO
-            video_value = ttypes.ValueType()
-            video_value.fieldtype = ttypes.Type.STRING
-            attributes_to_get['VIDEO'] = video_value
+        expression_value = {}
+        ad_id_value = ttypes.ValueType()
+        ad_id_value.fieldtype = ttypes.Type.NUMBER
+        ad_id_value.field = announce_id
+        expression_value[':id'] = ad_id_value
 
-            expression_value = {}
-            ad_id_value = ttypes.ValueType()
-            ad_id_value.fieldtype = ttypes.Type.NUMBER
-            ad_id_value.field = announce_id
-            expression_value[':id'] = ad_id_value
+        query_result = self.client.get(
+            self.deposit_tablename, item_key, attributes_to_get)
 
-            query_result = self.client.scan(
-                self.deposit_tablename, attributes_to_get, filter_expression, expression_value
-            )
-
-            if query_result.result.success and query_result.values:
-                announces += query_result.values
-            if query_result.scanend:
-                break
+        if query_result.result.success and query_result.values:
+            announce = query_result.values
 
         result = self.client.remove(self.summary_tablename, item_key)
         result_deposit = self.client.update(self.deposit_tablename, item_key, values)
@@ -441,8 +434,8 @@ class DepositServiceHandler(Iface):
                 announce_id, user_id))
             return_value.success = True
 
-            if announces[0].has_key('ANNOUNCE_IMAGE'):
-                images = announces[0]['ANNOUNCE_IMAGE']
+            if announce.has_key('ANNOUNCE_IMAGE'):
+                images = announce['ANNOUNCE_IMAGE']
                 images = images.replace("'", "\"")
                 images = images.replace("u\"", "\"")
                 images = json.loads(images)
@@ -455,8 +448,8 @@ class DepositServiceHandler(Iface):
                         
                         blob = bucket.blob(file_name)
                         blob.delete()
-            elif announces[0].has_key('VIDEO'):
-                videoname = announces[0]['VIDEO']
+            elif announce.has_key('VIDEO'):
+                videoname = announce['VIDEO']
                 videoname = unquote(videoname)
                 videoname = videoname.split('/o/')[-1]
                 videoname = videoname.split('?')[0]
