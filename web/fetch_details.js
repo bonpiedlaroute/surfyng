@@ -1241,3 +1241,45 @@ function generate_details_page(data, surfyn = false) {
   }
 
 }
+
+function copyToClipboard() {
+  var copyText = document.body.appendChild(document.createElement("input"));
+  copyText.value = window.location.href;
+  copyText.select();
+  copyText.setSelectionRange(0, 99999);
+  document.execCommand("copy");
+  copyText.parentNode.removeChild(copyText);
+
+  var tooltip = document.getElementById("myTooltip");
+  tooltip.innerHTML = "lien copié! ";
+
+}
+
+function outOfCopyAdLinkButton() {
+  var tooltip = document.getElementById("myTooltip");
+  tooltip.innerHTML = "Copier le lien de l'annonce";
+}
+function startcopy(event)
+{
+  var copyText = document.body.appendChild(document.createElement("input"));
+  copyText.value = window.location.href;
+  copyText.select();
+  copyText.setSelectionRange(0, 99999);
+  document.execCommand("copy");
+  copyText.parentNode.removeChild(copyText);
+
+  var tooltip = document.getElementById("myTooltip");
+  tooltip.innerHTML = "lien copié! ";
+  tooltip.style.visibility = "visible";
+  tooltip.style.opacity = "1";
+}
+function endcopy(event)
+{
+  setTimeout(function()
+  {
+  var tooltip = document.getElementById("myTooltip");
+  tooltip.style.visibility = "hidden";
+  tooltip.style.opacity = "0";
+}, 1500);
+
+}
