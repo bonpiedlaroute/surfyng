@@ -1997,8 +1997,9 @@ input:checked+.slider:before {
     }
     .sf_generic_infos_desc_text {
         color: rgb(76, 148, 188);
-        font-size: 15px;
+        font-size: 14px;
         text-decoration: none;
+        line-height: 14px;
     }
     .announce_summary_icon {
         font-size: 20px;
@@ -2156,7 +2157,7 @@ input:checked+.slider:before {
     }
     .sf_visit_file_link {
         display: block;
-        width: 80%;
+        width: 92%;
     }
     .sf_estimate_link_frame {
         width: 100%;

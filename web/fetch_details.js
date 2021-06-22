@@ -83,7 +83,7 @@ function enrichRelatedInfos(cityname, isForSale, isFlat) {
     othersrelatedinfos_div.appendChild(generic_infos_box_div1);
 
     var generic_infos_box_div3 = createNode("div");
-    generic_infos_box_div3.style.height = "100px";
+    generic_infos_box_div3.style.height = "120px";
     generic_infos_box_div3.className = "sf_generic_infos_box";
     var generic_infos_container_div3 = createNode("div");
     generic_infos_container_div3.className = "sf_generic_infos_container";
