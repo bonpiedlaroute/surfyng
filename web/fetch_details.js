@@ -83,7 +83,7 @@ function enrichRelatedInfos(cityname, isForSale, isFlat) {
     othersrelatedinfos_div.appendChild(generic_infos_box_div1);
 
     var generic_infos_box_div3 = createNode("div");
-    generic_infos_box_div3.style.height = "100px";
+    generic_infos_box_div3.style.height = "120px";
     generic_infos_box_div3.className = "sf_generic_infos_box";
     var generic_infos_container_div3 = createNode("div");
     generic_infos_container_div3.className = "sf_generic_infos_container";
@@ -1239,5 +1239,47 @@ function generate_details_page(data, surfyn = false) {
     var youtube_icon = document.getElementById("youtube-icon");
     youtube_icon.style.color = "white";
   }
+
+}
+
+function copyToClipboard() {
+  var copyText = document.body.appendChild(document.createElement("input"));
+  copyText.value = window.location.href;
+  copyText.select();
+  copyText.setSelectionRange(0, 99999);
+  document.execCommand("copy");
+  copyText.parentNode.removeChild(copyText);
+
+  var tooltip = document.getElementById("myTooltip");
+  tooltip.innerHTML = "lien copié! ";
+
+}
+
+function outOfCopyAdLinkButton() {
+  var tooltip = document.getElementById("myTooltip");
+  tooltip.innerHTML = "Copier le lien de l'annonce";
+}
+function startcopy(event)
+{
+  var copyText = document.body.appendChild(document.createElement("input"));
+  copyText.value = window.location.href;
+  copyText.select();
+  copyText.setSelectionRange(0, 99999);
+  document.execCommand("copy");
+  copyText.parentNode.removeChild(copyText);
+
+  var tooltip = document.getElementById("myTooltip");
+  tooltip.innerHTML = "lien copié! ";
+  tooltip.style.visibility = "visible";
+  tooltip.style.opacity = "1";
+}
+function endcopy(event)
+{
+  setTimeout(function()
+  {
+  var tooltip = document.getElementById("myTooltip");
+  tooltip.style.visibility = "hidden";
+  tooltip.style.opacity = "0";
+}, 1500);
 
 }
