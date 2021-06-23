@@ -1068,14 +1068,26 @@ function save_data(){
         sessionStorage.setItem("price", priceInput.value);
     // search_type
     if(divSell.style.transform == "scale(1)")
-        sessionStorage.setItem("search_type", "sell");
-    else if(divRent.style.transform == "scale(1)");
-        sessionStorage.setItem("search_type", "rent");
+    {
+      sessionStorage.setItem("search_type", "sell");
+    }
+    else
+    {
+      if(divRent.style.transform == "scale(1)");
+          sessionStorage.setItem("search_type", "rent");
+    }
+
     // prop_type
     if(divHouse.style.transform == "scale(1)")
-        sessionStorage.setItem("prop_type", "house");
-    else if(divAppart.style.transform == "scale(1)")
+    {
+      sessionStorage.setItem("prop_type", "house");
+    }
+    else
+    {
+      if(divAppart.style.transform == "scale(1)")
         sessionStorage.setItem("prop_type", "appart");
+    }
+
     // rooms
     for (i = 0; i < rooms.length; ++i) {
         if(rooms[i].style.transform == "scale(1)"){
@@ -1121,7 +1133,7 @@ function restore_data(){
     // bedrooms
     if(sessionStorage.getItem("bedrooms"))
         triggerMouseEvent(bedrooms[sessionStorage.getItem("bedrooms")-1], "mousedown");
-    
+
     console.log('Data restored');
 }
 
