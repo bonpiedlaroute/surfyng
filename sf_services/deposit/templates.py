@@ -1,3 +1,10 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*- 
+# (c) Copyright 2021 
+# author(s): Stephane Fedim
+# All rights reserved
+
+success_deposit_mail = u"""
 <html lang="fr">
 
 <head>
@@ -244,3 +251,4 @@
 </body>
 
 </html>
+"""
