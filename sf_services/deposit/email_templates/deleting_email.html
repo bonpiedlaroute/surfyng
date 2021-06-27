@@ -14,15 +14,15 @@
         .email-paragraph {
             font-size: 16px;
             line-height: 20px;
-            font-weight: bold;
-            color: #4C8E99;
+            /* font-weight: bold; */
+            /* color: #4C8E99; */
             padding-bottom: 10px;
         }
 
         .email-btn {
             display: inline-block;
             width: 30%;
-            height: 20px;
+            /* height: 20px; */
             color: #fff !important;
             padding: 15px;
             font-size: 1rem;
@@ -54,34 +54,29 @@
         }
 
         .hello_phrase {
-            font-size: 28px;
+            font-size: 25px;
             font-weight: bold;
             overflow-wrap: break-word;
-        }
-
-        .hello_online {
-            font-size: 20px;
         }
 
         .hello_message {
             font-size: 14px;
         }
 
-        .hello_period {
-            font-size: 12px;
-        }
-
         .morning_box_hello {
-            width: 66.64%;
+            width: 100%;
             margin-left: 5%;
             margin-right: 5%;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            /* border-right: 2px solid white; */
         }
 
         .morning_box_illustration {
-            border-left: 2px solid white;
+            /* border-left: 2px solid white; */
             text-align: center;
-            padding-top: 10px;
-            padding-bottom: 10px;
+            /* padding-top: 50px; */
+            /* padding-bottom: 50px; */
         }
 
         .announce_box {
@@ -115,61 +110,37 @@
             <div class="morning_box_hello">
                 <div style="text-align: center;">
                     <img src="https://firebasestorage.googleapis.com/v0/b/surfyn.appspot.com/o/email%2Flogo_circle.png?alt=media&token=68ca544b-6c88-4095-a1ef-a039ddbbdaf9"
-                        alt="logo">
+                    alt="logo">
                 </div>
-
+                
                 <p class="hello_phrase">Bonjour @@display_name@@,</p>
-                <strong class="hello_online">Votre annonce est en ligne !</strong>
                 <p class="hello_message">
-                    Votre annonce <strong>"@@ad_title@@"</strong> a été mise en ligne sur <a href="https://surfyn.fr"
-                        style="color: #007bff!important;" rel="noopener noreferrer">surfyn.fr</a>.
+                    Votre annonce a bien été supprimé de <a href="https://surfyn.fr"
+                        style="color: #007bff!important;" rel="noopener noreferrer">surfyn.fr</a> le @@date@@ à @@hour@@(UTC).
                 </p>
 
-                <p class="hello_period">Elle restera sur le site pendant 2 mois, et est déjà visible.</p>
             </div>
-            <div class="morning_box_illustration">
-                <img src="https://firebasestorage.googleapis.com/v0/b/surfyn.appspot.com/o/email%2Fillustration.png?alt=media&token=2fb0bed1-569f-473c-ba9a-a5fcf2865865"
+            <!-- <div class="morning_box_illustration">
+                <img src="https://firebasestorage.googleapis.com/v0/b/surfyn.appspot.com/o/email%2Fdeleting_illustration.png?alt=media&token=674efbd6-7eaa-4016-a3b4-ab8fd6700de1"
                     alt="illustration" style="width: 60%;">
-            </div>
+            </div> -->
         </div>
 
         <div class="spacer-5">
         </div>
 
-        <div class="announce_box offset">
-            <a class="email-btn" href="@@ad_link@@" target="_blank" rel="noopener noreferrer" role="button">
-                Voir mon annonce
-            </a>
-
-            <div class="spacer-5">
-            </div>
-
-            <div class="offset" style="display: flex; justify-content: space-between; width: 83.3%;">
-                <div style="width: 33.32%;"><img src="@@image1@@"
-                        style="height: 170px; width: 170px; display: block; border-radius: 4px;" alt="image 1">
-                </div>
-                <div style="width: 33.32%;"><img src="@@image2@@"
-                        style="height: 170px; width: 170px; display: block; border-radius: 4px;" alt="image 2">
-                </div>
-                <div style="width: 33.32%;"><img src="@@image3@@"
-                        style="height: 170px; width: 170px; display: block; border-radius: 4px;" alt="image 3">
-                </div>
-            </div>
-        </div>
-
-        <div class="spacer-2">
-        </div>
-
         <div class="account_box offset">
             <p class="email-paragraph">
-                A tout moment vous pouvez gérer l'ensemble de vos annonces <br> en ligne en vous connectant sur votre
-                compte
-                surfyn.
+                Il s'agit de l'annonce <span style="font-weight: bold;">"@@ad_title@@"</span>
+                <br>
+                <br>
+                <br>
+                Avez vous une autre annonce à déposer?
             </p>
 
-            <a class="email-btn" href="https://surfyn.fr/mesrecherches.html" target="_blank" rel="noopener noreferrer"
+            <a class="email-btn" href="https://surfyn.fr/deposer-une-annonce.html" target="_blank" rel="noopener noreferrer"
                 role="button">
-                Voir mon compte surfyn
+                Déposer une nouvelle annonce
             </a>
 
 
@@ -178,29 +149,6 @@
 
         </div>
         <div class="offset">
-            <p class="email-paragraph">Quelques astuces pour @@search_type@@ vite et bien !</p>
-
-            <div class="spacer-2">
-            </div>
-
-            <p style="font-size: 16px; font-weight: bold;">Photos</p>
-            <p style="font-size: 14px">Ajouter des photos et obtenez 7 fois plus de consultation sur votre annonce !
-                <br>
-                N'hésitez pas à les modifiez, changer l'ordre et attention à la lumière
-            </p>
-
-            <p style="font-size: 16px; font-weight: bold;">A la une</p>
-            <p style="font-size: 14px">
-                Mettez votre annonce en avant dans un emplacement spécial à droite des listes des annonces et <br>
-                gagnez en visibilité!
-            </p>
-
-            <p style="font-size: 16px; font-weight: bold;">Logo urgent</p>
-            <p style="font-size: 14px">
-                Signalez aux acheteurs potentiels le caractère urgent de votre vente dans la liste de résultats et <br>
-                vendez plus vite.
-            </p>
-
             <p style="font-size: 16px; font-weight: bold;">A votre service, l'équipe Surfyn</p>
         </div>
 
@@ -226,7 +174,7 @@
                 <a style="margin-left: 10px" href="https://www.instagram.com/surfynimmo" target="_blank"
                     rel="noopener noreferrer">
                     <img src="https://firebasestorage.googleapis.com/v0/b/surfyn.appspot.com/o/email%2Finstagram_icon.png?alt=media&token=a843090c-f8fb-42a3-a2da-e72cfb815c46"
-                        alt="instagram_logo">
+                    alt="instagram_logo">
                 </a>
                 <a style="margin-left: 10px" href="https://www.linkedin.com/company/surfyn" target="_blank"
                     rel="noopener noreferrer">
