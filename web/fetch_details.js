@@ -209,7 +209,7 @@ function generate_details_page(data, surfyn = false) {
         det_ad_container_div.className = "det_ad_container";
 
         if (i % 2 != 0)
-          det_ad_container_div.style.marginLeft = "20px";
+          det_ad_container_div.style.marginLeft = "15px";
       }
 
       var ad_link = createNode("a");
@@ -1033,7 +1033,7 @@ function generate_details_page(data, surfyn = false) {
       else {
 
         nb_similar.innerHTML = data.length;
-        nb_similar.innerHTML += " annonces correspondent à";
+        nb_similar.innerHTML += " annonces pour";
 
         nb_similar.innerHTML += isFlat ? " ce même appartement " : " cette même maison ";
       }

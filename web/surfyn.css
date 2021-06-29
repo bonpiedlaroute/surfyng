@@ -1963,7 +1963,7 @@ input:checked+.slider:before {
         color: black;
     }
     .det_ad_container {
-        height: 925px;
+        height: 1000px;
         width: 50%;
         background-color: #FFFFFF;
         box-shadow: 3px 3px #aaaaaa;
@@ -2271,14 +2271,14 @@ input:checked+.slider:before {
         align-items: center;
         justify-content: center;
         flex-direction: column;
-        height: 415px;
+        height: 475px;
         width: 100%;
     }
     .announce_text_description_container {
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 395px;
+        height: 455px;
         width: 100%;
     }
     .sf_modal_box_width {
