@@ -2,6 +2,7 @@
 
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <style type="text/css">
         .spacer-5 {
             height: 50px;
@@ -20,16 +21,18 @@
         }
 
         .email-btn {
-            display: inline-block;
-            width: 30%;
+            display: block;
+            width: 25%;
             height: 20px;
             color: #fff !important;
             padding: 15px;
-            font-size: 1rem;
+            font-size: 14px;
             text-align: center;
             border-radius: .25rem;
             font-weight: bold;
             background-color: #4C8E99;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         a,
@@ -73,8 +76,9 @@
 
         .morning_box_hello {
             width: 66.64%;
-            margin-left: 5%;
-            margin-right: 5%;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
         }
 
         .morning_box_illustration {
@@ -103,14 +107,41 @@
 
         .footer_box {
             background-color: #222545;
-            width: 83.3%;
+            width: 79.90%;
             padding: 15px;
+        }
+
+        .img_dim {
+            width: 75%;
+            height: 160px;
+        }
+
+        @media only screen and (max-width: 720px) {
+            .img_dim {
+                width: 90%;
+                height: 100px;
+            }
+
+            .email-btn {
+                display: block;
+                width: 40%;
+                height: 20px;
+                color: #fff !important;
+                padding: 15px;
+                font-size: 14px;
+                text-align: center;
+                border-radius: .25rem;
+                font-weight: bold;
+                background-color: #4C8E99;
+                margin-left: auto;
+                margin-right: auto;
+            }
         }
     </style>
 </head>
 
-<body style="background-color: #f2f2f2;">
-    <main class="">
+<body>
+    <main>
         <div class="morning_box offset">
             <div class="morning_box_hello">
                 <div style="text-align: center;">
@@ -127,10 +158,10 @@
 
                 <p class="hello_period">Elle restera sur le site pendant 2 mois, et est déjà visible.</p>
             </div>
-            <div class="morning_box_illustration">
+            <!-- <div class="morning_box_illustration">
                 <img src="https://firebasestorage.googleapis.com/v0/b/surfyn.appspot.com/o/email%2Fillustration.png?alt=media&token=2fb0bed1-569f-473c-ba9a-a5fcf2865865"
                     alt="illustration" style="width: 60%;">
-            </div>
+            </div> -->
         </div>
 
         <div class="spacer-5">
@@ -144,15 +175,18 @@
             <div class="spacer-5">
             </div>
 
-            <div class="offset" style="display: flex; justify-content: space-between; width: 83.3%;">
-                <div style="width: 33.32%;"><img src="@@image1@@"
-                        style="height: 170px; width: 170px; display: block; border-radius: 4px;" alt="image 1">
+            <div class="offset" style="display: flex; width: 83.3%;">
+                <div style="display: inline-block; width: 33.32%;"><img class="img_dim" src="@@image1@@"
+                        style="display: block; border-radius: 4px; margin-left: auto; margin-right: auto;"
+                        alt="image 1">
                 </div>
-                <div style="width: 33.32%;"><img src="@@image2@@"
-                        style="height: 170px; width: 170px; display: block; border-radius: 4px;" alt="image 2">
+                <div style="display: inline-block; width: 33.32%;"><img class="img_dim" src="@@image2@@"
+                        style="display: block; border-radius: 4px; margin-left: auto; margin-right: auto;"
+                        alt="image 2">
                 </div>
-                <div style="width: 33.32%;"><img src="@@image3@@"
-                        style="height: 170px; width: 170px; display: block; border-radius: 4px;" alt="image 3">
+                <div style="display: inlince-block; width: 33.32%;"><img class="img_dim" src="@@image3@@"
+                        style="display: block; border-radius: 4px; margin-left: auto; margin-right: auto;"
+                        alt="image 3">
                 </div>
             </div>
         </div>
@@ -178,7 +212,7 @@
 
         </div>
         <div class="offset">
-            <p class="email-paragraph">Quelques astuces pour @@search_type@@ vite et bien !</p>
+            <p class="email-paragraph" style="font-size: 20px;">Quelques astuces pour @@search_type@@ vite et bien !</p>
 
             <div class="spacer-2">
             </div>
@@ -201,7 +235,7 @@
                 vendez plus vite.
             </p>
 
-            <p style="font-size: 16px; font-weight: bold;">A votre service, l'équipe Surfyn</p>
+            <p style="font-size: 16px; font-weight: bold;">A votre service. <br> L'équipe Surfyn.</p>
         </div>
 
         <div class="spacer-2">
@@ -241,10 +275,10 @@
             </div>
             <div class="spacer-2">
             </div>
-            <div style="text-align: center; text-decoration: underline;">
+            <!-- <div style="text-align: center; text-decoration: underline;">
                 <a href="http://" target="_blank" rel="noopener noreferrer">Accéder à nos conditions générales
                     d'utilisation</a>
-            </div>
+            </div> -->
         </footer>
     </main>
 </body>

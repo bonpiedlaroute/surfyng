@@ -22,7 +22,7 @@ from thrift_generated.depositservice.deposit_service import Iface
 from thrift_generated.depositservice.deposit_service import Processor
 from inseecode_postalcode import *
 from urllib import unquote
-from templates import success_deposit_mail, deleting_deposit_mail
+from templates import success_deposit_mail, deleting_deposit_mail, success_deposit_mail_without_photos
 
 
 import firebase_admin
@@ -357,10 +357,15 @@ class DepositServiceHandler(Iface):
             subs['ad_title'] = title
             subs['ad_link'] = 'https://surfyn.fr' + announce_link_value.field
             subs['search_type'] = 'vendre' if data['search_type'] == 1 else 'louer'
-            imgs = [item[1] for item in images.items() if item[1]]
-            subs['image1'] = imgs[0]
-            subs['image2'] = imgs[1]
-            subs['image3'] = imgs[2]
+            if not data.has_key('VIDEO'):
+                imgs = [item[1] for item in images.items() if item[1]]
+                subs['image1'] = imgs[0]
+                subs['image2'] = imgs[1]
+                subs['image3'] = imgs[2]
+
+                template = success_deposit_mail
+            else:
+                template = success_deposit_mail_without_photos
 
             logging.info('Start sending confirmation mail')
             smtp_host_port = '{}:{}'.format(self.smtp_host, self.smtp_port)
@@ -368,7 +373,7 @@ class DepositServiceHandler(Iface):
             logging.info('Logging into SMTP Server')
             smtp_server.login(self.from_addr, self.password)
 
-            msg_to_send = re.sub(u'@@(.*?)@@', from_dict(subs), success_deposit_mail)
+            msg_to_send = re.sub(u'@@(.*?)@@', from_dict(subs), template)
             
             # recipients = []
             # recipients.append(user.email)

@@ -291,7 +291,7 @@ function generate_my_announce_page(data)
   {
 
       var card_col = createNode("div");
-      card_col.className = "col-md-6 col-lg-8 mb-3";
+      card_col.className = "col-md-6 col-lg-4 mb-3";
 
       var card = createNode("div");
       card.className = "card ml-0 h-100";
@@ -429,7 +429,7 @@ function detail_announce(event)
 function delete_announce(event)
 {
   d_url = 'https://surfyn.fr:7878/delete_announce?user_id=' + isConnectedUser() + '&ad_id=' + event.currentTarget.id;
-  //d_url = 'http://localhost:7878/delete_announce?user_id=' + isConnectedUser() + '&ad_id=' + event.currentTarget.id;
+  // d_url = 'http://localhost:7878/delete_announce?user_id=' + isConnectedUser() + '&ad_id=' + event.currentTarget.id;
 
   var loader = document.getElementById("ad_loader");
   loader.style.display = "";
@@ -475,7 +475,7 @@ fetch(url)
 });
 
 var url_ad = "https://surfyn.fr:7878/my_ad?userid="
-//var url_ad = "http://localhost:7878/my_ad?userid="
+// var url_ad = "http://localhost:7878/my_ad?userid="
 
 url_ad += userid;
 
