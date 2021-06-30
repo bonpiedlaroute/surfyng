@@ -838,7 +838,7 @@ function generate_summary_page(data, empty=false)
         ad_summary_container_div.appendChild(ad_summary_desc_div2);
 
         var ad_summary_desc_div3 = createNode("div");
-        ad_summary_desc_div3.className = "announce_summary_desc";
+        ad_summary_desc_div3.className = "announce_summary_desc_text_box";
         var ad_summary_desc_span3 = createNode("span");
         ad_summary_desc_span3.className = "sf_announce_summary_desc_text";
         if( data[i].hasOwnProperty('AD_TEXT_DESCRIPTION'))
