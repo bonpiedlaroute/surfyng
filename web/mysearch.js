@@ -291,7 +291,7 @@ function generate_my_announce_page(data)
   {
 
       var card_col = createNode("div");
-      card_col.className = "col-md-6 col-lg-4 mb-3";
+      card_col.className = "col-md-6 col-lg-8 mb-3";
 
       var card = createNode("div");
       card.className = "card ml-0 h-100";
