@@ -253,7 +253,9 @@ function connect_to_surfyn_with_google()
   {
     firebase.initializeApp(firebaseConfig);
   }
-
+  
+  // Save already written data
+  save_data()
   var provider = new firebase.auth.GoogleAuthProvider();
   provider.setCustomParameters({ prompt: 'select_account' });
 
@@ -278,7 +280,9 @@ function connect_to_surfyn_with_facebook()
   {
     firebase.initializeApp(firebaseConfig);
   }
-
+  
+  // Save already written data
+  save_data()
   var provider = new firebase.auth.FacebookAuthProvider();
   provider.setCustomParameters({ prompt: 'select_account' });
 
