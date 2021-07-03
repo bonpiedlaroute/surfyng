@@ -11,6 +11,7 @@ from email.header import Header
 from thrift.server import TServer
 from email.utils import formataddr
 from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 from thrift.protocol import TBinaryProtocol
 from firebase_admin import credentials, auth, storage
 from thrift.transport import TSocket, TTransport
@@ -21,6 +22,7 @@ from thrift_generated.depositservice.deposit_service import Iface
 from thrift_generated.depositservice.deposit_service import Processor
 from inseecode_postalcode import *
 from urllib import unquote
+from templates import success_deposit_mail, deleting_deposit_mail, success_deposit_mail_without_photos
 
 
 import firebase_admin
@@ -33,7 +35,13 @@ import logging
 import Queue
 import pytz
 import json
+import re
 
+def from_dict(dct):
+    def lookup(match):
+        key = match.group(1)
+        return dct[key] if key in dct else ''
+    return lookup
 
 class UserDeposit:
     def __init__(self):
@@ -344,22 +352,45 @@ class DepositServiceHandler(Iface):
             logging.info('Successful put announce {} in table {} and table {}'.format(
                 ID, self.deposit_tablename, self.summary_tablename))
             
+            subs = {}
+            subs['display_name'] = user.display_name
+            subs['ad_title'] = title
+            subs['ad_link'] = 'https://surfyn.fr' + announce_link_value.field
+            subs['search_type'] = 'vendre' if data['search_type'] == 1 else 'louer'
+            if not data.has_key('VIDEO'):
+                imgs = [item[1] for item in images.items() if item[1]]
+                subs['image1'] = imgs[0]
+                subs['image2'] = imgs[1]
+                subs['image3'] = imgs[2]
+
+                template = success_deposit_mail
+            else:
+                template = success_deposit_mail_without_photos
+
             logging.info('Start sending confirmation mail')
             smtp_host_port = '{}:{}'.format(self.smtp_host, self.smtp_port)
             smtp_server = smtplib.SMTP(smtp_host_port)
             logging.info('Logging into SMTP Server')
             smtp_server.login(self.from_addr, self.password)
 
-            msg_to_send = 'Votre annonce est en ligne sur Surfyn'
+            msg_to_send = re.sub(u'@@(.*?)@@', from_dict(subs), template)
             
-            recipients = []
-            recipients.append(user.email)
-            message = MIMEText(msg_to_send, _charset='utf-8')
-            message['Subject'] = 'Confirmation: Annonce deposee avec succes'
+            # recipients = []
+            # recipients.append(user.email)
+            message = MIMEMultipart('alternative')
+            content_text =  MIMEText('Votre annonce est en ligne sur Surfyn!', 'plain', _charset='utf-8')
+            content = MIMEText(msg_to_send, 'html', _charset='utf-8')
+
+            message['Subject'] = u'Votre annonce "{}" est en ligne'.format(title)
             message['From'] = formataddr((str(Header('Surfyn', 'utf-8')), self.from_addr))
             message['To'] = user.email
 
-            smtp_server.sendmail(self.from_addr, recipients, message.as_string())
+            message.attach(content_text)
+            message.attach(content)
+
+            logging.info("Send mail to {}.".format(user.email))
+
+            smtp_server.sendmail(self.from_addr, user.email, message.as_string())
 
             smtp_server.quit()
             
@@ -387,6 +418,7 @@ class DepositServiceHandler(Iface):
                 @user_id: User ID of the owner of ad
                 @announce_id: ad ID
         """
+        user = auth.get_user(user_id)
 
         id_value = ttypes.ValueType()
         id_value.field = announce_id
@@ -403,6 +435,11 @@ class DepositServiceHandler(Iface):
         
         attributes_to_get = {}
         
+        # ANNOUNCE_TITLE
+        announce_title_value = ttypes.ValueType()
+        announce_title_value.fieldtype = ttypes.Type.STRING
+        attributes_to_get['ANNOUNCE_TITLE'] = announce_title_value
+
         # ANNOUNCE_IMAGE = IMAGES_LIST
         announce_image_value = ttypes.ValueType()
         announce_image_value.fieldtype = ttypes.Type.STRING
@@ -458,6 +495,59 @@ class DepositServiceHandler(Iface):
                 blob = bucket.blob(videoname)
                 blob.delete()
             logging.info('Successfully deleted medias')
+
+            now = datetime.datetime.utcnow()
+            
+            months = {
+                1: "Janvier",
+                2: "Fevrier",
+                3: "Mars",
+                4: "Avril",
+                5: "Mai",
+                6: "Juin",
+                7: "Juillet",
+                8: "Aout",
+                9: "Septembre",
+                10: "Octobre",
+                11: "Novembre",
+                12: "Decembre"
+            }
+
+            subs = {}
+            subs['display_name'] = user.display_name
+            subs['ad_title'] = announce['ANNOUNCE_TITLE']
+            subs['date'] = '{} {} {}'.format(now.day, months[now.month], now.year)
+            subs['hour'] = now.strftime('%H:%M')
+
+            logging.info('Start sending deletion mail')
+            smtp_host_port = '{}:{}'.format(self.smtp_host, self.smtp_port)
+            smtp_server = smtplib.SMTP(smtp_host_port)
+            logging.info('Logging into SMTP Server')
+            smtp_server.login(self.from_addr, self.password)
+
+            msg_to_send = re.sub(u'@@(.*?)@@', from_dict(subs), deleting_deposit_mail)
+            
+            # recipients = []
+            # recipients.append(user.email)
+            message = MIMEMultipart('alternative')
+            content_text =  MIMEText(u'Suppression de votre annonce sur Surfyn!', 'plain', _charset='utf-8')
+            content = MIMEText(msg_to_send, 'html', _charset='utf-8')
+
+            message['Subject'] = 'Suppression de votre annonce sur Surfyn'
+            message['From'] = formataddr((str(Header('Surfyn', 'utf-8')), self.from_addr))
+            message['To'] = user.email
+
+            message.attach(content_text)
+            message.attach(content)
+
+            logging.info("Send mail to {}.".format(user.email))
+
+            smtp_server.sendmail(self.from_addr, user.email, message.as_string())
+
+            smtp_server.quit()
+            
+            logging.info('Email sent successfully')
+
         else:
             logging.error(result.error)
             return_value.success = False
