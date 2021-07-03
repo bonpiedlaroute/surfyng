@@ -117,6 +117,9 @@ class Serializer:
 
       return self.client.put(self.tablename, values)
 
+   def send_data(self, values):
+      return self.client.put(self.tablename, values)
+
    def scanidByCityAndAdSource(self, city, source):
       IDs = []
       filterexpression = "CITY = :ct and ANNOUNCE_SOURCE = :as"

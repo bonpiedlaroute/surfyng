@@ -9,24 +9,27 @@ from hash_id import hash_id
 from url_builder import buildIdalUrl
 from search_features import getEfficityPropertiesId, APART_ID, HOUSE_ID, BUY_ID
 from unidecode import unidecode
-from Serializer import Serializer
+from Serializer import Serializer, Type, ValueType
 from requests.auth import HTTPBasicAuth
 from pprint import pprint
 
+
+import re
 import os
 import sys
+import pytz
 import json
 import urllib
 import configparser
-import re
 import requests
+import datetime
 
 config_idal = configparser.ConfigParser()
 config_idal.read('config.ini')
 
 ip = config_idal['COMMON']['db_access_ip']
 port = int(config_idal['COMMON']['db_access_port'])
-tablename = config_idal['COMMON']['tablename']
+tablename = config_idal['APIMO']['tablename']
 
 idal_id = config_idal['APIMO']['idal_id']
 url = buildIdalUrl(idal_id)
@@ -34,89 +37,201 @@ url = buildIdalUrl(idal_id)
 user = config_idal['APIMO']['provider']
 password = config_idal['APIMO']['token']
 
+print('Fetch properties')
 response = requests.get(url, auth=HTTPBasicAuth(user, password))
+print('Fetch ended')
+
+print('Fetch units catalog')
 units_response = requests.get(
-    'https://api.apimo.pro/catalogs/unit_area', auth=HTTPBasicAuth(user, password))
+	'https://api.apimo.pro/catalogs/unit_area', auth=HTTPBasicAuth(user, password)).json()
+print('Fetch ended')
+
+print('Fetch heating type catalog')
 heating_response = requests.get(
-    'https://api.apimo.pro/catalogs/property_heating_type', auth=HTTPBasicAuth(user, password))
+	'https://api.apimo.pro/catalogs/property_heating_type', auth=HTTPBasicAuth(user, password)).json()
+print('Fetch ended')
+
+print('Fetch heating access catalog')
 heating_access_response = requests.get(
-    'https://api.apimo.pro/catalogs/property_heating_access', auth=HTTPBasicAuth(user, password))
+	'https://api.apimo.pro/catalogs/property_heating_access', auth=HTTPBasicAuth(user, password)).json()
+print('Fetch ended')
+
+print('Fetch floor catalog')
 floor_response = requests.get(
-    'https://api.apimo.pro/catalogs/property_floor', auth=HTTPBasicAuth(user, password))
+	'https://api.apimo.pro/catalogs/property_floor', auth=HTTPBasicAuth(user, password)).json()
+print('Fetch ended')
 
 data = response.json()
 
 
 def main():
-    city = sys.argv[1]
-    region = config_idal[city.upper()]['region']
+	city = sys.argv[1]
+	# region = config_idal[city.upper()]['region']
 
-    announces_count = data['total_items']
-    serializer = Serializer(ip, port, tablename)
-    ads = serializer.scanidByCityAndAdSource(city, "idal")
+	announces_count = data['total_items']
+	print('{} total items'.format(announces_count))
+	serializer = Serializer(ip, port, tablename)
+	ads = serializer.scanidByCityAndAdSource(city, "idal")
 
-    announce = dict()
+	announce = dict()
 
-    for ad in data['properties']:
-        region = ad['region']['name']
-        language = ad['comments']['language']
-        prop_type = ad['type']
-        search_type = ad['category']
+	for ad in data['properties']:
+		if ad['region']:
+			region = ad['region']['name']
+		language = ad['comments'][0]['language']
+		prop_type = ad['type']
+		search_type = ad['category']
+		# region == 'Hauts-de-Seine'
+		search_filter = language == 'fr' and prop_type in (
+			1, 2) and search_type in (1, 2) and city.upper() in ad['city']['name'].upper()
 
-        search_filter = region == 'Hauts-de-Seine' and language == 'fr' and prop_type in (
-            1, 2) and search_type in (1, 2)
+		# Region
+		if search_filter:
+			id_value = ValueType()
+			id_value.field = str(int(hash_id(
+				'https://www.idal-agenceimmobiliere.com/fr/' + str(ad['id']))))
+			id_value.fieldtype = Type.NUMBER
+			announce['ID'] = id_value
 
-        # Region
-        if search_filter:
-			announce['ID'] = hash_id(str(ad['id']) + ad['pictures'][0]['url'])
-			announce['ANNOUNCE_TITLE'] = ad['comments']['title']
-			announce['ANNOUNCE_SOURCE'] = 'idal/apimo'
-			announce['CITY'] = ad['city']['name']
-			announce['AD_TEXT_DESCRIPTION'] = ad['comments']['comment']
-			announce['PROPERTY_TYPE'] = ad['type']
-			announce['REGION'] = region
-			announce['SEARCH_TYPE'] = search_type
-			announce['ANNOUNCE_IMAGE'] = ad['pictures'][0]['url']
+			announce_link_value =  ValueType()
+			announce_link_value.field = 'https://www.idal-agenceimmobiliere.com/fr/'
+			announce_link_value.fieldtype =  Type.STRING
+			announce['ANNOUNCE_LINK'] = announce_link_value
+
+			announce_title_value = ValueType()
+			announce_title_value.field = ad['comments'][0]['title']
+			announce_title_value.fieldtype = Type.STRING
+			announce['ANNOUNCE_TITLE'] = announce_title_value
+
+			announce_source_value = ValueType()
+			announce_source_value.field = 'idal/apimo'
+			announce_source_value.fieldtype = Type.STRING
+			announce['ANNOUNCE_SOURCE'] = announce_source_value
+
+			city_value = ValueType()
+			city_value.field = ad['city']['name']
+			city_value.fieldtype = Type.STRING
+			announce['CITY'] = city_value
+
+			description_value = ValueType()
+			description_value.field = ad['comments'][0]['comment']
+			description_value.fieldtype = Type.STRING
+			announce['AD_TEXT_DESCRIPTION'] = description_value
+
+			prop_type_value = ValueType()
+			prop_type_value.fieldtype = Type.STRING
+			if ad['type'] == APART_ID:
+				prop_type_value.field = 'Appartement'
+			else:
+				prop_type_value.field = 'Maison'
+			announce['PROPERTY_TYPE'] = prop_type_value
+
+			region_value = ValueType()
+			region_value.field = region
+			region_value.fieldtype = Type.STRING
+			announce['REGION'] = region_value
+
+			search_type_value = ValueType()
+			search_type_value.fieldtype = Type.STRING
+			if search_type == BUY_ID:
+				search_type_value.field = 'For sale'
+			else:
+				search_type_value.field = 'For rent'
+			announce['SEARCH_TYPE'] = search_type_value
+
+			announce_image_value = ValueType()
+			announce_image_value.field = ad['pictures'][0]['url']
+			announce_image_value.fieldtype = Type.STRING
+			announce['ANNOUNCE_IMAGE'] = announce_image_value
+
 			# Get images
 			images = {}
 			for picture in ad['pictures']:
 				images['image{}'.format(picture['rank'])] = picture['url']
-			announce['IMAGE'] = str(images)
-			announce['PRICE'] = ad['price']['value']
-			# For surface we must consult units_response to get the right unit of area
-			announce['SURFACE'] = ad['area']['value']
-			announce['ROOMS'] =  ad['rooms']
-			announce['BEDROOMS'] = ad['bedrooms']
 			
+			images_value = ValueType()
+			images_value.field = str(images) 
+			images_value.fieldtype = Type.STRING
+			announce['IMAGE'] = images_value
+
+			price_value = ValueType()
+			price_value.field = str(ad['price']['value'])
+			price_value.fieldtype = Type.NUMBER
+			announce['PRICE'] = price_value
+
+			# For surface we must consult units_response to get the right unit of area
+			surface_value = ValueType()
+			surface_value.field = str(ad['area']['value'])
+			surface_value.fieldtype = Type.NUMBER
+			announce['SURFACE'] = surface_value
+
+			rooms_value = ValueType()
+			rooms_value.field = str(ad['rooms'])
+			rooms_value.fieldtype = Type.NUMBER
+			announce['ROOMS'] = rooms_value
+
+			if ad['bedrooms']:
+				bedrooms_value = ValueType()
+				bedrooms_value.field = str(ad['bedrooms'])
+				bedrooms_value.fieldtype = Type.STRING
+				announce['BEDROOMS'] = bedrooms_value
+
 			if ad['construction']['construction_year']:
-				announce['CONSTRUCTION_YEAR'] = ad['construction']['construction_year']
+				construction_value = ValueType()
+				construction_value.field = str(ad['construction']['construction_year'])
+				construction_value.fieldtype = Type.STRING
+				announce['CONSTRUCTION_YEAR'] = construction_value
+
 			if ad['heating']['type']:
+				heating_value = ValueType()
 				heating = heating_response[ad['heating']['type']-1]['name']
-				announce['TYPE_OF_HEATING'] =  heating
 				if ad['heating']['access']:
-					access = heating_access_response[ad['heating']['access']-1]['name']
-					heating += ' {}'.format(access)
+					access = heating_access_response[ad['heating']
+													 ['access']-1]['name']
+					heating += '- {}'.format(access)
+				heating_value.field = str(heating)
+				heating_value.fieldtype = Type.STRING
+				announce['TYPE_OF_HEATING'] = heating_value
+
 			# Get cave
 			cellars = 0
 			for area in ad['areas']:
 				if area['type'] == 6:
 					cellars += 1
+			cellar_value = ValueType()
 			if cellars:
-				announce['CELLAR'] =  str(cellars)
+				cellar_value.field = str(cellars)
+			else:
+				cellar_value.field = 'Non'
+			cellar_value.fieldtype = Type.STRING
+			announce['CELLAR'] = cellar_value
+
 			# Get floor
 			if ad['floor']['value']:
-				announce['FLOOR'] = ad['floor']['value']
-			
+				floor_value = ValueType()
+				floor_value.field = str(ad['floor']['value'])
+				floor_value.fieldtype = Type.STRING
+				announce['FLOOR'] = floor_value
+
 			# Get parking
 			parkings = 0
 			for area in ad['areas']:
 				if area['type'] == 5:
 					parkings += 1
+			parking_value = ValueType()
 			if parkings:
-				announce['PARKING'] = str(parkings)
-			
+				parking_value.field = str(parkings)
+			else:
+				parking_value.field = 'Non'
+			parking_value.fieldtype = Type.STRING
+			announce['PARKING'] = parking_value
+
 			if prop_type == 2:
-				announce['LAND_SURFACE'] = ad['area']['total']
+				if ad['area']['total']:
+					land_surface = ValueType()
+					land_surface.field = str(ad['area']['total'])
+					land_surface.fieldtype = Type.STRING
+					announce['LAND_SURFACE'] = land_surface
 
 			# Get balcony
 			balcony = False
@@ -124,177 +239,43 @@ def main():
 				if area['type'] == 43:
 					balcony = True
 					break
+			balcony_value = ValueType()
 			if balcony:
-				announce['BALCONY'] = 'Oui'
+				balcony_value.field = 'Oui'
 			else:
-				announce['BALCONY'] = 'Non'
-			
+				balcony_value.field = 'Non'
+			balcony_value.fieldtype = Type.STRING
+			announce['BALCONY'] = balcony_value
+
 			if ad['address']:
-				announce['ADDRESS'] = ad['address']
+				address_value = ValueType()
+				address_value.field = ad['address']
+				address_value.fieldtype = Type.STRING
+				announce['ADDRESS'] = address_value
+
 			if ad['longitude'] and ad['latitude']:
-				announce['LOCATION'] = "{}, {}".format(ad['longigute'], ad['latitude'])
-			pprint(announce)
+				location_value = ValueType()
+				location_value.field = "{}, {}".format(ad['longitude'], ad['latitude'])
+				location_value.fieldtype = Type.STRING
+				announce['LOCATION'] = location_value
 
+			utc_now = datetime.datetime.now(pytz.utc)
+			utc_now = utc_now.strftime("%Y-%m-%dT%H:%M:%S")
 
+			timestamp_value = ValueType()
+			timestamp_value.field = utc_now
+			timestamp_value.fieldtype = Type.STRING
+
+			announce['FIRST_TIMESTAMP'] = timestamp_value
+			announce['TIMESTAMP'] = timestamp_value
+
+			images_count_value = ValueType()
+			images_count_value.field = str(len(ad['pictures']))
+			images_count_value.fieldtype = Type.STRING
+			announce['IMAGE_COUNT'] = images_count_value
+
+			ret = serializer.send_data(announce)
+			print(ret)
 
 if __name__ == '__main__':
-    main()
-
-# class EfficitySpider(scrapy.Spider):
-# 	name = 'efficity'
-# 	def __init__(self, city='', **kwargs):
-
-# 		self.city = city
-# 		self.images_folder_name = config_efficity[city.upper()]['images']
-# 		self.region = config_efficity[city.upper()]['region']
-
-# 		if not os.path.exists(self.images_folder_name):
-# 			os.mkdir(self.images_folder_name)
-
-# 		self.announces_count = 0
-# 		self.serializer = Serializer(ip, port, tablename)
-# 		self.ads = self.serializer.scanidByCityAndAdSource(city, "efficity")
-
-# 	def start_requests(self):
-# 		prop_list = [APART_ID, HOUSE_ID]
-
-# 		for ptype in prop_list:
-# 			announcers_id = getEfficityPropertiesId(ptype)
-
-# 			url = buildEfficityUrl(self.city, announcers_id)
-# 			yield scrapy.Request(url=url, callback=lambda response, ptype = ptype: self.parse(response, ptype, 1))
-
-# 	def parse(self, response, ptype, nextpage):
-# 		base_url = 'https://www.efficity.com'
-
-# 		links = response.css('.programs-list-item-visual a::attr("href")').getall()
-
-# 		for link in links:
-# 			true_link = (base_url + link).encode('utf-8', 'ignore')
-# 			ID = hash_id(true_link)
-
-# 			if str(ID) not in self.ads:
-# 				yield scrapy.Request(url=true_link, callback=lambda response, url=true_link, ptype=ptype: self.parse_announce(response, url, ptype))
-# 			else:
-# 				self.serializer.updateTimeStamp(ID)
-
-# 		href = response.xpath('/html/body/div[2]/ul/li[3]/a/@href').get()
-# 		if nextpage == 1:
-# 			if href is not None:
-# 				next_link = base_url + href
-# 			else:
-# 				return
-
-# 			if next_link:
-# 				yield scrapy.Request(url=next_link, callback=lambda response, ptype=ptype: self.parse(response, ptype, 2))
-# 		else:
-# 			return
-
-# 	def parse_announce(self, response, url, ptype):
-# 		def extract_css_query(query):
-# 			return response.css(query).get(default='')
-# 		def extract_css_equip(query):
-# 			items = []
-# 			it = None
-# 			for item in response.css(query).getall():
-# 				it = unidecode(' '.join(item.split()))
-# 				if it:
-# 					items.append(it)
-# 			return items
-
-# 		data = dict()
-# 		price = extract_css_query('.program-details-price::text')
-
-# 		if price:
-# 			data['PRICE'] = price.encode('ascii', 'ignore').replace('*', '').strip()
-# 		else:
-# 			return
-
-# 		area = extract_css_query('h1.program-details-title::text')
-# 		if area:
-# 			data['SURFACE'] = area.split('-')[1].encode('ascii', 'ignore').replace('m', '').strip()
-# 		else:
-# 			return
-
-# 		rooms = extract_css_query('h1.program-details-title::text')
-# 		if rooms:
-# 			data['ROOMS'] = rooms.split()[1].encode('ascii', 'ignore')
-# 		else:
-# 			return
-
-# 		description = response.xpath('/html/body/section[1]/div[4]/div/div/div[1]/div[3]/div/p/text()').get()
-# 		description = description.split('<br>')[0].strip()
-# 		data['AD_TEXT_DESCRIPTION'] = description
-
-# 		if 'balcon' in description.lower():
-# 			data['BALCONY'] = '1'
-
-# 		equipments = extract_css_equip('.program-details-features li::text')
-# 		features = map(lambda item: unidecode(item), response.css('.program-details-sidebar ul li::text').getall())
-
-# 		# First step data extraction
-# 		for feature in equipments:
-# 			if 'chambre' in feature.lower():
-# 				data['BEDROOMS'] = feature.split()[0]
-# 			if 'parking' in feature.lower():
-# 				data['PARKING'] = '1'
-
-# 		parsed_features = {}
-# 		linear_features = []
-
-# 		# parsing
-# 		for feature in features:
-# 			data_splited = feature.split(':')
-# 			if len(data_splited) == 2:
-# 				key = data_splited[0].strip()
-# 				value = data_splited[1].strip()
-# 				parsed_features[key] = value
-# 			else:
-# 				linear_features.append(feature)
-
-# 		# Second step extraction
-# 		for key in parsed_features.keys():
-# 			heating = ""
-# 			if 'origine du chauffage' in key.lower():
-# 				heating = parsed_features[key]
-# 				data['TYPE_OF_HEATING'] = heating
-
-# 			if 'type du chauffage' in key.lower():
-# 				heating += ' + {}'.format(parsed_features[key])
-# 				data['TYPE_OF_HEATING'] = heating
-
-# 		# Third step extraction
-# 		for feature in linear_features:
-# 			if 'ascenseur' in feature.lower():
-# 				data['LIFT'] = '1'
-
-# 			if  'construit en' in feature.lower():
-# 				data['CONSTRUCTION_YEAR'] = re.findall(r'\d+', feature.lower())[-1]
-
-# 		# Images
-# 		images = map(lambda item: 'https:' + unidecode(item), response.css('img.d-none.d-sm-block.img-fluid::attr("src")').getall())
-
-# 		ID = hash_id(url)
-
-# 		images_count = 1
-# 		for img in images:
-# 			image_name = os.path.join(self.images_folder_name, str(ID) + '_' + str(images_count) + '.jpg')
-# 			urllib.urlretrieve(img, image_name)
-# 			images_count += 1
-
-# 		images_count = len(images)
-
-# 		json_data = json.dumps(data)
-# 		announce_image = ''
-# 		if images:
-# 			announce_image = images[0]
-
-
-# 		text_title = response.xpath('//title/text()').get()
-# 		announce_title = text_title
-# 		ret = self.serializer.send(ID, ptype, json_data, self.city, self.region, url, 'efficity', announce_title, BUY_ID, announce_image, images_count)
-# 		print(ret)
-# 		self.announces_count += 1
-
-# 	def closed(self, reason):
-# 		print('Announces found: {}\n'.format(self.announces_count))
+	main()

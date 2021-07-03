@@ -9,3 +9,4 @@ node_modules/
 surfyn-firebase-adminsdk.json
 *.sh
 sf_services/deposit/config.ini
+config.ini
