@@ -143,11 +143,10 @@
     <div class="sf_line row mx-auto">
       <a style="font-size:18px; color:black;" class="mx-auto">Adresse <span style="color: #53617c">*</span></a>
     </div>
-    </div>
-    <div style="height:120px;" class="row mx-auto">
+    <div style="height:180px;" class="row mx-auto">
       <div class="deposit_city mx-auto">
         <div
-          style="width:100%;height:120px;display:flex; justify-content:center;align-items:center;flex-direction:row;">
+          style="width:100%;height:180px;display:flex; justify-content:center;align-items:center;flex-direction:row;">
           <div class="estimate_place_left"></div>
           <div class="estimate_city">
             <div class="autocomplete" style="width:100%;">
@@ -156,6 +155,10 @@
               </input>
             </div>
             <div> <a id="address_error_message"></a></div>
+            <div class="feedback_box good_feedback" style="width:100%;" id="city_check_msg">
+              <a style="color:#61AEB5;font-weight:bold" id="msg_type">Info</a>
+              <a id="feedback_msg"> : Votre adresse ne sera pas affichée sur l'annonce, elle permettra de situer votre bien sur une carte.</a>
+            </div>
           </div>
           <div class="estimate_place_right"></div>
         </div>
@@ -432,7 +435,7 @@
     <div class="sf_line row mx-auto">
       <a style="font-size:18px; color:black;" class="mx-auto">Vos coordonnées</a>
     </div>
-    </div>
+    
     <div style="height:180px;" class="row mx-auto">
       <div class="deposit_city mx-auto">
         <div
@@ -447,7 +450,7 @@
             <div> <a id="phone_error_message"></a></div>
             <div class="feedback_box good_feedback" style="width:100%;" id="city_check_msg">
               <a style="color:#61AEB5;font-weight:bold" id="msg_type">Info</a>
-              <a id="feedback_msg"> : Vos coordonnées ne seront pas affichés sur l'annonce</a>
+              <a id="feedback_msg"> : Vos coordonnées ne seront pas affichés sur l'annonce.</a>
             </div>
           </div>
           <div class="estimate_place_right"></div>

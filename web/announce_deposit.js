@@ -201,7 +201,7 @@ function validate_second_step() {
                     if (isEmpty(phoneInput.value) === false)
                         dataParams["phone"] = phoneInput.value;
 
-                    if (isEmpty(construction_year) === false)
+                    if (isEmpty(constructionYearInput.value) === false)
                         dataParams["construction_year"] = constructionYearInput.value;
 
                     dataParams["address"] = addressInput.value;
