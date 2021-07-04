@@ -39,17 +39,7 @@ console.log(url_dt);
 
 
 function generate_details_page_surfyn(data) {
-    if (data == undefined) {
-        document.title = "Annonce introuvable - Surfyn";
-        document.getElementsByTagName('meta')["description"].content = "Cette annonce n'est plus disponible";
-        var announces_found = document.getElementById("nb_announces_found");
-        announces_found.innerHTML = "Cette annonce n'est plus disponible";
-        const metaRobots = document.createElement('meta');
-        metaRobots.name = 'robots';
-        metaRobots.content = 'noindex';
-        document.head.appendChild(metaRobots);
-    }
-    else {
+
         var ismobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
 
         // Page Title
@@ -804,5 +794,4 @@ function generate_details_page_surfyn(data) {
         forPuppeteer.style.visibility = 'hidden';
         header_content.appendChild(forPuppeteer);
 
-    }
 }
