@@ -484,7 +484,7 @@ function generate_details_page(data, surfyn = false) {
         det_location_text_div.style.height = "50%";
 
         var det_location_text_span = createNode("span");
-        det_location_text_span.className = "no_select";
+        det_location_text_span.className = "no_select sf_det_location_text_size";
         det_location_text_span.style.fontWeight = "bold";
 
         if (data[i].hasOwnProperty('LOCATION'))
@@ -492,9 +492,8 @@ function generate_details_page(data, surfyn = false) {
         else
           det_location_text_span.style.color = "lightgray";
 
-        if (ismobile)
-          det_location_text_span.style.fontSize = "12px";
-        det_location_text_span.innerHTML = "position";
+
+        det_location_text_span.innerHTML = "Localisation indiquée";
 
         det_location_text_div.appendChild(det_location_text_span);
         det_location_container_div.appendChild(det_location_text_div);

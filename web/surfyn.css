@@ -1809,6 +1809,9 @@ input:checked+.slider:before {
   visibility: visible;
   opacity: 1;
 }
+.sf_det_location_text_size {
+  font-size:12px;
+}
 
 @media (max-width:1024px) {
     .search_type_text {
@@ -2523,6 +2526,9 @@ input:checked+.slider:before {
         background-repeat: no-repeat;
         background-size: cover;
         background-position: left;
+    }
+    .sf_det_location_text_size {
+      font-size:10px;
     }
 }
 /* end of @media (max-width:1024px)  */
