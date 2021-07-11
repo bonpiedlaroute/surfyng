@@ -176,13 +176,17 @@ function validate_first_step() {
     }
 }
 
-function validate_second_step() {
+async function validate_second_step() {
 
     if (checkAddress()) {
         if (checkDescription()) {
             if ((isAllImagesSet() && !videoInput.checked) || (videoInput.checked && dataParams.hasOwnProperty("video"))) {
                 if (checkPhone()) {
                     sessionStorage.setItem("address", addressInput.value);
+                    var location = await getLocation(addressInput.value);
+                    if (location) {
+                        sessionStorage.setItem('location', location);
+                    }
                     sessionStorage.setItem("description", descriptionInput.value)
                     sessionStorage.setItem("parking", parkingInput.checked ? parkingNumberInput.value : 'Non');
                     sessionStorage.setItem("cellar", cellarInput.checked ? cellarNumberInput.value : 'Non');
@@ -205,6 +209,7 @@ function validate_second_step() {
                         dataParams["construction_year"] = constructionYearInput.value;
 
                     dataParams["address"] = addressInput.value;
+                    dataParams["location"] = sessionStorage.getItem("location");
                     dataParams["description"] = descriptionInput.value;
                     dataParams["parking"] = parkingInput.checked ? parkingNumberInput.value : 'Non';
                     dataParams["cellar"] = cellarInput.checked ? cellarNumberInput.value : 'Non';

@@ -23,7 +23,7 @@ function createNode(element) {
 }
 
 const url_dt = 'https://surfyn.fr:7878/search/ad?id='+ window.location.search.substr(1);
-//const url_dt = 'http://127.0.0.1:7878/search/ad?id=' + window.location.search.substr(1);
+// const url_dt = 'http://127.0.0.1:7878/search/ad?id=' + window.location.search.substr(1);
 
 console.log(url_dt);
 
@@ -36,7 +36,6 @@ console.log(url_dt);
 //     .catch(function (error) {
 //         console.log(error);
 //     });
-
 
 function generate_details_page_surfyn(data) {
     if (data == undefined) {
@@ -144,8 +143,7 @@ function generate_details_page_surfyn(data) {
                 var carousel_list = createNode("ol");
                 carousel_list.className = "carousel-indicators";
 
-                if(!data[i].hasOwnProperty('VIDEO'))
-                {
+                if (!data[i].hasOwnProperty('VIDEO')) {
 
                     var images = data[i].ANNOUNCE_IMAGE.replaceAll('\'', '\"');
                     images = images.replaceAll('u\"', '\"');
@@ -154,7 +152,7 @@ function generate_details_page_surfyn(data) {
                     var counter = 1;
 
                     for (image in images) {
-                        if(images[image] != "") {
+                        if (images[image] != "") {
                             var list_item = createNode("li")
                             list_item.setAttribute("data-target", "#myCarousel");
                             list_item.setAttribute("data-slide", counter.toString());
@@ -233,8 +231,7 @@ function generate_details_page_surfyn(data) {
 
                     container.appendChild(carousel);
                 }
-                else
-                {
+                else {
                     var video_container = createNode('div');
                     video_container.className = "embed-responsive embed-responsive-16by9";
 
@@ -613,6 +610,26 @@ function generate_details_page_surfyn(data) {
                 others_details_container.appendChild(others_details_info_container);
                 container.appendChild(others_details_container);
 
+                // location
+                if (data[i].hasOwnProperty('LOCATION')) {
+                    var location_container = createNode("div");
+                    location_container.className = "w-100 mt-5";
+
+                    var location_title = createNode("h2");
+                    location_title.style = "color: #3a838a";
+                    location_title.innerHTML = "LOCATION";
+
+                    location_container.appendChild(location_title);
+
+                    var map_container = createNode("div");
+                    map_container.id = "map";
+                    map_container.style = "height: 400px; width: 100%;";
+
+                    location_container.appendChild(map_container);
+                    container.appendChild(location_container);
+                }
+
+
                 // Side menu
                 // var side_container = document.getElementById("side_container");
 
@@ -748,6 +765,13 @@ function generate_details_page_surfyn(data) {
                 details_card.appendChild(share_container);
                 side_container.appendChild(details_card);
 
+                if (data[i].hasOwnProperty('LOCATION')) {
+                    var lat = data[i].LOCATION.split(';')[0].split('=')[1];
+                    var lon = data[i].LOCATION.split(';')[1].split('=')[1];
+                    draw_map(parseFloat(lat), parseFloat(lon));
+                }
+                // Generate map
+
                 // Patners title
                 // var partners_title = createNode("h4");
                 // partners_title.style = "color: #3a838a";
@@ -786,7 +810,7 @@ function generate_details_page_surfyn(data) {
 
                 similar_title = createNode("h2");
                 similar_title.style = "color: #3a838a";
-                similar_title.innerHTML = (data.length-1) + " annonces identiques publiées sur d'autres plateformes";
+                similar_title.innerHTML = (data.length - 1) + " annonces identiques publiées sur d'autres plateformes";
 
                 similar_container.appendChild(similar_title);
 
@@ -803,6 +827,5 @@ function generate_details_page_surfyn(data) {
         forPuppeteer.setAttribute("id", "prerendered-page");
         forPuppeteer.style.visibility = 'hidden';
         header_content.appendChild(forPuppeteer);
-
     }
 }

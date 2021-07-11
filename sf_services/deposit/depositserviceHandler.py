@@ -295,6 +295,13 @@ class DepositServiceHandler(Iface):
         address_value.fieldtype = ttypes.Type.STRING
         values['ADDRESS'] = address_value
 
+        # LOCATION
+        if data.has_key('location'):
+            location_value = ttypes.ValueType()
+            location_value.field = data['location']
+            location_value.fieldtype = ttypes.Type.STRING
+            values['LOCATION'] = location_value
+            
         # SOURCE LOGO
         source_logo_value = ttypes.ValueType()
         source_logo_value.field = "data/surfyn.svg"
@@ -488,7 +495,7 @@ class DepositServiceHandler(Iface):
                         try:
                             blob.delete()
                         except NotFound:
-                            logging.info('This media is already deleted.')
+                            logging.info('This media is already deleted: {}.'.format(filename))
             elif announce.has_key('VIDEO'):
                 videoname = announce['VIDEO']
                 videoname = unquote(videoname)
