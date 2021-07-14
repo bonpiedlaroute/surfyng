@@ -655,14 +655,27 @@ function generate_summary_page(data, empty=false)
   {
     if (!empty)
     {
-        announces_found.innerHTML = data.length
+        // first version title
+        /*announces_found.innerHTML = data.length
         announces_found.innerHTML += data.length == 1 ? " annonce ": " annonces ";
         announces_found.innerHTML += (split_propertyType.indexOf("1") !== -1 || split_propertyType.indexOf("3") !== -1) ? "d'": "de "
         announces_found.innerHTML += propertyType + rooms_text + " à ";
         announces_found.innerHTML += searchType == 1 ? "vendre à " : "louer à ";
         announces_found.innerHTML += search_city;
 
+        announces_found.innerHTML += " (" +postalcode+")";*/
+        announces_found.innerHTML = isFlat ? "Appartement " : "Maison ";
+        announces_found.innerHTML += rooms_text;
+        announces_found.innerHTML += searchType == 1 ? " à vendre ": " à louer ";
+        announces_found.innerHTML += search_city;
         announces_found.innerHTML += " (" +postalcode+")";
+
+        announces_found.innerHTML += ": ";
+        announces_found.innerHTML += data.length;
+        announces_found.innerHTML += data.length == 1 ? " annonce ": " annonces ";
+        announces_found.innerHTML += data.length == 1 ? " immobilière": " immobilières";
+
+
         document.title = announces_found.innerHTML;
         document.title +=" - Surfyn";
     }

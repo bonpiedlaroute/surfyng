@@ -152,11 +152,30 @@ if (!puppeter) {
   fetch(url)
     .then(function (resp) { return resp.json(); })
     .then(function (data) {
-      if (data[0].hasOwnProperty("AD_STATUS"))
-        generate_details_page_surfyn(data);
-      else
-        generate_details_page(data);
+      if (data.length == 0) {
+        document.title = "Annonce introuvable - Surfyn";
+        document.getElementsByTagName('meta')["description"].content = "Cette annonce n'est plus disponible";
+        var announces_found = document.getElementById("nb_announces_found");
+        announces_found.innerHTML = "Cette annonce n'est plus disponible";
+        const metaRobots = document.createElement('meta');
+        metaRobots.name = 'robots';
+        metaRobots.content = 'noindex';
+        document.head.appendChild(metaRobots);
 
+        var header_content = document.getElementById("header-content");
+
+
+        var forPuppeteer = document.createElement("div");
+        forPuppeteer.setAttribute("id", "prerendered-page");
+        forPuppeteer.style.visibility = 'hidden';
+        header_content.appendChild(forPuppeteer);
+      }
+      else {
+        if (data[0].hasOwnProperty("AD_STATUS"))
+          generate_details_page_surfyn(data);
+        else
+          generate_details_page(data);
+      }
     })
     .catch(function (error) {
       console.log(error);
@@ -166,17 +185,6 @@ if (!puppeter) {
 
 
 function generate_details_page(data, surfyn = false) {
-  if (data.length == 0) {
-    document.title = "Annonce introuvable - Surfyn";
-    document.getElementsByTagName('meta')["description"].content = "Cette annonce n'est plus disponible";
-    var announces_found = document.getElementById("nb_announces_found");
-    announces_found.innerHTML = "Cette annonce n'est plus disponible";
-    const metaRobots = document.createElement('meta');
-    metaRobots.name = 'robots';
-    metaRobots.content = 'noindex';
-    document.head.appendChild(metaRobots);
-  }
-  else {
     var nb_room = "";
 
     var ismobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
@@ -476,7 +484,7 @@ function generate_details_page(data, surfyn = false) {
         det_location_text_div.style.height = "50%";
 
         var det_location_text_span = createNode("span");
-        det_location_text_span.className = "no_select";
+        det_location_text_span.className = "no_select sf_det_location_text_size";
         det_location_text_span.style.fontWeight = "bold";
 
         if (data[i].hasOwnProperty('LOCATION'))
@@ -484,9 +492,8 @@ function generate_details_page(data, surfyn = false) {
         else
           det_location_text_span.style.color = "lightgray";
 
-        if (ismobile)
-          det_location_text_span.style.fontSize = "12px";
-        det_location_text_span.innerHTML = "position";
+
+        det_location_text_span.innerHTML = "Localisation indiquée";
 
         det_location_text_div.appendChild(det_location_text_span);
         det_location_container_div.appendChild(det_location_text_div);
@@ -1238,7 +1245,7 @@ function generate_details_page(data, surfyn = false) {
     linkedin_icon.style.color = "white";
     var youtube_icon = document.getElementById("youtube-icon");
     youtube_icon.style.color = "white";
-  }
+
 
 }
 
