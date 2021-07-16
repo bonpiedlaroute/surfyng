@@ -7,21 +7,22 @@ sys.path.append('../../bot')
 sys.path.append('../../bot/thrift_generated')
 
 from hash_id import *
+from urllib import unquote
 from email.header import Header
 from thrift.server import TServer
 from email.utils import formataddr
+from inseecode_postalcode import *
 from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
 from thrift.protocol import TBinaryProtocol
-from firebase_admin import credentials, auth, storage
+from email.mime.multipart import MIMEMultipart
+from google.api_core.exceptions import NotFound
 from thrift.transport import TSocket, TTransport
 from dynamodb_access import dynamodb_access, ttypes
+from firebase_admin import credentials, auth, storage
 from dynamodb_access.ttypes import Type, ValueType, KeyValue
 from thrift_generated.depositservice.ttypes import DepositResult
 from thrift_generated.depositservice.deposit_service import Iface
 from thrift_generated.depositservice.deposit_service import Processor
-from inseecode_postalcode import *
-from urllib import unquote
 from templates import success_deposit_mail, deleting_deposit_mail, success_deposit_mail_without_photos
 
 
@@ -294,6 +295,13 @@ class DepositServiceHandler(Iface):
         address_value.fieldtype = ttypes.Type.STRING
         values['ADDRESS'] = address_value
 
+        # LOCATION
+        if data.has_key('location'):
+            location_value = ttypes.ValueType()
+            location_value.field = data['location']
+            location_value.fieldtype = ttypes.Type.STRING
+            values['LOCATION'] = location_value
+            
         # SOURCE LOGO
         source_logo_value = ttypes.ValueType()
         source_logo_value.field = "data/surfyn.svg"
@@ -484,7 +492,10 @@ class DepositServiceHandler(Iface):
                         file_name = file_name.split('?')[0]
                         
                         blob = bucket.blob(file_name)
-                        blob.delete()
+                        try:
+                            blob.delete()
+                        except NotFound:
+                            logging.info('This media is already deleted: {}.'.format(filename))
             elif announce.has_key('VIDEO'):
                 videoname = announce['VIDEO']
                 videoname = unquote(videoname)
